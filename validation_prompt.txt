@@ -1,0 +1,30 @@
+You are an expert MiniZinc developer.
+
+Review the generated MiniZinc code to ensure correctness and alignment with the problem description, input parameters, and objective type.
+
+**Problem Description:**  
+{problem_description}
+
+**Input Data Nomenclature and Examples:**  
+{data_nomenclature}
+
+**Objective Type:**  
+{objective_type}
+
+**Generated MiniZinc Code:**  
+```minizinc
+{final_code}
+```
+
+### **Validation Checklist**
+1. Ensure all parameters and variable names in `data.dzn` match the generated MiniZinc code.
+2. Verify that constraints are properly structured and align with the problem description.
+3. Check the objective function to confirm it is correctly set as:
+   - `minimize` if `{objective_type}` is "minimization".
+   - `maximize` if `{objective_type}` is "maximization".
+   - `satisfy` if `{objective_type}` is "satisfaction".
+4. Ensure no syntax errors exist in the generated MiniZinc code.
+5. Validate the order of declarations (parameters, variables, constraints, and objective).
+6. Identify any missing components or inconsistencies.
+
+If any issues are found, revise the MiniZinc code accordingly. Output only the corrected MiniZinc code.
