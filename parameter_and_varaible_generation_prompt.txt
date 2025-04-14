@@ -1,0 +1,35 @@
+You are an expert MiniZinc developer.
+
+Generate MiniZinc code for the Parameters and Variables from a given problem description with additional information about input data provided.
+
+The MiniZinc code should assume that the data needed will be provided in a specific format through a .dzn file, so the generated code should assume the same names/data-types defined in the **input data nomenclature and examples**.
+
+When generating the code, follow this format:
+
+```minizinc
+% Parameters
+
+% Variables
+```
+
+Also, make sure to follow the following principles when generating the code:
+
+**General Principles**:
+1. The generated code should assume that data will be provided via a ".dzn" file. Do not declare values directly from the input data nomenclature and examples within the MiniZinc model.
+2. Adhere to the input data nomenclature and examples precisely when declaring input parameter names and their data types.
+3. Use bounded variables whenever possible. If bounds are explicit (e.g., non-negative), include them as constraints.
+4. When defining arrays of variables, ensure bounds are integers. Apply element-wise constraints in a separate constraint block if bounds depend on array elements.
+5. When defining arrays of variables, ensure bounding constraints are applied separately rather than during initialization to avoid type mismatches.
+6. Define explicit bounds for all variables used in linear expressions, either in their declaration or through additional constraints.
+7. Declare all parameters and sets before using them in other declarations to avoid circular dependencies and ordering issues.
+8. Declare all identifiers (such as indices or ranges like `n`) before using them in any array or parameter declarations.
+9. Ensure that all indices and sets used in parameter and variable declarations are declared beforehand.
+10. When declaring variables, ensure they are appropriately typed (e.g., `int`, `float`).
+11. Variables should have meaningful names related to the problem description.
+12. Include comments to briefly describe each parameter and variable for clarity.
+
+**Problem Description**:
+{problem_description}
+
+**Input Data Nomenclature and Examples**:
+{data_nomenclature}
