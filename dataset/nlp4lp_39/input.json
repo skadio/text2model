@@ -1,0 +1,55 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of Alloys",
+            "symbol": "K",
+            "shape": []
+        },
+        {
+            "definition": "Number of Metals",
+            "symbol": "M",
+            "shape": []
+        },
+        {
+            "definition": "Quantity of alloy to produce",
+            "symbol": "AlloyQuantity",
+            "shape": []
+        },
+        {
+            "definition": "Quantity of target components in the alloy",
+            "symbol": "Target",
+            "shape": [
+                "M"
+            ]
+        },
+        {
+            "definition": "Ratio of each component k in the alloy m",
+            "symbol": "Ratio",
+            "shape": [
+                "K",
+                "M"
+            ]
+        },
+        {
+            "definition": "Price of each alloy k",
+            "symbol": "Price",
+            "shape": [
+                "K"
+            ]
+        }
+    ],
+    "description": "A manufacturer wishes to produce an amount in lb of an alloy that consists of several kinds of metals. We know that by weight, the alloy we want contains a target quantity of each type of metal. Several other kinds of alloys are available at various prices and these alloys can be melted together to get the alloy we want. We know the price at which each alloy is sold per unit and the ratio of each metal in the alloys. Find the cheapest combination of quantities of alloys that reaches the target quantity of each type of metal.",
+    "metadata": {
+        "name": "Cheapest Alloy Combination",
+        "domain": "Manufacturing and Production",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            ">=",
+            "sum",
+            "="
+        ],
+        "identifier": "nlp4lp_39"
+    }
+}

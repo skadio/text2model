@@ -1,0 +1,23 @@
+ndepts = 5;  % departments
+ncities = 3; %  cities, Bristol, Brighton, london
+ncitiesm1 = 2; % cities, Bristol, Brighton
+
+% benefits (£k)
+benefit = array2d(1..ndepts, 1..ncities, 
+              [10,10,0,
+               15,20,0, 
+               10,15,0,
+               20,15,0,
+               5,15,0]); 
+
+%  communication costs/unit(£)
+dist = array2d(1..ncities, 1..ncities, [5,14,13,14,5,9,13,9,10]);
+
+% quantities of communication (k units)
+comm = array2d(1..ndepts, 1..ndepts, 
+        [0.0,0.0,1.0,1.5,0.0,
+         0.0,0.0,1.4,1.2,0.0,
+         0.0,0.0,0.0,0.0,2.0,
+         0.0,0.0,0.0,0.0,0.7,
+         0.0,0.0,0.0,0.0,0.0]);
+

@@ -1,0 +1,20 @@
+% ============================================================
+% Fishing Optimization Problem - Data File
+% ============================================================
+
+% Resource Constraints
+TotalAcres = 250;
+TotalBait = 800;
+MaxPain = 350;
+
+% Fish Catch Rates
+FishPerNetAcre = 8;
+FishPerLineAcre = 5;
+
+% Bait Consumption Per Acre
+BaitPerNetAcre = 4;
+BaitPerLineAcre = 3;
+
+% Pain Per Acre
+PainPerNetAcre = 2;
+PainPerLineAcre = 1;

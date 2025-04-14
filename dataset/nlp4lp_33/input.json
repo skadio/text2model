@@ -1,0 +1,40 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of data points",
+            "symbol": "K",
+            "shape": []
+        },
+        {
+            "definition": "Observed y values at each data point k",
+            "symbol": "ObservedValues",
+            "shape": [
+                "K"
+            ]
+        },
+        {
+            "definition": "Observed x values at each data point k",
+            "symbol": "ObservedXValues",
+            "shape": [
+                "K"
+            ]
+        }
+    ],
+    "description": "A quantity y is known to depend on another quantity x. A set of corresponding values has been collected for x and y and is presented. Fit the \u2018best\u2019 quadratic curve y = c * x^2 + b * x + a to this set of data points. The objective is to minimize the sum of absolute deviations of each observed value of y from the value predicted by the quadratic relationship.",
+    "metadata": {
+        "name": "Quadratic Curve Fitting",
+        "domain": "Mathematical Modeling",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            ">=",
+            "-",
+            "*",
+            "^",
+            "+",
+            "sum"
+        ],
+        "identifier": "nlp4lp_33"
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of rows in the grid",
+            "symbol": "rows",
+            "shape": []
+        },
+        {
+            "definition": "Length of row_rules for each row (number of constraints)",
+            "symbol": "row_rule_len",
+            "shape": []
+        },
+        {
+            "definition": "Constraints for each row in the grid indicating the sequence of shaded blocks",
+            "symbol": "row_rules",
+            "shape": [
+                "rows",
+                "row_rule_len"
+            ]
+        },
+        {
+            "definition": "Number of columns in the grid",
+            "symbol": "cols",
+            "shape": []
+        },
+        {
+            "definition": "Length of col_rules for each column (number of constraints)",
+            "symbol": "col_rule_len",
+            "shape": []
+        },
+        {
+            "definition": "Constraints for each column in the grid indicating the sequence of shaded blocks",
+            "symbol": "col_rules",
+            "shape": [
+                "cols",
+                "col_rule_len"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "The solution grid where 1 represents a shaded cell and 2 represents an empty cell",
+            "symbol": "x",
+            "shape": [
+                "rows",
+                "cols"
+            ]
+        }
+    ],
+    "description": "Nonograms are a popular puzzle, which goes by different names in different countries. Solvers have to shade in squares in a grid so that blocks of consecutive shaded squares satisfy constraints given for each row and column. Constraints indicate the sequence of shaded blocks (e.g. 3,1,2 means that there is a block of 3, then a gap of unspecified size, a block of length 1, another gap, and then a block of length 2). Each row and column will be given constraints.",
+    "metadata": {
+        "name": "Nonogram Solver",
+        "domain": "Puzzles and Games",
+        "objective": "satisfaction",
+        "source": "CSPLib",
+        "constraints": [
+            "forall",
+            "make_automaton",
+            "regular"
+        ],
+        "identifier": "CSPLib_12"
+    }
+}

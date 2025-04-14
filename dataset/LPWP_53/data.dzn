@@ -1,0 +1,8 @@
+GoldPerA = 3;
+WiresPerA = 2;
+CoinsPerA = 5;
+GoldPerB = 5;
+WiresPerB = 3;
+CoinsPerB = 7;
+TotalGold = 500;
+TotalWires = 300;

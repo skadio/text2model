@@ -1,0 +1,4 @@
+% Fixed values for area1, area2, and area3
+area1 = 13;
+area2 = 39;
+area3 == 16;

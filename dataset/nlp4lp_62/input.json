@@ -1,0 +1,65 @@
+{
+    "parameters": [
+        {
+            "definition": "The number of machines available",
+            "symbol": "M",
+            "shape": []
+        },
+        {
+            "definition": "The number of types of parts to produce",
+            "symbol": "P",
+            "shape": []
+        },
+        {
+            "definition": "The time required to produce a batch on machine m for part p",
+            "symbol": "TimeRequired",
+            "shape": [
+                "M",
+                "P"
+            ]
+        },
+        {
+            "definition": "The cost of operating machine m for a month",
+            "symbol": "MachineCosts",
+            "shape": [
+                "M"
+            ]
+        },
+        {
+            "definition": "The time each machine m is available for production each month",
+            "symbol": "Availability",
+            "shape": [
+                "M"
+            ]
+        },
+        {
+            "definition": "The price at which part p can be sold",
+            "symbol": "Prices",
+            "shape": [
+                "P"
+            ]
+        },
+        {
+            "definition": "The setup time required before producing a batch of part p",
+            "symbol": "SetupTime",
+            "shape": [
+                "P"
+            ]
+        }
+    ],
+    "description": "A division of an auto parts manufacturer produces different parts using different machines. A batch of 100 parts requires a specific amount of hours on each machine. There is a cost per hour of operating each machine, and each machine has a limited availability in hours for each month. The division sells parts in batches of 100 at a price specific to each part. For each type of part, the first machine has a setup time in hours before it can be used on this type of part. Other machines do not require a setup time. There is no minimum production quantity for any part. How many batches of each part should the manufacturer produce each month to maximize profit?",
+    "metadata": {
+        "name": "Auto Parts Manufacturer Optimization",
+        "domain": "Manufacturing and Production",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            "<=",
+            ">=",
+            "*"
+        ],
+        "identifier": "nlp4lp_62"
+    }
+}

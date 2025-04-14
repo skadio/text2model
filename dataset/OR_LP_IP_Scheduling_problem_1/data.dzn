@@ -1,0 +1,5 @@
+num_skis = 6;
+num_skiers = 5;
+
+ski_heights =   [1, 2, 5, 7, 13, 21]; % original problem
+skier_heights = [3, 4, 7, 11, 18];

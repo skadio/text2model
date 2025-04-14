@@ -1,0 +1,107 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of types of oil I",
+            "symbol": "I",
+            "shape": []
+        },
+        {
+            "definition": "Number of months M",
+            "symbol": "M",
+            "shape": []
+        },
+        {
+            "definition": "Buying price of oil i in month m",
+            "symbol": "BuyPrice",
+            "shape": [
+                "I",
+                "M"
+            ]
+        },
+        {
+            "definition": "Selling price of final product",
+            "symbol": "SellPrice",
+            "shape": []
+        },
+        {
+            "definition": "Indicator whether good i is a vegetable oil or not",
+            "symbol": "IsVegetable",
+            "shape": [
+                "I"
+            ]
+        },
+        {
+            "definition": "Maximum refining capacity for refinding vegetable oil per month",
+            "symbol": "MaxVegRefiningPerMonth",
+            "shape": []
+        },
+        {
+            "definition": "Maximum refining capacity for non-vegetable oil per month",
+            "symbol": "MaxNonVegRefiningPerMonth",
+            "shape": []
+        },
+        {
+            "definition": "Storage capacity for raw oil",
+            "symbol": "StorageSize",
+            "shape": []
+        },
+        {
+            "definition": "Storage cost per unit per month",
+            "symbol": "StorageCost",
+            "shape": []
+        },
+        {
+            "definition": "Maximum hardness of final product",
+            "symbol": "MaxHardness",
+            "shape": []
+        },
+        {
+            "definition": "Minimum hardness of final product",
+            "symbol": "MinHardness",
+            "shape": []
+        },
+        {
+            "definition": "Hardness of good i",
+            "symbol": "Hardness",
+            "shape": [
+                "I"
+            ]
+        },
+        {
+            "definition": "Initial amount of oil of each type that's available for processing",
+            "symbol": "InitialAmount",
+            "shape": []
+        },
+        {
+            "definition": "If an oil is used in a month, at least MinUsage tons must be used.",
+            "symbol": "MinUsage",
+            "shape": []
+        },
+        {
+            "definition": "Dependencies of goods i as a binary table if Dependencies_{i, j}} is 1, then when oil i is used, oil j must also be used",
+            "symbol": "Dependencies",
+            "shape": [
+                "I",
+                "I"
+            ]
+        }
+    ],
+    "description": "A food is manufactured by refining raw oils and blending them together. Each type of raw oil is either a vegetable oil or non-vegetable oil. Each type may be purchased during any month for a month-specific price. The final product sells at a fixed price per ton. Vegetable oils and non-vegetable oils require different production lines for refining. In any month, there is a limit on how much vegetable oil can be refined and how much non-vegetable oil can be refined. There is no loss of weight in the refining process, and the cost of refining may be ignored. There is a limit on the amount of raw oil that can be stored for later use. The cost of storage for both vegetable and non-vegetable oil is the same per ton per month. However, only raw oil can be stored, not refined oils or the final product. There is also a technological restriction of the hardness of the final product. The hardness of the final product is calculated by the weighted average of the hardness of each oil it is made with. We are given the maximum and minimum hardness (in units which hardness is measured) that the final product may be. We are also given the hardness of each oil type. At present, we are given the initial amounts of each type of raw oil that is in storage. It is required that at the end of the last month, we still have the same amount of storage as we started with. Additionally, we know that the food may never be made up of more than three oils in any month. If an oil is used in a month, there is a minimum usage criteria that must be met. There are also dependencies in the oil usage, which mean that if an oil of a given type is used then another type must also be used. What buying, storing and manufacturing policy should the company pursue in order to maximize profit?",
+    "metadata": {
+        "name": "Oil Refining and Blending",
+        "domain": "Manufacturing and Production",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            "<=",
+            ">=",
+            "if",
+            "then",
+            "else",
+            "endif"
+        ],
+        "identifier": "nlp4lp_20"
+    }
+}

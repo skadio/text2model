@@ -1,0 +1,9 @@
+NumLinks = 4;
+StartNode = [1, 2, 2, 3];
+EndNode = [2, 3, 4, 4];
+Capacity = [50, 40, 60, 50];
+Cost = [2, 3, 1, 1];
+NumFlowReqs = 2;
+SourceNode = [1, 2];
+DestinationNode = [4, 3];
+DataRate = [40, 30];

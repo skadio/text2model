@@ -1,0 +1,47 @@
+{
+    "parameters": [
+        {
+            "definition": "Size of the grid - number of rows and columns",
+            "symbol": "n",
+            "shape": []
+        },
+        {
+            "definition": "Grid representing the location of villagers in need of relief supplies",
+            "symbol": "huts",
+            "shape": [
+                "n",
+                "n"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "Total distance that all villagers must travel (sum of squared distances)",
+            "symbol": "total_dist",
+            "shape": []
+        },
+        {
+            "definition": "Locations to drop the two relief packages, sorted lexicographically",
+            "symbol": "x",
+            "shape": [
+                "2",
+                "2"
+            ]
+        }
+    ],
+    "description": "Problem involves coordinating relief efforts after catastrophes by dropping relief packages in locations that minimize the total distance villagers must travel to pick them up. Villager locations are given on a grid, and only air drop options for relief supply delivery are available. Each villager will pick up supplies from the nearest drop location. We can choose exactly 2 airdrop locations and have to minimize the sum of squared distances of huts to their closest relief package destination.",
+    "metadata": {
+        "name": "Relief Effort Coordination",
+        "domain": "Transportation and Logistics",
+        "objective": "minimization",
+        "source": "hakank",
+        "constraints": [
+            "forall",
+            "calculateDistance",
+            "min",
+            "sum",
+            "<="
+        ],
+        "identifier": "OR_LP_IP_Scheduling_problem_4"
+    }
+}

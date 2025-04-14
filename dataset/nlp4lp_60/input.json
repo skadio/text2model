@@ -1,0 +1,45 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of east-west streets",
+            "symbol": "N",
+            "shape": []
+        },
+        {
+            "definition": "Number of north-south streets",
+            "symbol": "W",
+            "shape": []
+        },
+        {
+            "definition": "Time to cross street segment going west, for given street n and segment w",
+            "symbol": "WestTime",
+            "shape": [
+                "N",
+                "W-1"
+            ]
+        },
+        {
+            "definition": "Time to cross street segment going north, for given street n and segment w",
+            "symbol": "NorthTime",
+            "shape": [
+                "N-1",
+                "W"
+            ]
+        }
+    ],
+    "description": "A delivery person starts at the intersection of 1st Avenue and 1st Street and needs to reach the intersection of W th Avenue and N th Street. The path between these two points forms an N-1 \u00d7 W-1 grid. Each block on the grid has a unique walking time due to varying pedestrian traffic during rush hour. The delivery person can only walk north or west. The journey can be broken down into stages, where at each stage the delivery person decides to walk either north or west. When at an intersection, there is a specific time taken to move to the next street north on the same avenue or to the next avenue west on the same street. Determine the optimal path the delivery person should take to ensure the package is delivered in the least amount of time.",
+    "metadata": {
+        "name": "Optimal Delivery Path",
+        "domain": "Transportation and Logistics",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "if",
+            "<=",
+            "sum",
+            "*"
+        ],
+        "identifier": "nlp4lp_60"
+    }
+}

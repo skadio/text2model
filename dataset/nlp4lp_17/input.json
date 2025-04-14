@@ -1,0 +1,84 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of options",
+            "symbol": "O",
+            "shape": []
+        },
+        {
+            "definition": "Number of price points",
+            "symbol": "P",
+            "shape": []
+        },
+        {
+            "definition": "Number of processes",
+            "symbol": "L",
+            "shape": []
+        },
+        {
+            "definition": "Allocated resources for each option",
+            "symbol": "Allocated",
+            "shape": [
+                "O"
+            ]
+        },
+        {
+            "definition": "Price at each price point",
+            "symbol": "Price",
+            "shape": [
+                "P"
+            ]
+        },
+        {
+            "definition": "Input resources required for each option in each process",
+            "symbol": "Input",
+            "shape": [
+                "L",
+                "O"
+            ]
+        },
+        {
+            "definition": "Output produced for each price point in each process",
+            "symbol": "Output",
+            "shape": [
+                "L",
+                "P"
+            ]
+        },
+        {
+            "definition": "Cost for each process",
+            "symbol": "Cost",
+            "shape": [
+                "L"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "The number of times each process is executed",
+            "symbol": "ProcessExecution",
+            "shape": [
+                "L"
+            ]
+        },
+        {
+            "definition": "Total revenue generated from all processes",
+            "symbol": "TotalRevenue",
+            "shape": []
+        }
+    ],
+    "description": "A manager of an oil refinery has several million barrels of crude oil of different types allocated for production during the coming month. These resources can be used to make multiple different products. Each product has a price it sells at. There are multiple production processes, each that uses some amount of each type of crude oil and produces some amount of each product. Each process has a cost per barrel of product produced. There is no separate cost for the crude oil as they have already been allocated. How many times should each process be executed to maximize the revenue for the next month? (we can assume that the number of times that each process is executed is a floating point number)",
+    "metadata": {
+        "name": "Oil Refinery Production Optimization",
+        "domain": "Industrial Engineering and Design",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "sum",
+            "<=",
+            ">=",
+            "forall"
+        ],
+        "identifier": "nlp4lp_17"
+    }
+}

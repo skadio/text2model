@@ -1,0 +1,7 @@
+n_courses=6;
+n_periods=3;
+load_per_period_lb=10;
+load_per_period_ub=30;
+courses_per_period_lb=2;
+courses_per_period_ub=4;
+course_load=[5, 10, 15, 10, 5, 10];

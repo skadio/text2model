@@ -1,0 +1,38 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of observed data points",
+            "symbol": "NumObs",
+            "shape": []
+        },
+        {
+            "definition": "Observed values of y",
+            "symbol": "Y",
+            "shape": [
+                "K"
+            ]
+        },
+        {
+            "definition": "Observed values of x",
+            "symbol": "X",
+            "shape": [
+                "K"
+            ]
+        }
+    ],
+    "description": "A quantity y is known to depend on another quantity x. A set of corresponding values has been collected for x and y and is presented. Fit the \u2018best\u2019 straight line y = bx + a where the objective is to minimize the maximum deviation of all the observed values of y from the value predicted by the linear relationship.",
+    "metadata": {
+        "name": "Linear Regression with Minimax Criterion",
+        "domain": "Mathematical Modeling",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            ">=",
+            "-",
+            "*",
+            "+"
+        ],
+        "identifier": "nlp4lp_32"
+    }
+}

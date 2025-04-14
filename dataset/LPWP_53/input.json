@@ -1,0 +1,84 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of times process A is run",
+            "symbol": "ProcessA",
+            "shape": []
+        },
+        {
+            "definition": "Number of times process B is run",
+            "symbol": "ProcessB",
+            "shape": []
+        },
+        {
+            "definition": "Gold required per run of process A",
+            "symbol": "GoldPerA",
+            "shape": []
+        },
+        {
+            "definition": "Wires required per run of process A",
+            "symbol": "WiresPerA",
+            "shape": []
+        },
+        {
+            "definition": "Coins plated per run of process A",
+            "symbol": "CoinsPerA",
+            "shape": []
+        },
+        {
+            "definition": "Gold required per run of process B",
+            "symbol": "GoldPerB",
+            "shape": []
+        },
+        {
+            "definition": "Wires required per run of process B",
+            "symbol": "WiresPerB",
+            "shape": []
+        },
+        {
+            "definition": "Coins plated per run of process B",
+            "symbol": "CoinsPerB",
+            "shape": []
+        },
+        {
+            "definition": "Total available gold",
+            "symbol": "TotalGold",
+            "shape": []
+        },
+        {
+            "definition": "Total available wires",
+            "symbol": "TotalWires",
+            "shape": []
+        }
+    ],
+    "output": [
+        {
+            "definition": "Optimal number of times to run process A",
+            "symbol": "ProcessA",
+            "shape": []
+        },
+        {
+            "definition": "Optimal number of times to run process B",
+            "symbol": "ProcessB",
+            "shape": []
+        },
+        {
+            "definition": "Maximum total coins plated",
+            "symbol": "TotalCoins",
+            "shape": []
+        }
+    ],
+    "description": "A coin plating operation involves two processes: process A and process B. Process A uses a fixed amount of gold and wires to plate a certain number of coins, while process B uses different amounts of gold and wires to plate a different number of coins. With limited resources of gold and wires, the objective is to determine how many times each process should be executed to maximize the total number of coins plated.",
+    "metadata": {
+        "name": "Coin Plating Optimization",
+        "domain": "Mathematical Modeling",
+        "objective": "maximization",
+        "source": "LPWP",
+        "constraints": [
+            "sum",
+            "<=",
+            "maximization"
+        ],
+        "identifier": "LPWP_53"
+    }
+}

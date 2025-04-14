@@ -1,0 +1,57 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of ports",
+            "symbol": "D",
+            "shape": []
+        },
+        {
+            "definition": "Number of depots",
+            "symbol": "P",
+            "shape": []
+        },
+        {
+            "definition": "Number of containers available at each depot",
+            "symbol": "Numdepot",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Number of containers available at each port",
+            "symbol": "Numport",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Cost per unit distance for transporting goods",
+            "symbol": "Price",
+            "shape": []
+        },
+        {
+            "definition": "Distance between depot d and port p",
+            "symbol": "Distance",
+            "shape": [
+                "D",
+                "P"
+            ]
+        }
+    ],
+    "description": "An Italian transport company must send empty containers from its depots to ports. Each depot has a certain number of containers currently available and a requirement on the minimum number of containers it must have. Transporting containers from one depot to another is by barges and each barge can only hold two containers. The cost of the barge is proportional to the distance traveled (we are given the constant of proportionality). If we are given the distances between depots, minimize the total transportation cost to satisfy all requirements.",
+    "metadata": {
+        "name": "Container Transportation Optimization",
+        "domain": "Transportation and Logistics",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            "<=",
+            ">=",
+            "div",
+            "*"
+        ],
+        "identifier": "nlp4lp_45"
+    }
+}

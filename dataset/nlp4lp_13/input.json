@@ -1,0 +1,45 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of different currencies",
+            "symbol": "N",
+            "shape": []
+        },
+        {
+            "definition": "Initial amount of currency i",
+            "symbol": "Start",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Limit for the number of transactions for currency i",
+            "symbol": "Limit",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Exchange rate from currency i to currency j",
+            "symbol": "Rate",
+            "shape": [
+                "N",
+                "N"
+            ]
+        }
+    ],
+    "description": "Suppose that there is a given a number of available currencies, and assume that we have the exchange rate between each currency. Also certain regulations impose a limit on the total amount of each currency that can be exchanged (whether to other currencies or from other currencies) on any given day. Suppose that we start the day with a given number of units of each currency.\n\nAssume that for any sequence i_1, \u2026 ,i_k of currencies, we have rate_{i_1,i_2}, rate_{i_2,i_3}, ..., rate_{i_{k-1}, i_{k}}, rate_{i_k, i_1} <= 1, which means that wealth cannot be multiplied by going through a cycle of currencies. Maximize the number of units of currency that we end up with at the end of the day, through a sequence of currency transactions.",
+    "metadata": {
+        "name": "Currency Exchange Maximization",
+        "domain": "Finance and Investment",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            "<=",
+            "="
+        ],
+        "identifier": "nlp4lp_13"
+    }
+}

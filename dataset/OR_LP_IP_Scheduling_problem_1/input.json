@@ -1,0 +1,56 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of available skis",
+            "symbol": "num_skis",
+            "shape": []
+        },
+        {
+            "definition": "Number of skiers",
+            "symbol": "num_skiers",
+            "shape": []
+        },
+        {
+            "definition": "Array of ski heights",
+            "symbol": "ski_heights",
+            "shape": [
+                6
+            ]
+        },
+        {
+            "definition": "Array of skier heights",
+            "symbol": "skier_heights",
+            "shape": [
+                5
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "Total sum of disparities between skiers and skis",
+            "symbol": "z",
+            "shape": []
+        },
+        {
+            "definition": "Assignment of skis to skiers optimizing the disparities",
+            "symbol": "x",
+            "shape": [
+                5
+            ]
+        }
+    ],
+    "description": "The Ski Optimization problem aims to minimize the disparity between skier heights and assigned ski heights. The objective is to find an assignment of skis to skiers such that the sum of disparities is minimized. Each skier should ideally have skis whose height matches their own, but in practice, this is generally not possible. The goal is to optimize the assignment to minimize overall disparities. Disparities are measured in the absolute difference between the skier heights and ski heights.",
+    "metadata": {
+        "name": "Ski Assignment Optimization",
+        "domain": "Scheduling",
+        "objective": "minimization",
+        "source": "hakank",
+        "constraints": [
+            "all_different",
+            "abs",
+            "sum",
+            "minimize"
+        ],
+        "identifier": "OR_LP_IP_Scheduling_problem_1"
+    }
+}

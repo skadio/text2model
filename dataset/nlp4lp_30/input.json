@@ -1,0 +1,53 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of departments",
+            "symbol": "K",
+            "shape": []
+        },
+        {
+            "definition": "Number of possible locations",
+            "symbol": "L",
+            "shape": []
+        },
+        {
+            "definition": "Benefit of department k being located at location l",
+            "symbol": "Benefit",
+            "shape": [
+                "K",
+                "L"
+            ]
+        },
+        {
+            "definition": "Communication costs between departments k and j",
+            "symbol": "Communication",
+            "shape": [
+                "K",
+                "K"
+            ]
+        },
+        {
+            "definition": "Cost of locating at location l with requirement m",
+            "symbol": "Cost",
+            "shape": [
+                "L",
+                "L"
+            ]
+        }
+    ],
+    "description": "A large company wishes to move some of its departments out of London. There are benefits to be derived from doing this (cheaper housing, government incentives, easier recruitment, etc.), which have been costed. Also, however, there will be greater costs of communication between departments. These have also been costed for all possible locations of each department. The company comprises of several departments. There are several possible cities for relocation, or a department may be kept in London. None of these cities (including London) may be the location for more than three of the departments. For each department, we are given the benefit of relocation to each city (in thousands of pounds). Communication costs are of the form communication_{k, j} * cost_{l, m}, where communication_{k, j} is the quantity of communication between department k and city j and cost{l, m} is the unit cost of communication between city l and city m. Where should each department be located so as to minimize overall yearly cost?",
+    "metadata": {
+        "name": "Department Relocation Optimization",
+        "domain": "Economic and Business Decisions",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            "=",
+            "<=",
+            "*"
+        ],
+        "identifier": "nlp4lp_30"
+    }
+}

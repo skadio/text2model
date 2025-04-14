@@ -1,0 +1,67 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of nodes in the network",
+            "symbol": "n",
+            "shape": []
+        },
+        {
+            "definition": "Number of arcs in the network",
+            "symbol": "num_edges",
+            "shape": []
+        },
+        {
+            "definition": "Set of arcs represented as pairs of nodes",
+            "symbol": "E",
+            "shape": [
+                "num_edges",
+                "2"
+            ]
+        },
+        {
+            "definition": "Capacities of each arc in the network",
+            "symbol": "a",
+            "shape": [
+                "num_edges"
+            ]
+        },
+        {
+            "definition": "Source node",
+            "symbol": "s",
+            "shape": []
+        },
+        {
+            "definition": "Sink node",
+            "symbol": "t",
+            "shape": []
+        }
+    ],
+    "output": [
+        {
+            "definition": "Elementary flow through each arc in the network",
+            "symbol": "x",
+            "shape": [
+                "num_edges"
+            ]
+        },
+        {
+            "definition": "Total flow from source node to sink node",
+            "symbol": "flow",
+            "shape": []
+        }
+    ],
+    "description": "The Maximum Flow Problem in a network is to maximize the flow from a given source node to a given sink node subject to conservation of flow constraints at each node and flow capacities on each edge/arc. The objective is to find the maximum total flow through the network from the ource into the sink.",
+    "metadata": {
+        "name": "Maximum Flow Problem",
+        "domain": "Network and Security",
+        "objective": "maximization",
+        "source": "hakank",
+        "constraints": [
+            "<=",
+            "sum",
+            "=",
+            "*"
+        ],
+        "identifier": "OR_LP_IP_Scheduling_problem_6"
+    }
+}

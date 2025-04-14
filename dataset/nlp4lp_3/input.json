@@ -1,0 +1,67 @@
+{
+    "parameters": [
+        {
+            "definition": "The number of years for which planning is to be conducted",
+            "symbol": "T",
+            "shape": []
+        },
+        {
+            "definition": "The demand in period t",
+            "symbol": "Demand",
+            "shape": [
+                "T"
+            ]
+        },
+        {
+            "definition": "The maximum oil capacity in period t",
+            "symbol": "OilCap",
+            "shape": [
+                "T"
+            ]
+        },
+        {
+            "definition": "The cost of coal per unit",
+            "symbol": "CoalCost",
+            "shape": []
+        },
+        {
+            "definition": "The cost of nuclear energy per unit",
+            "symbol": "NukeCost",
+            "shape": []
+        },
+        {
+            "definition": "The maximum nuclear capacity",
+            "symbol": "MaxNuke",
+            "shape": []
+        },
+        {
+            "definition": "The lifetime of a coal plant",
+            "symbol": "CoalLife",
+            "shape": []
+        },
+        {
+            "definition": "The lifetime of a nuclear plant",
+            "symbol": "NukeLife",
+            "shape": []
+        }
+    ],
+    "description": "A state wants to plan its electricity capacity for the next few years. It has a forecast of the demand for electricity per year for each of the following years. It knows the existing capacity per year, which is in oil-fired plants, that will not be retired. There are two alternatives for expanding electric capacity: coal-fired or nuclear power plants. There is a capital cost per unit of the coal-fired capacity that is incurred when a plant is established. Similarly, there is a capital cost per unit of nuclear power capacity that is incurred when a plant is established. Coal plants and nuclear plants will produce at their capacity until the end of their lifetime. Further, for various political and safety reasons, it has been decided that for each year, no more than a certain amount of the total capacity should ever be nuclear. ",
+    "metadata": {
+        "name": "Electricity Capacity Planning",
+        "domain": "Energy and Natural Resources",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            ">=",
+            "<=",
+            "sum",
+            "*",
+            "if",
+            "else",
+            "true",
+            "endif"
+        ],
+        "identifier": "nlp4lp_3"
+    }
+}

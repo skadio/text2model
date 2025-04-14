@@ -1,0 +1,53 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of bottle types",
+            "symbol": "n",
+            "shape": []
+        },
+        {
+            "definition": "Number of bottles of each type",
+            "symbol": "b",
+            "shape": [
+                "n"
+            ]
+        },
+        {
+            "definition": "Number of bottles with each type of fill amount",
+            "symbol": "t",
+            "shape": [
+                "n"
+            ]
+        },
+        {
+            "definition": "Number of people",
+            "symbol": "num_people",
+            "shape": []
+        }
+    ],
+    "output": [
+        {
+            "definition": "Allocation of bottles to each person",
+            "symbol": "allocation",
+            "shape": [
+                "num_people"
+            ]
+        }
+    ],
+    "description": "There are some bottles with varying quantities of liquid that are to be distributed to some people. How can the bottles be distributed such that each person gets the same number of bottles and the same amount of liquid? It is not possiblem to move liquid from one bottle to another. Within a solution, allocations should be in lexicographical order.",
+    "metadata": {
+        "name": "Distribute Partially Filled Bottles",
+        "domain": "Puzzles and Games",
+        "objective": "satisfaction",
+        "source": "hakank",
+        "constraints": [
+            "forall",
+            "<",
+            "=",
+            "+",
+            "*",
+            "sum"
+        ],
+        "identifier": "puzzles_problem_11"
+    }
+}

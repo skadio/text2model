@@ -1,0 +1,14 @@
+
+num_parts = 3;
+num_stores = 3;
+
+% product_stores[p,s]: price 0.0 means that p is _not_ available at store s
+product_stores = 
+array2d(1..num_parts,1..num_stores,
+[
+0.0,  2.25, 2.9,
+0.0,  3.00, 0.0,
+2.0, 15.00, 7.0,
+]);
+
+store_delivery_costs = [12.56, 15.2, 33.5];

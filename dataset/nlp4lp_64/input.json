@@ -1,0 +1,49 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of projects",
+            "symbol": "I",
+            "shape": []
+        },
+        {
+            "definition": "Number of Consultants",
+            "symbol": "J",
+            "shape": []
+        },
+        {
+            "definition": "Fixed cost for project j",
+            "symbol": "FixedCosts",
+            "shape": [
+                "J"
+            ]
+        },
+        {
+            "definition": "Additional cost for assigning consultant i to project j",
+            "symbol": "AdditionalCosts",
+            "shape": [
+                "I",
+                "J"
+            ]
+        },
+        {
+            "definition": "Maximum number of projects that can be assigned to a consultant",
+            "symbol": "MaxProjectsPerConsultant",
+            "shape": []
+        }
+    ],
+    "description": "A company has several projects to be done by a fixed number of consultants. Each consultant may be assigned up to a maximum number of projects. Hiring consultants incurs a fixed cost and there is an additional cost incurred for assigning specific consultants to specific projects. Determine the assignment of consultants to projects that minimize the total cost.",
+    "metadata": {
+        "name": "Consultant Assignment Optimization",
+        "domain": "Economic and Business Decisions",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            "=",
+            "<=",
+            "*"
+        ],
+        "identifier": "nlp4lp_64"
+    }
+}

@@ -1,0 +1,9 @@
+N = 3;
+IsolateCentral = [10, 6, 8];
+ScanCentral = [6, 4, 6];
+IsolateDistributed = [12, 9, 12];
+ScanDistributed = [18, 10, 15];
+CentralCost = 150;
+DistributedCost = 70;
+CentralMaxHours = 16;
+DistributedMaxHours = 33;

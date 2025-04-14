@@ -1,0 +1,33 @@
+% ----------------------------
+% DZN File for Aircraft Assignment
+% ----------------------------
+
+% Total number of aircraft and routes
+TotalAircraft = 4;
+TotalRoutes = 4;
+
+% Availability of each aircraft
+Availability = [500, 600, 700, 800];
+
+% Demand for each route
+Demand = [200, 300, 400, 500];
+
+% Capacity matrix (Capabilities)
+Capacity = array2d(1..TotalAircraft, 1..TotalRoutes,
+  [
+    100, 200, 300, 400,   % Aircraft 1 capacities for Routes 1..4
+    200, 300, 400, 500,   % Aircraft 2
+    300, 400, 500, 600,   % Aircraft 3
+    400, 500, 600, 700    % Aircraft 4
+  ]
+);
+
+% Cost matrix
+Costs = array2d(1..TotalAircraft, 1..TotalRoutes,
+  [
+    10, 20, 30, 40,  % Aircraft 1 costs for Routes 1..4
+    20, 30, 40, 50,  % Aircraft 2
+    30, 40, 50, 60,  % Aircraft 3
+    40, 50, 60, 70   % Aircraft 4
+  ]
+);

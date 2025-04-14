@@ -1,0 +1,13 @@
+num_people = 8;
+
+% Binary compatibility matrix (donor-to-recipient adjacency matrix)
+compatible = array2d(1..num_people, 1..num_people, [
+    0, 1, 1, 0, 0, 0, 0, 0,  % Person 1 can donate to 2, 3
+    1, 0, 0, 0, 0, 1, 0, 0,  % Person 2 can donate to 1, 6
+    1, 0, 0, 1, 0, 0, 1, 0,  % Person 3 can donate to 1, 4, 7
+    0, 1, 0, 0, 0, 0, 0, 0,  % Person 4 can donate to 2
+    0, 1, 0, 0, 0, 0, 0, 0,  % Person 5 can donate to 2
+    0, 0, 0, 0, 1, 0, 0, 0,  % Person 6 can donate to 5
+    0, 0, 0, 0, 0, 0, 0, 1,  % Person 7 can donate to 8
+    0, 0, 1, 0, 0, 0, 0, 0   % Person 8 can donate to 3
+]);

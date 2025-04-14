@@ -1,0 +1,71 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of warehouses to open",
+            "symbol": "P",
+            "shape": []
+        },
+        {
+            "definition": "Number of customers",
+            "symbol": "num_customers",
+            "shape": []
+        },
+        {
+            "definition": "Number of warehouses",
+            "symbol": "num_warehouses",
+            "shape": []
+        },
+        {
+            "definition": "Demand of each customer",
+            "symbol": "Demand",
+            "shape": [
+                "num_customers"
+            ]
+        },
+        {
+            "definition": "Distance between each customer and warehouse",
+            "symbol": "Distance",
+            "shape": [
+                "num_customers",
+                "num_warehouses"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "Binary decision variable for each warehouse representing if it is open or not",
+            "symbol": "OpenWarehouse",
+            "shape": [
+                "num_warehouses"
+            ]
+        },
+        {
+            "definition": "Binary decision variable for each pair of customer-warehouse representing if the customer is served from that warehouse",
+            "symbol": "ShipToCustomer",
+            "shape": [
+                "num_customers",
+                "num_warehouses"
+            ]
+        },
+        {
+            "definition": "Objective function value, i.e., sum of demand-weighted distance from P warehouses to serve all customers",
+            "symbol": "z",
+            "shape": []
+        }
+    ],
+    "description": "The P-Median problem involves selecting P warehouses from a set of candidate locations to minimize the demand-weighted distance of serving all customers. We are given the demand of customers and distances between customers and warehouses. Each customer is served by exactly one warehouse. The goal is to allocate warehouses to minimize the sum of demand weighted distances of the customers to the warehouse that serves them.",
+    "metadata": {
+        "name": "P-Median Problem",
+        "domain": "Transportation and Logistics",
+        "objective": "minimization",
+        "source": "hakank",
+        "constraints": [
+            "forall",
+            "sum",
+            "=",
+            "<=",
+            "/\\"
+        ],
+        "identifier": "non_linear_problem_9"
+    }
+}

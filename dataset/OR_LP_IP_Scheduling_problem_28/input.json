@@ -1,0 +1,71 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of different parts to buy",
+            "symbol": "num_parts",
+            "shape": []
+        },
+        {
+            "definition": "Number of stores to choose from",
+            "symbol": "num_stores",
+            "shape": []
+        },
+        {
+            "definition": "Prices of each part in each store",
+            "symbol": "product_stores",
+            "shape": [
+                "num_parts",
+                "num_stores"
+            ]
+        },
+        {
+            "definition": "Delivery cost of each store",
+            "symbol": "store_delivery_costs",
+            "shape": [
+                "num_stores"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "Selected store for each part",
+            "symbol": "x",
+            "shape": [
+                "num_parts"
+            ]
+        },
+        {
+            "definition": "Total cost of parts without delivery",
+            "symbol": "part_cost",
+            "shape": []
+        },
+        {
+            "definition": "Total delivery cost",
+            "symbol": "delivery_cost",
+            "shape": []
+        },
+        {
+            "definition": "Total cost of buying all parts including delivery",
+            "symbol": "total_cost",
+            "shape": []
+        }
+    ],
+    "description": "The problem involves selecting the optimal store for each part to minimize the total cost of buying all parts including delivery costs. Each part has different prices in different stores, and each store has a delivery cost. If multiple products are purchased from a store then the delivery cost remains the same. The objective is to find the optimal assignment of parts to stores to minimize the total cost.",
+    "metadata": {
+        "name": "Minimize Shopping Cost",
+        "domain": "Economic and Business Decisions",
+        "objective": "minimization",
+        "source": "hakank",
+        "constraints": [
+            "forall",
+            ">",
+            "sum",
+            "=",
+            "if",
+            "then",
+            "else",
+            "endif"
+        ],
+        "identifier": "OR_LP_IP_Scheduling_problem_28"
+    }
+}

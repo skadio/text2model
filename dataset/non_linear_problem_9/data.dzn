@@ -1,0 +1,15 @@
+P = 2;
+num_customers = 4;
+
+
+num_warehouses = 3;
+
+Demand = [100.0,80.0,80.0,70.0];
+
+Distance = array2d(Customers, Warehouses,
+  [
+    2.0, 10.0, 50.0,
+    2.0, 10.0, 52.0,
+   50.0, 60.0,  3.0,
+   40.0, 60.0,  1.0
+  ]);

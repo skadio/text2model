@@ -1,0 +1,71 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of days in the carpooling schedule",
+            "symbol": "num_days",
+            "shape": []
+        },
+        {
+            "definition": "Number of people participating in the carpool",
+            "symbol": "num_people",
+            "shape": []
+        },
+        {
+            "definition": "Array representing the participation of each person on each day of the carpool. Value 1 indicates participation, and value 0 indicates non-participation.",
+            "symbol": "participation",
+            "shape": [
+                "num_people",
+                "num_days"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "Array representing the chosen driver for each day in the carpool schedule",
+            "symbol": "driver",
+            "shape": [
+                "num_days"
+            ]
+        },
+        {
+            "definition": "Array representing the number of days each person drives in the carpool schedule",
+            "symbol": "num_drives",
+            "shape": [
+                "num_people"
+            ]
+        },
+        {
+            "definition": "Array representing the differences between actual driving days and the obligation for each person",
+            "symbol": "diffs",
+            "shape": [
+                "num_people"
+            ]
+        },
+        {
+            "definition": "Number of discrepancies between actual driving and the obligations for fairness",
+            "symbol": "z",
+            "shape": []
+        },
+        {
+            "definition": "Total discrepancy between the sum of obligations and the number of days",
+            "symbol": "pdiff",
+            "shape": []
+        }
+    ],
+    "description": "Carpool Fairness: Given a carpool schedule where people choose to participate on certain days, determine a fair allocation of driving responsibilities based on the number of participants each day. Minimize the differences between the actual driving days and the obligations to achieve a fair schedule. If there are n people in a car on a given day, then the obligation of any person in that car on that day is \frac{1}{n}.",
+    "metadata": {
+        "name": "Carpool Fairness",
+        "domain": "Transportation and Logistics",
+        "objective": "minimization",
+        "source": "hakank",
+        "constraints": [
+            "forall",
+            "sum",
+            "bool2int",
+            "<=",
+            "abs",
+            "in"
+        ],
+        "identifier": "combinatorial_problem_32"
+    }
+}

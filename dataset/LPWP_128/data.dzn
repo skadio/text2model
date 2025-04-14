@@ -1,0 +1,12 @@
+WaterPerLiquid = 40;
+AlcoholPerLiquid = 50;
+WaterPerFoam = 60;
+AlcoholPerFoam = 40;
+
+TotalWater = 2000;
+TotalAlcohol = 2100;
+
+HandsPerLiquid = 30;
+HandsPerFoam = 20;
+
+MaxLiquid = 30;

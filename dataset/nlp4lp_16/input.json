@@ -1,0 +1,83 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of different products",
+            "symbol": "N",
+            "shape": []
+        },
+        {
+            "definition": "Hours required to assemble product i",
+            "symbol": "AssemblyHour",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Hours required to test product i",
+            "symbol": "TestingHour",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Material cost for product i",
+            "symbol": "MaterialCost",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Maximum total hours available for assembly",
+            "symbol": "MaxAssembly",
+            "shape": []
+        },
+        {
+            "definition": "Maximum total hours available for testing",
+            "symbol": "MaxTesting",
+            "shape": []
+        },
+        {
+            "definition": "Selling price for product i",
+            "symbol": "Price",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Maximum overtime hours available for assembly",
+            "symbol": "MaxOvertimeAssembly",
+            "shape": []
+        },
+        {
+            "definition": "Overtime cost for assembly per hour",
+            "symbol": "OvertimeAssemblyCost",
+            "shape": []
+        },
+        {
+            "definition": "Discount on material cost when a certain threshold is reached",
+            "symbol": "MaterialDiscount",
+            "shape": []
+        },
+        {
+            "definition": "Threshold for the quantity to reach to obtain the material discount",
+            "symbol": "DiscountThreshold",
+            "shape": []
+        }
+    ],
+    "description": "A company produces several kinds of products. Each product of a given type requires a given number of hours of assembly labor, hours of testing, and raw materials (measured in $). Given the current personnel of the company, there is a limit on the number of hours of assembly labor and hours of testing each day. Each type of product has a price. The company also has an upper limit on the number of hours of overtime assembly labor that can be scheduled at an overtime rate in hours. Suppose that a raw material supplier provides a percentage discount if the daily bill is above a given $ threshold. Maximize the daily profit of the company, which is the total revenue minus the total cost.",
+    "metadata": {
+        "name": "Daily Profit Maximization",
+        "domain": "Economic and Business Decisions",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "sum",
+            "<=",
+            "=",
+            "if",
+            "then",
+            "endif"
+        ],
+        "identifier": "nlp4lp_16"
+    }
+}

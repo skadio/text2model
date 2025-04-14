@@ -1,0 +1,4 @@
+N = 6;
+Num = [5, 10, 2, 3, 2, 10];
+WorkingDays = 5;
+RestingDays = 2;

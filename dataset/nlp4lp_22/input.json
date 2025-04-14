@@ -1,0 +1,90 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of types of machines M",
+            "symbol": "M",
+            "shape": []
+        },
+        {
+            "definition": "Number of types of products",
+            "symbol": "K",
+            "shape": []
+        },
+        {
+            "definition": "Number of time periods I",
+            "symbol": "I",
+            "shape": []
+        },
+        {
+            "definition": "Number of machines",
+            "symbol": "NumMachines",
+            "shape": [
+                "M"
+            ]
+        },
+        {
+            "definition": "Profit for each product",
+            "symbol": "Profit",
+            "shape": [
+                "K"
+            ]
+        },
+        {
+            "definition": "Time required to produce each product on each machine",
+            "symbol": "Time",
+            "shape": [
+                "K",
+                "M"
+            ]
+        },
+        {
+            "definition": "Downtime for each machine",
+            "symbol": "Downtime",
+            "shape": [
+                "M"
+            ]
+        },
+        {
+            "definition": "Limit for each product on constraints",
+            "symbol": "Limit",
+            "shape": [
+                "K",
+                "I"
+            ]
+        },
+        {
+            "definition": "Price for storing products",
+            "symbol": "StorePrice",
+            "shape": []
+        },
+        {
+            "definition": "Quantity of products to keep in store",
+            "symbol": "KeepQuantity",
+            "shape": []
+        },
+        {
+            "definition": "Number of work hours available",
+            "symbol": "WorkHours",
+            "shape": []
+        }
+    ],
+    "description": "We are trying to determine the optimal selling, storing, and manufacturing policy for a company to maximize its profit. We are given the number of machines the company has and the number of different products it produces. Each product has a known profit. For each product, we are also given the time required on each machine. For the present month (January) and the following months, some machines will be down for maintenance. For each machine, we know for how many months it must be down for maintenance. Additionally, there is a limitation of how much of each product may be produced in each month. Further, to store products, there is a limit of 100 of each type at a cost per unit per month. The company originally starts with no stock of any type of product, but there is a minimum stock that should be stored of each type of product at the end of subsequent months. Assuming that the factory works six days a week for two shifts of a fixed number of hours a day and that a month has exactly 24 days for convenience if no sequencing problems need to be considered, what selling, storing, and manufacturing policy should the company pursue to maximize profit?",
+    "metadata": {
+        "name": "Factory Production Planning",
+        "domain": "Manufacturing and Production",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "<=",
+            "+",
+            "-",
+            "*",
+            "/",
+            "if",
+            "else",
+            "endif",
+            "forall"
+        ],
+        "identifier": "nlp4lp_22"
+    }
+}

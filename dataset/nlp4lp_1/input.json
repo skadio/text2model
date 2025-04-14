@@ -1,0 +1,50 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of different goods produced by the firm",
+            "symbol": "M",
+            "shape": []
+        },
+        {
+            "definition": "Number of different raw materials used by the firm",
+            "symbol": "N",
+            "shape": []
+        },
+        {
+            "definition": "Available amount of raw material i",
+            "symbol": "Available",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Requirement of raw material i to produce one unit of good j",
+            "symbol": "Requirements",
+            "shape": [
+                "N",
+                "M"
+            ]
+        },
+        {
+            "definition": "Revenue earned from selling one unit of good j",
+            "symbol": "Prices",
+            "shape": [
+                "M"
+            ]
+        }
+    ],
+    "description": "A firm produces different goods using different raw materials. The firm has a limited amount of each raw material available. Each good requires a specific amount of raw materials to be produced. Each good results in an amount of revenue produced per unit. How much of each good should the firm produce to maximize its total revenue?",
+    "metadata": {
+        "name": "Maximize Total Revenue",
+        "domain": "Economic and Business Decisions",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "<=",
+            "sum",
+            "*"
+        ],
+        "identifier": "nlp4lp_1"
+    }
+}

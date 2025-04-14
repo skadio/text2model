@@ -1,0 +1,97 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of months",
+            "symbol": "M",
+            "shape": []
+        },
+        {
+            "definition": "Number of different oils",
+            "symbol": "I",
+            "shape": []
+        },
+        {
+            "definition": "Buy price of oil i in month m",
+            "symbol": "BuyPrice",
+            "shape": [
+                "I",
+                "M"
+            ]
+        },
+        {
+            "definition": "Sell price of the products after refining",
+            "symbol": "SellPrice",
+            "shape": []
+        },
+        {
+            "definition": "Indicator whether item i is a vegetable oil",
+            "symbol": "IsVegetable",
+            "shape": [
+                "I"
+            ]
+        },
+        {
+            "definition": "Total refining capability for vegetable oils per month",
+            "symbol": "MaxVegetableRefiningPerMonth",
+            "shape": []
+        },
+        {
+            "definition": "Total refining capability for non-vegetable oils per month",
+            "symbol": "MaxNonVegetableRefiningPerMonth",
+            "shape": []
+        },
+        {
+            "definition": "Storage capacity for raw oil",
+            "symbol": "StorageSize",
+            "shape": []
+        },
+        {
+            "definition": "Cost for storing oil per month per ton",
+            "symbol": "StorageCost",
+            "shape": []
+        },
+        {
+            "definition": "The maximum hardness allowed for the products after refining",
+            "symbol": "MaxHardness",
+            "shape": []
+        },
+        {
+            "definition": "The minimum hardness required for the products after refining",
+            "symbol": "MinHardness",
+            "shape": []
+        },
+        {
+            "definition": "Hardness of item i",
+            "symbol": "Hardness",
+            "shape": [
+                "I"
+            ]
+        },
+        {
+            "definition": "Initial amount of items in storage at the beginning of the planning horizon",
+            "symbol": "InitialAmount",
+            "shape": []
+        }
+    ],
+    "description": "A food is manufactured by refining raw oils and blending them together. Each type of raw oil is either a vegetable oil or non-vegetable oil. Each type may be purchased during any month for a month-specific price. The final product sells at a fixed price per ton. Vegetable oils and non-vegetable oils require different production lines for refining. In any month, there is a limit on how much vegetable oil can be refined and how much non-vegetable oil can be refined. There is no loss of weight in the refining process, and the cost of refining may be ignored. There is a limit on the amount of raw oil that can be stored for later use. The cost of storage for both vegetable and non-vegetable oil is the same per ton per month. However, only raw oil can be stored, not refined oils or the final product. There is also a technological restriction of the hardness of the final product. The hardness of the final product is calculated by the weighted average of the hardness of each oil it is made with. We are given the maximum and minimum hardness (in units which hardness is measured) that the final product may be. We are also given the hardness of each oil type. At present, we are given the initial amounts of each type of raw oil that is in storage. It is required that at the end of the last month, we still have the same amount of storage as we started with. What buying, storing and manufacturing policy should the company pursue in order to maximize profit?",
+    "metadata": {
+        "name": "Food Manufacturing Optimization",
+        "domain": "Manufacturing and Production",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "if",
+            "else",
+            "endif",
+            "<=",
+            ">=",
+            "=",
+            "sum",
+            "*",
+            "-",
+            "+"
+        ],
+        "identifier": "nlp4lp_19"
+    }
+}

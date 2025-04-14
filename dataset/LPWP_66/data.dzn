@@ -1,0 +1,12 @@
+ButterPerAlmond = 5;
+ButterPerPistachio = 3;
+FlourPerAlmond = 8;
+FlourPerPistachio = 6;
+
+TotalButter = 600;
+TotalFlour = 800;
+
+TimePerAlmond = 12;
+TimePerPistachio = 10;
+
+MinAlmondRatio = 3;

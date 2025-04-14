@@ -1,0 +1,27 @@
+num_projects = 15;
+max_budget = 225;
+max_projects = 9;
+max_persons = 28;
+values = [600,400,100,150, 80,120,200,220, 90,380,290,130, 80,270,280];
+budgets = [35,34,26,12,10,18,32,11,10,22,27,18,16,29,22];
+
+num_not_with = 6;
+not_with = array2d(1..num_not_with, 1..2, [ 
+  1, 10,
+  5, 6,
+  6,5,
+  10, 1,
+  11, 15,
+  15, 11
+]);
+
+num_requires = 5;
+requires = array2d(1..num_requires, 1..2, [
+  3, 15,
+  4, 15,
+  8, 7,
+  13, 2,
+  14, 2
+]);
+
+personell = [5,3,4,2,2,2,4,1,1,5,3,2,2,4,3];

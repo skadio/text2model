@@ -1,0 +1,9 @@
+A = 3;
+S = 2;
+AvailableAlloy = [40, 50, 80];
+CarbonContent = [3, 4, 3.5];
+NickelContent = [1, 1.5, 1.8];
+AlloyPrice = [380, 400, 440];
+SteelPrice = [650, 600];
+CarbonMin = [3.6, 3.4];
+NickelMax = [1.5, 1.7];

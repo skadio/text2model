@@ -1,0 +1,14 @@
+M = 8;
+RequiredLanguages = ["FR", "AR", "GE", "RU", "SP", "CH", "IT", "PO"];
+
+N = 6;
+Cost = [12000, 16000, 13000, 15000, 9000, 7000];
+TranslatorLanguagesMatrix = [
+    % FR AR GE RU SP CH IT PO
+    |1, 1, 0, 0, 0, 0, 1, 0| % Translator 1
+    |0, 0, 1, 1, 0, 1, 0, 0|, % Translator 2
+    |0, 1, 0, 0, 0, 1, 0, 0|, % Translator 3
+    |1, 0, 0, 0, 1, 0, 1, 1|, % Translator 4
+    |1, 0, 1, 1, 1, 0, 0, 0|, % Translator 5
+    |0, 0, 1, 0, 1, 0, 0, 1|  % Translator 6
+];

@@ -1,0 +1,67 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of pieces of music for the concert",
+            "symbol": "num_pieces",
+            "shape": []
+        },
+        {
+            "definition": "Number of players in the orchestra",
+            "symbol": "num_players",
+            "shape": []
+        },
+        {
+            "definition": "Array containing the duration of each piece",
+            "symbol": "duration",
+            "shape": [
+                "num_pieces"
+            ]
+        },
+        {
+            "definition": "Array representing players' availability for each piece",
+            "symbol": "rehearsal",
+            "shape": [
+                "num_players",
+                "num_pieces"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "Order in which the pieces are rehearsed",
+            "symbol": "rehearsal_order",
+            "shape": [
+                "num_pieces"
+            ]
+        },
+        {
+            "definition": "Waiting time for each player",
+            "symbol": "waiting_time",
+            "shape": [
+                "num_players"
+            ]
+        },
+        {
+            "definition": "Total waiting time for all players",
+            "symbol": "total_waiting_time",
+            "shape": []
+        }
+    ],
+    "description": "A concert is to consist of nine pieces of music of different durations each involving a different combination of the five members of the orchestra. Players can arrive at rehearsals immediately before the first piece in which they are involved and depart immediately after the last piece in which they are involved. The problem is to devise an order in which the pieces can be rehearsed so as to minimize the total time that players are waiting to play, i.e. the total time when players are present but not currently playing. What is this minimum waiting time?",
+    "metadata": {
+        "name": "Rehearsal Scheduling Problem",
+        "domain": "Scheduling",
+        "objective": "minimization",
+        "source": "CSPLib",
+        "constraints": [
+            "all_different",
+            "forall",
+            "sum",
+            "bool2int",
+            "<",
+            ">",
+            "="
+        ],
+        "identifier": "CSPLib_39"
+    }
+}

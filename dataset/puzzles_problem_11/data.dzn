@@ -1,0 +1,31 @@
+/*
+  Vaderlind (op cit, page 40):
+  """
+  Problem 15 
+  How to distribute 5 full, 8 half-full, and 11 empty bottles of wine
+  between three persons if each person get the same number of bottles 
+  and the same amout of wine. Find all solutions.
+  """
+  
+  Here the solutions:
+    [1, 4, 3]
+    [2, 2, 4]
+    [2, 2, 4]
+    ----------
+    [1, 4, 3]
+    [1, 4, 3]
+    [3, 0, 5]
+    ----------
+    [0, 6, 2]
+    [2, 2, 4]
+    [3, 0, 5]
+    ----------
+    ==========
+
+
+*/
+
+n = 3; % number of bottle types
+b = [5,8,11]; % number of bottles of each type
+t = [2,1,0]; %  number of [filled, half filled, empty] bottles. [1,1/2,0] -> [2,1,0]
+num_people = 3;

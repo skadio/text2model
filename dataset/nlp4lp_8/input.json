@@ -1,0 +1,50 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of Parts",
+            "symbol": "NumParts",
+            "shape": []
+        },
+        {
+            "definition": "Number of Machines",
+            "symbol": "NumMachines",
+            "shape": []
+        },
+        {
+            "definition": "The time taken to make one unit of spare part k on machine s",
+            "symbol": "Time",
+            "shape": [
+                "K",
+                "S"
+            ]
+        },
+        {
+            "definition": "Profit from producing one unit of spare part k",
+            "symbol": "Profit",
+            "shape": [
+                "K"
+            ]
+        },
+        {
+            "definition": "Capacity of machine s for the month",
+            "symbol": "Capacity",
+            "shape": [
+                "S"
+            ]
+        }
+    ],
+    "description": "A small firm specializes in making some types of spare automobile parts. Each part has to go through several shops. There is a required number of worker-hours for each type of part in each shop. Making a type of part results in an amount of profit specific to the part. Each shop has a maximum capacity of working hours. How much of each spare part is to be made to maximize profit?",
+    "metadata": {
+        "name": "Spare Parts Production Optimization",
+        "domain": "Manufacturing and Production",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            "<=",
+            "*"
+        ],
+        "identifier": "nlp4lp_8"
+    }
+}

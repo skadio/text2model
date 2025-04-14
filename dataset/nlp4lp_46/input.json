@@ -1,0 +1,64 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of different raw materials",
+            "symbol": "N",
+            "shape": []
+        },
+        {
+            "definition": "Number of different products",
+            "symbol": "M",
+            "shape": []
+        },
+        {
+            "definition": "Amount of raw material i available",
+            "symbol": "Available",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Amount of raw material i required to produce one unit of product j",
+            "symbol": "Requirements",
+            "shape": [
+                "N",
+                "M"
+            ]
+        },
+        {
+            "definition": "Price at which product j can be sold",
+            "symbol": "Prices",
+            "shape": [
+                "M"
+            ]
+        },
+        {
+            "definition": "Cost of producing one unit of product j",
+            "symbol": "Costs",
+            "shape": [
+                "M"
+            ]
+        },
+        {
+            "definition": "Demand for product j",
+            "symbol": "Demands",
+            "shape": [
+                "M"
+            ]
+        }
+    ],
+    "description": "Wild Sports produces different products using different raw materials. The company has a specific amount of each raw material available. Each product requires some amount of each raw material to be produced. Each product has a selling price per unit and a production cost. Each product also has a forecasted maximum demand for the month. How many of each product should the sports produce to maximize its profit for the month?",
+    "metadata": {
+        "name": "Sports Product Production Optimization",
+        "domain": "Manufacturing and Production",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            "<=",
+            "*"
+        ],
+        "identifier": "nlp4lp_46"
+    }
+}

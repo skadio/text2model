@@ -1,0 +1,5 @@
+I = 5;
+J = 3;
+FixedCosts = [100, 150, 135];
+AdditionalCosts = array2d(1..5, 1..3, [10, 12, 20, 10, 8, 12, 15, 8, 20, 10, 6, 15, 8, 10, 15]);
+MaxProjectsPerConsultant = 3;

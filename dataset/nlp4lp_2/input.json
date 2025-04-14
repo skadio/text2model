@@ -1,0 +1,118 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of systems",
+            "symbol": "N",
+            "shape": []
+        },
+        {
+            "definition": "Whether system i is a workstation",
+            "symbol": "IsWorkstation",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Price of system i",
+            "symbol": "Price",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Number of disk drives in system i",
+            "symbol": "DiskDrives",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Number of 256K memory boards in system i",
+            "symbol": "MemoryBoards",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Maximum number of CPUs available",
+            "symbol": "MaxCpu",
+            "shape": []
+        },
+        {
+            "definition": "Minimum total disk drives",
+            "symbol": "MinDisk",
+            "shape": []
+        },
+        {
+            "definition": "Maximum total disk drives",
+            "symbol": "MaxDisk",
+            "shape": []
+        },
+        {
+            "definition": "Minimum total memory boards",
+            "symbol": "MinMemory",
+            "shape": []
+        },
+        {
+            "definition": "Maximum total memory boards",
+            "symbol": "MaxMemory",
+            "shape": []
+        },
+        {
+            "definition": "Demand of system i",
+            "symbol": "Demand",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Demand for General Purpose systems",
+            "symbol": "DemandGP",
+            "shape": []
+        },
+        {
+            "definition": "Demand for Workstations",
+            "symbol": "DemandWS",
+            "shape": []
+        },
+        {
+            "definition": "Number of preordered system i",
+            "symbol": "Preorder",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Number of alternative memory configurations possible",
+            "symbol": "AltMemory",
+            "shape": []
+        },
+        {
+            "definition": "Whether the alternative memory is compatible with system i",
+            "symbol": "AltCompatible",
+            "shape": [
+                "N"
+            ]
+        }
+    ],
+    "description": "Digital Equipment Corporation (DEC) has introduced new families of computer systems with different memory, disk storage, and expansion capabilities. Each system is either a general-purpose (GP) system or a workstation (WS) system. Each system must have an integer number of disk drives. Additionally, for each system, an average number of units of disk drive per system is requested by customers. Each system uses a specific amount of units of 256K memory boards per system and has a price in dollars. The in-house supplier of CPUs for DEC has a maximum number of units of CPUs that it can provide due to debugging problems. (Each system requires exactly 1 CPU) The supply of disk drives is uncertain and is estimated by the manufacturer and has an upper and lower bound. The supply of 256k memory boards is also limited and has an upper and lower bound. For each system, there is an estimated maximum demand for the next quarter. Additionally, there is a maximum demand for the whole GP family and the whole WS family for the next quarter. Included in the projections, is a preorder demand that has been received for each type of system that must be fulfilled in the next quarter. To address the shortage of 256K memory boards, DEC has access to some units of an alternative memory board that can only be used in certain systems. To make the problem easier to solve, you can assume the number of systems produced is a floating point number. How many of which system should DEC produce and using what memories and disks to maximize the profit for the next quarter?",
+    "metadata": {
+        "name": "DEC System Production Optimization",
+        "domain": "Manufacturing and Production",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            ">=",
+            "<=",
+            "sum",
+            "*",
+            "if",
+            "then",
+            "else",
+            "endif",
+            "="
+        ],
+        "identifier": "nlp4lp_2"
+    }
+}

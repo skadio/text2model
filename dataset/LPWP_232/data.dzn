@@ -1,0 +1,15 @@
+TotalSpace = 1900;
+MinParticipants = 500;
+MinBoards = 300;
+
+ParticipantsPerCircular = 5;
+ParticipantsPerRectangular = 4;
+
+BoardsPerCircular = 4;
+BoardsPerRectangular = 4;
+
+GuestsPerCircular = 8;
+GuestsPerRectangular = 12;
+
+SpacePerCircular = 15;
+SpacePerRectangular = 20;

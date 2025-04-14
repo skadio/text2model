@@ -1,0 +1,72 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of slots per template",
+            "symbol": "S",
+            "shape": []
+        },
+        {
+            "definition": "Number of templates to produce",
+            "symbol": "t",
+            "shape": []
+        },
+        {
+            "definition": "Number of variations of carton designs",
+            "symbol": "n",
+            "shape": []
+        },
+        {
+            "definition": "Array indicating how many of each variation must be printed",
+            "symbol": "d",
+            "shape": [
+                "n"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "Number of slots allocated to each design in each template",
+            "symbol": "p",
+            "shape": [
+                "n",
+                "t"
+            ]
+        },
+        {
+            "definition": "Number of pressings of each template",
+            "symbol": "R",
+            "shape": [
+                "t"
+            ]
+        },
+        {
+            "definition": "Total production",
+            "symbol": "Production",
+            "shape": []
+        },
+        {
+            "definition": "Surplus",
+            "symbol": "Surplus",
+            "shape": []
+        }
+    ],
+    "description": "A color printing firm which produces a variety of products from thin board, including cartons for human and animal food and magazine inserts. Each product is made from the same sheets of board, with the same dimensions, but have different design variations. The products are made from a mother sheet which is printed from a template, consisting of a thin aluminium sheet on which the design for several of the variations is etched. Each template, has a fixed number of slots, each of which can be assigned to exactly one design variation. (a template can have more than one slot assigned to each design variation). We are given a fixed number of templates, and a minimum demand of each design variation that we must manufacture. What are the configurations of the slots for the templates that leads to the minimum amount of surplus when all the demands are met? Surplus is the total amount of product manufactured that exceeds the demands. Ensure that the templates are organized in lexicographic order.",
+    "metadata": {
+        "name": "Template Design for Printing",
+        "domain": "Mathematical Modeling",
+        "objective": "minimization",
+        "source": "CSPLib",
+        "constraints": [
+            "sum",
+            "forall",
+            "lex_lesseq",
+            "if",
+            "then",
+            "else",
+            "endif",
+            "int_search",
+            "minimize"
+        ],
+        "identifier": "CSPLib_2"
+    }
+}

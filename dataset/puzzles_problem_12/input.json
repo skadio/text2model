@@ -1,0 +1,63 @@
+{
+    "parameters": [
+        {
+            "definition": "Area of the first rectangle",
+            "symbol": "area1",
+            "shape": []
+        },
+        {
+            "definition": "Area of the second rectangle",
+            "symbol": "area2",
+            "shape": []
+        },
+        {
+            "definition": "Area of the third rectangle",
+            "symbol": "area3",
+            "shape": []
+        }
+    ],
+    "output": [
+        {
+            "definition": "Length of fourth rectangle",
+            "symbol": "len",
+            "shape": []
+        },
+        {
+            "definition": "Height of fourth rectangle",
+            "symbol": "height",
+            "shape": []
+        },
+        {
+            "definition": "Length of first and third rectangle",
+            "symbol": "x",
+            "shape": []
+        },
+        {
+            "definition": "Height of first and second rectangle",
+            "symbol": "y",
+            "shape": []
+        },
+        {
+            "definition": "Area of fourth rectangle",
+            "symbol": "area4",
+            "shape": []
+        }
+    ],
+    "description": "A large rectangle is divided into four smaller rectangles. The areas of three of these rectangles are known to be 16, 13, and 39. The dimensions of the large rectangle are unknown, as are the dimensions of the smaller rectangles. Find the area of the fourth rectangle. A diagram of the rectangles is given below.\r\n\r\n        x        len\r\n    ------------------\r\n    | area1 |  area2  | \r\n    -----------------   y\r\n    | area3 |    ?    |      \r\n    -------------- height\r\n",
+    "metadata": {
+        "name": "Place Numbers in Cross",
+        "domain": "Puzzles and Games",
+        "objective": "satisfaction",
+        "source": "hakank",
+        "constraints": [
+            "==",
+            "-",
+            "*",
+            "+"
+        ],
+        "links": [
+            "https://mindyourdecisions.com/blog/2017/12/20/can-you-solve-the-rectangle-area-puzzle/"
+        ],
+        "identifier": "puzzles_problem_12"
+    }
+}

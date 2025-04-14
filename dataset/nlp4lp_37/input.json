@@ -1,0 +1,50 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of different types of food",
+            "symbol": "K",
+            "shape": []
+        },
+        {
+            "definition": "Number of nutrients to consider",
+            "symbol": "M",
+            "shape": []
+        },
+        {
+            "definition": "Price of food k",
+            "symbol": "Price",
+            "shape": [
+                "K"
+            ]
+        },
+        {
+            "definition": "Demand for nutrient m",
+            "symbol": "Demand",
+            "shape": [
+                "M"
+            ]
+        },
+        {
+            "definition": "Amount of nutrient m in food k",
+            "symbol": "Nutrition",
+            "shape": [
+                "K",
+                "M"
+            ]
+        }
+    ],
+    "description": "We want to create an optimized and economical nutritional diet. For each food type that is available in the market, we have the price per unit and the amount of each of the nutrients that we are tracking that it contains per unit of food. If we have a demand for each of the nutrients that we are tracking, how much of each type of food should we buy to minimize the cost of meeting all our nutritional demands?",
+    "metadata": {
+        "name": "Food Purchase Optimization",
+        "domain": "Healthcare and Human Systems",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            ">=",
+            "*"
+        ],
+        "identifier": "nlp4lp_37"
+    }
+}

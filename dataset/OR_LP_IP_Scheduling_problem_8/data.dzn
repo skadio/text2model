@@ -1,0 +1,7 @@
+n = 7;
+demand = array1d(0..n-1, [5,7,7,10,16,18,12]);
+
+full_time_pay = 100;
+part_time_pay = 150;
+full_time_shift = 5;
+part_time_shift = 2;

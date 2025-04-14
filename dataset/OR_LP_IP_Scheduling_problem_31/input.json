@@ -1,0 +1,80 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of jobs to be scheduled",
+            "symbol": "num_jobs",
+            "shape": []
+        },
+        {
+            "definition": "Number of machines available for job scheduling",
+            "symbol": "num_machines",
+            "shape": []
+        },
+        {
+            "definition": "Matrix representing the time each job takes on each machine",
+            "symbol": "job_times",
+            "shape": [
+                "num_jobs",
+                "num_machines"
+            ]
+        },
+        {
+            "definition": "Matrix representing the order of jobs on each machine",
+            "symbol": "job_order",
+            "shape": [
+                "num_jobs",
+                "num_machines"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "Earliest end time of all jobs",
+            "symbol": "earliest_end_time",
+            "shape": []
+        },
+        {
+            "definition": "Time taken by each job on each machine",
+            "symbol": "job_times",
+            "shape": [
+                "num_jobs",
+                "num_machines"
+            ]
+        },
+        {
+            "definition": "Order of job processing on each machine",
+            "symbol": "job_order",
+            "shape": [
+                "num_jobs",
+                "num_machines"
+            ]
+        },
+        {
+            "definition": "Start and end times for each job on each machine",
+            "symbol": "job_start, job_end",
+            "shape": [
+                "num_jobs",
+                "num_machines"
+            ]
+        }
+    ],
+    "description": "The Job-shop problem involves scheduling a set of jobs on a set of machines where each job has a defined duration on each machine and a specified order of processing across machines. The objective is to minimize the earliest end time while ensuring that jobs do not overlap on a machine and are processed in the correct order across machines.",
+    "metadata": {
+        "name": "Job-Shop Scheduling",
+        "domain": "Scheduling",
+        "objective": "minimization",
+        "source": "hakank",
+        "constraints": [
+            "forall",
+            "cumulative",
+            "before",
+            "after",
+            "+",
+            "<=",
+            ">=",
+            "<",
+            ">"
+        ],
+        "identifier": "OR_LP_IP_Scheduling_problem_31"
+    }
+}

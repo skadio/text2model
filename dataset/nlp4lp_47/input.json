@@ -1,0 +1,65 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of parts",
+            "symbol": "P",
+            "shape": []
+        },
+        {
+            "definition": "Number of machines",
+            "symbol": "M",
+            "shape": []
+        },
+        {
+            "definition": "Time required to produce one batch of part p on machine m",
+            "symbol": "TimeRequired",
+            "shape": [
+                "M",
+                "P"
+            ]
+        },
+        {
+            "definition": "Cost associated with using machine m",
+            "symbol": "MachineCosts",
+            "shape": [
+                "M"
+            ]
+        },
+        {
+            "definition": "Availability of machine m per month",
+            "symbol": "Availability",
+            "shape": [
+                "M"
+            ]
+        },
+        {
+            "definition": "Selling price of one batch of part p",
+            "symbol": "Prices",
+            "shape": [
+                "P"
+            ]
+        },
+        {
+            "definition": "Minimum number of batches of part p to be produced",
+            "symbol": "MinBatches",
+            "shape": [
+                "P"
+            ]
+        }
+    ],
+    "description": "A division of an auto parts manufacturer produces different parts using different machines. A batch of 100 parts requires a specific amount of hours on each machine. There is a cost per hour of operating each machine, and each machine has a limited availability in hours for each month. The division sells parts in batches of 100 at a price specific to each part. Further, for each part, the division has to produce a minimum number of batches per part to fulfill a contract. How many batches of each part should the manufacturer produce each month to maximize profit?",
+    "metadata": {
+        "name": "Auto Parts Manufacturer Optimization",
+        "domain": "Manufacturing and Production",
+        "objective": "maximization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            "<=",
+            ">=",
+            "-"
+        ],
+        "identifier": "nlp4lp_47"
+    }
+}

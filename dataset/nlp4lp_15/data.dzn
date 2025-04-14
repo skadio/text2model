@@ -1,0 +1,9 @@
+P = 2;
+Cash = 3000;
+Hour = [2, 6];
+Cost = [3, 2];
+Price = [6, 5];
+InvestPercentage = [0.4, 0.3];
+UpgradeHours = 2000;
+UpgradeCost = 400;
+AvailableHours = 2000;

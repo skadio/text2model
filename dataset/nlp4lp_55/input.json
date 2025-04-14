@@ -1,0 +1,51 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of power plants",
+            "symbol": "P",
+            "shape": []
+        },
+        {
+            "definition": "Number of cities",
+            "symbol": "C",
+            "shape": []
+        },
+        {
+            "definition": "Electricity supply capacity of power plant p",
+            "symbol": "Supply",
+            "shape": [
+                "P"
+            ]
+        },
+        {
+            "definition": "Electricity demand of city c",
+            "symbol": "Demand",
+            "shape": [
+                "C"
+            ]
+        },
+        {
+            "definition": "Transmission cost from power plant p to city c",
+            "symbol": "TransmissionCosts",
+            "shape": [
+                "P",
+                "C"
+            ]
+        }
+    ],
+    "description": "A small electric utility operates various power plants to supply electricity to certain cities. Each power plant has a capacity. Each city has a peak demand which must be met at the same time. There is a transmission cost to send electricity from each power plant to each city. How much electricity should each power plant send to each city to minimize the total transmission cost?",
+    "metadata": {
+        "name": "Power Plant Electricity Distribution",
+        "domain": "Energy and Natural Resources",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            "<=",
+            ">=",
+            "*"
+        ],
+        "identifier": "nlp4lp_55"
+    }
+}

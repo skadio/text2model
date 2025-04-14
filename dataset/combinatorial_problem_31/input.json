@@ -1,0 +1,48 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of people in the kidney exchange program",
+            "symbol": "num_people",
+            "shape": []
+        },
+        {
+            "definition": "Compatibility matrix where each person has a set of compatible donors",
+            "symbol": "compatible",
+            "shape": [
+                "num_people",
+                "num_people"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "The number of exchanges that maximize kidney donations",
+            "symbol": "z",
+            "shape": []
+        },
+        {
+            "definition": "Assignment of kidney donors (0 indicates no kidney donation)",
+            "symbol": "x",
+            "shape": [
+                "num_people"
+            ]
+        }
+    ],
+    "description": "This problem simulates a kidney exchange program where individuals can donate and receive kidneys in a cycle or exchange system. The goal is to maximize the number of exchanges while ensuring that every person who donates a kidney also receives one.",
+    "metadata": {
+        "name": "Kidney Exchange Optimization",
+        "domain": "Healthcare and Human Systems",
+        "objective": "maximization",
+        "source": "hakank",
+        "constraints": [
+            "alldifferent_except_0",
+            "forall",
+            "sum",
+            ">",
+            "=",
+            "in",
+            "bool2int"
+        ],
+        "identifier": "combinatorial_problem_31"
+    }
+}

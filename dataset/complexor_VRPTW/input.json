@@ -1,0 +1,97 @@
+{
+    "description": "The Vehicle Routing Problem with Time Windows (VRPTW) involves the distribution of goods between depots and customers using a set of vehicles. Each vehicle must serve a subset of customers while respecting its capacity, and each customer has a specific demand that must be met within a predefined time window (given by a lower and upper bound). Additionally, there is a cost associated with traveling between customers (and depots) as well as an expected service time at each customer. The objective is to minimize the total transportation cost while meeting all customer demands within their time windows.",
+    "parameters": [
+        {
+            "symbol": "CustomerCount",
+            "definition": "The number of customers to be supplied",
+            "shape": []
+        },
+        {
+            "symbol": "VehicleCount",
+            "definition": "The number of vehicles available for distribution",
+            "shape": []
+        },
+        {
+            "symbol": "CustomerDemand",
+            "definition": "The demand of each customer",
+            "shape": [
+                "CustomerCount"
+            ]
+        },
+        {
+            "symbol": "CustomerLBTW",
+            "definition": "The lower bound of the time window for each customer",
+            "shape": [
+                "CustomerCount"
+            ]
+        },
+        {
+            "symbol": "CustomerUBTW",
+            "definition": "The upper bound of the time window for each customer",
+            "shape": [
+                "CustomerCount"
+            ]
+        },
+        {
+            "symbol": "CustomerDistance",
+            "definition": "The distance from each customer to every other customer",
+            "shape": [
+                "CustomerCount",
+                "CustomerCount"
+            ]
+        },
+        {
+            "symbol": "CustomerServiceTime",
+            "definition": "The service time required for each customer",
+            "shape": [
+                "CustomerCount"
+            ]
+        },
+        {
+            "symbol": "VehicleCapacity",
+            "definition": "The capacity of each vehicle",
+            "shape": [
+                "VehicleCount"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "symbol": "VehicleRoutes",
+            "definition": "An array of routes, where each route is a list of customer indices (in the order they are visited) assigned to a vehicle",
+            "shape": [
+                "VehicleCount",
+                "CustomerCount"
+            ]
+        },
+        {
+            "symbol": "CustomerArrivalTime",
+            "definition": "An array indicating the arrival time at each customer",
+            "shape": [
+                "CustomerCount"
+            ]
+        },
+        {
+            "symbol": "TotalDistance",
+            "definition": "The total distance traveled by all vehicles",
+            "shape": []
+        }
+    ],
+    "metadata": {
+        "name": "Vehicle Routing Problem with Time Windows",
+        "domain": "Transportation and Logistics",
+        "objective": "minimization",
+        "source": "ComplexOR",
+        "constraints": [
+            "forall",
+            "sum",
+            "=",
+            "<=",
+            ">=",
+            "/\\",
+            "+",
+            "*"
+        ],
+        "identifier": "complexor_VRPTW"
+    }
+}

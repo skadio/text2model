@@ -1,0 +1,45 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of days in recurring period",
+            "symbol": "N",
+            "shape": []
+        },
+        {
+            "definition": "The number of users on the nth day",
+            "symbol": "Num",
+            "shape": [
+                "N"
+            ]
+        },
+        {
+            "definition": "Number of consecutive working days before a resting period",
+            "symbol": "WorkingDays",
+            "shape": []
+        },
+        {
+            "definition": "Number of consecutive resting days",
+            "symbol": "RestingDays",
+            "shape": []
+        }
+    ],
+    "description": "To operate a cafeteria, the manager must ensure on-call duty based on the statistics on the required staff. For the future days, we know the number of desired employees on each day. If each employee works a fixed number of days in a row followed by a fixed number of days off, calculate the minimum number of employees to hire. Assume a recurring schedule.",
+    "metadata": {
+        "name": "Cafeteria Staff Scheduling",
+        "domain": "Scheduling",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            ">=",
+            "=",
+            "<=",
+            "if",
+            "then",
+            "elseif",
+            "endif"
+        ],
+        "identifier": "nlp4lp_42"
+    }
+}

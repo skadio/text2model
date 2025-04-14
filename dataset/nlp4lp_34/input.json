@@ -1,0 +1,81 @@
+{
+    "parameters": [
+        {
+            "definition": "Total number of periods",
+            "symbol": "T",
+            "shape": []
+        },
+        {
+            "definition": "Total number of generators",
+            "symbol": "K",
+            "shape": []
+        },
+        {
+            "definition": "Demand during period t",
+            "symbol": "Demand",
+            "shape": [
+                "T"
+            ]
+        },
+        {
+            "definition": "Number of generator k",
+            "symbol": "NumGenerator",
+            "shape": [
+                "K"
+            ]
+        },
+        {
+            "definition": "Minimum level of generator k",
+            "symbol": "MinLevel",
+            "shape": [
+                "K"
+            ]
+        },
+        {
+            "definition": "Maximum level of generator k",
+            "symbol": "MaxLevel",
+            "shape": [
+                "K"
+            ]
+        },
+        {
+            "definition": "Running cost of generator k",
+            "symbol": "RunCost",
+            "shape": [
+                "K"
+            ]
+        },
+        {
+            "definition": "Extra cost of generator k",
+            "symbol": "ExtraCost",
+            "shape": [
+                "K"
+            ]
+        },
+        {
+            "definition": "Start-up cost of generator k",
+            "symbol": "StartCost",
+            "shape": [
+                "K"
+            ]
+        }
+    ],
+    "description": "A number of power stations are committed to meeting the following electricity load demands over a day. Each period of a day has a given demand that must be met. There are several types of generating units available, and each type has its own availability. Each type of generator also has a minimum production level and a maximum production level. There is an hourly cost of running a generator at minimum level and an extra hourly cost for each megawatt at which a generator is operated above the minimum level. These costs are specific to the type of generator. Additionally, starting up a type of generator also involves a cost specific to the type of generator. Which generators should be working in which periods of the day to minimize total cost?",
+    "metadata": {
+        "name": "Power Station Problem",
+        "domain": "Energy and Natural Resources",
+        "objective": "minimization",
+        "source": "NLP4LP",
+        "constraints": [
+            "forall",
+            "sum",
+            ">= ",
+            "<=",
+            "max",
+            "if",
+            "else",
+            "endif"
+        ],
+        "identifier": "nlp4lp_34"
+    }
+}

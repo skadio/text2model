@@ -1,0 +1,11 @@
+W = 4;
+RegularCost = 30;
+OvertimeCost = 45;
+AssemblyTime = 0.4;
+MaterialCost = 25;
+SellingPrice = 65;
+HoldingCost = 4;
+SalvageValue = 30;
+Demand = [700, 1500, 2800, 1800];
+RegularLabor = [450, 550, 600, 600];
+OvertimeLabor = [40, 200, 320, 160];

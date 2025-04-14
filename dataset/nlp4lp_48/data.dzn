@@ -1,0 +1,10 @@
+A = 3;
+GoalYoung = 500;
+GoalOld = 600;
+GoalUniqueYoung = 250;
+GoalUniqueOld = 300;
+YoungClicks = [40, 30, 70];
+OldClicks = [60, 70, 30];
+Costs = [75, 100, 120];
+MaxClicks = [600, 300, 300];
+UniqueClicks = [40, 75, 90];

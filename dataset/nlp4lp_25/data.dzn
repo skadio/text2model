@@ -1,0 +1,8 @@
+K = 4;
+MaxWork = 3;
+Royalty = [5e+06, 4e+06, 4e+06, 5e+06];
+Limit = [2e+06, 2.5e+06, 1.3e+06, 3e+06];
+Quality = [1.0, 0.7, 1.5, 0.5];
+RequiredQuality = [0.9, 0.8, 1.2, 0.6, 1.0];
+Price = 10;
+Discount = 0.1;

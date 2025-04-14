@@ -1,0 +1,62 @@
+{
+    "parameters": [
+        {
+            "definition": "Number of items available in the auction",
+            "symbol": "num_items",
+            "shape": []
+        },
+        {
+            "definition": "Maximum item in the auction",
+            "symbol": "max_item",
+            "shape": []
+        },
+        {
+            "definition": "Number of bids in the auction",
+            "symbol": "num_bids",
+            "shape": []
+        },
+        {
+            "definition": "Binary Matrix containing the packages (sets of items) for each bid, 0 if contained, 1 if not",
+            "symbol": "packages",
+            "shape": [
+                "num_bids",
+                "num_items"
+            ]
+        },
+        {
+            "definition": "Array containing the bid amount for each bid",
+            "symbol": "bids",
+            "shape": [
+                "num_bids"
+            ]
+        }
+    ],
+    "output": [
+        {
+            "definition": "Binary array indicating whether each bid is chosen (1) or not chosen (0)",
+            "symbol": "x",
+            "shape": [
+                "num_bids"
+            ]
+        },
+        {
+            "definition": "Total cost of the selected bids",
+            "symbol": "total",
+            "shape": []
+        }
+    ],
+    "description": "Combinatorial auction problem where bidders can give bids for sets of items. The auctioneer needs to generate an optimal selection that maximizes revenue. Given a set of items and bids, find a subset of bids such that any two bids in the subset do not share an item while maximizing the total bid amount. This problem can be seen as a variation of the set covering/set partition problem.",
+    "metadata": {
+        "name": "Combinatorial Auction",
+        "domain": "Economic and Business Decisions",
+        "objective": "maximization",
+        "source": "hakank",
+        "constraints": [
+            "sum",
+            "bool2int",
+            "<=",
+            "forall"
+        ],
+        "identifier": "combinatorial_problem_7"
+    }
+}
