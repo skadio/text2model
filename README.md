@@ -1,2 +1,2 @@
-# llm4opt-code
-llm4opt-code
+# Text2Zinc Code
+This Repository contains all code associated with the Text2Zinc Paper.
