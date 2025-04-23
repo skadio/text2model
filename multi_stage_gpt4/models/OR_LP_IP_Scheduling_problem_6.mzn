@@ -1,0 +1,34 @@
+% Parameters
+int: n; % Number of nodes in the network
+int: num_edges; % Number of arcs in the network
+array[1..num_edges, 1..2] of int: E; % Set of arcs represented as pairs of nodes
+array[1..num_edges] of int: a; % Capacities of each arc in the network
+int: s; % Source node
+int: t; % Sink node
+
+% Variables
+array[1..n, 1..n] of var 0..max(a): flow; % Flow on each arc, bounded by the arc's capacity
+var 0..sum(a): total_flow; % Total flow through the network, bounded by the sum of all arc capacities
+
+% Constraints
+
+% The flow on each arc must be less than or equal to the capacity of the arc
+constraint forall(i in 1..num_edges)(
+  flow[E[i,1], E[i,2]] <= a[i]
+);
+
+% The total flow out of the source node must be equal to the total flow
+constraint sum(i in 1..num_edges | E[i,1] = s)(flow[E[i,1], E[i,2]]) = total_flow;
+
+% The total flow into the sink node must be equal to the total flow
+constraint sum(i in 1..num_edges | E[i,2] = t)(flow[E[i,1], E[i,2]]) = total_flow;
+
+% For each node, the total flow into the node must be equal to the total flow out of the node
+% (except for the source and sink nodes)
+constraint forall(i in 1..n | i != s /\ i != t)(
+  sum(j in 1..num_edges | E[j,1] = i)(flow[E[j,1], E[j,2]]) = 
+  sum(j in 1..num_edges | E[j,2] = i)(flow[E[j,1], E[j,2]])
+);
+
+% Objective
+solve maximize total_flow;
