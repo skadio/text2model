@@ -1,14 +1,13 @@
-# MiniZinc Code Generation Pipeline
+# MiniZinc Code Generation using LLMs
 
 A unified pipeline for generating MiniZinc code using different prompting strategies with OpenAI's GPT models.
 
 ## Project Structure
 
 ```
-.
-├── main.py                 # Main script to run all strategies
-├── utils.py               # Utility functions for common operations
-├── prompts/               # Directory for prompt templates
+├── main.py                                                      # Main script to run all strategies
+├── utils.py                                                     # Utility functions for common operations
+├── prompts/                                                     # Directory for prompt templates
 │   ├── cot_prompt.txt
 │   ├── validation_prompt.txt
 │   ├── kg_code_generation_prompt.txt
@@ -16,9 +15,9 @@ A unified pipeline for generating MiniZinc code using different prompting strate
 │   ├── constraint_generation_prompt.txt
 │   ├── objective_generation_prompt.txt
 │   └── code_generation_prompt.txt
-├── knowledge_graphs/      # Directory for knowledge graph files
+├── knowledge_graphs/                                            # Directory for knowledge graph files
 │   └── problem_N.ttl
-├── output/               # Output directory (created automatically)
+├── output/                                                      # Output directory (created automatically)
 │   ├── gpt-4/
 │   │   ├── vanilla/
 │   │   ├── two_stage/
@@ -66,8 +65,8 @@ python main.py --strategies vanilla --problem-ids 0 1 2 10 --model gpt-4
 python main.py --strategies all \
               --model gpt-4o \
               --output-dir custom_output \
-              --temperature 0.1 \
-              --max-tokens 2048 \
+              --temperature 0 \
+              --max-tokens 4096 \
               --sleep-time 5
 ```
 
@@ -90,8 +89,6 @@ python main.py --strategies all \
 - `--sleep-time`: Sleep time between API calls in seconds (default: 3)
 
 ## Required Prompt Files
-
-Create these files in the `prompts/` directory:
 
 1. `cot_prompt.txt`: Chain of thought prompt
 2. `validation_prompt.txt`: Validation prompt

@@ -1,9 +1,9 @@
+import ast
 import os
 import re
-import ast
-import openai
-from typing import Dict, Any, Optional, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
+import openai
 
 # Global API configuration
 API_CONFIG = {
@@ -28,18 +28,17 @@ def call_openai_api(client: openai.OpenAI, prompt: str) -> Optional[str]:
         model_name = API_CONFIG['model']
         if model_name == 'gpt-4o':
             model_name = 'o3-2025-04-16'
-        
-        # Create basic parameters
+
         params = {
             "model": model_name,
             "messages": [{"role": "user", "content": prompt}]
         }
-        
+
         # Add temperature and max_tokens only for non-reasoning models
         if API_CONFIG['model'] != 'gpt-4o':
             params["temperature"] = API_CONFIG['temperature']
             params["max_tokens"] = API_CONFIG['max_tokens']
-        
+
         completion = client.chat.completions.create(**params)
         result = completion.choices[0].message.content.strip()
         return extract_code_blocks(result)
@@ -61,27 +60,27 @@ def create_data_nomenclature(input_data: Dict[str, Any], dzn_data: List[Tuple[st
     """Create data nomenclature section for prompts"""
     parameters = input_data['parameters']
     data_nomenclature = []
-    
+
     for idx, param in enumerate(parameters):
         symbol = param['symbol']
         definition = param['definition']
         shape = param['shape']
-        
+
         # Find the corresponding dzn line for this parameter
         example_line = next(
             (line for param_name, line in dzn_data if param_name == symbol),
             f"{symbol} = N/A;"
         )
-        
+
         # Format shape display
         shape_display = f"[{', '.join(map(str, shape))}]" if shape else "scalar"
-        
+
         data_nomenclature.append(
             f"{idx + 1}. {symbol}: {definition}\n"
             f"Example: {example_line}\n"
             f"Shape: {shape_display}"
         )
-    
+
     return '\n'.join(data_nomenclature)
 
 
@@ -90,7 +89,7 @@ def prepare_problem_data(problem: Dict[str, Any]) -> Dict[str, Any]:
     input_data = ast.literal_eval(problem['input.json'])
     dzn_data = parse_dzn_string(problem['data.dzn'])
     data_nomenclature = create_data_nomenclature(input_data, dzn_data)
-    
+
     return {
         'description': input_data['description'],
         'data_nomenclature': data_nomenclature,
@@ -104,7 +103,7 @@ def prepare_problem_data(problem: Dict[str, Any]) -> Dict[str, Any]:
 def create_baseline_prompt(problem: Dict[str, Any]) -> str:
     """Create a baseline prompt for single-stage generation"""
     problem_data = prepare_problem_data(problem)
-    
+
     return f"""You are an expert MiniZinc developer.
 
 Generate Minizinc code from a given problem description with additional information about the parameters provided.
@@ -129,21 +128,11 @@ def save_solution(output_dir: str, problem_id: str, solution: str) -> None:
         f.write(solution)
 
 
-def load_prompt(file_path: str) -> str:
+def load_file(file_path: str) -> str:
     """Load a prompt template from file"""
     try:
         with open(file_path, 'r') as file:
             return file.read()
     except FileNotFoundError:
         print(f"Prompt file not found: {file_path}")
-        return ""
-
-
-def load_file(file_path: str) -> str:
-    """Load any file content"""
-    try:
-        with open(file_path, 'r') as file:
-            return file.read()
-    except FileNotFoundError:
-        print(f"File not found: {file_path}")
         return ""
