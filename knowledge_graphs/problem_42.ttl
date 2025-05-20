@@ -1,0 +1,36 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:N rdf:type rdfs:Class ;
+  rdfs:label "Number of east-west streets" ;
+  rdfs:comment "Scalar value representing the number of east-west streets in the grid" .
+
+opt:W rdf:type rdfs:Class ;
+  rdfs:label "Number of north-south streets" ;
+  rdfs:comment "Scalar value representing the number of north-south streets in the grid" .
+
+opt:WestTime rdf:type rdfs:Class ;
+  rdfs:label "Time to cross street segment going west" ;
+  rdfs:comment "2D array representing the time to cross each street segment going west, for given street n and segment w" .
+
+opt:NorthTime rdf:type rdfs:Class ;
+  rdfs:label "Time to cross street segment going north" ;
+  rdfs:comment "2D array representing the time to cross each street segment going north, for given street n and segment w" .
+
+opt:Path rdf:type rdfs:Class ;
+  rdfs:label "Path" ;
+  rdfs:comment "Variable representing the path taken by the delivery person" .
+
+opt:Time rdf:type rdfs:Class ;
+  rdfs:label "Time" ;
+  rdfs:comment "Variable representing the total time taken by the delivery person to deliver the package" .
+
+opt:Constraint rdf:type rdfs:Class ;
+  rdfs:label "Constraint" ;
+  rdfs:comment "Constraints of the optimization problem, including the limitation of movement to only north or west" .
+
+opt:Objective rdf:type rdfs:Class ;
+  rdfs:label "Objective" ;
+  rdfs:comment "Objective of the optimization problem, which is to minimize the total time taken to deliver the package" .

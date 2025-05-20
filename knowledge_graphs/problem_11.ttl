@@ -1,0 +1,98 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:K a rdf:Property ;
+    rdfs:label "Number of types of minerals" ;
+    rdfs:range xsd:integer .
+
+opt:SteelQuantity a rdf:Property ;
+    rdfs:label "Amount of steel to produce in tons" ;
+    rdfs:range xsd:float .
+
+opt:ManganesePercent a rdf:Property ;
+    rdfs:label "Percentage of manganese in the steel required" ;
+    rdfs:range xsd:float .
+
+opt:SiliconMinPercent a rdf:Property ;
+    rdfs:label "Minimum percentage of silicon in the steel required" ;
+    rdfs:range xsd:float .
+
+opt:SiliconMaxPercent a rdf:Property ;
+    rdfs:label "Maximum percentage of silicon in the steel allowed" ;
+    rdfs:range xsd:float .
+
+opt:SiliconContent a rdf:Property ;
+    rdfs:label "Silicon content in the k-th stock" ;
+    rdfs:range xsd:float .
+
+opt:ManganeseContent a rdf:Property ;
+    rdfs:label "Manganese content in the k-th stock" ;
+    rdfs:range xsd:float .
+
+opt:ManganesePrice a rdf:Property ;
+    rdfs:label "Price of manganese per ton" ;
+    rdfs:range xsd:float .
+
+opt:MaterialCost a rdf:Property ;
+    rdfs:label "Cost of the k-th stock material per ton" ;
+    rdfs:range xsd:float .
+
+opt:SellingPrice a rdf:Property ;
+    rdfs:label "Selling price of steel per ton" ;
+    rdfs:range xsd:float .
+
+opt:MeltingPrice a rdf:Property ;
+    rdfs:label "Price to melt one ton of steel" ;
+    rdfs:range xsd:float .
+
+opt:SteelProduction a rdf:Class ;
+    rdfs:label "Steel Production" ;
+    rdfs:subClassOf opt:OptimizationProblem ;
+    rdfs:comment "Optimization problem to maximize profit in steel production" .
+
+opt:OptimizationProblem a rdf:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:comment "A problem to be solved by finding the best solution among a set of possible solutions" .
+
+opt:hasParameter a rdf:Property ;
+    rdfs:label "has parameter" ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range opt:Parameter .
+
+opt:Parameter a rdf:Class ;
+    rdfs:label "Parameter" ;
+    rdfs:comment "A constant in the problem that is not subject to optimization" .
+
+opt:hasVariable a rdf:Property ;
+    rdfs:label "has variable" ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range opt:Variable .
+
+opt:Variable a rdf:Class ;
+    rdfs:label "Variable" ;
+    rdfs:comment "A quantity that is subject to optimization in the problem" .
+
+opt:hasConstraint a rdf:Property ;
+    rdfs:label "has constraint" ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range opt:Constraint .
+
+opt:Constraint a rdf:Class ;
+    rdfs:label "Constraint" ;
+    rdfs:comment "A condition that the solution to the problem must satisfy" .
+
+opt:hasObjective a rdf:Property ;
+    rdfs:label "has objective" ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range opt:Objective .
+
+opt:Objective a rdf:Class ;
+    rdfs:label "Objective" ;
+    rdfs:comment "The goal to be achieved in the problem" .
+
+opt:Maximize a rdf:Class ;
+    rdfs:label "Maximize" ;
+    rdfs:subClassOf opt:Objective ;
+    rdfs:comment "An objective to maximize a quantity" .

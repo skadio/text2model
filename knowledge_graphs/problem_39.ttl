@@ -1,0 +1,51 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:NumParts a rdf:Property ;
+    rdfs:label "Number of Parts" ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of different types of spare parts the firm can produce." .
+
+opt:NumMachines a rdf:Property ;
+    rdfs:label "Number of Machines" ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of machines or shops available for producing the spare parts." .
+
+opt:Time a rdf:Property ;
+    rdfs:label "Time" ;
+    rdfs:range xsd:float ;
+    rdfs:comment "The time taken to make one unit of spare part k on machine s." .
+
+opt:Profit a rdf:Property ;
+    rdfs:label "Profit" ;
+    rdfs:range xsd:float ;
+    rdfs:comment "Profit from producing one unit of spare part k." .
+
+opt:Capacity a rdf:Property ;
+    rdfs:label "Capacity" ;
+    rdfs:range xsd:float ;
+    rdfs:comment "Capacity of machine s for the month." .
+
+opt:MaximizeProfit a opt:OptimizationProblem ;
+    rdfs:label "Maximize Profit" ;
+    rdfs:comment "The objective is to determine how much of each spare part is to be made to maximize profit." ;
+    opt:hasParameter opt:NumParts, opt:NumMachines, opt:Time, opt:Profit, opt:Capacity ;
+    opt:hasVariable opt:QuantityProduced ;
+    opt:hasConstraint opt:MachineCapacityConstraint ;
+    opt:hasObjective opt:ProfitObjective .
+
+opt:QuantityProduced a rdf:Property ;
+    rdfs:label "Quantity Produced" ;
+    rdfs:range xsd:float ;
+    rdfs:comment "The quantity of each spare part to be produced." .
+
+opt:MachineCapacityConstraint a opt:Constraint ;
+    rdfs:label "Machine Capacity Constraint" ;
+    rdfs:comment "The total time spent on each machine cannot exceed its capacity." .
+
+opt:ProfitObjective a opt:Objective ;
+    rdfs:label "Profit Objective" ;
+    rdfs:comment "The objective is to maximize the total profit from producing the spare parts." ;
+    opt:isMaximizationObjective "true"^^xsd:boolean .

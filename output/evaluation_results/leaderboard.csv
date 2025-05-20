@@ -1,0 +1,7 @@
+model,strategy,execution_accuracy,solution_accuracy,average_score,problems_attempted,problems_solved,evaluation_date
+gpt-4o,chain_of_thought_with_validation,60.91,34.55,47.73,110,38,2025-05-12 21:22:58
+gpt-4,chain_of_thought_with_validation,57.27,28.18,42.73,110,31,2025-05-12 21:19:19
+gpt-4,knowledge_graph,48.18,25.45,36.82,110,28,2025-05-12 21:19:49
+gpt-4,compositional_approach,44.55,20.0,32.27,110,22,2025-05-12 21:16:21
+gpt-4,compositional_approach_with_validation,43.64,20.91,32.27,110,23,2025-05-12 21:18:49
+gpt-4,baseline,32.73,17.27,25.0,110,19,2025-05-12 21:21:20

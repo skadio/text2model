@@ -1,0 +1,72 @@
+@prefix bacp: <http://www.semanticweb.org/ontologies/bacp#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+bacp:Problem a rdfs:Class ;
+    rdfs:label "Balanced Academic Curriculum Problem" .
+
+bacp:hasParameter a rdf:Property ;
+    rdfs:domain bacp:Problem ;
+    rdfs:range bacp:Parameter .
+
+bacp:Parameter a rdfs:Class ;
+    rdfs:label "Parameter" ;
+    rdfs:subClassOf [ a rdfs:Class ;
+        rdfs:label "Scalar" ;
+        rdfs:subClassOf [ a rdfs:Class ;
+            rdfs:label "Integer" ] ] .
+
+bacp:n_courses a bacp:Parameter ;
+    rdfs:label "Number of courses in the academic curriculum" ;
+    rdfs:comment "Example: n_courses=6" .
+
+bacp:n_periods a bacp:Parameter ;
+    rdfs:label "Number of academic periods available for scheduling" ;
+    rdfs:comment "Example: n_periods=3" .
+
+bacp:load_per_period_lb a bacp:Parameter ;
+    rdfs:label "Lower bound for academic load per period" ;
+    rdfs:comment "Example: load_per_period_lb=10" .
+
+bacp:load_per_period_ub a bacp:Parameter ;
+    rdfs:label "Upper bound for academic load per period" ;
+    rdfs:comment "Example: load_per_period_ub=30" .
+
+bacp:courses_per_period_lb a bacp:Parameter ;
+    rdfs:label "Lower bound for number of courses per period" ;
+    rdfs:comment "Example: courses_per_period_lb=2" .
+
+bacp:courses_per_period_ub a bacp:Parameter ;
+    rdfs:label "Upper bound for number of courses per period" ;
+    rdfs:comment "Example: courses_per_period_ub=4" .
+
+bacp:course_load a bacp:Parameter ;
+    rdfs:label "Array representing the academic load of each course" ;
+    rdfs:comment "Example: course_load=[5, 10, 15, 10, 5, 10]" ;
+    rdfs:subClassOf [ a rdfs:Class ;
+        rdfs:label "Array" ;
+        rdfs:subClassOf [ a rdfs:Class ;
+            rdfs:label "Integer" ] ] .
+
+bacp:hasVariable a rdf:Property ;
+    rdfs:domain bacp:Problem ;
+    rdfs:range bacp:Variable .
+
+bacp:Variable a rdfs:Class ;
+    rdfs:label "Variable" .
+
+bacp:hasConstraint a rdf:Property ;
+    rdfs:domain bacp:Problem ;
+    rdfs:range bacp:Constraint .
+
+bacp:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" .
+
+bacp:hasObjective a rdf:Property ;
+    rdfs:domain bacp:Problem ;
+    rdfs:range bacp:Objective .
+
+bacp:Objective a rdfs:Class ;
+    rdfs:label "Objective" ;
+    rdfs:comment "Minimizes the maximum courseload across all periods" .

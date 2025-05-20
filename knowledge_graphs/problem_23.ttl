@@ -1,0 +1,49 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:CafeteriaStaffingProblem a opt:OptimizationProblem ;
+    rdfs:label "Cafeteria Staffing Problem" ;
+    opt:hasParameter opt:N, opt:Num, opt:WorkingDays, opt:RestingDays ;
+    opt:hasVariable opt:Employees ;
+    opt:hasConstraint opt:WorkRestCycle ;
+    opt:hasObjective opt:MinimizeEmployees .
+
+opt:N a opt:Parameter ;
+    rdfs:label "Number of days in recurring period" ;
+    rdfs:comment "N represents the number of days in the recurring period." ;
+    rdfs:range xsd:integer .
+
+opt:Num a opt:Parameter ;
+    rdfs:label "Number of users on the nth day" ;
+    rdfs:comment "Num represents the number of users on the nth day." ;
+    rdfs:range xsd:integer .
+
+opt:WorkingDays a opt:Parameter ;
+    rdfs:label "Number of consecutive working days before a resting period" ;
+    rdfs:comment "WorkingDays represents the number of consecutive working days before a resting period." ;
+    rdfs:range xsd:integer .
+
+opt:RestingDays a opt:Parameter ;
+    rdfs:label "Number of consecutive resting days" ;
+    rdfs:comment "RestingDays represents the number of consecutive resting days." ;
+    rdfs:range xsd:integer .
+
+opt:Employees a opt:Variable ;
+    rdfs:label "Number of employees to hire" ;
+    rdfs:comment "Employees represents the number of employees to hire." ;
+    rdfs:range xsd:integer .
+
+opt:WorkRestCycle a opt:Constraint ;
+    rdfs:label "Work-rest cycle constraint" ;
+    rdfs:comment "WorkRestCycle ensures that each employee works a fixed number of days in a row followed by a fixed number of days off." .
+
+opt:MinimizeEmployees a opt:Objective ;
+    rdfs:label "Minimize number of employees" ;
+    rdfs:comment "MinimizeEmployees is the objective to minimize the number of employees to hire." ;
+    opt:optimizationType opt:Minimization .
+
+opt:Minimization a opt:OptimizationType ;
+    rdfs:label "Minimization" ;
+    rdfs:comment "Minimization is the type of optimization." .

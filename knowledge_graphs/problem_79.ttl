@@ -1,0 +1,52 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix bakery: <http://www.example.com/bakery#> .
+
+bakery:AlmondCroissants rdf:type rdfs:Class ;
+    rdfs:label "Number of almond croissants to be produced" ;
+    rdfs:range xsd:integer .
+
+bakery:PistachioCroissants rdf:type rdfs:Class ;
+    rdfs:label "Number of pistachio croissants to be produced" ;
+    rdfs:range xsd:integer .
+
+bakery:ButterPerAlmond rdf:type rdfs:Class ;
+    rdfs:label "Butter required per almond croissant" ;
+    rdfs:range xsd:integer .
+
+bakery:ButterPerPistachio rdf:type rdfs:Class ;
+    rdfs:label "Butter required per pistachio croissant" ;
+    rdfs:range xsd:integer .
+
+bakery:FlourPerAlmond rdf:type rdfs:Class ;
+    rdfs:label "Flour required per almond croissant" ;
+    rdfs:range xsd:integer .
+
+bakery:FlourPerPistachio rdf:type rdfs:Class ;
+    rdfs:label "Flour required per pistachio croissant" ;
+    rdfs:range xsd:integer .
+
+bakery:TotalButter rdf:type rdfs:Class ;
+    rdfs:label "Total available butter" ;
+    rdfs:range xsd:integer .
+
+bakery:TotalFlour rdf:type rdfs:Class ;
+    rdfs:label "Total available flour" ;
+    rdfs:range xsd:integer .
+
+bakery:TimePerAlmond rdf:type rdfs:Class ;
+    rdfs:label "Time required per almond croissant" ;
+    rdfs:range xsd:integer .
+
+bakery:TimePerPistachio rdf:type rdfs:Class ;
+    rdfs:label "Time required per pistachio croissant" ;
+    rdfs:range xsd:integer .
+
+bakery:MinAlmondRatio rdf:type rdfs:Class ;
+    rdfs:label "Minimum almond-to-pistachio croissant production ratio" ;
+    rdfs:range xsd:integer .
+
+bakery:OptimizationProblem rdf:type rdfs:Class ;
+    rdfs:label "Optimization problem for bakery" ;
+    rdfs:subClassOf bakery:AlmondCroissants, bakery:PistachioCroissants, bakery:ButterPerAlmond, bakery:ButterPerPistachio, bakery:FlourPerAlmond, bakery:FlourPerPistachio, bakery:TotalButter, bakery:TotalFlour, bakery:TimePerAlmond, bakery:TimePerPistachio, bakery:MinAlmondRatio .

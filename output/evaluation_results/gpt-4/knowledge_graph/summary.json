@@ -1,0 +1,16 @@
+{
+  "model_name": "gpt-4",
+  "strategy_name": "knowledge_graph",
+  "evaluation_date": "2025-05-12 21:19:49",
+  "execution_accuracy": 48.18,
+  "solution_accuracy": 25.45,
+  "average_score": 36.82,
+  "satisfaction_execution_accuracy": 60.0,
+  "satisfaction_solution_accuracy": 20.0,
+  "optimization_execution_accuracy": 47.0,
+  "optimization_solution_accuracy": 26.0,
+  "problems_attempted": 110,
+  "problems_solved": 28,
+  "satisfaction_problems": 10,
+  "optimization_problems": 100
+}

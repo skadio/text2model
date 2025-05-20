@@ -1,0 +1,57 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:SchoolDistrictOptimizationProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:TotalNumberOfSchools, opt:TotalNumberOfStudentGroups, opt:TotalNumberOfNeighborhoods, opt:Capacity, opt:Population, opt:Distance ;
+    opt:hasVariable opt:StudentAssignment ;
+    opt:hasConstraint opt:CapacityConstraint, opt:PopulationConstraint ;
+    opt:hasObjective opt:MinimizeTotalDistance .
+
+opt:TotalNumberOfSchools a opt:Parameter ;
+    rdfs:label "S" ;
+    rdfs:comment "Total number of schools" ;
+    rdfs:range xsd:integer .
+
+opt:TotalNumberOfStudentGroups a opt:Parameter ;
+    rdfs:label "G" ;
+    rdfs:comment "Total number of student groups" ;
+    rdfs:range xsd:integer .
+
+opt:TotalNumberOfNeighborhoods a opt:Parameter ;
+    rdfs:label "N" ;
+    rdfs:comment "Total number of neighborhoods" ;
+    rdfs:range xsd:integer .
+
+opt:Capacity a opt:Parameter ;
+    rdfs:label "Capacity" ;
+    rdfs:comment "Capacity of school s for student group g" ;
+    rdfs:range xsd:integer .
+
+opt:Population a opt:Parameter ;
+    rdfs:label "Population" ;
+    rdfs:comment "Population of student group g in neighborhood n" ;
+    rdfs:range xsd:integer .
+
+opt:Distance a opt:Parameter ;
+    rdfs:label "Distance" ;
+    rdfs:comment "Distance between neighborhood n and school s" ;
+    rdfs:range xsd:float .
+
+opt:StudentAssignment a opt:Variable ;
+    rdfs:comment "Assignment of students from neighborhoods to schools" ;
+    rdfs:range xsd:integer .
+
+opt:CapacityConstraint a opt:Constraint ;
+    rdfs:comment "The total number of students assigned to a school should not exceed its capacity" .
+
+opt:PopulationConstraint a opt:Constraint ;
+    rdfs:comment "The total number of students assigned from a neighborhood should not exceed its population" .
+
+opt:MinimizeTotalDistance a opt:Objective ;
+    rdfs:comment "Minimize the total distance traveled by all students" ;
+    opt:optimizationType opt:Minimization .
+
+opt:Minimization a opt:OptimizationType ;
+    rdfs:label "Minimization" .

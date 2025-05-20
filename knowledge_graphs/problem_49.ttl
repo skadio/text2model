@@ -1,0 +1,51 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimization#> .
+
+:TravelingSalesmanProblem a opt:OptimizationProblem ;
+    rdfs:label "Traveling Salesman Problem" ;
+    opt:hasParameter :NumberOfCities, :StartCity, :Distances ;
+    opt:hasVariable :Route ;
+    opt:hasConstraint :VisitEachCityOnce, :ReturnToStartCity ;
+    opt:hasObjective :MinimizeTotalDistance .
+
+:NumberOfCities a opt:Parameter ;
+    rdfs:label "Number of cities" ;
+    rdfs:comment "The total number of cities that need to be visited" ;
+    opt:hasDataType xsd:integer ;
+    opt:hasShape "scalar" .
+
+:StartCity a opt:Parameter ;
+    rdfs:label "Start city" ;
+    rdfs:comment "The index of the city where the journey starts" ;
+    opt:hasDataType xsd:integer ;
+    opt:hasShape "scalar" .
+
+:Distances a opt:Parameter ;
+    rdfs:label "Distances" ;
+    rdfs:comment "The distance from city i to city j" ;
+    opt:hasDataType xsd:array ;
+    opt:hasShape "[N, N]" .
+
+:Route a opt:Variable ;
+    rdfs:label "Route" ;
+    rdfs:comment "The sequence of cities visited" ;
+    opt:hasDataType xsd:array ;
+    opt:hasShape "[N]" .
+
+:VisitEachCityOnce a opt:Constraint ;
+    rdfs:label "Visit each city once" ;
+    rdfs:comment "Each city must be visited exactly once" ;
+    opt:hasVariables :Route .
+
+:ReturnToStartCity a opt:Constraint ;
+    rdfs:label "Return to start city" ;
+    rdfs:comment "The journey must end at the start city" ;
+    opt:hasVariables :Route .
+
+:MinimizeTotalDistance a opt:Objective ;
+    rdfs:label "Minimize total distance" ;
+    rdfs:comment "The total distance of the route should be minimized" ;
+    opt:hasVariables :Route ;
+    opt:isTypeOf opt:Minimization .

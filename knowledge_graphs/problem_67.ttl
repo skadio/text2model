@@ -1,0 +1,72 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:M a rdf:Property ;
+    rdfs:label "Number of types of machines" ;
+    rdfs:range xsd:integer .
+
+opt:K a rdf:Property ;
+    rdfs:label "Number of types of products" ;
+    rdfs:range xsd:integer .
+
+opt:I a rdf:Property ;
+    rdfs:label "Number of time periods" ;
+    rdfs:range xsd:integer .
+
+opt:NumMachines a rdf:Property ;
+    rdfs:label "Number of machines" ;
+    rdfs:range xsd:integer .
+
+opt:Profit a rdf:Property ;
+    rdfs:label "Profit for each product" ;
+    rdfs:range xsd:float .
+
+opt:Time a rdf:Property ;
+    rdfs:label "Time required to produce each product on each machine" ;
+    rdfs:range xsd:float .
+
+opt:Downtime a rdf:Property ;
+    rdfs:label "Downtime for each machine" ;
+    rdfs:range xsd:integer .
+
+opt:Limit a rdf:Property ;
+    rdfs:label "Limit for each product on constraints" ;
+    rdfs:range xsd:integer .
+
+opt:StorePrice a rdf:Property ;
+    rdfs:label "Price for storing products" ;
+    rdfs:range xsd:float .
+
+opt:KeepQuantity a rdf:Property ;
+    rdfs:label "Quantity of products to keep in store" ;
+    rdfs:range xsd:integer .
+
+opt:WorkHours a rdf:Property ;
+    rdfs:label "Number of work hours available" ;
+    rdfs:range xsd:float .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:ManufacturingPolicy a rdfs:Class ;
+    rdfs:label "Manufacturing Policy" ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:ManufacturingPolicy rdfs:subClassOf opt:OptimizationProblem ;
+    rdfs:label "Manufacturing Policy" ;
+    rdfs:comment "The optimal selling, storing, and manufacturing policy for a company to maximize its profit." .
+
+opt:ManufacturingPolicy opt:M "5" ;
+    opt:K "7" ;
+    opt:I "N/A" ;
+    opt:NumMachines "[4, 2, 3, 1, 1]" ;
+    opt:Profit "[10, 6, 8, 4, 11, 9, 3]" ;
+    opt:Time "array2d(1..6, 1..5, [0.5, 0.1, 0.2, 0.05, 0.0, 0.7, 0.2, 0.0, 0.03, 0.0, 0.0, 0.0, 0.8, 0.0, 0.01, 0.0, 0.3, 0.0, 0.07, 0.0, 0.3, 0.0, 0.0, 0.1, 0.05, 0.5, 0.0, 0.6, 0.08, 0.05])" ;
+    opt:Downtime "array2d(1..1, 1..5, [0, 1, 1, 1, 1])" ;
+    opt:Limit "array2d(1..7, 1..6, [500, 600, 300, 200, 0, 500, 1000, 500, 600, 300, 100, 500, 300, 200, 0, 400, 500, 100, 300, 0, 0, 500, 100, 300, 800, 400, 500, 200, 1000, 1100, 200, 300, 400, 0, 300, 500, 100, 150, 100, 100, 0, 60])" ;
+    opt:StorePrice "0.5" ;
+    opt:KeepQuantity "100" ;
+    opt:WorkHours "8.0" .

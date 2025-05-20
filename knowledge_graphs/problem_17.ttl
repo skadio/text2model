@@ -1,0 +1,64 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:N rdf:type rdfs:Class ;
+      rdfs:label "Number of different products" ;
+      rdfs:comment "The total number of different products produced by the company." ;
+      rdfs:range xsd:integer .
+
+opt:AssemblyHour rdf:type rdfs:Class ;
+                 rdfs:label "Hours required to assemble product i" ;
+                 rdfs:comment "The number of hours required to assemble each type of product." ;
+                 rdfs:range xsd:float .
+
+opt:TestingHour rdf:type rdfs:Class ;
+                rdfs:label "Hours required to test product i" ;
+                rdfs:comment "The number of hours required to test each type of product." ;
+                rdfs:range xsd:float .
+
+opt:MaterialCost rdf:type rdfs:Class ;
+                 rdfs:label "Material cost for product i" ;
+                 rdfs:comment "The cost of raw materials required for each type of product." ;
+                 rdfs:range xsd:float .
+
+opt:MaxAssembly rdf:type rdfs:Class ;
+                rdfs:label "Maximum total hours available for assembly" ;
+                rdfs:comment "The maximum number of hours available for assembly each day." ;
+                rdfs:range xsd:integer .
+
+opt:MaxTesting rdf:type rdfs:Class ;
+               rdfs:label "Maximum total hours available for testing" ;
+               rdfs:comment "The maximum number of hours available for testing each day." ;
+               rdfs:range xsd:integer .
+
+opt:Price rdf:type rdfs:Class ;
+           rdfs:label "Selling price for product i" ;
+           rdfs:comment "The selling price for each type of product." ;
+           rdfs:range xsd:float .
+
+opt:MaxOvertimeAssembly rdf:type rdfs:Class ;
+                        rdfs:label "Maximum overtime hours available for assembly" ;
+                        rdfs:comment "The maximum number of overtime hours that can be scheduled for assembly." ;
+                        rdfs:range xsd:integer .
+
+opt:OvertimeAssemblyCost rdf:type rdfs:Class ;
+                         rdfs:label "Overtime cost for assembly per hour" ;
+                         rdfs:comment "The cost per hour for overtime assembly labor." ;
+                         rdfs:range xsd:float .
+
+opt:MaterialDiscount rdf:type rdfs:Class ;
+                     rdfs:label "Discount on material cost when a certain threshold is reached" ;
+                     rdfs:comment "The percentage discount provided by the raw material supplier if the daily bill is above a certain threshold." ;
+                     rdfs:range xsd:float .
+
+opt:DiscountThreshold rdf:type rdfs:Class ;
+                      rdfs:label "Threshold for the quantity to reach to obtain the material discount" ;
+                      rdfs:comment "The threshold for the quantity of raw materials to reach to obtain the discount." ;
+                      rdfs:range xsd:float .
+
+opt:Profit rdf:type rdfs:Class ;
+            rdfs:label "Daily profit of the company" ;
+            rdfs:comment "The daily profit of the company, which is the total revenue minus the total cost." ;
+            rdfs:range xsd:float .

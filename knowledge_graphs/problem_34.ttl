@@ -1,0 +1,53 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:RocketProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:X0, opt:V0, opt:XT, opt:VT, opt:T ;
+    opt:hasVariable opt:Acceleration ;
+    opt:hasConstraint opt:PositionConstraint, opt:VelocityConstraint ;
+    opt:hasObjective opt:MinimizeFuel .
+
+opt:X0 a opt:Parameter ;
+    rdfs:label "Initial position of the object" ;
+    rdfs:comment "The initial position of the rocket at the start of the journey." ;
+    rdfs:range xsd:float .
+
+opt:V0 a opt:Parameter ;
+    rdfs:label "Initial velocity of the object" ;
+    rdfs:comment "The initial velocity of the rocket at the start of the journey." ;
+    rdfs:range xsd:float .
+
+opt:XT a opt:Parameter ;
+    rdfs:label "Final position of the object" ;
+    rdfs:comment "The target position of the rocket at the end of the journey." ;
+    rdfs:range xsd:float .
+
+opt:VT a opt:Parameter ;
+    rdfs:label "Final velocity of the object" ;
+    rdfs:comment "The target velocity of the rocket at the end of the journey." ;
+    rdfs:range xsd:float .
+
+opt:T a opt:Parameter ;
+    rdfs:label "Time duration for the journey" ;
+    rdfs:comment "The total time duration for the rocket's journey." ;
+    rdfs:range xsd:integer .
+
+opt:Acceleration a opt:Variable ;
+    rdfs:label "Acceleration at each timestep" ;
+    rdfs:comment "The acceleration of the rocket at each timestep, which is under our control." ;
+    rdfs:range xsd:float .
+
+opt:PositionConstraint a opt:Constraint ;
+    rdfs:label "Position constraint" ;
+    rdfs:comment "The constraint that the rocket's position at each timestep must follow the equation x_{t+1} = x_t + v_t." .
+
+opt:VelocityConstraint a opt:Constraint ;
+    rdfs:label "Velocity constraint" ;
+    rdfs:comment "The constraint that the rocket's velocity at each timestep must follow the equation v_{t+1} = v_t + a_t." .
+
+opt:MinimizeFuel a opt:Objective ;
+    rdfs:label "Minimize fuel consumption" ;
+    rdfs:comment "The objective to minimize the thrust required, which is max_t |a_t|, subject to the given constraints." ;
+    opt:isMinimizationObjective true .

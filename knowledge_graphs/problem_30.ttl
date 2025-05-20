@@ -1,0 +1,95 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:NetAcres a rdf:Property ;
+    rdfs:label "NetAcres" ;
+    rdfs:range xsd:decimal .
+
+opt:LineAcres a rdf:Property ;
+    rdfs:label "LineAcres" ;
+    rdfs:range xsd:decimal .
+
+opt:TotalAcres a rdf:Property ;
+    rdfs:label "TotalAcres" ;
+    rdfs:range xsd:decimal .
+
+opt:FishPerNetAcre a rdf:Property ;
+    rdfs:label "FishPerNetAcre" ;
+    rdfs:range xsd:decimal .
+
+opt:FishPerLineAcre a rdf:Property ;
+    rdfs:label "FishPerLineAcre" ;
+    rdfs:range xsd:decimal .
+
+opt:BaitPerNetAcre a rdf:Property ;
+    rdfs:label "BaitPerNetAcre" ;
+    rdfs:range xsd:decimal .
+
+opt:BaitPerLineAcre a rdf:Property ;
+    rdfs:label "BaitPerLineAcre" ;
+    rdfs:range xsd:decimal .
+
+opt:TotalBait a rdf:Property ;
+    rdfs:label "TotalBait" ;
+    rdfs:range xsd:decimal .
+
+opt:PainPerNetAcre a rdf:Property ;
+    rdfs:label "PainPerNetAcre" ;
+    rdfs:range xsd:decimal .
+
+opt:PainPerLineAcre a rdf:Property ;
+    rdfs:label "PainPerLineAcre" ;
+    rdfs:range xsd:decimal .
+
+opt:MaxPain a rdf:Property ;
+    rdfs:label "MaxPain" ;
+    rdfs:range xsd:decimal .
+
+opt:FishingProblem a rdfs:Class ;
+    rdfs:label "FishingProblem" ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "OptimizationProblem" .
+
+opt:hasVariable opt:NetAcres, opt:LineAcres ;
+    rdfs:label "hasVariable" ;
+    rdfs:range opt:Variable .
+
+opt:hasParameter opt:TotalAcres, opt:FishPerNetAcre, opt:FishPerLineAcre, opt:BaitPerNetAcre, opt:BaitPerLineAcre, opt:TotalBait, opt:PainPerNetAcre, opt:PainPerLineAcre, opt:MaxPain ;
+    rdfs:label "hasParameter" ;
+    rdfs:range opt:Parameter .
+
+opt:hasConstraint opt:TotalAcresConstraint, opt:TotalBaitConstraint, opt:MaxPainConstraint ;
+    rdfs:label "hasConstraint" ;
+    rdfs:range opt:Constraint .
+
+opt:hasObjective opt:MaximizeFishCatch ;
+    rdfs:label "hasObjective" ;
+    rdfs:range opt:Objective .
+
+opt:Variable a rdfs:Class ;
+    rdfs:label "Variable" .
+
+opt:Parameter a rdfs:Class ;
+    rdfs:label "Parameter" .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective" .
+
+opt:TotalAcresConstraint a opt:Constraint ;
+    rdfs:label "TotalAcresConstraint" .
+
+opt:TotalBaitConstraint a opt:Constraint ;
+    rdfs:label "TotalBaitConstraint" .
+
+opt:MaxPainConstraint a opt:Constraint ;
+    rdfs:label "MaxPainConstraint" .
+
+opt:MaximizeFishCatch a opt:Objective ;
+    rdfs:label "MaximizeFishCatch" .

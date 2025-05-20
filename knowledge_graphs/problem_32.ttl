@@ -1,0 +1,58 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:K a rdf:Property ;
+    rdfs:label "Number of terms in the sequence" ;
+    rdfs:range xsd:integer ;
+    rdfs:domain opt:OptimizationProblem .
+
+opt:P a rdf:Property ;
+    rdfs:label "Coefficients of the linear combination" ;
+    rdfs:range xsd:float ;
+    rdfs:domain opt:OptimizationProblem .
+
+opt:ExpectedZ a rdf:Property ;
+    rdfs:label "Expected value of Z" ;
+    rdfs:range xsd:float ;
+    rdfs:domain opt:OptimizationProblem .
+
+opt:ExpectedZSquared a rdf:Property ;
+    rdfs:label "Expected value of Z squared" ;
+    rdfs:range xsd:float ;
+    rdfs:domain opt:OptimizationProblem .
+
+opt:Z a rdf:Property ;
+    rdfs:label "Random variable Z" ;
+    rdfs:range xsd:float ;
+    rdfs:domain opt:OptimizationProblem .
+
+opt:Z_4 a rdf:Property ;
+    rdfs:label "Fourth moment of Z" ;
+    rdfs:range xsd:float ;
+    rdfs:domain opt:OptimizationProblem .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization problem" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:LinearProgramming a rdfs:Class ;
+    rdfs:label "Linear programming" ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:UpperBound a rdfs:Class ;
+    rdfs:label "Upper bound" ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:LowerBound a rdfs:Class ;
+    rdfs:label "Lower bound" ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective" ;
+    rdfs:subClassOf opt:OptimizationProblem .

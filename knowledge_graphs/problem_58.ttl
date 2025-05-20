@@ -1,0 +1,33 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:NumObs a rdf:Property ;
+    rdfs:label "Number of observed data points" ;
+    rdfs:range xsd:integer .
+
+opt:Y a rdf:Property ;
+    rdfs:label "Observed values of y" ;
+    rdfs:range xsd:float .
+
+opt:X a rdf:Property ;
+    rdfs:label "Observed values of x" ;
+    rdfs:range xsd:float .
+
+opt:a a opt:Variable ;
+    rdfs:label "Intercept of the best fit line" ;
+    rdfs:range xsd:float .
+
+opt:b a opt:Variable ;
+    rdfs:label "Slope of the best fit line" ;
+    rdfs:range xsd:float .
+
+opt:LinearRelationship a opt:Constraint ;
+    rdfs:label "Linear relationship between x and y" ;
+    rdfs:comment "y = bx + a" .
+
+opt:MaxDeviation a opt:Objective ;
+    rdfs:label "Maximum deviation of observed y from predicted y" ;
+    rdfs:comment "Minimize the maximum deviation" ;
+    opt:optimizationType opt:Minimization .

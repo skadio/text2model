@@ -1,0 +1,59 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:slotsPerTemplate a rdf:Property ;
+    rdfs:label "Number of slots per template" ;
+    rdfs:domain opt:PrintingProblem ;
+    rdfs:range xsd:integer .
+
+opt:numberOfTemplates a rdf:Property ;
+    rdfs:label "Number of templates to produce" ;
+    rdfs:domain opt:PrintingProblem ;
+    rdfs:range xsd:integer .
+
+opt:numberOfVariations a rdf:Property ;
+    rdfs:label "Number of variations of carton designs" ;
+    rdfs:domain opt:PrintingProblem ;
+    rdfs:range xsd:integer .
+
+opt:demandArray a rdf:Property ;
+    rdfs:label "Array indicating how many of each variation must be printed" ;
+    rdfs:domain opt:PrintingProblem ;
+    rdfs:range xsd:integer .
+
+opt:PrintingProblem a rdfs:Class ;
+    rdfs:label "Color Printing Optimization Problem" ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" .
+
+opt:hasObjective a rdf:Property ;
+    rdfs:label "has objective" ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range opt:Objective .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective" .
+
+opt:minimizeSurplus a opt:Objective ;
+    rdfs:label "Minimize surplus" ;
+    rdfs:comment "The configurations of the slots for the templates that leads to the minimum amount of surplus when all the demands are met" .
+
+opt:hasConstraint a rdf:Property ;
+    rdfs:label "has constraint" ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range opt:Constraint .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" .
+
+opt:meetDemand a opt:Constraint ;
+    rdfs:label "Meet demand" ;
+    rdfs:comment "A minimum demand of each design variation that must be manufactured" .
+
+opt:lexicographicOrder a opt:Constraint ;
+    rdfs:label "Lexicographic order" ;
+    rdfs:comment "The templates are organized in lexicographic order" .

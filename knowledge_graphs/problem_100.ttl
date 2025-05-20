@@ -1,0 +1,52 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix wlp: <http://www.example.org/warehouse_location_problem#> .
+
+wlp:n_suppliers a owl:DatatypeProperty ;
+    rdfs:domain wlp:WarehouseLocationProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of warehouse candidates" .
+
+wlp:n_stores a owl:DatatypeProperty ;
+    rdfs:domain wlp:WarehouseLocationProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of stores" .
+
+wlp:building_cost a owl:DatatypeProperty ;
+    rdfs:domain wlp:WarehouseLocationProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Cost of opening a warehouse" .
+
+wlp:capacity a owl:DatatypeProperty ;
+    rdfs:domain wlp:WarehouseLocationProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Array containing the capacity of each warehouse" .
+
+wlp:cost_matrix a owl:DatatypeProperty ;
+    rdfs:domain wlp:WarehouseLocationProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Cost matrix where each element represents the cost of a store being supplied by a warehouse" .
+
+wlp:WarehouseLocationProblem a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:comment "Warehouse Location Problem (WLP) is an optimization problem where a company aims to open warehouses at candidate locations to supply its stores. Each warehouse has a maintenance cost and specific capacity. Each store must be supplied by exactly one warehouse, with supply costs varying per warehouse. The goal is to minimize the sum of maintenance and supply costs by determining which warehouses to open and assigning them to supply stores." .
+
+wlp:hasObjective a owl:ObjectProperty ;
+    rdfs:domain wlp:WarehouseLocationProblem ;
+    rdfs:range wlp:Objective ;
+    rdfs:comment "The objective of the Warehouse Location Problem" .
+
+wlp:Objective a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:comment "The objective of the Warehouse Location Problem is to minimize the sum of maintenance and supply costs by determining which warehouses to open and assigning them to supply stores." .
+
+wlp:hasConstraint a owl:ObjectProperty ;
+    rdfs:domain wlp:WarehouseLocationProblem ;
+    rdfs:range wlp:Constraint ;
+    rdfs:comment "The constraints of the Warehouse Location Problem" .
+
+wlp:Constraint a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:comment "The constraints of the Warehouse Location Problem are that each store must be supplied by exactly one warehouse and the supply costs vary per warehouse." .

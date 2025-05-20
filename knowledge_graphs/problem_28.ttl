@@ -1,0 +1,79 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix : <http://example.org/> .
+
+:LiquidSanitizers a rdf:Property ;
+    rdfs:label "Number of liquid hand sanitizers to produce" ;
+    rdfs:range xsd:integer .
+
+:FoamSanitizers a rdf:Property ;
+    rdfs:label "Number of foam hand sanitizers to produce" ;
+    rdfs:range xsd:integer .
+
+:WaterPerLiquid a rdf:Property ;
+    rdfs:label "Water required per liquid sanitizer" ;
+    rdfs:range xsd:integer .
+
+:AlcoholPerLiquid a rdf:Property ;
+    rdfs:label "Alcohol required per liquid sanitizer" ;
+    rdfs:range xsd:integer .
+
+:WaterPerFoam a rdf:Property ;
+    rdfs:label "Water required per foam sanitizer" ;
+    rdfs:range xsd:integer .
+
+:AlcoholPerFoam a rdf:Property ;
+    rdfs:label "Alcohol required per foam sanitizer" ;
+    rdfs:range xsd:integer .
+
+:TotalWater a rdf:Property ;
+    rdfs:label "Total available water" ;
+    rdfs:range xsd:integer .
+
+:TotalAlcohol a rdf:Property ;
+    rdfs:label "Total available alcohol" ;
+    rdfs:range xsd:integer .
+
+:HandsPerLiquid a rdf:Property ;
+    rdfs:label "Cleaning capacity per liquid sanitizer" ;
+    rdfs:range xsd:integer .
+
+:HandsPerFoam a rdf:Property ;
+    rdfs:label "Cleaning capacity per foam sanitizer" ;
+    rdfs:range xsd:integer .
+
+:MaxLiquid a rdf:Property ;
+    rdfs:label "Maximum number of liquid sanitizers" ;
+    rdfs:range xsd:integer .
+
+:SanitizerProduction a rdf:Class ;
+    rdfs:label "Sanitizer Production" ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :LiquidSanitizers ;
+        owl:maxCardinality "MaxLiquid"^^xsd:integer
+    ] ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :FoamSanitizers ;
+        owl:minCardinality "LiquidSanitizers"^^xsd:integer
+    ] ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :TotalWater ;
+        owl:maxCardinality "WaterPerLiquid*LiquidSanitizers + WaterPerFoam*FoamSanitizers"^^xsd:integer
+    ] ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :TotalAlcohol ;
+        owl:maxCardinality "AlcoholPerLiquid*LiquidSanitizers + AlcoholPerFoam*FoamSanitizers"^^xsd:integer
+    ] .
+
+:Objective a rdf:Class ;
+    rdfs:label "Objective" ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :HandsPerLiquid ;
+        owl:maxCardinality "LiquidSanitizers*HandsPerLiquid + FoamSanitizers*HandsPerFoam"^^xsd:integer
+    ] .

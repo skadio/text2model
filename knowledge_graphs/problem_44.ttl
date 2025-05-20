@@ -1,0 +1,40 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix paper: <http://www.example.com/paper#> .
+
+paper:M rdf:type rdfs:Class ;
+    rdfs:label "Number of types of smaller rolls" ;
+    rdfs:comment "The number of different types of smaller rolls that the company produces." ;
+    rdfs:range xsd:integer .
+
+paper:N rdf:type rdfs:Class ;
+    rdfs:label "Number of different cutting patterns" ;
+    rdfs:comment "The number of different cutting patterns available for producing the smaller rolls." ;
+    rdfs:range xsd:integer .
+
+paper:large_roll_width rdf:type rdfs:Class ;
+    rdfs:label "Large Roll Width" ;
+    rdfs:comment "The width of the large rolls of paper produced by the company." ;
+    rdfs:range xsd:float .
+
+paper:demands rdf:type rdfs:Class ;
+    rdfs:label "Demands" ;
+    rdfs:comment "The demand for each type of smaller roll." ;
+    rdfs:range xsd:integer .
+
+paper:roll_width_options rdf:type rdfs:Class ;
+    rdfs:label "Roll Width Options" ;
+    rdfs:comment "The width options for the smaller rolls." ;
+    rdfs:range xsd:float .
+
+paper:patterns rdf:type rdfs:Class ;
+    rdfs:label "The different cutting patterns" ;
+    rdfs:comment "The different cutting patterns applied to the large rolls to produce the smaller rolls." ;
+    rdfs:range xsd:integer .
+
+paper:OptimizationProblem rdf:type rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:comment "The optimization problem to determine the minimum number of large rolls needed to fulfill all the orders." .
+
+paper:OptimizationProblem rdfs:subClassOf paper:M, paper:N, paper:large_roll_width, paper:demands, paper:roll_width_options, paper:patterns .

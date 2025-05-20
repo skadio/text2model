@@ -1,0 +1,50 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix nqueens: <http://www.semanticweb.org/nqueens#> .
+
+nqueens:Chessboard a rdfs:Class ;
+  rdfs:label "Chessboard" ;
+  rdfs:comment "A chessboard for the N-Queens problem" .
+
+nqueens:Queen a rdfs:Class ;
+  rdfs:label "Queen" ;
+  rdfs:comment "A queen in the N-Queens problem" .
+
+nqueens:size a rdf:Property ;
+  rdfs:label "size" ;
+  rdfs:comment "Size of the chessboard and the number of queens to be placed" ;
+  rdfs:domain nqueens:Chessboard ;
+  rdfs:range xsd:integer .
+
+nqueens:position a rdf:Property ;
+  rdfs:label "position" ;
+  rdfs:comment "Position of a queen on the chessboard" ;
+  rdfs:domain nqueens:Queen ;
+  rdfs:range xsd:integer .
+
+nqueens:placedOn a rdf:Property ;
+  rdfs:label "placed on" ;
+  rdfs:comment "Indicates the chessboard a queen is placed on" ;
+  rdfs:domain nqueens:Queen ;
+  rdfs:range nqueens:Chessboard .
+
+nqueens:NoTwoQueensCanAttackEachOther a rdfs:Class ;
+  rdfs:label "No two queens can attack each other" ;
+  rdfs:comment "Constraint that no two queens can attack each other" .
+
+nqueens:hasConstraint a rdf:Property ;
+  rdfs:label "has constraint" ;
+  rdfs:comment "Indicates a constraint of the N-Queens problem" ;
+  rdfs:domain nqueens:Chessboard ;
+  rdfs:range nqueens:NoTwoQueensCanAttackEachOther .
+
+nqueens:FindPositionsForQueens a rdfs:Class ;
+  rdfs:label "Find positions for queens" ;
+  rdfs:comment "Objective to find positions for queens where they do not attack each other" .
+
+nqueens:hasObjective a rdf:Property ;
+  rdfs:label "has objective" ;
+  rdfs:comment "Indicates the objective of the N-Queens problem" ;
+  rdfs:domain nqueens:Chessboard ;
+  rdfs:range nqueens:FindPositionsForQueens .

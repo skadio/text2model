@@ -1,0 +1,56 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix knap: <http://www.example.org/knapsack#> .
+
+knap:KnapsackProblem a rdfs:Class ;
+    rdfs:comment "The knapsack problem class" .
+
+knap:hasCapacity a rdf:Property ;
+    rdfs:domain knap:KnapsackProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Total capacity of the knapsack" .
+
+knap:hasItem a rdf:Property ;
+    rdfs:domain knap:KnapsackProblem ;
+    rdfs:range knap:Item ;
+    rdfs:comment "Item to be packed in the knapsack" .
+
+knap:Item a rdfs:Class ;
+    rdfs:comment "Item class" .
+
+knap:hasValue a rdf:Property ;
+    rdfs:domain knap:Item ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Value of the item" .
+
+knap:hasSize a rdf:Property ;
+    rdfs:domain knap:Item ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Size of the item" .
+
+knap:hasObjective a rdf:Property ;
+    rdfs:domain knap:KnapsackProblem ;
+    rdfs:range knap:Objective ;
+    rdfs:comment "Objective of the knapsack problem" .
+
+knap:Objective a rdfs:Class ;
+    rdfs:comment "Objective class" .
+
+knap:isMaximization a rdf:Property ;
+    rdfs:domain knap:Objective ;
+    rdfs:range xsd:boolean ;
+    rdfs:comment "Whether the objective is to maximize the total value" .
+
+knap:hasConstraint a rdf:Property ;
+    rdfs:domain knap:KnapsackProblem ;
+    rdfs:range knap:Constraint ;
+    rdfs:comment "Constraint of the knapsack problem" .
+
+knap:Constraint a rdfs:Class ;
+    rdfs:comment "Constraint class" .
+
+knap:isSizeLimit a rdf:Property ;
+    rdfs:domain knap:Constraint ;
+    rdfs:range xsd:boolean ;
+    rdfs:comment "Whether the constraint is a size limit" .

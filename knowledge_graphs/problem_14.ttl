@@ -1,0 +1,64 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:StockInvestmentProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:N, opt:Bought, opt:BuyPrice, opt:CurrentPrice, opt:FuturePrice, opt:TransactionRate, opt:TaxRate, opt:K ;
+    opt:hasVariable opt:SharesToSell ;
+    opt:hasConstraint opt:MoneyRaisedConstraint ;
+    opt:hasObjective opt:MaximizePortfolioValue .
+
+opt:N a opt:Parameter ;
+    rdfs:label "Number of different shares" ;
+    rdfs:comment "The number of different shares in the investor's portfolio." ;
+    rdfs:range xsd:integer .
+
+opt:Bought a opt:Parameter ;
+    rdfs:label "Amount of each share initially bought" ;
+    rdfs:comment "The amount of each share initially bought by the investor." ;
+    rdfs:range xsd:float .
+
+opt:BuyPrice a opt:Parameter ;
+    rdfs:label "Purchase price of each share" ;
+    rdfs:comment "The purchase price of each share in the investor's portfolio." ;
+    rdfs:range xsd:float .
+
+opt:CurrentPrice a opt:Parameter ;
+    rdfs:label "Current market price of each share" ;
+    rdfs:comment "The current market price of each share in the investor's portfolio." ;
+    rdfs:range xsd:float .
+
+opt:FuturePrice a opt:Parameter ;
+    rdfs:label "Expected future market price of each share" ;
+    rdfs:comment "The expected future market price of each share in the investor's portfolio." ;
+    rdfs:range xsd:float .
+
+opt:TransactionRate a opt:Parameter ;
+    rdfs:label "Transaction cost rate per share sold" ;
+    rdfs:comment "The transaction cost rate per share sold by the investor." ;
+    rdfs:range xsd:float .
+
+opt:TaxRate a opt:Parameter ;
+    rdfs:label "Capital gains tax rate on the profit from selling shares" ;
+    rdfs:comment "The capital gains tax rate on the profit from selling shares by the investor." ;
+    rdfs:range xsd:float .
+
+opt:K a opt:Parameter ;
+    rdfs:label "Amount of money the investor needs to raise" ;
+    rdfs:comment "The amount of money the investor needs to raise from selling shares." ;
+    rdfs:range xsd:float .
+
+opt:SharesToSell a opt:Variable ;
+    rdfs:label "Shares to sell" ;
+    rdfs:comment "The number of shares to sell in order to raise the required amount of money." ;
+    rdfs:range xsd:float .
+
+opt:MoneyRaisedConstraint a opt:Constraint ;
+    rdfs:label "Money raised constraint" ;
+    rdfs:comment "The constraint that the money raised from selling shares, net of capital gains and transaction costs, must be equal to the amount the investor needs to raise." .
+
+opt:MaximizePortfolioValue a opt:Objective ;
+    rdfs:label "Maximize portfolio value" ;
+    rdfs:comment "The objective to maximize the expected value of the investor's portfolio next year." ;
+    opt:optimizationType opt:Maximization .
