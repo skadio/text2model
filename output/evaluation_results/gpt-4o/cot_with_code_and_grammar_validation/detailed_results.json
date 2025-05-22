@@ -4,6 +4,8 @@
     "problem_type": "satisfaction",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": ""
   },
   {
@@ -11,6 +13,8 @@
     "problem_type": "satisfaction",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": ""
   },
   {
@@ -18,6 +22,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "97.0"
   },
   {
@@ -25,6 +31,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "No objective value found in output"
   },
   {
@@ -32,6 +40,8 @@
     "problem_type": "satisfaction",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": ""
   },
   {
@@ -39,6 +49,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "20.0"
   },
   {
@@ -46,6 +58,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "383.0"
   },
   {
@@ -53,6 +67,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "0.0"
   },
   {
@@ -60,20 +76,26 @@
     "problem_type": "satisfaction",
     "execution_success": true,
     "solution_success": true,
-    "output": "queens = [2, 4, 6, 1, 3, 5];\n----------\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "queens = [4, 1, 5, 2, 6, 3];\n----------\n"
   },
   {
     "problem_id": "CSPLib_6",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: no function or predicate with name `all_different' found\n/tmp/tmpqatv2b3o.mzn:20.12-27\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: no function or predicate with name `all_different' found\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpiljhkbyu.mzn:20.12-27\n"
   },
   {
     "problem_id": "CSPLib_8",
     "problem_type": "satisfaction",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "x = [0, 0, 2];\ny = [0, 1, 1];\n----------\n"
   },
   {
@@ -81,6 +103,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "970.0"
   },
   {
@@ -88,6 +112,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "1080.0"
   },
   {
@@ -95,6 +121,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "750.0"
   },
   {
@@ -102,6 +130,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "0.0"
   },
   {
@@ -109,6 +139,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "1500.0"
   },
   {
@@ -116,13 +148,17 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: no function or predicate with name `alldifferent' found\n/tmp/tmptk2e_qg2.mzn:19.12-37\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: no function or predicate with name `alldifferent' found\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpr1mwflag.mzn:19.12-37\n"
   },
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_18",
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "2310.0"
   },
   {
@@ -130,6 +166,8 @@
     "problem_type": "satisfaction",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": ""
   },
   {
@@ -137,6 +175,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "14.56"
   },
   {
@@ -144,20 +184,26 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: multiple assignment to the same variable\n/tmp/tmpv95hu6kk.dzn:24.1-14\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: multiple assignment to the same variable\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmp8xz5lrih.dzn:24.1-14\n"
   },
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_4",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `n'\n/tmp/tmp3u1t1zo5.dzn:1.1-6\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `n'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpkrvpr67a.dzn:1.1-6\n"
   },
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_5",
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "8.0"
   },
   {
@@ -165,6 +211,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "29.0"
   },
   {
@@ -172,6 +220,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "8200.0"
   },
   {
@@ -179,6 +229,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "100.0"
   },
   {
@@ -186,6 +238,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "6.0"
   },
   {
@@ -193,6 +247,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "0.5833333333333333"
   },
   {
@@ -200,6 +256,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "8.0"
   },
   {
@@ -207,13 +265,17 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `TotalAircraft'\n/tmp/tmp8zbti9w1.dzn:6.1-17\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `TotalAircraft'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpy6z91ozo.dzn:6.1-17\n"
   },
   {
     "problem_id": "complexor_AircraftLanding",
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "556.0"
   },
   {
@@ -221,13 +283,17 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmpkutsmpt9.mzn:27.26-30:\n      sum(i in PRODUCTS)(float(Cost[i]) * float(x[i])) +\n                         ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmpkutsmpt9.mzn:30.7-11:\n      float(Cash) +\n      ^^^^^\nError: syntax error, unexpected float\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpywf0prlc.mzn:27.26-30:\n      sum(i in PRODUCTS)(float(Cost[i]) * float(x[i])) +\n                         ^^^^^\nError: syntax error, unexpected float\n\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpywf0prlc.mzn:30.7-11:\n      float(Cash) +\n      ^^^^^\nError: syntax error, unexpected float\n"
   },
   {
     "problem_id": "complexor_CapacitatedWarehouseLocation",
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "18460.0"
   },
   {
@@ -235,13 +301,17 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `ParticipantNum'\n/tmp/tmplk_fz_bz.dzn:1.1-19\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `ParticipantNum'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpteqd9und.dzn:1.1-19\n"
   },
   {
     "problem_id": "complexor_TSP",
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "315.0"
   },
   {
@@ -249,13 +319,17 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `CustomerCount'\n/tmp/tmpw85pbw7a.dzn:1.1-18\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `CustomerCount'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpgh21hed3.dzn:1.1-18\n"
   },
   {
     "problem_id": "nlp4lp_1",
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "76.0"
   },
   {
@@ -263,6 +337,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "7.370370370370372"
   },
   {
@@ -270,6 +346,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "240.9"
   },
   {
@@ -277,20 +355,26 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `T', did you mean `K'?\n/tmp/tmp_12klrbc.dzn:1.1-6\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `T', did you mean `K'?\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpyijhhods.dzn:1.1-6\n"
   },
   {
     "problem_id": "nlp4lp_13",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `Start'\n/tmp/tmpgs91zxj3.dzn:2.1-28\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `Start'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmp5u793ytw.dzn:2.1-28\n"
   },
   {
     "problem_id": "nlp4lp_14",
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "2.0"
   },
   {
@@ -298,13 +382,17 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmp1sn91s6k.mzn:27.26-30:\n      sum(i in PRODUCTS)(float(Cost[i]) * float(x[i])) +\n                         ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmp1sn91s6k.mzn:30.7-11:\n      float(Cash) +\n      ^^^^^\nError: syntax error, unexpected float\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpeodjpcd8.mzn:27.26-30:\n      sum(i in PRODUCTS)(float(Cost[i]) * float(x[i])) +\n                         ^^^^^\nError: syntax error, unexpected float\n\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpeodjpcd8.mzn:30.7-11:\n      float(Cash) +\n      ^^^^^\nError: syntax error, unexpected float\n"
   },
   {
     "problem_id": "nlp4lp_16",
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "1622.0"
   },
   {
@@ -312,6 +400,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "339000.0"
   },
   {
@@ -319,6 +409,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "10305.11226252159"
   },
   {
@@ -326,20 +418,26 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `True'\n/tmp/tmpnbo2tfme.dzn:5.16-19\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `True'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpj335oxpc.dzn:5.16-19\n"
   },
   {
     "problem_id": "nlp4lp_2",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `False'\n/tmp/tmpe4ha045x.dzn:2.18-22\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `False'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpzohtagev.dzn:2.18-22\n"
   },
   {
     "problem_id": "nlp4lp_20",
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "No objective value found in output"
   },
   {
@@ -347,20 +445,26 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: initialisation value for `KeepQuantity' has invalid type-inst: expected `array[int] of int', actual `int'\n/tmp/tmp_tsvywop.mzn:11.1-32\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: initialisation value for `KeepQuantity' has invalid type-inst: expected `array[int] of int', actual `int'\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpjqg0r1gc.mzn:11.1-32\n"
   },
   {
     "problem_id": "nlp4lp_22",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error:   symbol error: variable `I' must be defined (did you forget to specify a data file?)\n/tmp/tmp37gab5wk.mzn:4.1-6\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error:   symbol error: variable `I' must be defined (did you forget to specify a data file?)\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpfx84sxwg.mzn:4.1-6\n"
   },
   {
     "problem_id": "nlp4lp_23",
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "No objective value found in output"
   },
   {
@@ -368,20 +472,26 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple type errors:\nError: type error: multiple assignment to the same variable\n/tmp/tmpig6jfoqu.dzn:1.1-85\n\nError: type error: multiple assignment to the same variable\n/tmp/tmpig6jfoqu.dzn:2.1-29\n\nError: type error: multiple assignment to the same variable\n/tmp/tmpig6jfoqu.dzn:3.1-31\n\nError: type error: multiple assignment to the same variable\n/tmp/tmpig6jfoqu.dzn:4.1-32\n\nError: type error: multiple assignment to the same variable\n/tmp/tmpig6jfoqu.dzn:5.1-25\n\nError: type error: multiple assignment to the same variable\n/tmp/tmpig6jfoqu.dzn:6.1-32\n\nError: type error: multiple assignment to the same variable\n/tmp/tmpig6jfoqu.dzn:7.1-16\n\nError: type error: multiple assignment to the same variable\n/tmp/tmpig6jfoqu.dzn:8.1-32\n\nError: type error: multiple assignment to the same variable\n/tmp/tmpig6jfoqu.dzn:9.1-17\n\nError: type error: multiple assignment to the same variable\n/tmp/tmpig6jfoqu.dzn:10.1-27\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Multiple type errors:\nError: type error: multiple assignment to the same variable\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpy9focj5e.dzn:1.1-85\n\nError: type error: multiple assignment to the same variable\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpy9focj5e.dzn:2.1-29\n\nError: type error: multiple assignment to the same variable\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpy9focj5e.dzn:3.1-31\n\nError: type error: multiple assignment to the same variable\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpy9focj5e.dzn:4.1-32\n\nError: type error: multiple assignment to the same variable\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpy9focj5e.dzn:5.1-25\n\nError: type error: multiple assignment to the same variable\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpy9focj5e.dzn:6.1-32\n\nError: type error: multiple assignment to the same variable\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpy9focj5e.dzn:7.1-16\n\nError: type error: multiple assignment to the s"
   },
   {
     "problem_id": "nlp4lp_25",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: no function or predicate with this signature found: `..o(float)'\nCannot use the following functions or predicates with the same identifier:\nfunction set of $$E : '..o'($$E: a);\n    (argument 1 expects type int, but type float given)\n\n/tmp/tmpxn_0xsom.mzn:19.27-31\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: no function or predicate with this signature found: `..o(float)'\nCannot use the following functions or predicates with the same identifier:\nfunction set of $$E : '..o'($$E: a);\n    (argument 1 expects type int, but type float given)\n\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmp6slmqt65.mzn:19.27-31\n"
   },
   {
     "problem_id": "nlp4lp_27",
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "No objective value found in output"
   },
   {
@@ -389,6 +499,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "1860.0"
   },
   {
@@ -396,6 +508,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "No objective value found in output"
   },
   {
@@ -403,6 +517,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "205.0"
   },
   {
@@ -410,34 +526,44 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `Benefit' are [1..5,1..3], but is assigned to array with index sets [1..5, 1..2]. You may need to coerce the index sets using the array2d function.\n/tmp/tmpgmyztejs.mzn:4.1-35\n  in variable declaration for 'Benefit'\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `Benefit' are [1..5,1..3], but is assigned to array with index sets [1..5, 1..2]. You may need to coerce the index sets using the array2d function.\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmp8t1w7ths.mzn:4.1-35\n  in variable declaration for 'Benefit'\n"
   },
   {
     "problem_id": "nlp4lp_31",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `K', did you mean `N'?\n/tmp/tmp9ihxtnbh.dzn:1.1-6\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `K', did you mean `N'?\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmp6344qwg7.dzn:1.1-6\n"
   },
   {
     "problem_id": "nlp4lp_32",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `NumObs'\n/tmp/tmppj3z7bew.dzn:1.1-11\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `NumObs'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmp_s073uxj.dzn:1.1-11\n"
   },
   {
     "problem_id": "nlp4lp_33",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `K', did you mean `P'?\n/tmp/tmprr0wz22b.dzn:1.1-6\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `K', did you mean `M'?\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpg3y3jj53.dzn:1.1-6\n"
   },
   {
     "problem_id": "nlp4lp_34",
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "256500.0"
   },
   {
@@ -445,6 +571,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "1000.0"
   },
   {
@@ -452,6 +580,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "20.0"
   },
   {
@@ -459,6 +589,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "4.0"
   },
   {
@@ -466,6 +598,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "970.0"
   },
   {
@@ -473,6 +607,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "3800.0"
   },
   {
@@ -480,13 +616,17 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `Period'\n/tmp/tmp4qp_igrt.dzn:1.1-10\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `Period'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpmeshh69m.dzn:1.1-10\n"
   },
   {
     "problem_id": "nlp4lp_40",
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "12000.0"
   },
   {
@@ -494,6 +634,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "450.0"
   },
   {
@@ -501,6 +643,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "10.0"
   },
   {
@@ -508,13 +652,17 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `K'\n/tmp/tmp4jb7mhqe.dzn:1.1-5\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `K'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmp_2316pfs.dzn:1.1-5\n"
   },
   {
     "problem_id": "nlp4lp_44",
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "3.0"
   },
   {
@@ -522,6 +670,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "No objective value found in output"
   },
   {
@@ -529,6 +679,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "25500.0"
   },
   {
@@ -536,6 +688,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "9600.0"
   },
   {
@@ -543,6 +697,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "915.0"
   },
   {
@@ -550,6 +706,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "37100.00000000001"
   },
   {
@@ -557,6 +715,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "210.0"
   },
   {
@@ -564,6 +724,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "16620.0"
   },
   {
@@ -571,6 +733,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "178900.0"
   },
   {
@@ -578,6 +742,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "10200.0"
   },
   {
@@ -585,6 +751,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "9750.0"
   },
   {
@@ -592,6 +760,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "70300.0"
   },
   {
@@ -599,6 +769,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "1380.0"
   },
   {
@@ -606,6 +778,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "No objective value found in output"
   },
   {
@@ -613,6 +787,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "5600.0"
   },
   {
@@ -620,6 +796,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "97600.0"
   },
   {
@@ -627,6 +805,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "2.0"
   },
   {
@@ -634,6 +814,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "26.5"
   },
   {
@@ -641,6 +823,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "251500.0"
   },
   {
@@ -648,6 +832,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "7080.0"
   },
   {
@@ -655,13 +841,17 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmp3xpzy2dm.dzn:8.5:\n    |1, 1, 0, 0, 0, 0, 1, 0| % Translator 1\n    ^\nError: syntax error, unexpected '|'\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmppe__9_ds.dzn:8.5:\n    |1, 1, 0, 0, 0, 0, 1, 0| % Translator 1\n    ^\nError: syntax error, unexpected '|'\n"
   },
   {
     "problem_id": "nlp4lp_64",
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "290.0"
   },
   {
@@ -669,6 +859,8 @@
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "2280.0"
   },
   {
@@ -676,20 +868,26 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: no function or predicate with name `alldifferent' found\n/tmp/tmpnva37coy.mzn:13.12-30\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: no function or predicate with name `alldifferent' found\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpi0hn3wlw.mzn:13.12-30\n"
   },
   {
     "problem_id": "nlp4lp_67",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `N', did you mean `n'?\n/tmp/tmphsge79ht.dzn:1.1-6\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `N', did you mean `n'?\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpzumheinr.dzn:1.1-6\n"
   },
   {
     "problem_id": "nlp4lp_7",
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "0.01"
   },
   {
@@ -697,6 +895,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "12000.0"
   },
   {
@@ -704,6 +904,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "166.0000000000001"
   },
   {
@@ -711,6 +913,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "14.90000000000001"
   },
   {
@@ -718,20 +922,26 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `X_INTRODUCED_0_' are [1..4,1..4], but is assigned to array with index sets [0..4, 0..4]. You may need to coerce the index sets using the array2d function.\n/tmp/tmpylarb064.mzn:9.1-33\n  in variable declaration for 'x'\n/tmp/tmpddfc2xhx.dzn:5.5-12.4\n  in call 'array2d'\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `X_INTRODUCED_0_' are [1..4,1..4], but is assigned to array with index sets [0..4, 0..4]. You may need to coerce the index sets using the array2d function.\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpinz3dlks.mzn:9.1-33\n  in variable declaration for 'x'\n/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpyypn3vsi.dzn:5.5-12.4\n  in call 'array2d'\n"
   },
   {
     "problem_id": "non_linear_problem_23",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: no function or predicate with name `all_different' found\n/tmp/tmpzrnzqfnq.mzn:13.12-30\n"
+    "timeout": 60,
+    "solver": "highs",
+    "output": "Error: type error: no function or predicate with name `all_different' found\n/private/var/folders/kh/c_jvx6wj7z9d56bvn0z8jzcw_1j_7g/T/tmpkbelsaew.mzn:13.12-30\n"
   },
   {
     "problem_id": "non_linear_problem_9",
     "problem_type": "minimization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "670.0"
   },
   {
@@ -739,6 +949,8 @@
     "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "13.0"
   },
   {
@@ -746,6 +958,8 @@
     "problem_type": "satisfaction",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": ""
   },
   {
@@ -753,6 +967,8 @@
     "problem_type": "satisfaction",
     "execution_success": true,
     "solution_success": true,
+    "timeout": 60,
+    "solver": "highs",
     "output": "area4 = 48.0;\n----------\n"
   },
   {
@@ -760,6 +976,8 @@
     "problem_type": "satisfaction",
     "execution_success": false,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": "Execution timed out after 60 seconds"
   },
   {
@@ -767,6 +985,8 @@
     "problem_type": "satisfaction",
     "execution_success": true,
     "solution_success": false,
+    "timeout": 60,
+    "solver": "highs",
     "output": ""
   }
 ]

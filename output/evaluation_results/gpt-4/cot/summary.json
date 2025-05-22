@@ -1,7 +1,7 @@
 {
   "model_name": "gpt-4",
-  "strategy_name": "chain_of_thought",
-  "evaluation_date": "2025-05-21 21:44:39",
+  "strategy_name": "cot",
+  "evaluation_date": "2025-05-22 13:49:54",
   "execution_accuracy": 57.27,
   "solution_accuracy": 28.18,
   "average_score": 42.73,

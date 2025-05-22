@@ -1,7 +1,7 @@
 {
   "model_name": "gpt-4o",
-  "strategy_name": "chain_of_thought_with_validation",
-  "evaluation_date": "2025-05-21 21:50:23",
+  "strategy_name": "cot_with_code_validation",
+  "evaluation_date": "2025-05-22 13:32:11",
   "execution_accuracy": 80.91,
   "solution_accuracy": 41.82,
   "average_score": 61.36,

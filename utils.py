@@ -52,34 +52,34 @@ def check_syntax(mzn_code: str, dzn_data: str, timeout: int = 60) -> Optional[st
     """Check MiniZinc syntax and return error message if any"""
     temp_file_path = "temp_model.mzn"
     temp_dzn_path = "temp_data.dzn"
-    
+
     try:
         # Save temporary MiniZinc file
         with open(temp_file_path, 'w') as f:
             f.write(mzn_code)
-            
+
         # Save dzn data
         with open(temp_dzn_path, 'w') as f:
             f.write(dzn_data)
 
         # Run MiniZinc to check for syntax errors
         result = subprocess.run(
-            ["/snap/bin/minizinc", temp_file_path, temp_dzn_path], 
-            capture_output=True, 
+            ["/snap/bin/minizinc", temp_file_path, temp_dzn_path],
+            capture_output=True,
             text=True,
             timeout=timeout
         )
-        
+
         # Clean up temporary files
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
         if os.path.exists(temp_dzn_path):
             os.remove(temp_dzn_path)
-        
+
         if result.returncode != 0:
             return result.stderr
         return None
-        
+
     except subprocess.TimeoutExpired:
         # Clean up on timeout
         if os.path.exists(temp_file_path):

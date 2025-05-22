@@ -63,7 +63,7 @@ def run_knowledge_graph_strategy(client, problem, idx, output_dir):
         return False
 
 
-def run_cot_with_validation_strategy(client, problem, idx, output_dir):
+def run_cot_with_code_validation_strategy(client, problem, idx, output_dir):
     """Run the cot with validation strategy with chain of thought and validation"""
     try:
         # Prepare data
@@ -135,7 +135,7 @@ def run_cot_strategy(client, problem, idx, output_dir):
         return False
 
 
-def run_cot_with_grammar_check_strategy(client, problem, idx, output_dir):
+def run_cot_with_grammar_validation_strategy(client, problem, idx, output_dir):
     """Run the CoT + Grammar Check strategy (2-stage)"""
     try:
         # Prepare data
@@ -165,7 +165,7 @@ def run_cot_with_grammar_check_strategy(client, problem, idx, output_dir):
         if syntax_error_message:
             grammar_prompt = utils.load_file('prompts/grammar_prompt.txt')
             minizinc_grammar = utils.load_file('grammar.mzn')
-            
+
             grammar_corrected_code = utils.call_openai_api(
                 client,
                 grammar_prompt.format(
@@ -176,7 +176,7 @@ def run_cot_with_grammar_check_strategy(client, problem, idx, output_dir):
                     minizinc_grammar=minizinc_grammar
                 )
             )
-            
+
             if grammar_corrected_code:
                 current_code = grammar_corrected_code
 
@@ -192,7 +192,7 @@ def run_cot_with_grammar_check_strategy(client, problem, idx, output_dir):
 ###########################################################
 # Three-call Strategies
 ###########################################################
-def run_cot_validation_grammar_strategy(client, problem, idx, output_dir):
+def run_cot_with_code_and_grammar_validation_strategy(client, problem, idx, output_dir):
     """Run the CoT + Validation + Grammar Check strategy (3-stage)"""
     try:
         # Prepare data
@@ -231,19 +231,19 @@ def run_cot_validation_grammar_strategy(client, problem, idx, output_dir):
                     syntax_error_message=syntax_error_message
                 )
             )
-            
+
             if validated_code:
                 current_code = validated_code
                 # Check syntax again after validation
                 syntax_error_message = utils.check_syntax(validated_code, problem['data.dzn'])
-            
+
             time.sleep(2)
 
         # Stage 3: Grammar-based correction if syntax error still exists
         if syntax_error_message:
             grammar_prompt = utils.load_file('prompts/grammar_prompt.txt')
             minizinc_grammar = utils.load_file('grammar.mzn')
-            
+
             grammar_corrected_code = utils.call_openai_api(
                 client,
                 grammar_prompt.format(
@@ -254,7 +254,7 @@ def run_cot_validation_grammar_strategy(client, problem, idx, output_dir):
                     minizinc_grammar=minizinc_grammar
                 )
             )
-            
+
             if grammar_corrected_code:
                 current_code = grammar_corrected_code
 
@@ -403,11 +403,8 @@ def main():
 
     # Determine which strategies to run
     if 'all' in args.strategies:
-        strategies = ['baseline', 'cot', 
-                      'knowledge_graph', 'cot_with_validation', 'cot_with_grammar_check',
-                      'cot_validation_grammar', 
-                      'compositional', 
-                      'compositional_with_validation']
+        strategies = ['baseline', 'cot', 'knowledge_graph', 'cot_with_validation', 'cot_with_grammar_check',
+                      'cot_validation_grammar', 'compositional', 'compositional_with_validation']
     else:
         strategies = args.strategies
 
@@ -421,19 +418,25 @@ def main():
 
     # Strategy mapping
     strategy_functions = {
+
         # Single GPT call
         'baseline': run_baseline_strategy,
         'cot': run_cot_strategy,
+
         # Two GPT calls
         'knowledge_graph': run_knowledge_graph_strategy,
-        'cot_with_validation': run_cot_with_validation_strategy,
-        'cot_with_grammar_check': run_cot_with_grammar_check_strategy,
+
+        'cot_with_code_validation': run_cot_with_code_validation_strategy,
+        'cot_with_grammar_validation': run_cot_with_grammar_validation_strategy,
+
         # Three GPT calls
-        'cot_validation_grammar': run_cot_validation_grammar_strategy,
+        'cot_with_code_and_grammar_validation': run_cot_with_code_and_grammar_validation_strategy,
+
         # Four GPT calls
         'compositional': lambda c, p, i, o: run_compositional_strategy(c, p, i, o, validate=False),
+
         # Five GPT calls
-        'compositional_with_validation': run_compositional_strategy
+        'compositional_with_code_validation': run_compositional_strategy
     }
 
     # Process problems

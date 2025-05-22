@@ -272,6 +272,8 @@ def evaluate_strategy(model_name, strategy_name, output_dir, problems, timeout, 
             "problem_type": problem_type,
             "execution_success": execution_success,
             "solution_success": solution_success,
+            "timeout": timeout,
+            "solver": solver,
             "output": output[:1000] if len(output) > 1000 else output
         })
 

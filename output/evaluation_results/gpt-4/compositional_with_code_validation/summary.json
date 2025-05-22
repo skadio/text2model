@@ -1,7 +1,7 @@
 {
   "model_name": "gpt-4",
-  "strategy_name": "compositional_approach_with_validation",
-  "evaluation_date": "2025-05-21 21:43:38",
+  "strategy_name": "compositional_with_code_validation",
+  "evaluation_date": "2025-05-22 13:41:40",
   "execution_accuracy": 43.64,
   "solution_accuracy": 20.91,
   "average_score": 32.27,
