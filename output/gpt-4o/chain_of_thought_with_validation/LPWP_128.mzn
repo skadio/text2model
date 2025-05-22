@@ -9,27 +9,20 @@ int: HandsPerLiquid;
 int: HandsPerFoam;
 int: MaxLiquid;
 
-/* Derived upper bound for foam sanitizers based on available resources */
-int: MaxFoam = min(TotalWater div WaterPerFoam,
-                   TotalAlcohol div AlcoholPerFoam);
-
 % Variables
 var 0..MaxLiquid: LiquidSanitizers;
-var 0..MaxFoam:   FoamSanitizers;
+var 0..max(TotalWater, TotalAlcohol): FoamSanitizers;
 
 % Constraints
 constraint
-    WaterPerLiquid * LiquidSanitizers +
-    WaterPerFoam   * FoamSanitizers <= TotalWater;
+    WaterPerLiquid * LiquidSanitizers + WaterPerFoam * FoamSanitizers <= TotalWater;
 
 constraint
-    AlcoholPerLiquid * LiquidSanitizers +
-    AlcoholPerFoam   * FoamSanitizers <= TotalAlcohol;
+    AlcoholPerLiquid * LiquidSanitizers + AlcoholPerFoam * FoamSanitizers <= TotalAlcohol;
 
 constraint
-    FoamSanitizers > LiquidSanitizers;
+    FoamSanitizers >= LiquidSanitizers + 1;
 
 % Objective
 solve maximize
-    HandsPerLiquid * LiquidSanitizers +
-    HandsPerFoam   * FoamSanitizers;
+    LiquidSanitizers * HandsPerLiquid + FoamSanitizers * HandsPerFoam;

@@ -1,30 +1,31 @@
 % Parameters
-int: P;
-int: C;
+int: P;                         % Number of power plants
+int: C;                         % Number of cities
+set of int: PLANTS = 1..P;
+set of int: CITIES = 1..C;
 
-set of int: Plants = 1..P;
-set of int: Cities = 1..C;
+array[PLANTS] of int: Supply;   % Capacity of each power plant
+array[CITIES] of int: Demand;   % Peak demand of each city
+array[PLANTS, CITIES] of int: TransmissionCosts;   % Cost matrix
 
-array[Plants] of int: Supply;
-array[Cities] of int: Demand;
-array[Plants, Cities] of int: TransmissionCosts;
-
-int: TotalDemand = sum(c in Cities)(Demand[c]);
+int: totalDemand = sum(c in CITIES)(Demand[c]);
 
 % Variables
-array[Plants, Cities] of var 0..TotalDemand: X;
+array[PLANTS, CITIES] of var 0..totalDemand: Flow;    % Electricity sent from plant p to city c
 
 % Constraints
+% 1. Respect supply capacity of each power plant
 constraint
-    forall(p in Plants)(
-        sum(c in Cities)(X[p,c]) <= Supply[p]
+    forall(p in PLANTS)(
+        sum(c in CITIES)(Flow[p, c]) <= Supply[p]
     );
 
+% 2. Meet the demand of each city exactly
 constraint
-    forall(c in Cities)(
-        sum(p in Plants)(X[p,c]) == Demand[c]
+    forall(c in CITIES)(
+        sum(p in PLANTS)(Flow[p, c]) == Demand[c]
     );
 
 % Objective
 solve minimize
-    sum(p in Plants, c in Cities)(X[p,c] * TransmissionCosts[p,c]);
+    sum(p in PLANTS, c in CITIES)(Flow[p, c] * TransmissionCosts[p, c]);

@@ -1,44 +1,41 @@
 % Parameters
 int: ParticipantsPerCircular;
 int: ParticipantsPerRectangular;
-
 int: BoardsPerCircular;
 int: BoardsPerRectangular;
-
 int: GuestsPerCircular;
 int: GuestsPerRectangular;
-
 int: SpacePerCircular;
 int: SpacePerRectangular;
-
 int: TotalSpace;
 int: MinParticipants;
 int: MinBoards;
 
-% A derived bound for decision variables
-int: MaxTables = TotalSpace div min(SpacePerCircular, SpacePerRectangular);
+% Derived constants for bounding the decision variables
+int: MaxCircular    = TotalSpace div SpacePerCircular;
+int: MaxRectangular = TotalSpace div SpacePerRectangular;
 
 % Variables
-var 0..MaxTables: CircularTables;
-var 0..MaxTables: RectangularTables;
+var 0..MaxCircular:    CircularTables;
+var 0..MaxRectangular: RectangularTables;
 
 % Constraints
 constraint
-    SpacePerCircular * CircularTables +
-    SpacePerRectangular * RectangularTables
+    CircularTables * SpacePerCircular +
+    RectangularTables * SpacePerRectangular
     <= TotalSpace;
 
 constraint
-    ParticipantsPerCircular * CircularTables +
-    ParticipantsPerRectangular * RectangularTables
+    CircularTables * ParticipantsPerCircular +
+    RectangularTables * ParticipantsPerRectangular
     >= MinParticipants;
 
 constraint
-    BoardsPerCircular * CircularTables +
-    BoardsPerRectangular * RectangularTables
+    CircularTables * BoardsPerCircular +
+    RectangularTables * BoardsPerRectangular
     >= MinBoards;
 
 % Objective
 solve maximize
-    GuestsPerCircular * CircularTables +
-    GuestsPerRectangular * RectangularTables;
+    CircularTables * GuestsPerCircular +
+    RectangularTables * GuestsPerRectangular;

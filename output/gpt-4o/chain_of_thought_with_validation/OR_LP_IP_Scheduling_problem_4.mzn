@@ -2,24 +2,22 @@
 int: n;
 array[1..n, 1..n] of int: huts;
 
+set of int: GRID = 1..n;
+
 % Variables
-var 1..n: row1;
-var 1..n: col1;
-var 1..n: row2;
-var 1..n: col2;
+array[1..2] of var 1..n: r;   % Row indices of the two airdrop locations
+array[1..2] of var 1..n: c;   % Column indices of the two airdrop locations
 
 % Constraints
 constraint
-    row1 != row2 \/ col1 != col2;
+    (r[1] != r[2]) \/ (c[1] != c[2]);        % The two airdrop locations must be different
 
 % Objective
-var int: total_distance =
-    sum(i in 1..n, j in 1..n)(
+var int: totalDistance =
+    sum(i in GRID, j in GRID)(
         huts[i,j] *
-        min(
-            (i - row1)*(i - row1) + (j - col1)*(j - col1),
-            (i - row2)*(i - row2) + (j - col2)*(j - col2)
-        )
+        min( (i - r[1])*(i - r[1]) + (j - c[1])*(j - c[1]),
+             (i - r[2])*(i - r[2]) + (j - c[2])*(j - c[2]) )
     );
 
-solve minimize total_distance;
+solve minimize totalDistance;

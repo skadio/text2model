@@ -4,7 +4,7 @@
     "problem_type": "satisfaction",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: no function or predicate with this signature found: `regular(array[int] of var int,int,array[int,int] of int,array[int,int] of int,array[int] of int)'\nCannot use the following functions or predicates with the same identifier:\npredicate regular(array [int] of var $$E: x,string: r);\n    (requires 2 arguments, but 5 given)\npredicate regular(array [$$X] of var $$Val: x,array [$$State,$$Val] of opt $$State: d,$$State: q0,set of $$State: F);\n    (requires 4 arguments, but 5 given)\npredicate regular(array [int] of var int: x,int: Q,set of int: S,array [int,int] of int: d,int: q0,set of int: F);\n    (requires 6 arguments, but 5 given)\npredicate regular(array [int] of var int: x,int: Q,int: S,array [int,int] of int: d,int: q0,set of int: F);\n    (requires 6 arguments, but 5 given)\n\n/tmp/tmp9pww8gao.mzn:16.3-24.3\n"
+    "output": "Error: type error: no function or predicate with this signature found: `regular(array[int] of var int,int,array[int,int] of int,array[int,int] of int,array[int] of int)'\nCannot use the following functions or predicates with the same identifier:\npredicate regular(array [int] of var $$E: x,string: r);\n    (requires 2 arguments, but 5 given)\npredicate regular(array [$$X] of var $$Val: x,array [$$State,$$Val] of opt $$State: d,$$State: q0,set of $$State: F);\n    (requires 4 arguments, but 5 given)\npredicate regular(array [int] of var int: x,int: Q,set of int: S,array [int,int] of int: d,int: q0,set of int: F);\n    (requires 6 arguments, but 5 given)\npredicate regular(array [int] of var int: x,int: Q,int: S,array [int,int] of int: d,int: q0,set of int: F);\n    (requires 6 arguments, but 5 given)\n\n/tmp/tmpdyx0m9va.mzn:16.3-24.3\n"
   },
   {
     "problem_id": "CSPLib_14",
@@ -18,14 +18,14 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpp_8vv95h.mzn:24.1-8:\nminimize surplus;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmpm1pn4vn8.mzn:24.1-8:\nminimize surplus;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "CSPLib_22",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmpcm3uqd7a.mzn:13.1-8:\nminimize sum(i in SHIFTS)(x[i]);\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n\n/tmp/tmpcm3uqd7a.mzn:17.46:\nconstraint forall(w in WORK)(sum(i in SHIFTS | w in shifts[i])(x[i]) = 1);\n                                             ^\nError: syntax error, unexpected '|', expecting ')'\n"
+    "output": "Multiple syntax errors:\n/tmp/tmpw9tmuwjx.mzn:13.1-8:\nminimize sum(i in SHIFTS)(x[i]);\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n\n/tmp/tmpw9tmuwjx.mzn:17.46:\nconstraint forall(w in WORK)(sum(i in SHIFTS | w in shifts[i])(x[i]) = 1);\n                                             ^\nError: syntax error, unexpected '|', expecting ')'\n"
   },
   {
     "problem_id": "CSPLib_28",
@@ -46,14 +46,14 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpnvjk61ir.mzn:14.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmpkqvd48ez.mzn:14.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "CSPLib_39",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: type error in operator application for `'=''. No matching operator found with left-hand side type `array[int] of var int' and right-hand side type `var int'\n/tmp/tmp2hjt1p20.mzn:22.3-129\n"
+    "output": "Error: type error: type error in operator application for `'=''. No matching operator found with left-hand side type `array[int] of var int' and right-hand side type `var int'\n/tmp/tmpan8d845r.mzn:22.3-129\n"
   },
   {
     "problem_id": "CSPLib_54",
@@ -81,7 +81,7 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: type-inst must be par set but is `var set of int'\n/tmp/tmpbptesw1t.mzn:16.5-41\n"
+    "output": "Error: type error: type-inst must be par set but is `var set of int'\n/tmp/tmpg1z_vtmg.mzn:16.5-41\n"
   },
   {
     "problem_id": "LPWP_232",
@@ -95,21 +95,21 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpekeid317.mzn:18.1-8:\nmaximize A*CoinsPerA + B*CoinsPerB;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmp8y14czgt.mzn:18.1-8:\nmaximize A*CoinsPerA + B*CoinsPerB;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "LPWP_66",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `ButterPerAlmond'\n/tmp/tmp6j3wzwr7.dzn:1.1-19\n"
+    "output": "Error: type error: undefined identifier `ButterPerAlmond'\n/tmp/tmprv41xok2.dzn:1.1-19\n"
   },
   {
     "problem_id": "LPWP_85",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `TotalAcres'\n/tmp/tmplu8lmq6t.dzn:6.1-16\n"
+    "output": "Error: type error: undefined identifier `TotalAcres'\n/tmp/tmpv1n9n923.dzn:6.1-16\n"
   },
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_1",
@@ -123,7 +123,7 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `num_not_with'\n/tmp/tmpey9enenf.dzn:8.1-16\n"
+    "output": "Error: type error: undefined identifier `num_not_with'\n/tmp/tmppkrtari2.dzn:8.1-16\n"
   },
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_2",
@@ -144,7 +144,7 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `max_time'\n/tmp/tmps9us66bh.dzn:24.1-14\n"
+    "output": "Error: type error: undefined identifier `max_time'\n/tmp/tmppyoyu3y4.dzn:24.1-14\n"
   },
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_4",
@@ -165,63 +165,63 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmp7x0d809v.mzn:26.1-8:\nmaximize total_flow;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmpz9_jwgkj.mzn:26.1-8:\nmaximize total_flow;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_8",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmpk6np6b2b.mzn:17.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n\n/tmp/tmpk6np6b2b.mzn:31.1:\n);\n^\nError: syntax error, unexpected ')'\n\n/tmp/tmpk6np6b2b.mzn:42.1:\n);\n^\nError: syntax error, unexpected ')'\n"
+    "output": "Multiple syntax errors:\n/tmp/tmpyad9kmjj.mzn:17.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n\n/tmp/tmpyad9kmjj.mzn:31.1:\n);\n^\nError: syntax error, unexpected ')'\n\n/tmp/tmpyad9kmjj.mzn:42.1:\n);\n^\nError: syntax error, unexpected ')'\n"
   },
   {
     "problem_id": "combinatorial_problem_1",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: assertion failed: Variable X_INTRODUCED_42_ needs finite upper bound for a big-M constraint, current domain -infinity..infinity\n/tmp/tmpy0f99s07.mzn:20.1-16\n  in variable declaration for 'max_sum'\n  in call 'max'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:491.3-494.46\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:494.37-45\n  in call 'max_t'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_internal.mzn:2793.3-2804.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_internal.mzn:2800.5-2803.10\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_internal.mzn:2802.18-40\n  in call 'array_int_maximum'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions-2.0.mzn:13.3-54\n  in call 'array_int_minimum_I'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:118.3-148.7\n  in let expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:128.8-148.7\n  in if-th"
+    "output": "Error: assertion failed: Variable X_INTRODUCED_42_ needs finite upper bound for a big-M constraint, current domain -infinity..infinity\n/tmp/tmpi0ba_gue.mzn:20.1-16\n  in variable declaration for 'max_sum'\n  in call 'max'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:491.3-494.46\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:494.37-45\n  in call 'max_t'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_internal.mzn:2793.3-2804.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_internal.mzn:2800.5-2803.10\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_internal.mzn:2802.18-40\n  in call 'array_int_maximum'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions-2.0.mzn:13.3-54\n  in call 'array_int_minimum_I'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:118.3-148.7\n  in let expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:128.8-148.7\n  in if-th"
   },
   {
     "problem_id": "combinatorial_problem_31",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: cannot determine coercion from type array[int,int] of int to type array[int,int] of bool\n/tmp/tmpeq272lgr.dzn:4.14-13.2\n"
+    "output": "Error: type error: cannot determine coercion from type array[int,int] of int to type array[int,int] of bool\n/tmp/tmpzqxpjcv1.dzn:4.14-13.2\n"
   },
   {
     "problem_id": "combinatorial_problem_32",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmpesi10tcl.mzn:31.10-13:\nvar int: diff = sum(i in 1..num_people) (abs(total_driving_days[i] - total_obligation[i]));\n         ^^^^\nError: syntax error, unexpected diff, expecting identifier\n\n/tmp/tmpesi10tcl.mzn:32.16-19:\nsolve minimize diff;\n               ^^^^\nError: syntax error, unexpected diff\n"
+    "output": "Multiple syntax errors:\n/tmp/tmpxjfzjcpk.mzn:31.10-13:\nvar int: diff = sum(i in 1..num_people) (abs(total_driving_days[i] - total_obligation[i]));\n         ^^^^\nError: syntax error, unexpected diff, expecting identifier\n\n/tmp/tmpxjfzjcpk.mzn:32.16-19:\nsolve minimize diff;\n               ^^^^\nError: syntax error, unexpected diff\n"
   },
   {
     "problem_id": "combinatorial_problem_7",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpbj4kk0u6.mzn:15.1-8:\nmaximize total_bid;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmprbvu223i.mzn:15.1-8:\nmaximize total_bid;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "complexor_AircraftAssignment",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpivn_u5xd.mzn:16.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmpw67m8r5z.mzn:16.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "complexor_AircraftLanding",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpb3x61uq2.mzn:29.1:\n);\n^\nError: syntax error, unexpected ')'\n"
+    "output": "/tmp/tmpbcxwyk0f.mzn:29.1:\n);\n^\nError: syntax error, unexpected ')'\n"
   },
   {
     "problem_id": "complexor_CFLP",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmphsmyil71.mzn:17.1-8:\nminimize TotalCost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmpjssoi4hi.mzn:17.1-8:\nminimize TotalCost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "complexor_CapacitatedWarehouseLocation",
@@ -249,28 +249,28 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmp7ma5davt.mzn:20.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmp2gdpjy4m.mzn:20.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_1",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpzvztdxw3.mzn:21.1-8:\nmaximize TotalRevenue;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmpo11zv6g6.mzn:21.1-8:\nmaximize TotalRevenue;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_10",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: cannot determine coercion from type var float to type var int\n/tmp/tmp7so_980z.mzn:18.24-117\n"
+    "output": "Error: type error: cannot determine coercion from type var float to type var int\n/tmp/tmp4bn5iiod.mzn:18.24-117\n"
   },
   {
     "problem_id": "nlp4lp_11",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpowhqvnsr.mzn:16.1-8:\nminimize total_distance;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmpzheukvmm.mzn:16.1-8:\nminimize total_distance;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_12",
@@ -284,7 +284,7 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `i', did you mean `N'?\n/tmp/tmpge3fkthl.mzn:16.37\n"
+    "output": "Error: type error: undefined identifier `i', did you mean `N'?\n/tmp/tmpe6yb5ip5.mzn:16.37\n"
   },
   {
     "problem_id": "nlp4lp_14",
@@ -305,7 +305,7 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmphoa6rmie.mzn:37.21:\nvar 0..1000: Product[1..N];\n                    ^\nError: syntax error, unexpected [, expecting end of file\n"
+    "output": "/tmp/tmptwoit8nc.mzn:37.21:\nvar 0..1000: Product[1..N];\n                    ^\nError: syntax error, unexpected [, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_17",
@@ -319,63 +319,63 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `i', did you mean `K'?\n/tmp/tmpgbm8nlmz.mzn:28.32\n"
+    "output": "Error: type error: undefined identifier `i', did you mean `K'?\n/tmp/tmpi5rojtrg.mzn:28.32\n"
   },
   {
     "problem_id": "nlp4lp_19",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmp7tjasejq.mzn:33.80:\n  sum(i in 1..I) (IsVegetable[i] * Refine[m,i]) <= MaxVegetableRefiningPerMonth,\n                                                                               ^\nError: syntax error, unexpected ','\n\n/tmp/tmp7tjasejq.mzn:37.91:\n  sum(i in 1..I) (Hardness[i] * Refine[m,i]) / sum(i in 1..I) (Refine[m,i]) >= MinHardness,\n                                                                                          ^\nError: syntax error, unexpected ','\n"
+    "output": "Multiple syntax errors:\n/tmp/tmp6lw39ud1.mzn:33.80:\n  sum(i in 1..I) (IsVegetable[i] * Refine[m,i]) <= MaxVegetableRefiningPerMonth,\n                                                                               ^\nError: syntax error, unexpected ','\n\n/tmp/tmp6lw39ud1.mzn:37.91:\n  sum(i in 1..I) (Hardness[i] * Refine[m,i]) / sum(i in 1..I) (Refine[m,i]) >= MinHardness,\n                                                                                          ^\nError: syntax error, unexpected ','\n"
   },
   {
     "problem_id": "nlp4lp_2",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmpwfppy93t.mzn:23.25-29:\narray[1..N] of var 0.0..float(Demand[i]): Systems;\n                        ^^^^^\nError: syntax error, unexpected float, expecting ++ or ':'\n\n/tmp/tmpwfppy93t.mzn:27.1-8:\nmaximize profit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "Multiple syntax errors:\n/tmp/tmpchl3jdlw.mzn:23.25-29:\narray[1..N] of var 0.0..float(Demand[i]): Systems;\n                        ^^^^^\nError: syntax error, unexpected float, expecting ++ or ':'\n\n/tmp/tmpchl3jdlw.mzn:27.1-8:\nmaximize profit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_20",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: cannot determine coercion from type array[int,int] of int to type array[int,int] of bool\n/tmp/tmp75p7d_vl.dzn:15.16-111\n"
+    "output": "Error: type error: cannot determine coercion from type array[int,int] of int to type array[int,int] of bool\n/tmp/tmpsoo2ap8x.dzn:15.16-111\n"
   },
   {
     "problem_id": "nlp4lp_21",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmp93ai15am.mzn:22.1-8:\nmaximize TotalProfit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmp0jecu56q.mzn:22.1-8:\nmaximize TotalProfit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_22",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `array[int,int] of int'\n/tmp/tmpzfmhyzpr.mzn:18.26-33\n"
+    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `array[int,int] of int'\n/tmp/tmp3xu71qu8.mzn:18.26-33\n"
   },
   {
     "problem_id": "nlp4lp_23",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: type-inst must be par set but is `var set of int'\n/tmp/tmpq2gr53q0.mzn:18.26-39\n"
+    "output": "Error: type error: type-inst must be par set but is `var set of int'\n/tmp/tmpjiedkpet.mzn:18.26-39\n"
   },
   {
     "problem_id": "nlp4lp_24",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `i', did you mean `I'?\n/tmp/tmpbl7ixi3e.mzn:18.37\n"
+    "output": "Error: type error: undefined identifier `i', did you mean `I'?\n/tmp/tmpcnc62g0h.mzn:18.37\n"
   },
   {
     "problem_id": "nlp4lp_25",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmpn1grr_ko.mzn:35.27-33:\nconstraint sum(i in 1..K) operate[i] <= MaxWork; % can't operate more than MaxWork mines\n                          ^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpn1grr_ko.mzn:37.92-101:\nconstraint forall(i in 1..K) (sum(j in 1..K) (Quality[j] * production[j]) / sum(j in 1..K) production[j] = RequiredQuality[i]); % the quality of the blended ore must meet the requirement\n                                                                                           ^^^^^^^^^^\nError: syntax error, unexpected identifier\n"
+    "output": "Multiple syntax errors:\n/tmp/tmpr9fogwdd.mzn:35.27-33:\nconstraint sum(i in 1..K) operate[i] <= MaxWork; % can't operate more than MaxWork mines\n                          ^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpr9fogwdd.mzn:37.92-101:\nconstraint forall(i in 1..K) (sum(j in 1..K) (Quality[j] * production[j]) / sum(j in 1..K) production[j] = RequiredQuality[i]); % the quality of the blended ore must meet the requirement\n                                                                                           ^^^^^^^^^^\nError: syntax error, unexpected identifier\n"
   },
   {
     "problem_id": "nlp4lp_27",
@@ -389,77 +389,77 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpgsruwaup.mzn:19.1-8:\nmaximize obj;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmpxprn3xlf.mzn:19.1-8:\nmaximize obj;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_29",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `i', did you mean `K'?\n/tmp/tmpmlld8qyn.mzn:14.32\n"
+    "output": "Error: type error: undefined identifier `i', did you mean `K'?\n/tmp/tmp80xmgu3_.mzn:14.32\n"
   },
   {
     "problem_id": "nlp4lp_3",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `i', did you mean `T'?\n/tmp/tmpp4oaurwz.mzn:14.30\n"
+    "output": "Error: type error: undefined identifier `i', did you mean `T'?\n/tmp/tmpeqth4kz0.mzn:14.30\n"
   },
   {
     "problem_id": "nlp4lp_30",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `Benefit' are [1..5,1..3], but is assigned to array with index sets [1..5, 1..2]. You may need to coerce the index sets using the array2d function.\n/tmp/tmpitfr7u_4.mzn:9.1-33\n  in variable declaration for 'Benefit'\n"
+    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `Benefit' are [1..5,1..3], but is assigned to array with index sets [1..5, 1..2]. You may need to coerce the index sets using the array2d function.\n/tmp/tmpi8mtj4dc.mzn:9.1-33\n  in variable declaration for 'Benefit'\n"
   },
   {
     "problem_id": "nlp4lp_31",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmphnj8afh5.mzn:20.1-8:\nminimize obj;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmp698qqhzz.mzn:20.1-8:\nminimize obj;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_32",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmpf1qrp0u9.mzn:23.12-25.1\n  in call 'forall'\n  in array comprehension expression\n    with i = 1\n/tmp/tmpf1qrp0u9.mzn:24.3-37\n  in binary '<=' operator expression\n  in call 'abs'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:600.3-617.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:601.5-610.9\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:606.7-609.12\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:608.20-34\n  in call 'float_abs'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:90.3-108.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:95.5-103.35\n  in let expression\n/snap/minizinc/1136/share/minizinc/line"
+    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmpcgehrj9n.mzn:23.12-25.1\n  in call 'forall'\n  in array comprehension expression\n    with i = 1\n/tmp/tmpcgehrj9n.mzn:24.3-37\n  in binary '<=' operator expression\n  in call 'abs'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:600.3-617.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:601.5-610.9\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:606.7-609.12\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:608.20-34\n  in call 'float_abs'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:90.3-108.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:95.5-103.35\n  in let expression\n/snap/minizinc/1136/share/minizinc/line"
   },
   {
     "problem_id": "nlp4lp_33",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmpe41y27rn.mzn:20.12-22.1\n  in call 'forall'\n  in array comprehension expression\n    with k = 1\n/tmp/tmpe41y27rn.mzn:21.5-63\n  in binary '=' operator expression\n  in call 'abs'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:600.3-617.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:601.5-610.9\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:606.7-609.12\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:608.20-34\n  in call 'float_abs'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:90.3-108.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:95.5-103.35\n  in let expression\n/snap/minizinc/1136/share/minizinc/linea"
+    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmpwu_izgjl.mzn:20.12-22.1\n  in call 'forall'\n  in array comprehension expression\n    with k = 1\n/tmp/tmpwu_izgjl.mzn:21.5-63\n  in binary '=' operator expression\n  in call 'abs'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:600.3-617.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:601.5-610.9\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:606.7-609.12\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:608.20-34\n  in call 'float_abs'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:90.3-108.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:95.5-103.35\n  in let expression\n/snap/minizinc/1136/share/minizinc/linea"
   },
   {
     "problem_id": "nlp4lp_34",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: evaluation error: Index set mismatch. Declared index set of `Demand' is [1..4], but is assigned to array with index set [1..5]. You may need to coerce the index sets using the array1d function.\n/tmp/tmp7q_y1zzo.mzn:6.1-26\n  in variable declaration for 'Demand'\n"
+    "output": "Error: evaluation error: Index set mismatch. Declared index set of `Demand' is [1..4], but is assigned to array with index set [1..5]. You may need to coerce the index sets using the array1d function.\n/tmp/tmp5rn0900w.mzn:6.1-26\n  in variable declaration for 'Demand'\n"
   },
   {
     "problem_id": "nlp4lp_35",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpmwcj2a2y.mzn:23.1-8:\nmaximize total_profit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmpw7odxtzn.mzn:23.1-8:\nmaximize total_profit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_36",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpet_dftr5.mzn:12.1-8:\nmaximize total_value;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmpmvss9mxg.mzn:12.1-8:\nmaximize total_value;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_37",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpog_v4u_z.mzn:19.1-8:\nminimize sum(i in 1..K)(Price[i]*Food[i]);\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmp0o47py_n.mzn:19.1-8:\nminimize sum(i in 1..K)(Price[i]*Food[i]);\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_38",
@@ -487,14 +487,14 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpdy5oev51.mzn:21.1-8:\nmaximize total_profit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmpbeqymqym.mzn:21.1-8:\nmaximize total_profit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_41",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmpms0des37.mzn:20.112:\nconstraint forall(i in 1..N) (RegularProduction[i] + OvertimeProduction[i] + (if i > 1 then Storage[i-1] else 0) >= Demand[i]);\n                                                                                                               ^\nError: syntax error, unexpected ')'\n\n/tmp/tmpms0des37.mzn:21.112:\nconstraint forall(i in 1..N) (RegularProduction[i] + OvertimeProduction[i] + (if i > 1 then Storage[i-1] else 0) - Demand[i] = Storage[i]);\n                                                                                                               ^\nError: syntax error, unexpected ')'\n"
+    "output": "Multiple syntax errors:\n/tmp/tmp_p0mw357.mzn:20.112:\nconstraint forall(i in 1..N) (RegularProduction[i] + OvertimeProduction[i] + (if i > 1 then Storage[i-1] else 0) >= Demand[i]);\n                                                                                                               ^\nError: syntax error, unexpected ')'\n\n/tmp/tmp_p0mw357.mzn:21.112:\nconstraint forall(i in 1..N) (RegularProduction[i] + OvertimeProduction[i] + (if i > 1 then Storage[i-1] else 0) - Demand[i] = Storage[i]);\n                                                                                                               ^\nError: syntax error, unexpected ')'\n"
   },
   {
     "problem_id": "nlp4lp_42",
@@ -508,14 +508,14 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmp9rspz6yh.mzn:22.1-8:\nmaximize profit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmp2ddsufmt.mzn:22.1-8:\nmaximize profit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_44",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: cannot determine coercion from type array[int] of float to type array[int] of int\n/tmp/tmpjbgppd4f.dzn:3.8-28\n"
+    "output": "Error: type error: cannot determine coercion from type array[int] of float to type array[int] of int\n/tmp/tmp98e3ruvc.dzn:3.8-28\n"
   },
   {
     "problem_id": "nlp4lp_45",
@@ -543,28 +543,28 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmp8fwye2gr.mzn:20.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmpzwr0p2vx.mzn:20.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_49",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmp4jx9yv5o.mzn:20.1-8:\nmaximize profit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmpi748msdz.mzn:20.1-8:\nmaximize profit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_5",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `array[int] of int'\n/tmp/tmp1q7ufay9.mzn:31.43-53\n"
+    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `array[int] of int'\n/tmp/tmpit0nomrj.mzn:31.43-53\n"
   },
   {
     "problem_id": "nlp4lp_50",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpjyw4puh2.mzn:23.1-8:\nminimize TotalCost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmp6m_ke8b5.mzn:23.1-8:\nminimize TotalCost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_51",
@@ -585,14 +585,14 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `array[int] of int'\n/tmp/tmp_dnf5_fl.mzn:33.20-30\n"
+    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `array[int] of int'\n/tmp/tmp152x0gv9.mzn:33.20-30\n"
   },
   {
     "problem_id": "nlp4lp_54",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmphw76vkms.mzn:41.1-8:\nmaximize total_unique_clicks;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmp4s5l8wod.mzn:41.1-8:\nmaximize total_unique_clicks;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_55",
@@ -606,7 +606,7 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpgt9engst.mzn:23.1-8:\nminimize TotalCost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmpitqjj9k5.mzn:23.1-8:\nminimize TotalCost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_57",
@@ -627,7 +627,7 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpe_nre5a4.mzn:15.1-8:\nminimize fuel;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmpbsn1d_rg.mzn:15.1-8:\nminimize fuel;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_60",
@@ -641,7 +641,7 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `array[int] of int'\n/tmp/tmpkz9zc_zz.mzn:17.20-36\n"
+    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `array[int] of int'\n/tmp/tmp86mkj_wj.mzn:17.20-36\n"
   },
   {
     "problem_id": "nlp4lp_62",
@@ -655,21 +655,21 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpw4b0zv_6.dzn:8.5:\n    |1, 1, 0, 0, 0, 0, 1, 0| % Translator 1\n    ^\nError: syntax error, unexpected '|'\n"
+    "output": "/tmp/tmpwqi4ho_0.dzn:8.5:\n    |1, 1, 0, 0, 0, 0, 1, 0| % Translator 1\n    ^\nError: syntax error, unexpected '|'\n"
   },
   {
     "problem_id": "nlp4lp_64",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpuxueboby.mzn:19.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmpd5s6s7yp.mzn:19.1-8:\nminimize total_cost;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_65",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmpgjoghp5n.mzn:31.18:\nvar 0..1: central[N];\n                 ^\nError: syntax error, unexpected [, expecting end of file\n\n/tmp/tmpgjoghp5n.mzn:32.22:\nvar 0..1: distributed[N];\n                     ^\nError: syntax error, unexpected [, expecting end of file\n"
+    "output": "Multiple syntax errors:\n/tmp/tmp8w3qgww2.mzn:31.18:\nvar 0..1: central[N];\n                 ^\nError: syntax error, unexpected [, expecting end of file\n\n/tmp/tmp8w3qgww2.mzn:32.22:\nvar 0..1: distributed[N];\n                     ^\nError: syntax error, unexpected [, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_66",
@@ -683,21 +683,21 @@
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmppx2yri_b.mzn:16.1-8:\nminimize total_large_rolls;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmp_mfgq7kx.mzn:16.1-8:\nminimize total_large_rolls;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_7",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: assertion failed: Variable X_INTRODUCED_118_ needs finite upper bound for a big-M constraint, current domain -infinity..infinity\n/tmp/tmp59pczhw9.mzn:25.12-45\n  in binary '=' operator expression\n  in call 'max'\n  in array comprehension expression\n    with t = 0\n  in call 'abs'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:579.3-588.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:584.5-587.10\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:586.18-30\n  in call 'int_abs'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:66.3-83.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:71.5-80.26\n  in let expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:73.10-80.26\n  in binary '/\\' operator expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:78.7-30\n  in call 'aux_int_le_if_1'\n/snap/minizinc/1136/share/mini"
+    "output": "Error: assertion failed: Variable X_INTRODUCED_118_ needs finite upper bound for a big-M constraint, current domain -infinity..infinity\n/tmp/tmp4mh874k2.mzn:25.12-45\n  in binary '=' operator expression\n  in call 'max'\n  in array comprehension expression\n    with t = 0\n  in call 'abs'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:579.3-588.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:584.5-587.10\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:586.18-30\n  in call 'int_abs'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:66.3-83.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:71.5-80.26\n  in let expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:73.10-80.26\n  in binary '/\\' operator expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:78.7-30\n  in call 'aux_int_le_if_1'\n/snap/minizinc/1136/share/mini"
   },
   {
     "problem_id": "nlp4lp_8",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmpf64u1km7.mzn:13.1-8:\nmaximize totalProfit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
+    "output": "/tmp/tmpr2_126os.mzn:13.1-8:\nmaximize totalProfit;\n^^^^^^^^\nError: syntax error, unexpected maximize, expecting end of file\n"
   },
   {
     "problem_id": "nlp4lp_9",
@@ -711,28 +711,28 @@
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: cannot determine coercion from type array[int,int] of float to type array[int,int] of int\n/tmp/tmp0ae4qexb.dzn:17.8-22.30\n"
+    "output": "Error: type error: cannot determine coercion from type array[int,int] of float to type array[int,int] of int\n/tmp/tmp2ei2t54o.dzn:17.8-22.30\n"
   },
   {
     "problem_id": "non_linear_problem_15",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Multiple syntax errors:\n/tmp/tmpuh0icmuh.mzn:19.16:\n  grid[i,1] = Z;\n               ^\nError: syntax error, unexpected ';'\n\n/tmp/tmpuh0icmuh.mzn:20.13:\n  grid[i,c] = Z;\n            ^\nError: syntax error, unexpected =, expecting ++ or ':'\n\n/tmp/tmpuh0icmuh.mzn:23.16:\n  grid[1,j] = Z;\n               ^\nError: syntax error, unexpected ';'\n\n/tmp/tmpuh0icmuh.mzn:24.13:\n  grid[r,j] = Z;\n            ^\nError: syntax error, unexpected =, expecting ++ or ':'\n"
+    "output": "Multiple syntax errors:\n/tmp/tmpc_psclyd.mzn:19.16:\n  grid[i,1] = Z;\n               ^\nError: syntax error, unexpected ';'\n\n/tmp/tmpc_psclyd.mzn:20.13:\n  grid[i,c] = Z;\n            ^\nError: syntax error, unexpected =, expecting ++ or ':'\n\n/tmp/tmpc_psclyd.mzn:23.16:\n  grid[1,j] = Z;\n               ^\nError: syntax error, unexpected ';'\n\n/tmp/tmpc_psclyd.mzn:24.13:\n  grid[r,j] = Z;\n            ^\nError: syntax error, unexpected =, expecting ++ or ':'\n"
   },
   {
     "problem_id": "non_linear_problem_23",
     "problem_type": "maximization",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: array access using a variable is not supported for array of string.\n/tmp/tmpb4icoa87.mzn:27.46-56\n"
+    "output": "Error: type error: array access using a variable is not supported for array of string.\n/tmp/tmpnjvwgb_v.mzn:27.46-56\n"
   },
   {
     "problem_id": "non_linear_problem_9",
     "problem_type": "minimization",
     "execution_success": false,
     "solution_success": false,
-    "output": "/tmp/tmp42adk2bh.mzn:14.1-8:\nminimize total_distance;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+    "output": "/tmp/tmpli0ye8or.mzn:14.1-8:\nminimize total_distance;\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
   },
   {
     "problem_id": "puzzles_problem_1",
@@ -746,7 +746,7 @@
     "problem_type": "satisfaction",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: 2-dimensional array accessed with 1 expression\n/tmp/tmpgigu6ovo.mzn:53.31-40\n"
+    "output": "Error: type error: 2-dimensional array accessed with 1 expression\n/tmp/tmpb1a678jn.mzn:53.31-40\n"
   },
   {
     "problem_id": "puzzles_problem_12",
@@ -760,13 +760,13 @@
     "problem_type": "satisfaction",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: type error in operator application for `'intersect''. No matching operator found with left-hand side type `int' and right-hand side type `set of int'\n/tmp/tmpyc2lyss9.mzn:22.34-53\n"
+    "output": "Error: type error: type error in operator application for `'intersect''. No matching operator found with left-hand side type `int' and right-hand side type `set of int'\n/tmp/tmpblgzu33w.mzn:22.34-53\n"
   },
   {
     "problem_id": "puzzles_problem_31",
     "problem_type": "satisfaction",
     "execution_success": false,
     "solution_success": false,
-    "output": "Error: type error: undefined identifier `X', did you mean `n'?\n/tmp/tmp2if907pi.dzn:7.5\n"
+    "output": "Error: type error: undefined identifier `X', did you mean `n'?\n/tmp/tmpaolrhf7m.dzn:7.5\n"
   }
 ]

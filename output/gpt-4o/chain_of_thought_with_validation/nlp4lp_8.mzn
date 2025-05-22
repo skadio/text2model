@@ -2,23 +2,35 @@
 int: NumParts;
 int: NumMachines;
 
-set of int: PARTS    = 1..NumParts;
-set of int: MACHINES = 1..NumMachines;
+set of int: Parts    = 1..NumParts;
+set of int: Machines = 1..NumMachines;
 
-array[PARTS, MACHINES] of int: Time;
-array[PARTS]              of int: Profit;
-array[MACHINES]           of int: Capacity;
+array[Parts, Machines] of int: Time;        % hours needed for one unit of part k on machine s
+array[Parts]           of int: Profit;      % profit per unit of part k
+array[Machines]        of int: Capacity;    % monthly capacity (hours) of machine s
 
-int: BigM = sum(s in MACHINES)(Capacity[s]);
+% Derived parameters
+array[Parts] of int: MaxProduction =
+  [ min( [ Capacity[s] div Time[k,s] | s in Machines ] )
+  | k in Parts
+  ];
+
+int: GlobalMax = max(MaxProduction);        % common explicit upper bound for all decision vars
 
 % Variables
-array[PARTS] of var 0..BigM: Produce;
+array[Parts] of var 0..GlobalMax: Production;   % units of part k to produce
 
 % Constraints
 constraint
-  forall(s in MACHINES) (
-    sum(k in PARTS)(Time[k,s] * Produce[k]) <= Capacity[s]
+  forall(k in Parts)(
+    Production[k] <= MaxProduction[k]          % individual upper bounds
+  );
+
+constraint
+  forall(s in Machines)(
+    sum(k in Parts)( Time[k,s] * Production[k] ) <= Capacity[s]   % machine-hour capacities
   );
 
 % Objective
-solve maximize sum(k in PARTS)(Profit[k] * Produce[k]);
+solve maximize
+  sum(k in Parts)( Profit[k] * Production[k] );

@@ -2,41 +2,39 @@
 int: NumberOfFacilities;
 int: NumberOfCustomers;
 
-set of int: Facilities = 1..NumberOfFacilities;
-set of int: Customers  = 1..NumberOfCustomers;
+array [1..NumberOfFacilities] of int: FacilityFixedCost;
+array [1..NumberOfFacilities, 1..NumberOfCustomers] of int: FacilityToCustomerTransportCost;
+array [1..NumberOfFacilities] of int: FacilityCapacity;
+array [1..NumberOfCustomers] of int: CustomerDemand;
 
-array[Facilities] of int: FacilityFixedCost;
-array[Facilities, Customers] of int: FacilityToCustomerTransportCost;
-array[Facilities] of int: FacilityCapacity;
-array[Customers] of int: CustomerDemand;
+set of int: Facility = 1..NumberOfFacilities;
+set of int: Customer = 1..NumberOfCustomers;
 
-int: TotalDemand = sum(c in Customers)(CustomerDemand[c]);
+int: MaxDemand = max(CustomerDemand);
 
 % Variables
-array[Facilities] of var bool: Open;
-array[Facilities, Customers] of var 0..TotalDemand: Ship;
+array [Facility] of var 0..1: OpenFacility;
+array [Facility, Customer] of var 0..MaxDemand: Flow;
 
 % Constraints
 constraint
-  forall(c in Customers)(
-    sum(f in Facilities)(Ship[f,c]) = CustomerDemand[c]
-  );
+    forall(c in Customer)(
+        sum(f in Facility)(Flow[f, c]) = CustomerDemand[c]
+    );
 
 constraint
-  forall(f in Facilities)(
-    sum(c in Customers)(Ship[f,c]) <= FacilityCapacity[f] * bool2int(Open[f])
-  );
+    forall(f in Facility)(
+        sum(c in Customer)(Flow[f, c]) <= FacilityCapacity[f] * OpenFacility[f]
+    );
 
 constraint
-  forall(f in Facilities, c in Customers)(
-    Ship[f,c] <= CustomerDemand[c] * bool2int(Open[f])
-  );
+    forall(f in Facility, c in Customer)(
+        Flow[f, c] <= CustomerDemand[c]
+    );
 
 % Objective
-var int: TotalCost =
-    sum(f in Facilities)(FacilityFixedCost[f] * bool2int(Open[f])) +
-    sum(f in Facilities, c in Customers)(
-        FacilityToCustomerTransportCost[f,c] * Ship[f,c]
-    );
+var int: TotalCost = 
+    sum(f in Facility)(FacilityFixedCost[f] * OpenFacility[f]) +
+    sum(f in Facility, c in Customer)(FacilityToCustomerTransportCost[f, c] * Flow[f, c]);
 
 solve minimize TotalCost;

@@ -1,0 +1,772 @@
+[
+  {
+    "problem_id": "CSPLib_12",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Multiple syntax errors:\n/tmp/tmpc91muxn1.mzn:20.5-12:\n    function(i, j) = if i = j+1 then i else if i <= row_rule_len /\\ j = row_rules[i] then i+1 else 0 endif endif), 1, row_rule_len+2)\n    ^^^^^^^^\nError: syntax error, unexpected function, expecting ')'\n\n/tmp/tmpc91muxn1.mzn:28.5-12:\n    function(i, j) = if i = j+1 then i else if i <= col_rule_len /\\ j = col_rules[j,i] then i+1 else 0 endif endif), 1, col_rule_len+2)\n    ^^^^^^^^\nError: syntax error, unexpected function, expecting ')'\n"
+  },
+  {
+    "problem_id": "CSPLib_14",
+    "problem_type": "satisfaction",
+    "execution_success": true,
+    "solution_success": false,
+    "output": ""
+  },
+  {
+    "problem_id": "CSPLib_2",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: no function or predicate with name `increasing' found\n/tmp/tmprkv936vs.mzn:19.3-43\n"
+  },
+  {
+    "problem_id": "CSPLib_22",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "/tmp/tmp0oup1qkr.mzn:10.12:\nvar 0..1: x[SHIFTS]; % Binary variable indicating whether a shift is selected or not\n           ^\nError: syntax error, unexpected [, expecting end of file\n"
+  },
+  {
+    "problem_id": "CSPLib_28",
+    "problem_type": "satisfaction",
+    "execution_success": true,
+    "solution_success": false,
+    "output": ""
+  },
+  {
+    "problem_id": "CSPLib_30",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "20.0"
+  },
+  {
+    "problem_id": "CSPLib_34",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "383.0"
+  },
+  {
+    "problem_id": "CSPLib_39",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "22.0"
+  },
+  {
+    "problem_id": "CSPLib_54",
+    "problem_type": "satisfaction",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "queens = [4, 1, 5, 2, 6, 3];\n----------\n"
+  },
+  {
+    "problem_id": "CSPLib_6",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Multiple syntax errors:\n/tmp/tmpo1wqf4z8.mzn:8.34-37:\narray[1..m, 1..m] of var 0..m*m: diff; % Differences between each pair of marks\n                                 ^^^^\nError: syntax error, unexpected diff, expecting identifier\n\n/tmp/tmpo1wqf4z8.mzn:12.5-8:\n    diff[i,j] = a[j] - a[i]\n    ^^^^\nError: syntax error, unexpected diff\n\n/tmp/tmpo1wqf4z8.mzn:17.9-12:\n        diff[i,j] != diff[k,l]\n        ^^^^\nError: syntax error, unexpected diff\n"
+  },
+  {
+    "problem_id": "CSPLib_8",
+    "problem_type": "satisfaction",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "x = [1, 1, 3];\ny = [1, 2, 2];\n----------\n"
+  },
+  {
+    "problem_id": "LPWP_128",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "970.0"
+  },
+  {
+    "problem_id": "LPWP_232",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "1080.0"
+  },
+  {
+    "problem_id": "LPWP_53",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "750.0"
+  },
+  {
+    "problem_id": "LPWP_66",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "0.0"
+  },
+  {
+    "problem_id": "LPWP_85",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "1500.0"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_1",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "7.0"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_18",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "2310.0"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_2",
+    "problem_type": "satisfaction",
+    "execution_success": true,
+    "solution_success": false,
+    "output": ""
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_28",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "14.56"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_31",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `max_time'\n/tmp/tmpe8dcwibs.dzn:24.1-14\n"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_4",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "178.0"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_5",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "8.0"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_6",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Multiple syntax errors:\n/tmp/tmpteohfphz.mzn:14.54:\nconstraint forall(i in 2..n-1)(sum(j in 1..num_edges | E[j,1] = i)(f[j]) = sum(j in 1..num_edges | E[j,2] = i)(f[j]));\n                                                     ^\nError: syntax error, unexpected '|', expecting ')'\n\n/tmp/tmpteohfphz.mzn:20.38:\nsolve maximize sum(j in 1..num_edges | E[j,1] = s)(f[j]) - sum(j in 1..num_edges | E[j,2] = t)(f[j]);\n                                     ^\nError: syntax error, unexpected '|', expecting ')'\n"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_8",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "2300.0"
+  },
+  {
+    "problem_id": "combinatorial_problem_1",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: assertion failed: Variable X_INTRODUCED_42_ needs finite upper bound for a big-M constraint, current domain -infinity..infinity\n/tmp/tmp57mckjwl.mzn:19.16-29\n  in call 'max'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:491.3-494.46\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:494.37-45\n  in call 'max_t'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_internal.mzn:2793.3-2804.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_internal.mzn:2800.5-2803.10\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_internal.mzn:2802.18-40\n  in call 'array_int_maximum'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions-2.0.mzn:13.3-54\n  in call 'array_int_minimum_I'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:118.3-148.7\n  in let expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:128.8-148.7\n  in if-then-else expression\n/snap/minizinc/1136/"
+  },
+  {
+    "problem_id": "combinatorial_problem_31",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "No objective value found in output"
+  },
+  {
+    "problem_id": "combinatorial_problem_32",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Multiple syntax errors:\n/tmp/tmpbneszw5r.mzn:25.10-13:\nvar int: diff = sum(i in 1..num_people, j in 1..num_days) (\n         ^^^^\nError: syntax error, unexpected diff, expecting identifier\n\n/tmp/tmpbneszw5r.mzn:32.16-19:\nsolve minimize diff;\n               ^^^^\nError: syntax error, unexpected diff\n"
+  },
+  {
+    "problem_id": "combinatorial_problem_7",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "11.0"
+  },
+  {
+    "problem_id": "complexor_AircraftAssignment",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "140.0"
+  },
+  {
+    "problem_id": "complexor_AircraftLanding",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "/tmp/tmph0fhy82s.mzn:30.1:\n);\n^\nError: syntax error, unexpected ')'\n"
+  },
+  {
+    "problem_id": "complexor_CFLP",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "95090.0"
+  },
+  {
+    "problem_id": "complexor_CapacitatedWarehouseLocation",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "18460.0"
+  },
+  {
+    "problem_id": "complexor_CarSelection",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "25.0"
+  },
+  {
+    "problem_id": "complexor_TSP",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "315.0"
+  },
+  {
+    "problem_id": "complexor_VRPTW",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "No objective value found in output"
+  },
+  {
+    "problem_id": "nlp4lp_1",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "76.0"
+  },
+  {
+    "problem_id": "nlp4lp_10",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "7.500000000000001"
+  },
+  {
+    "problem_id": "nlp4lp_11",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "240.9"
+  },
+  {
+    "problem_id": "nlp4lp_12",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "1310.0"
+  },
+  {
+    "problem_id": "nlp4lp_13",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `i', did you mean `N'?\n/tmp/tmpp4nd0z9h.mzn:8.37\n"
+  },
+  {
+    "problem_id": "nlp4lp_14",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "2.0"
+  },
+  {
+    "problem_id": "nlp4lp_15",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "1800.0"
+  },
+  {
+    "problem_id": "nlp4lp_16",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `var float'\n/tmp/tmpeqnxaia7.mzn:18.5-50\n"
+  },
+  {
+    "problem_id": "nlp4lp_17",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "/tmp/tmpd6vsvd7b.mzn:1.5-13:\nThe generated MiniZinc code is correct and aligns with the problem description, input parameters, and objective type. There are no syntax errors, the order of declarations is correct, and no components are missing or inconsistent. The constraints are properly structured and the objective function is correctly set to maximize. All parameter and variable names in the MiniZinc code match the given data. Therefore, no revisions are needed.\n    ^^^^^^^^^\nError: syntax error, unexpected identifier, expecting ++ or ':'\n"
+  },
+  {
+    "problem_id": "nlp4lp_18",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `i', did you mean `K'?\n/tmp/tmp5rarmi32.mzn:12.32\n"
+  },
+  {
+    "problem_id": "nlp4lp_19",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `True'\n/tmp/tmpqgqts7ie.dzn:5.16-19\n"
+  },
+  {
+    "problem_id": "nlp4lp_2",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "/tmp/tmpkhq7srs2.mzn:20.25-29:\narray[1..N] of var 0.0..float(Demand): Systems;\n                        ^^^^^\nError: syntax error, unexpected float, expecting ++ or ':'\n"
+  },
+  {
+    "problem_id": "nlp4lp_20",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: initialisation value for `InitialAmount' has invalid type-inst: expected `array[int] of int', actual `int'\n/tmp/tmpfxv9yis3.mzn:14.1-33\n"
+  },
+  {
+    "problem_id": "nlp4lp_21",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `Time' are [1..7,1..5], but is assigned to array with index sets [1..6, 1..5]. You may need to coerce the index sets using the array2d function.\n/tmp/tmpjmuf7okf.mzn:7.1-32\n  in variable declaration for 'Time'\n"
+  },
+  {
+    "problem_id": "nlp4lp_22",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Multiple type errors:\nError: type error: initialisation value for `Downtime' has invalid type-inst: expected `array[int] of int', actual `array[int,int] of int'\n/tmp/tmp24qmibgt.dzn:6.12-47\n\nError: type error:   symbol error: variable `I' must be defined (did you forget to specify a data file?)\n/tmp/tmpmz5195d1.mzn:4.1-6\n"
+  },
+  {
+    "problem_id": "nlp4lp_23",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `i', did you mean `K'?\n/tmp/tmpt9rzc05m.mzn:16.38\n"
+  },
+  {
+    "problem_id": "nlp4lp_24",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `LessOneWaste'\n/tmp/tmpfm38atoy.dzn:3.1-31\n"
+  },
+  {
+    "problem_id": "nlp4lp_25",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `k', did you mean `K'?\n/tmp/tmp4i7iad9t.mzn:13.35\n"
+  },
+  {
+    "problem_id": "nlp4lp_27",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `i', did you mean `K'?\n/tmp/tmp6nxqki_q.mzn:13.38\n"
+  },
+  {
+    "problem_id": "nlp4lp_28",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `i', did you mean `K'?\n/tmp/tmpo9reuk54.mzn:12.32\n"
+  },
+  {
+    "problem_id": "nlp4lp_29",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `i', did you mean `K'?\n/tmp/tmpbre_9na7.mzn:12.32\n"
+  },
+  {
+    "problem_id": "nlp4lp_3",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "955.0"
+  },
+  {
+    "problem_id": "nlp4lp_30",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "/tmp/tmpme1z70pv.mzn:20.189-191:\nconstraint total_cost = sum(k in 1..K)(Benefit[k, location[k]]) - sum(k in 1..K, j in 1..K where k != j, l in 1..L, m in 1..L) (Communication[k, j] * Cost[l, m] * bool2int(location[k] = l and location[j] = m));\n                                                                                                                                                                                            ^^^\nError: syntax error, unexpected identifier, expecting ')'\n"
+  },
+  {
+    "problem_id": "nlp4lp_31",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmpkyh3h75g.mzn:17.12-19.1\n  in call 'forall'\n  in array comprehension expression\n    with i = 1\n/tmp/tmpkyh3h75g.mzn:18.5-38\n  in binary '=' operator expression\n  in call 'abs'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:600.3-617.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:601.5-610.9\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:606.7-609.12\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:608.20-34\n  in call 'float_abs'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:90.3-108.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:95.5-103.35\n  in let expression\n/snap/minizinc/1136/share/minizinc/linea"
+  },
+  {
+    "problem_id": "nlp4lp_32",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmpmt2ajsr1.mzn:16.12-18.1\n  in call 'forall'\n  in array comprehension expression\n    with i = 1\n/tmp/tmpmt2ajsr1.mzn:17.5-42\n  in binary '<=' operator expression\n  in call 'abs'\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:600.3-617.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:601.5-610.9\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:606.7-609.12\n  in let expression\n/snap/minizinc/1136/share/minizinc/std/stdlib/stdlib_math.mzn:608.20-34\n  in call 'float_abs'\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:90.3-108.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:95.5-103.35\n  in let expression\n/snap/minizinc/1136/share/minizinc/line"
+  },
+  {
+    "problem_id": "nlp4lp_33",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Multiple type errors:\nError: type error:   symbol error: variable `PredictedValues' must be defined (did you forget to specify a data file?)\n/tmp/tmp1g1vymn_.mzn:10.1-37\n\nError: type error:   symbol error: variable `Deviations' must be defined (did you forget to specify a data file?)\n/tmp/tmp1g1vymn_.mzn:11.1-32\n"
+  },
+  {
+    "problem_id": "nlp4lp_34",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `array[int] of int'\n/tmp/tmp0tbqrfyx.mzn:13.26-42\n"
+  },
+  {
+    "problem_id": "nlp4lp_35",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "1000.0"
+  },
+  {
+    "problem_id": "nlp4lp_36",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `K', did you mean `C'?\n/tmp/tmpav644jvb.mzn:3.10\n"
+  },
+  {
+    "problem_id": "nlp4lp_37",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "4.0"
+  },
+  {
+    "problem_id": "nlp4lp_38",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "0.0"
+  },
+  {
+    "problem_id": "nlp4lp_39",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "3800.0"
+  },
+  {
+    "problem_id": "nlp4lp_4",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "No objective value found in output"
+  },
+  {
+    "problem_id": "nlp4lp_40",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "39000.0"
+  },
+  {
+    "problem_id": "nlp4lp_41",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `float_plus_infinity'\n/tmp/tmpin8k2561.mzn:11.25-43\n"
+  },
+  {
+    "problem_id": "nlp4lp_42",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: type-inst must be par set but is `var set of int'\n/tmp/tmpkc4ha16d.mzn:9.20-36\n"
+  },
+  {
+    "problem_id": "nlp4lp_43",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "-18117.5"
+  },
+  {
+    "problem_id": "nlp4lp_44",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "1.0"
+  },
+  {
+    "problem_id": "nlp4lp_45",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "21.0"
+  },
+  {
+    "problem_id": "nlp4lp_46",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "25500.0"
+  },
+  {
+    "problem_id": "nlp4lp_47",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "9600.0"
+  },
+  {
+    "problem_id": "nlp4lp_48",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `i', did you mean `A'?\n/tmp/tmpamu106f0.mzn:14.33\n"
+  },
+  {
+    "problem_id": "nlp4lp_49",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: arithmetic error: overflow in floating point operation\n"
+  },
+  {
+    "problem_id": "nlp4lp_5",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "No objective value found in output"
+  },
+  {
+    "problem_id": "nlp4lp_50",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "16620.0"
+  },
+  {
+    "problem_id": "nlp4lp_51",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Multiple syntax errors:\n/tmp/tmpzggvtt9_.mzn:33.1:\n);\n^\nError: syntax error, unexpected ')'\n\n/tmp/tmpzggvtt9_.mzn:36.1:\n);\n^\nError: syntax error, unexpected ')'\n\n/tmp/tmpzggvtt9_.mzn:40.124:\nvar int: TotalCost = sum(w in 1..W) (MaterialCost * BasketsProduced[w] + HoldingCost * (if w < W then BasketsHeld[w] else 0) + RegularCost * RegularLaborUsed[w] + OvertimeCost * OvertimeLaborUsed[w]);\n                                                                                                                           ^\nError: syntax error, unexpected ')'\n"
+  },
+  {
+    "problem_id": "nlp4lp_52",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "480750.0"
+  },
+  {
+    "problem_id": "nlp4lp_53",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: type error in operator application for `'..''. No matching operator found with left-hand side type `int' and right-hand side type `array[int] of int'\n/tmp/tmpil9hi59_.mzn:14.20-30\n"
+  },
+  {
+    "problem_id": "nlp4lp_54",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `i', did you mean `A'?\n/tmp/tmpvndngaxd.mzn:15.33\n"
+  },
+  {
+    "problem_id": "nlp4lp_55",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "1380.0"
+  },
+  {
+    "problem_id": "nlp4lp_56",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "No objective value found in output"
+  },
+  {
+    "problem_id": "nlp4lp_57",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "/tmp/tmpxci48p9v.mzn:23.182:\nvar int: TotalCost = sum(m in 1..NumMachines)(MachineCosts[m] * (if m = 1 then StandardCost * Availability[m] + OvertimeCost * OvertimeUsed[m] else Availability[m] + OvertimeUsed[m]));\n                                                                                                                                                                                     ^\nError: syntax error, unexpected ')'\n"
+  },
+  {
+    "problem_id": "nlp4lp_58",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "76900.0"
+  },
+  {
+    "problem_id": "nlp4lp_6",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "2.0"
+  },
+  {
+    "problem_id": "nlp4lp_60",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "26.5"
+  },
+  {
+    "problem_id": "nlp4lp_61",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `t', did you mean `T'?\n/tmp/tmpwbb0vtsn.mzn:15.38\n"
+  },
+  {
+    "problem_id": "nlp4lp_62",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "5660.0"
+  },
+  {
+    "problem_id": "nlp4lp_63",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "/tmp/tmpscehwxch.dzn:8.5:\n    |1, 1, 0, 0, 0, 0, 1, 0| % Translator 1\n    ^\nError: syntax error, unexpected '|'\n"
+  },
+  {
+    "problem_id": "nlp4lp_64",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "290.0"
+  },
+  {
+    "problem_id": "nlp4lp_65",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "2280.0"
+  },
+  {
+    "problem_id": "nlp4lp_66",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "No objective value found in output"
+  },
+  {
+    "problem_id": "nlp4lp_67",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "45.0"
+  },
+  {
+    "problem_id": "nlp4lp_7",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "/tmp/tmp2dsnjefj.mzn:25.25:\n  x[t] = x[t-1] + v[t-1],\n                        ^\nError: syntax error, unexpected ','\n"
+  },
+  {
+    "problem_id": "nlp4lp_8",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "12000.0"
+  },
+  {
+    "problem_id": "nlp4lp_9",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "output": "No objective value found in output"
+  },
+  {
+    "problem_id": "non_linear_problem_10",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `k', did you mean `j'?\n/tmp/tmpcj7rfaa7.mzn:16.232\n"
+  },
+  {
+    "problem_id": "non_linear_problem_15",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `x', did you mean `M'?\n/tmp/tmpvqxtujyk.dzn:5.1-12.4\n"
+  },
+  {
+    "problem_id": "non_linear_problem_23",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: evaluation error: Abort: Unable to create linear formulation for the `float_times(X_INTRODUCED_7_, X_INTRODUCED_224_, X_INTRODUCED_375_)`\n\tconstraint. To flatten this instance a quadratic constraint is required, but the\n\tusage of these constraints is currently disabled for the selected solver. Define\n\t`QuadrFloat=true` if your solver supports quadratic constraints, or use\n\tinteger variables.\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:331.3-345.7\n  in if-then-else expression\n/snap/minizinc/1136/share/minizinc/linear/redefinitions.mzn:338.5-344.5\n  in call 'abort'\n"
+  },
+  {
+    "problem_id": "non_linear_problem_9",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `Customers'\n/tmp/tmpqekg7eft.dzn:9.20-28\n"
+  },
+  {
+    "problem_id": "puzzles_problem_1",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "13.0"
+  },
+  {
+    "problem_id": "puzzles_problem_11",
+    "problem_type": "satisfaction",
+    "execution_success": true,
+    "solution_success": false,
+    "output": ""
+  },
+  {
+    "problem_id": "puzzles_problem_12",
+    "problem_type": "satisfaction",
+    "execution_success": true,
+    "solution_success": true,
+    "output": "x = 4;\ny = 29;\nlen = 1;\nheight = 13;\narea4 = 48;\n----------\n"
+  },
+  {
+    "problem_id": "puzzles_problem_13",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: no function or predicate with name `exactly' found\n/tmp/tmpfj58tmez.mzn:18.3-57\n"
+  },
+  {
+    "problem_id": "puzzles_problem_31",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "output": "Error: type error: undefined identifier `X', did you mean `n'?\n/tmp/tmpkp4_n7dw.dzn:7.5\n"
+  }
+]

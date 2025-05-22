@@ -1,22 +1,25 @@
 % Parameters
 int: NumShifts;
-set of int: S = 1..NumShifts;
+array[1..NumShifts] of int: OfficersNeeded;
+array[1..NumShifts] of int: ShiftCosts;
 
-array[S] of int: OfficersNeeded;
-array[S] of int: ShiftCosts;
-
-% Auxiliary upper bound on the number of officers that can start any shift
-int: MaxOfficers = sum(OfficersNeeded);
+% Derived Parameters
+int: MaxOfficers = sum(s in 1..NumShifts)(OfficersNeeded[s]);
 
 % Variables
-array[S] of var 0..MaxOfficers: StartShift;   % officers whose first of two consecutive shifts is s
+array[1..NumShifts] of var 0..MaxOfficers: OfficersStarting;
+var int: TotalCost;
 
 % Constraints
 constraint
-  forall(s in S)(
-    StartShift[s] +
-    StartShift[ if s == 1 then NumShifts else s - 1 endif ] >= OfficersNeeded[s]
-  );
+    TotalCost = sum(s in 1..NumShifts)(OfficersStarting[s] * ShiftCosts[s]);
+
+constraint
+    forall(s in 1..NumShifts)(
+        OfficersStarting[s] + 
+        OfficersStarting[ if s == 1 then NumShifts else s - 1 endif ]
+        >= OfficersNeeded[s]
+    );
 
 % Objective
-solve minimize sum(s in S)(StartShift[s] * ShiftCosts[s]);
+solve minimize TotalCost;

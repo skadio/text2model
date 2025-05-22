@@ -1,46 +1,48 @@
-% Parameters
 int: num_jobs;
 int: num_machines;
 
-set of int: JOBS     = 1..num_jobs;
-set of int: MACHINES = 1..num_machines;
-set of int: OPS      = 1..num_machines;   % operation index within a job (1st, 2nd, ...)
+array[1..num_jobs, 1..num_machines] of int: job_times;
+array[1..num_jobs, 1..num_machines] of int: job_order;
 
-array[JOBS, OPS] of int: job_times;        % processing times
-array[JOBS, OPS] of int: job_order;        % machine used by each operation
+% Upper bound on the schedule length (provided in the data file)
+int: max_time;
+int: UB = max_time;
 
-int: horizon = sum(j in JOBS, o in OPS)(job_times[j,o]);   % upper bound on the schedule length
+array[1..num_jobs, 1..num_machines] of var 0..UB: start_time;
+array[1..num_jobs, 1..num_machines] of var 0..UB: end_time;
+var 0..UB: makespan;
 
-
-% Variables
-array[JOBS, OPS] of var 0..horizon: start;   % start time of every operation
-var 0..horizon: makespan;                    % length of the schedule
-
-
-% Constraints
-% 1. Technology (within-job) precedence
+% Duration relationship
 constraint
-  forall(j in JOBS, o in 1..num_machines-1) (
-    start[j,o+1] >= start[j,o] + job_times[j,o]
+  forall(j in 1..num_jobs, s in 1..num_machines)(
+    end_time[j,s] = start_time[j,s] + job_times[j,s]
   );
 
-% 2. Machine capacity – no overlapping operations on the same machine
+% Technological order inside each job
 constraint
-  forall(m in MACHINES)(
-    forall(j1 in JOBS, j2 in JOBS where j1 < j2,
-           o1 in OPS, o2 in OPS
-           where job_order[j1,o1] == m /\ job_order[j2,o2] == m)(
-      (start[j1,o1] + job_times[j1,o1] <= start[j2,o2]) \/
-      (start[j2,o2] + job_times[j2,o2] <= start[j1,o1])
+  forall(j in 1..num_jobs, s in 1..num_machines-1)(
+    start_time[j,s+1] >= end_time[j,s]
+  );
+
+% Machine capacity (no overlap on the same machine)
+constraint
+  forall(m in 1..num_machines)(
+    forall(j1 in 1..num_jobs, j2 in j1+1..num_jobs)(
+      let {
+        set of int: S1 = { s | s in 1..num_machines where job_order[j1,s] = m },
+        set of int: S2 = { s | s in 1..num_machines where job_order[j2,s] = m }
+      } in
+      forall(s1 in S1, s2 in S2)(
+        end_time[j1,s1] <= start_time[j2,s2] \/
+        end_time[j2,s2] <= start_time[j1,s1]
+      )
     )
   );
 
-% 3. Definition of the makespan
+% Makespan definition
 constraint
-  forall(j in JOBS)(
-    makespan >= start[j,num_machines] + job_times[j,num_machines]
+  forall(j in 1..num_jobs, s in 1..num_machines)(
+    end_time[j,s] <= makespan
   );
 
-
-% Objective
 solve minimize makespan;

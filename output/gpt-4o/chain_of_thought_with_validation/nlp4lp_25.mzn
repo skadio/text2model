@@ -1,60 +1,57 @@
 % Parameters
 int: K;
+set of int: Mines = 1..K;
+
 int: MaxWork;
-array[1..K] of float: Royalty;
-array[1..K] of float: Limit;
-array[1..K] of float: Quality;
-array[int] of float: RequiredQuality;
+
+array[Mines] of float: Royalty;
+array[Mines] of float: Limit;
+array[Mines] of float: Quality;
+
+array[int] of float: RequiredQuality;      % length defines number of years
+
 float: Price;
 float: Discount;
 
 % Derived sets and constants
 set of int: Years = index_set(RequiredQuality);
-int: Y_last = max(Years);
-float: MaxLimit = max([Limit[k] | k in 1..K]);
+int: I = card(Years);
+
+float: GlobalUpperProd = max([Limit[k] | k in Mines]);
+array[Years] of float: DiscFactor = [pow(1.0 + Discount, t - 1) | t in Years];
 
 % Decision variables
-array[1..K, Years] of var bool: operate;
-array[1..K, Years] of var bool: open;
-array[1..K, Years] of var 0.0..MaxLimit: Prod;
+array[Mines, Years] of var 0.0..GlobalUpperProd: x;   % production
+array[Mines, Years] of var 0..1: w;                   % worked
+array[Mines, Years] of var 0..1: y_open;              % open
 
-% A mine must be open if it is operated
-constraint
-  forall(k in 1..K, y in Years)(
-    operate[k,y] -> open[k,y]
-  );
+% Constraints
+constraint forall(k in Mines, t in Years)(
+    x[k,t] <= Limit[k] * w[k,t]
+);
 
-% A mine cannot re-open once it has been closed
-constraint
-  forall(k in 1..K, y in Years where y < Y_last)(
-    open[k,y+1] -> open[k,y]
-  );
+constraint forall(k in Mines, t in Years)(
+    w[k,t] <= y_open[k,t]
+);
 
-% Production bounds
-constraint
-  forall(k in 1..K, y in Years)(
-    Prod[k,y] <= Limit[k] * bool2int(operate[k,y])
-  );
+constraint forall(k in Mines, t in Years where t < max(Years))(
+    y_open[k,t] >= y_open[k,t+1]
+);
 
-% Maximum number of operating mines per year
-constraint
-  forall(y in Years)(
-    sum(k in 1..K)(bool2int(operate[k,y])) <= MaxWork
-  );
+constraint forall(t in Years)(
+    sum(k in Mines)(w[k,t]) <= MaxWork
+);
 
-% Blended quality requirement per year
-constraint
-  forall(y in Years)(
-    sum(k in 1..K)(Prod[k,y] * Quality[k]) =
-    RequiredQuality[y] * sum(k in 1..K)(Prod[k,y])
-  );
+constraint forall(t in Years)(
+    sum(k in Mines)(x[k,t] * (Quality[k] - RequiredQuality[t])) = 0.0
+);
 
-% Net present value
+% Objective
 var float: NPV =
-  sum(y in Years)(
-    (Price * sum(k in 1..K)(Prod[k,y])
-     - sum(k in 1..K)(Royalty[k] * bool2int(open[k,y])))
-    / pow(1.0 + Discount, y - min(Years))
-  );
+    sum(t in Years)(
+        (Price * sum(k in Mines)(x[k,t]) -
+         sum(k in Mines)(Royalty[k] * y_open[k,t]))
+        / DiscFactor[t]
+    );
 
 solve maximize NPV;

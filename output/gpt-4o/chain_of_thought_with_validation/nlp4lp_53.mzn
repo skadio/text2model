@@ -1,54 +1,57 @@
 % Parameters
-int: M;                       % Number of machines
-int: P;                       % Number of parts
+int: M;
+int: P;
 
-array[1..M, 1..P] of int: TimeRequired;   % Hours needed on machine m for a batch of part p
-array[1..M] of float: MachineCosts;       % Cost per hour of running machine m
-array[1..M] of int: Availability;         % Regularly available hours on machine m
-array[1..P] of float: Prices;             % Revenue from selling one batch of part p
-array[1..P] of int: MinBatches;           % Contracted minimum batches of part p
-array[1..M] of float: ExtraCosts;         % Additional cost per overtime hour on machine m
-array[1..M] of int: MaxExtra;             % Maximum overtime hours that can be bought for machine m
+set of int: Machines = 1..M;
+set of int: Parts    = 1..P;
+
+array[Machines, Parts] of float: TimeRequired;   % hours per batch of part p on machine m
+array[Machines]        of float: MachineCosts;   % cost per hour on machine m
+array[Machines]        of float: Availability;   % regular available hours on machine m
+array[Parts]           of float: Prices;         % selling price per batch of part p
+array[Parts]           of int:   MinBatches;     % minimum batches required for part p
+array[Machines]        of float: ExtraCosts;     % additional cost per extra hour on machine m
+array[Machines]        of float: MaxExtra;       % maximum extra hours purchasable for machine m
+
+% Derived upper bounds on production
+array[Parts] of int: MaxBatches =
+  [ min([ floor((Availability[m] + MaxExtra[m]) / TimeRequired[m,p])
+          | m in Machines ])
+  | p in Parts ];
 
 % Decision variables
-array[1..P] of var int: Batches;          % Batches to produce for each part
-array[1..M] of var float: ExtraHours;     % Overtime hours purchased for each machine
+array[Parts]    of var int:   Batches;     % batches of each part produced
+array[Machines] of var float: ExtraHours;  % extra hours bought for each machine
+array[Machines] of var float: HoursUsed;   % total hours used on each machine
+var float: Profit;                         % objective value
 
-% Constraints
+% Contract requirements and logical upper bounds
+constraint forall(p in Parts)(
+  MinBatches[p] <= Batches[p] /\ Batches[p] <= MaxBatches[p]
+);
 
-% Minimum contractual production and non-negativity
+% Hours consumed per machine
+constraint forall(m in Machines)(
+  HoursUsed[m] = sum(p in Parts)( TimeRequired[m,p] * int2float(Batches[p]) )
+);
+
+% Capacity including extra hours
+constraint forall(m in Machines)(
+  HoursUsed[m] <= Availability[m] + ExtraHours[m]
+);
+
+% Limits on extra hours
+constraint forall(m in Machines)(
+  0.0 <= ExtraHours[m] /\ ExtraHours[m] <= MaxExtra[m]
+);
+
+% Profit calculation
 constraint
-  forall(p in 1..P)(
-    Batches[p] >= MinBatches[p] /\ Batches[p] >= 0
-  );
-
-% Bounds on overtime hours
-constraint
-  forall(m in 1..M)(
-    ExtraHours[m] >= 0.0 /\ ExtraHours[m] <= float(MaxExtra[m])
-  );
-
-% Machine–time capacity (regular + overtime)
-constraint
-  forall(m in 1..M)(
-    float( sum(p in 1..P)( TimeRequired[m,p] * Batches[p] ) )
-    <= float(Availability[m]) + ExtraHours[m]
-  );
-
-% Overtime must cover every hour above regular availability
-constraint
-  forall(m in 1..M)(
-    ExtraHours[m] >=
-      float( sum(p in 1..P)( TimeRequired[m,p] * Batches[p] ) ) - float(Availability[m])
-  );
-
-% Objective: maximize profit
-var float: Profit =
-      sum(p in 1..P)( Prices[p] * float(Batches[p]) )
-    - sum(m in 1..M)(
-        MachineCosts[m] *
-        ( sum(p in 1..P)( float(TimeRequired[m,p]) * float(Batches[p]) ) )
-      )
-    - sum(m in 1..M)( ExtraCosts[m] * ExtraHours[m] );
+  Profit =
+      sum(p in Parts)( Prices[p] * int2float(Batches[p]) )
+    - sum(m in Machines)(
+        MachineCosts[m] * HoursUsed[m] +
+        ExtraCosts[m]   * ExtraHours[m]
+      );
 
 solve maximize Profit;

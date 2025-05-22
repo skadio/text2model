@@ -1,52 +1,54 @@
 % Parameters
-int: A;                               % Number of different alloys
-int: S;                               % Number of different steel types
+int: A;
+int: S;
 
-array[1..A] of float: AvailableAlloy; % Available amount of each alloy (t)
-array[1..A] of float: CarbonContent;  % Carbon content of each alloy   (%)
-array[1..A] of float: NickelContent;  % Nickel content of each alloy   (%)
-array[1..A] of float: AlloyPrice;     % Purchase price per ton of each alloy
+set of int: Alloys = 1..A;
+set of int: Steels = 1..S;
 
-array[1..S] of float: SteelPrice;     % Selling price per ton of each steel
-array[1..S] of float: CarbonMin;      % Minimum required carbon content (%)
-array[1..S] of float: NickelMax;      % Maximum allowed nickel content (%)
+array[Alloys] of float: AvailableAlloy;
+array[Alloys] of float: CarbonContent;
+array[Alloys] of float: NickelContent;
+array[Alloys] of float: AlloyPrice;
 
-float: TotalAvailable = sum(a in 1..A)(AvailableAlloy[a]);
+array[Steels] of float: SteelPrice;
+array[Steels] of float: CarbonMin;
+array[Steels] of float: NickelMax;
+
+float: TotalAvailableAlloy = sum(a in Alloys)(AvailableAlloy[a]);
 
 % Variables
-array[a in 1..A, s in 1..S] of var 0.0..AvailableAlloy[a]: X;   % tons of alloy a used in steel s
-array[1..S] of var 0.0..TotalAvailable: Y;                      % tons of steel s produced
-var float: Profit;                                              % total profit
+array[Alloys, Steels] of var 0.0..TotalAvailableAlloy: Use;              % tons of alloy a in steel s
+array[Steels]            of var 0.0..TotalAvailableAlloy: SteelProduced; % tons of steel s
 
 % Constraints
 constraint
-    forall(s in 1..S) (
-        Y[s] = sum(a in 1..A)(X[a,s])               % steel quantity definition
-    );
+  forall(a in Alloys)(
+    sum(s in Steels)(Use[a,s]) <= AvailableAlloy[a]
+  );
 
 constraint
-    forall(a in 1..A) (
-        sum(s in 1..S)(X[a,s]) <= AvailableAlloy[a] % alloy availability
-    );
+  forall(s in Steels)(
+    SteelProduced[s] = sum(a in Alloys)(Use[a,s])
+  );
 
 constraint
-    forall(s in 1..S) (
-        sum(a in 1..A)((CarbonContent[a] - CarbonMin[s]) * X[a,s]) >= 0.0
-    );
+  forall(s in Steels)(
+    sum(a in Alloys)(CarbonContent[a] * Use[a,s]) >= CarbonMin[s] * SteelProduced[s]
+  );
 
 constraint
-    forall(s in 1..S) (
-        sum(a in 1..A)((NickelContent[a] - NickelMax[s]) * X[a,s]) <= 0.0
-    );
+  forall(s in Steels)(
+    sum(a in Alloys)(NickelContent[a] * Use[a,s]) <= NickelMax[s] * SteelProduced[s]
+  );
 
 constraint
-    forall(s in 1..S) (
-        X[1,s] <= 0.40 * Y[s]                       % at most 40% of alloy 1
-    );
+  forall(s in Steels)(
+    Use[1,s] <= 0.4 * SteelProduced[s]      % Max 40% of alloy 1 in any steel
+  );
 
 % Objective
-constraint
-    Profit =   sum(s in 1..S)(SteelPrice[s] * Y[s])
-             - sum(a in 1..A, s in 1..S)(AlloyPrice[a] * X[a,s]);
+var float: Profit = 
+    sum(s in Steels)(SteelPrice[s] * SteelProduced[s]) 
+  - sum(a in Alloys, s in Steels)(AlloyPrice[a] * Use[a,s]);
 
 solve maximize Profit;

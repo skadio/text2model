@@ -2,50 +2,50 @@
 int: NumberOfLocations;
 int: NumberOfCustomers;
 
-set of int: LOC  = 1..NumberOfLocations;
-set of int: CUST = 1..NumberOfCustomers;
+set of int: LOCATIONS = 1..NumberOfLocations;
+set of int: CUSTOMERS  = 1..NumberOfCustomers;
 
-array[LOC]  of int: WarehouseCapacity;
-array[LOC]  of int: MinimumDemandFromWarehouse;
-array[LOC]  of int: WarehouseFixedCost;
-
-array[CUST] of int: CustomerDemand;
-array[LOC, CUST] of int: ServiceAllocationCost;
-
+array[CUSTOMERS] of int: CustomerDemand;
+array[LOCATIONS, CUSTOMERS] of int: ServiceAllocationCost;
+array[LOCATIONS] of int: WarehouseCapacity;
+array[LOCATIONS] of int: MinimumDemandFromWarehouse;
 int: MinimumOpenWarehouses;
 int: MaximumOpenWarehouses;
+array[LOCATIONS] of int: WarehouseFixedCost;
 
 % Variables
-array[LOC]        of var 0..1: Open;                     % 1 if warehouse i is opened
-array[LOC, CUST]  of var 0..1: Assign;                   % 1 if customer j served by warehouse i
+array[LOCATIONS] of var 0..1: open;                      % 1 if warehouse i is opened
+array[LOCATIONS, CUSTOMERS] of var 0..1: assign;         % 1 if customer j served by warehouse i
 
 % Constraints
 constraint
-    forall (j in CUST) (
-        sum (i in LOC) (Assign[i,j]) = 1                 % every customer assigned exactly once
-    );
+   forall(j in CUSTOMERS)(
+      sum(i in LOCATIONS)(assign[i,j]) = 1                 % each customer served exactly once
+   );
 
 constraint
-    forall (i in LOC, j in CUST) (
-        Assign[i,j] <= Open[i]                           % only open warehouses can serve
-    );
+   forall(i in LOCATIONS, j in CUSTOMERS)(
+      assign[i,j] <= open[i]                               % service only from open warehouses
+   );
 
 constraint
-    forall (i in LOC) (
-        sum (j in CUST) (CustomerDemand[j] * Assign[i,j]) <= WarehouseCapacity[i]  % capacity upper bound
-    );
+   forall(i in LOCATIONS)(
+      sum(j in CUSTOMERS)(CustomerDemand[j] * assign[i,j]) <= WarehouseCapacity[i]   % capacity
+   );
 
 constraint
-    forall (i in LOC) (
-        sum (j in CUST) (CustomerDemand[j] * Assign[i,j]) >= 
-            MinimumDemandFromWarehouse[i] * Open[i]                            % minimum served if opened
-    );
+   forall(i in LOCATIONS)(
+      sum(j in CUSTOMERS)(CustomerDemand[j] * assign[i,j]) >=
+      MinimumDemandFromWarehouse[i] * open[i]              % minimum load if opened
+   );
 
 constraint
-    let { var int: NumOpen = sum (i in LOC) (Open[i]) } in
-        (NumOpen >= MinimumOpenWarehouses /\ NumOpen <= MaximumOpenWarehouses); % bounds on number of open warehouses
+   sum(i in LOCATIONS)(open[i]) >= MinimumOpenWarehouses /\   % min number of open warehouses
+   sum(i in LOCATIONS)(open[i]) <= MaximumOpenWarehouses;     % max number of open warehouses
 
 % Objective
-solve minimize
-    sum (i in LOC, j in CUST) (ServiceAllocationCost[i,j] * Assign[i,j]) +
-    sum (i in LOC) (WarehouseFixedCost[i] * Open[i]);
+var int: TotalCost =
+      sum(i in LOCATIONS, j in CUSTOMERS)(ServiceAllocationCost[i,j] * assign[i,j])
+    + sum(i in LOCATIONS)(WarehouseFixedCost[i] * open[i]);
+
+solve minimize TotalCost;

@@ -19,4 +19,5 @@ constraint BaitPerNetAcre * NetAcres + BaitPerLineAcre * LineAcres <= TotalBait;
 constraint PainPerNetAcre * NetAcres + PainPerLineAcre * LineAcres <= MaxPain;
 
 % Objective
-solve maximize FishPerNetAcre * NetAcres + FishPerLineAcre * LineAcres;
+var int: TotalFish = FishPerNetAcre * NetAcres + FishPerLineAcre * LineAcres;
+solve maximize TotalFish;

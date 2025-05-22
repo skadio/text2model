@@ -1,57 +1,51 @@
 % Parameters
 int: num_days;
 int: num_people;
+array[1..num_people, 1..num_days] of int: participation;
 
-set of int: Days   = 1..num_days;
-set of int: People = 1..num_people;
-
-array[People, Days] of 0..1: participation;
+% Sets
+set of int: DAYS   = 1..num_days;
+set of int: PEOPLE = 1..num_people;
 
 % Derived data
-array[Days] of int: participants_count =
-  [ sum(p in People)(participation[p,d]) | d in Days ];
+array[DAYS] of int: participants_per_day =
+  [ sum(p in PEOPLE)( participation[p,d] ) | d in DAYS ];
 
-array[People] of float: obligation =
-  [ sum(d in Days)(
-        if participants_count[d] > 0 then
-            participation[p,d] * (1.0 / float(participants_count[d]))
-        else 0.0 endif
-     ) | p in People ];
+% Guarantee that every considered day has at least one participant
+constraint forall(d in DAYS)( participants_per_day[d] > 0 );
 
-float: max_diff = float(num_days);
+array[PEOPLE] of float: obligation =
+  [ sum(d in DAYS)(
+        if participation[p,d] == 1 then
+            1.0 / float(participants_per_day[d])
+        else
+            0.0
+        endif
+    )
+  | p in PEOPLE ];
 
-% Variables
-array[People, Days] of var 0..1: drive;
-array[People]        of var 0..num_days: actual_drive;
-array[People]        of var -max_diff..max_diff: diff;
-array[People]        of var 0.0..max_diff: abs_diff;
+% Decision variables
+array[DAYS]   of var PEOPLE: driver;           % driver chosen for each day
+array[PEOPLE] of var 0..num_days: drive_count; % how many times each person drives
+array[PEOPLE] of var float: deviation;         % signed deviation from obligation
+array[PEOPLE] of var float: abs_deviation;     % absolute deviation
 
 % Constraints
-constraint
-  forall(d in Days)(
-    sum(p in People)(drive[p,d]) = 1
-  );
+constraint forall(d in DAYS)(
+    participation[driver[d], d] == 1           % only a participant can be the driver
+);
 
-constraint
-  forall(p in People, d in Days)(
-    drive[p,d] <= participation[p,d]
-  );
+constraint forall(p in PEOPLE)(
+    drive_count[p] = sum(d in DAYS)( bool2int(driver[d] == p) )
+);
 
-constraint
-  forall(p in People)(
-    actual_drive[p] = sum(d in Days)(drive[p,d])
-  );
+constraint forall(p in PEOPLE)(
+    deviation[p] = float(drive_count[p]) - obligation[p]
+);
 
-constraint
-  forall(p in People)(
-    diff[p] = int2float(actual_drive[p]) - obligation[p]
-  );
-
-constraint
-  forall(p in People)(
-    abs_diff[p] >=  diff[p] /\
-    abs_diff[p] >= -diff[p]
-  );
+constraint forall(p in PEOPLE)(
+    abs_deviation[p] = abs(deviation[p])
+);
 
 % Objective
-solve minimize sum(p in People)(abs_diff[p]);
+solve minimize sum(p in PEOPLE)( abs_deviation[p] );

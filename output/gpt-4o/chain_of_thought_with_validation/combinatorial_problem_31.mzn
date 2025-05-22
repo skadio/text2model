@@ -1,41 +1,42 @@
 % Parameters
 int: num_people;
-array[1..num_people, 1..num_people] of bool: compatible;
+array[1..num_people, 1..num_people] of 0..1: compatible;
 
 % Variables
-array[1..num_people, 1..num_people] of var 0..1: x;
+array[1..num_people, 1..num_people] of var 0..1: donate;
 
 % Constraints
-% 1. Donations only along compatible pairs
+% 1. No self-donation
 constraint
-  forall(i in 1..num_people, j in 1..num_people) (
-    x[i,j] <= bool2int(compatible[i,j])
+  forall(i in 1..num_people) (
+    donate[i,i] = 0
   );
 
-% 2. No self-donations
+% 2. Donation only allowed if compatible
 constraint
-  forall(p in 1..num_people) (
-    x[p,p] = 0
+  forall(i, j in 1..num_people) (
+    donate[i,j] <= compatible[i,j]
   );
 
-% 3. Each participant donates at most once
+% 3. Each person donates at most once
 constraint
-  forall(p in 1..num_people) (
-    sum(j in 1..num_people)(x[p,j]) <= 1
+  forall(i in 1..num_people) (
+    sum(j in 1..num_people)( donate[i,j] ) <= 1
   );
 
-% 4. Each participant receives at most once
+% 4. Each person receives at most once
 constraint
-  forall(p in 1..num_people) (
-    sum(i in 1..num_people)(x[i,p]) <= 1
+  forall(j in 1..num_people) (
+    sum(i in 1..num_people)( donate[i,j] ) <= 1
   );
 
-% 5. Receive–donate balance (participation only in closed cycles)
+% 5. A participant must both donate and receive, or do neither
 constraint
-  forall(p in 1..num_people) (
-    sum(j in 1..num_people)(x[p,j]) = sum(i in 1..num_people)(x[i,p])
+  forall(k in 1..num_people) (
+    sum(j in 1..num_people)( donate[k,j] ) =
+    sum(i in 1..num_people)( donate[i,k] )
   );
 
 % Objective
 solve maximize
-  sum(i in 1..num_people, j in 1..num_people)(x[i,j]);
+  sum(i, j in 1..num_people)( donate[i,j] );

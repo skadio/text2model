@@ -1,39 +1,25 @@
 % Parameters
-int: N;                                               % Number of files
-float: Capacity;                                      % Capacity of one floppy disk
-array[1..N] of float: Size;                           % Size of each file
+int: N;
+float: Capacity;
+array[1..N] of float: Size;
 
-set of int: FILES = 1..N;                             % Index set for files
-set of int: DISKS = 1..N;                             % Upper bound on number of disks (one per file)
+set of int: FILES = 1..N;
+set of int: DISKS = 1..N;   % Upper-bound on disks (each file on its own disk)
 
 % Variables
-array[DISKS] of var 0..1: y;                          % y[k] = 1 if disk k is used
-array[FILES, DISKS] of var 0..1: x;                   % x[j,k] = 1 if file j is placed on disk k
+array[FILES, DISKS] of var 0..1: x;   % x[i,j] = 1 if file i on disk j
+array[DISKS]            of var 0..1: y;   % y[j] = 1 if disk j is used
 
 % Constraints
-% 1) Every file is assigned to exactly one disk
 constraint
-    forall(j in FILES) (
-        sum(k in DISKS)( x[j,k] ) = 1
+    forall(i in FILES) (
+        sum(j in DISKS)(x[i,j]) = 1            % each file assigned to exactly one disk
     );
 
-% 2) Linking assignment to disk usage
 constraint
-    forall(j in FILES, k in DISKS) (
-        x[j,k] <= y[k]
-    );
-
-% 3) Capacity constraint for each disk
-constraint
-    forall(k in DISKS) (
-        sum(j in FILES)( Size[j] * int2float(x[j,k]) ) <= Capacity * int2float(y[k])
-    );
-
-% 4) Symmetry breaking: used disks appear first
-constraint
-    forall(k in 1..N-1) (
-        y[k] >= y[k+1]
+    forall(j in DISKS) (
+        sum(i in FILES)(Size[i] * x[i,j]) <= Capacity * y[j]   % respect disk capacity
     );
 
 % Objective
-solve minimize sum(k in DISKS)( y[k] );
+solve minimize sum(j in DISKS)(y[j]);

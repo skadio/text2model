@@ -4,37 +4,42 @@ array[1..N] of float: Start;
 array[1..N] of float: Limit;
 array[1..N, 1..N] of float: Rate;
 
-% Variables
-array[1..N, 1..N] of var float: x;      % amount of currency i converted to currency j
-array[1..N] of var float: End;          % final amount of currency i after all exchanges
+% -------------------------------------------------------------------------
+% Derived finite bounds (needed by most float solvers)
+% -------------------------------------------------------------------------
+float: maxLimit  = max([ Limit[i] | i in 1..N ]);
+float: maxRate   = max([ Rate[i,j] | i in 1..N, j in 1..N ]);
+float: totalLimit = sum(i in 1..N)( Limit[i] );
+float: maxFinal  = max([ Start[i] + maxRate * totalLimit | i in 1..N ]);
 
+% -------------------------------------------------------------------------
+% Decision variables
+% -------------------------------------------------------------------------
+array[1..N, 1..N] of var 0.0..maxLimit: X;      % amount exchanged from i to j
+array[1..N]            of var 0.0..maxFinal: Final;  % final holdings
+
+% -------------------------------------------------------------------------
 % Constraints
+% -------------------------------------------------------------------------
+% 1) No self–exchange
 constraint
-    forall(i in 1..N, j in 1..N) (
-        x[i,j] >= 0.0
-    );
+  forall(i in 1..N)( X[i,i] = 0.0 );
 
+% 2) Balance equation for each currency
 constraint
-    forall(i in 1..N) (
-        x[i,i] = 0.0                    % no self-exchange
-    );
+  forall(i in 1..N)(
+    Final[i] = Start[i]
+               - sum(j in 1..N)( X[i,j] )
+               + sum(j in 1..N)( Rate[j,i] * X[j,i] )
+  );
 
+% 3) Daily transaction limits for each currency
 constraint
-    forall(i in 1..N) (
-        sum(j in 1..N)(x[i,j]) <= Start[i]   % cannot exchange more than the initial amount
-    );
+  forall(i in 1..N)(
+    sum(j in 1..N)( X[i,j] ) + sum(j in 1..N)( X[j,i] ) <= Limit[i]
+  );
 
-constraint
-    forall(i in 1..N) (
-        End[i] = Start[i]
-                 - sum(j in 1..N)(x[i,j])
-                 + sum(j in 1..N)(x[j,i] * Rate[j,i])
-    );
-
-constraint
-    forall(i in 1..N) (
-        sum(j in 1..N)(x[i,j]) + sum(j in 1..N)(x[j,i] * Rate[j,i]) <= Limit[i]
-    );
-
-% Objective
-solve maximize sum(i in 1..N)(End[i]);
+% -------------------------------------------------------------------------
+% Objective: maximise total wealth at the end of the day
+% -------------------------------------------------------------------------
+solve maximize sum(i in 1..N)( Final[i] );

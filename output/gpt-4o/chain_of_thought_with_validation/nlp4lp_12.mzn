@@ -4,27 +4,25 @@ array[1..T] of int: Deliver;
 int: StorageCost;
 int: SwitchCost;
 
-% Derived sets and constants
-set of int: MONTHS = 1..T;
-set of int: MONTHS_EXCEPT_LAST = 1..T-1;
-int: TotalDemand = sum(m in MONTHS)(Deliver[m]);
+% Derived constants
+int: TotalDemand = sum(i in 1..T)(Deliver[i]);
 
 % Variables
-array[MONTHS] of var 0..TotalDemand: prod;      % units produced in month m
-array[MONTHS] of var int:            inv;       % inventory at end of month m
+array[1..T] of var 0..TotalDemand: Production;
+array[0..T] of var 0..TotalDemand: Inventory;
 
-% Inventory balance
-constraint inv[1] = prod[1] - Deliver[1];
-constraint forall(m in 2..T)(
-    inv[m] = inv[m-1] + prod[m] - Deliver[m]
-);
+% Constraints
+constraint Inventory[0] = 0;
+constraint Inventory[T] = 0;
 
-% Non-negativity of inventory
-constraint forall(m in MONTHS)(inv[m] >= 0);
+constraint
+  forall(i in 1..T)(
+    Inventory[i] = Inventory[i-1] + Production[i] - Deliver[i]
+  );
 
-% Objective components
-var int: totalStorageCost = sum(m in MONTHS_EXCEPT_LAST)(StorageCost * inv[m]);
-var int: totalSwitchCost  = sum(m in MONTHS_EXCEPT_LAST)(SwitchCost  * abs(prod[m+1] - prod[m]));
-var int: totalCost = totalStorageCost + totalSwitchCost;
+% Objective
+var int: TotalCost =
+    sum(i in 1..T-1)(StorageCost * Inventory[i])
+  + sum(i in 1..T-1)(SwitchCost * abs(Production[i+1] - Production[i]));
 
-solve minimize totalCost;
+solve minimize TotalCost;

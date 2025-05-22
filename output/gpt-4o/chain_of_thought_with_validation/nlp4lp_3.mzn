@@ -1,40 +1,51 @@
 % Parameters
 int: T;
-set of int: YEARS = 1..T;
-
-array[YEARS] of int: Demand;
-array[YEARS] of int: OilCap;
-
+array[1..T] of int: Demand;
+array[1..T] of int: OilCap;
 int: CoalCost;
 int: NukeCost;
-
 int: MaxNuke;
-
 int: CoalLife;
 int: NukeLife;
 
-% A generous upper bound for yearly build decisions
-int: MaxBuild = sum(Demand);
+% Derived constants
+int: MaxDemand = max(Demand);
+int: MaxBuildPerYear = MaxDemand;
+int: MaxTotalCap = T * MaxBuildPerYear;
 
-% Decision variables: capacity started in year t
-array[YEARS] of var 0..MaxBuild: CoalBuild;
-array[YEARS] of var 0..MaxBuild: NukeBuild;
+% Variables
+array[1..T] of var 0..MaxBuildPerYear: CoalBuild;
+array[1..T] of var 0..MaxBuildPerYear: NukeBuild;
 
-% Meet demand in every year
+array[1..T] of var 0..MaxTotalCap: ActiveCoal;
+array[1..T] of var 0..MaxTotalCap: ActiveNuke;
+
+var int: TotalCost;
+
+% Constraints
 constraint
-  forall(t in YEARS)(
-    OilCap[t]
-    + sum(s in 1..t where t <= s + CoalLife - 1)(CoalBuild[s])
-    + sum(s in 1..t where t <= s + NukeLife - 1)(NukeBuild[s])
-    >= Demand[t]
+  forall(t in 1..T)(
+    ActiveCoal[t] = sum([CoalBuild[tau] | tau in 1..t where t - tau < CoalLife])
   );
 
-% Nuclear capacity limit in every year
 constraint
-  forall(t in YEARS)(
-    sum(s in 1..t where t <= s + NukeLife - 1)(NukeBuild[s]) <= MaxNuke
+  forall(t in 1..T)(
+    ActiveNuke[t] = sum([NukeBuild[tau] | tau in 1..t where t - tau < NukeLife])
   );
 
-% Objective: minimise total capital cost
-solve minimize
-  sum(t in YEARS)(CoalBuild[t] * CoalCost + NukeBuild[t] * NukeCost);
+constraint
+  forall(t in 1..T)(
+    OilCap[t] + ActiveCoal[t] + ActiveNuke[t] >= Demand[t]
+  );
+
+constraint
+  forall(t in 1..T)(
+    ActiveNuke[t] <= MaxNuke
+  );
+
+constraint
+  TotalCost = CoalCost * sum(t in 1..T)(CoalBuild[t]) +
+              NukeCost * sum(t in 1..T)(NukeBuild[t]);
+
+% Objective
+solve minimize TotalCost;

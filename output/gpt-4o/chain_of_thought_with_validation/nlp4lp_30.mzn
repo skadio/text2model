@@ -1,31 +1,29 @@
-% Parameters
-int: K;
-int: L;
+array[int, int] of float: Communication;
+array[int, int] of float: Cost;
+array[int, int] of float: Benefit;
 
-set of int: DEPTS = 1..K;
-set of int: LOCS  = 1..L;
+set of int: Departments      = index_set_1of(Communication);
+set of int: Cities           = index_set_1of(Cost);
+set of int: Benefit_Cities   = index_set_2of(Benefit);
 
-array[DEPTS, LOCS] of float: Benefit;
-array[DEPTS, DEPTS] of float: Communication;
-array[LOCS , LOCS ] of float: Cost;
+function float: dept_benefit(int: d, int: c) =
+    if c in Benefit_Cities then Benefit[d, c] else 0.0 endif;
 
-% Variables
-array[DEPTS] of var LOCS: loc;               % location chosen for each department
+array[Departments] of var Cities: loc;
 
-% Constraints
-% Capacity constraint: no location (including London) hosts more than three departments
 constraint
-  forall(l in LOCS) (
-    sum(k in DEPTS)(bool2int(loc[k] = l)) <= 3
+  forall(c in Cities)(
+    sum(d in Departments)(bool2int(loc[d] == c)) <= 3
   );
 
-% Objective
 var float: total_communication_cost =
-  sum(k in DEPTS, j in DEPTS)(
-    Communication[k,j] * Cost[loc[k], loc[j]]
+  sum(d1 in Departments, d2 in Departments where d1 < d2)(
+    Communication[d1, d2] * Cost[loc[d1], loc[d2]]
   );
 
 var float: total_benefit =
-  sum(k in DEPTS)( Benefit[k, loc[k]] );
+  sum(d in Departments)(dept_benefit(d, loc[d]));
 
-solve minimize total_communication_cost - total_benefit;
+var float: total_yearly_cost = total_communication_cost - total_benefit;
+
+solve minimize total_yearly_cost;

@@ -2,34 +2,29 @@
 int: OriginNum;
 int: DestinationNum;
 
-set of int: Origins = 1..OriginNum;
-set of int: Destinations = 1..DestinationNum;
+array[1..OriginNum] of int: Supply;
+array[1..DestinationNum] of int: Demand;
+array[1..OriginNum, 1..DestinationNum] of int: Cost;
 
-array[Origins] of int: Supply;
-array[Destinations] of int: Demand;
-array[Origins, Destinations] of int: Cost;
+set of int: ORIGINS = 1..OriginNum;
+set of int: DESTINATIONS = 1..DestinationNum;
 
-% Pre-computed bound for decision variables
-int: MaxTransport = sum(d in Destinations)(Demand[d]);
+int: MaxSupply = max(Supply);
 
 % Variables
-array[Origins, Destinations] of var 0..MaxTransport: x;
+array[ORIGINS, DESTINATIONS] of var 0..MaxSupply: x;
 
 % Constraints
 constraint
-  forall(i in Origins)(
-    sum(j in Destinations)(x[i,j]) <= Supply[i]
+  forall(i in ORIGINS)(
+    sum(j in DESTINATIONS)( x[i,j] ) <= Supply[i]
   );
 
 constraint
-  forall(j in Destinations)(
-    sum(i in Origins)(x[i,j]) == Demand[j]
-  );
-
-constraint
-  forall(i in Origins, j in Destinations)(
-    x[i,j] <= min(Supply[i], Demand[j])
+  forall(j in DESTINATIONS)(
+    sum(i in ORIGINS)( x[i,j] ) == Demand[j]
   );
 
 % Objective
-solve minimize sum(i in Origins, j in Destinations)(Cost[i,j] * x[i,j]);
+solve minimize
+  sum(i in ORIGINS, j in DESTINATIONS)( Cost[i,j] * x[i,j] );

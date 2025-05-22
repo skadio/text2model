@@ -2,84 +2,78 @@
 int: M;
 int: I;
 
-set of int: Months  = 1..M;
-set of int: Oils    = 1..I;
-set of int: Periods = 0..M;                     % for inventory balance (month 0 .. M)
+set of int: Months = 1..M;
+set of int: Oils   = 1..I;
 
-array[Months, Oils] of float: BuyPrice;         % price to buy oil i in month m
-float: SellPrice;                               % selling price of final product (per ton)
+array[Months, Oils] of int: BuyPrice;      % month, oil
+int: SellPrice;
 
-array[Oils] of bool:  IsVegetable;              % true if oil is vegetable
-int:  MaxVegetableRefiningPerMonth;
-int:  MaxNonVegetableRefiningPerMonth;
+array[Oils] of bool: IsVegetable;
 
-int:  StorageSize;                              % maximum total inventory (tons)
-float: StorageCost;                             % cost per ton stored per month
+int: MaxVegetableRefiningPerMonth;
+int: MaxNonVegetableRefiningPerMonth;
 
-float: MaxHardness;                             % technological hardness limits
+int: StorageSize;        % maximum tons that can be stored for any single oil
+int: StorageCost;        % cost per stored ton per month
+
+float: MaxHardness;
 float: MinHardness;
-array[Oils] of float: Hardness;                 % hardness of each oil
+array[Oils] of float: Hardness;
 
-array[Oils] of float: InitialAmount;            % initial inventory of each oil (tons)
+int: InitialAmount;      % tons in store (per oil) at the beginning and end of horizon
 
-
-% Helpful constants
-float: StorageSizeF      = float(StorageSize);
-float: VegCapF           = float(MaxVegetableRefiningPerMonth);
-float: NonVegCapF        = float(MaxNonVegetableRefiningPerMonth);
-float: MaxRefineCapacity = max(VegCapF, NonVegCapF);
+int: MaxRefiningPerOilPerMonth = max(MaxVegetableRefiningPerMonth,
+                                     MaxNonVegetableRefiningPerMonth);
 
 % Decision variables
-array[Periods, Oils] of var 0.0..StorageSizeF: Store;             % inventory at end of period p
-array[Months,  Oils] of var 0.0..StorageSizeF: Buy;               % tons bought in month m
-array[Months,  Oils] of var 0.0..MaxRefineCapacity: Refine;       % tons refined in month m
+array[Months, Oils] of var 0..StorageSize: Buy;          % tons purchased
+array[Months, Oils] of var 0..MaxRefiningPerOilPerMonth: Use;  % tons refined/used
+array[0..M, Oils]  of var 0..StorageSize: Store;         % tons in storage
 
-
-% 1. Initial and final inventory requirements
-constraint forall(i in Oils)(
-    Store[0,i] = InitialAmount[i]
-);
-constraint forall(i in Oils)(
-    Store[M,i] = InitialAmount[i]
-);
-
-% 2. Inventory balance
+% Initial stock
 constraint
-    forall(m in Months, i in Oils)(
-        Store[m,i] = Store[m-1,i] + Buy[m,i] - Refine[m,i]
-    );
+  forall(i in Oils)( Store[0,i] = InitialAmount );
 
-% 3. Storage capacity limit
+% Inventory balance
 constraint
-    forall(p in Periods)(
-        sum(i in Oils)(Store[p,i]) <= StorageSizeF
-    );
+  forall(m in Months, i in Oils)(
+    Store[m-1,i] + Buy[m,i] - Use[m,i] = Store[m,i]
+  );
 
-% 4. Refining capacity per month
+% Final stock equals initial
 constraint
-    forall(m in Months)(
-        sum(i in Oils where IsVegetable[i])(Refine[m,i]) <= VegCapF
-    );
-constraint
-    forall(m in Months)(
-        sum(i in Oils where not IsVegetable[i])(Refine[m,i]) <= NonVegCapF
-    );
+  forall(i in Oils)( Store[M,i] = InitialAmount );
 
-% 5. Hardness constraints for the monthly blend
+% Storage capacity
 constraint
-    forall(m in Months)(
-        sum(i in Oils)(Hardness[i] * Refine[m,i]) >= MinHardness * sum(i in Oils)(Refine[m,i])
-    );
+  forall(m in Months, i in Oils)( Store[m,i] <= StorageSize );
+
+% Refining capacities
 constraint
-    forall(m in Months)(
-        sum(i in Oils)(Hardness[i] * Refine[m,i]) <= MaxHardness * sum(i in Oils)(Refine[m,i])
-    );
+  forall(m in Months)(
+       sum(i in Oils where IsVegetable[i])(Use[m,i])     <= MaxVegetableRefiningPerMonth /\
+       sum(i in Oils where not IsVegetable[i])(Use[m,i]) <= MaxNonVegetableRefiningPerMonth
+  );
 
-% Objective components
-var float: TotalRevenue     = SellPrice * sum(m in Months, i in Oils)(Refine[m,i]);
-var float: TotalBuyingCost  = sum(m in Months, i in Oils)(BuyPrice[m,i] * Buy[m,i]);
-var float: TotalStorageCost = StorageCost * sum(m in Months, i in Oils)(Store[m,i]);
+% Hardness requirements
+constraint
+  forall(m in Months)(
+    let {
+          var int  : total_int = sum(i in Oils)(Use[m,i]),
+          var float: total_f   = int2float(total_int),
+          var float: hard_sum  = sum(i in Oils)(Hardness[i] * int2float(Use[m,i]))
+        } in
+    ( total_int = 0 ) \/
+    ( MinHardness * total_f <= hard_sum /\ hard_sum <= MaxHardness * total_f )
+  );
 
-var float: Profit = TotalRevenue - TotalBuyingCost - TotalStorageCost;
+% Objective: maximise profit
+var int: Profit =
+        % revenue
+        sum(m in Months)( SellPrice * sum(i in Oils)(Use[m,i]) )
+        % minus purchase costs
+      - sum(m in Months, i in Oils)( BuyPrice[m,i] * Buy[m,i] )
+        % minus storage costs
+      - sum(m in Months, i in Oils)( StorageCost * Store[m,i] );
 
 solve maximize Profit;

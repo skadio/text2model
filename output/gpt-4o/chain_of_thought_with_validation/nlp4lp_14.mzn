@@ -1,24 +1,20 @@
-% Parameters
-int: M;                                     % Number of inequalities
-int: N;                                     % Dimension of the space
+int: M;
+int: N;
 
-array[1..M, 1..N] of float: A;              % Coefficients of the inequalities
-array[1..M] of float: B;                    % Right-hand sides
+array[1..M, 1..N] of float: A;
+array[1..M] of float: B;
 
-array[1..M] of float: row_norm =            % Euclidean norm of each row of A
-  [ sqrt(sum(j in 1..N)(A[i,j]^2)) | i in 1..M ];
+array[1..M] of float: normA =
+  [ sqrt(sum(j in 1..N)(A[i, j] * A[i, j])) | i in 1..M ];
 
-% Variables
-array[1..N] of var float: y;                % Coordinates of the Chebyshev center
-var float: r;                               % Radius of the inscribed ball
+float: BIG = 1.0e6;
 
-% Constraints
+array[1..N] of var float(-BIG, BIG): y;
+var float(0.0, BIG): r;
+
 constraint
-    r >= 0;                                 % Non-negativity of the radius
-constraint
-    forall(i in 1..M) (                     % Ball must lie inside every half-space
-        sum(j in 1..N)(A[i,j] * y[j]) + row_norm[i] * r <= B[i]
-    );
+  forall(i in 1..M)(
+    sum(j in 1..N)(A[i, j] * y[j]) + normA[i] * r <= B[i]
+  );
 
-% Objective
 solve maximize r;

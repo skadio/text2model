@@ -1,24 +1,23 @@
 % Parameters
-int: K;
-set of int: KRange = 0..K;
-
-array[KRange] of float: P;            % Provided but not used in the optimisation
-float: ExpectedZ;
-float: ExpectedZSquared;
+int: K;                                    % Number of support points (values 0..K-1)
+array[1..K] of float: P;                   % Provided probability vector (not used in optimisation)
+float: ExpectedZ;                          % Given E[Z]
+float: ExpectedZSquared;                   % Given E[Z^2]
 
 % Variables
-array[KRange] of var 0.0..1.0: p;     % Probabilities p_k
-var float: ExpectedZFourth;           % Fourth moment to be maximised
+array[0..K-1] of var 0.0..1.0: p;          % Decision probabilities p_k  (k = 0..K-1)
+var float: fourthMoment;                   % E[Z^4] to be maximised
 
 % Constraints
-constraint sum(k in KRange)(p[k]) = 1;
-
-constraint sum(k in KRange)(int2float(k) * p[k]) = ExpectedZ;
-
-constraint sum(k in KRange)(int2float(k * k) * p[k]) = ExpectedZSquared;
-
-constraint ExpectedZFourth = 
-    sum(k in KRange)(int2float(k * k * k * k) * p[k]);
+constraint
+    sum(k in 0..K-1)(p[k]) = 1.0;                          % Probabilities sum to 1
+constraint
+    sum(k in 0..K-1)(k * p[k]) = ExpectedZ;                % First moment
+constraint
+    sum(k in 0..K-1)(k * k * p[k]) = ExpectedZSquared;     % Second moment
 
 % Objective
-solve maximize ExpectedZFourth;
+constraint
+    fourthMoment = sum(k in 0..K-1)(k * k * k * k * p[k]); % Definition of E[Z^4]
+
+solve maximize fourthMoment;

@@ -1,30 +1,30 @@
-int: S;                      % number of schools
-int: G;                      % number of student groups
-int: N;                      % number of neighbourhoods
+% Parameters
+int: S;
+int: G;
+int: N;
 
-array[1..S, 1..G] of int: Capacity;      % capacity of school s for group g
-array[1..N, 1..G] of int: Population;    % population of group g in neighbourhood n
-array[1..N, 1..S] of float: Distance;    % distance from neighbourhood n to school s
+array[1..S, 1..G] of float: Capacity;
+array[1..N, 1..G] of float: Population;
+array[1..N, 1..S] of float: Distance;
 
-% Auxiliary constants
-int: max_pop = max([Population[n,g] | n in 1..N, g in 1..G]);
-float: max_pop_f = float(max_pop);       % upper bound for assignment variables
+float: BIG_M = max([Population[n,g] | n in 1..N, g in 1..G]);
 
 % Variables
-array[1..N, 1..S, 1..G] of var 0.0..max_pop_f: x;   % students of group g from n sent to s
+array[1..N, 1..G, 1..S] of var 0.0..BIG_M: Assign;
 
-% Every student is assigned
+% Constraints
 constraint
-  forall(n in 1..N, g in 1..G) (
-    sum(s in 1..S)(x[n,s,g]) = float(Population[n,g])
+  forall(n in 1..N, g in 1..G)(
+    sum(s in 1..S)(Assign[n,g,s]) = Population[n,g]
   );
 
-% School capacities are respected
 constraint
-  forall(s in 1..S, g in 1..G) (
-    sum(n in 1..N)(x[n,s,g]) <= float(Capacity[s,g])
+  forall(s in 1..S, g in 1..G)(
+    sum(n in 1..N)(Assign[n,g,s]) <= Capacity[s,g]
   );
 
 % Objective
-solve minimize
-  sum(n in 1..N, s in 1..S, g in 1..G)(Distance[n,s] * x[n,s,g]);
+var float: total_distance =
+  sum(n in 1..N, g in 1..G, s in 1..S)(Assign[n,g,s] * Distance[n,s]);
+
+solve minimize total_distance;

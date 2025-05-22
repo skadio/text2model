@@ -2,29 +2,29 @@
 int: NumPorts;
 int: NumTerminals;
 
-set of int: Ports      = 1..NumPorts;
-set of int: Terminals  = 1..NumTerminals;
+set of int: K = 1..NumTerminals;          % Terminals
+set of int: L = 1..NumPorts;             % Ports / Destinations
 
-array[Terminals, Ports] of int: Cost;
-array[Ports]             of int: Demand;
-array[Terminals]         of int: Supply;
+array[K, L] of int: Cost;                % Transportation cost from terminal k to port l
+array[K] of int: Supply;                 % Supply at each terminal k
+array[L] of int: Demand;                 % Demand at each port l
 
-int: TotalSupply = sum(k in Terminals)(Supply[k]);
+int: TotalSupply = sum(k in K)(Supply[k]);
 
 % Variables
-array[Terminals, Ports] of var 0..TotalSupply: X;
+array[K, L] of var 0..TotalSupply: X;    % Quantity shipped from terminal k to port l
 
 % Constraints
 constraint
-    forall(k in Terminals)(
-        sum(l in Ports)(X[k,l]) <= Supply[k]
-    );
+  forall(k in K)(
+    sum(l in L)(X[k,l]) <= Supply[k]     % Do not exceed supply at each terminal
+  );
 
 constraint
-    forall(l in Ports)(
-        sum(k in Terminals)(X[k,l]) == Demand[l]
-    );
+  forall(l in L)(
+    sum(k in K)(X[k,l]) >= Demand[l]     % Satisfy demand at each port
+  );
 
 % Objective
 solve minimize
-    sum(k in Terminals, l in Ports)(Cost[k,l] * X[k,l]);
+  sum(k in K, l in L)(Cost[k,l] * X[k,l]);

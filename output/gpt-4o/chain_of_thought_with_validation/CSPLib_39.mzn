@@ -2,62 +2,49 @@
 int: num_pieces;
 int: num_players;
 
-set of int: Pieces  = 1..num_pieces;
-set of int: Players = 1..num_players;
+array[1..num_pieces] of int: duration;
+array[1..num_players, 1..num_pieces] of int: rehearsal; % 1 ⇔ player involved in piece
 
-array[Pieces]          of int: duration;                    % duration of each piece
-array[Players, Pieces] of int: rehearsal;                   % 1 if player p plays in piece i, 0 otherwise
+% Derived constants
+int: total_duration = sum(i in 1..num_pieces)(duration[i]);
+int: BIG             = total_duration + 1;
 
-int: total_duration = sum(i in Pieces)(duration[i]);        % useful upper-bound
-
-array[Players] of int: playing_time =                       % fixed playing time of every player
-    [ sum(i in Pieces)(rehearsal[p,i] * duration[i]) | p in Players ];
+array[1..num_players] of int: play_duration =
+  [ sum(i in 1..num_pieces)(rehearsal[p,i] * duration[i]) | p in 1..num_players ];
 
 % Variables
-array[Pieces]  of var Pieces: pos;            % position of every piece in the schedule
-array[Players] of var Pieces: first_p;        % first piece a player is present
-array[Players] of var Pieces: last_p;         % last  piece a player is present
-
-array[Players, Pieces] of var bool: between;  % true if a piece occurs between first_p and last_p for player p
-
-array[Players] of var 0..total_duration: present_time;
-array[Players] of var 0..total_duration: waiting_time;
-
-var int: total_waiting = sum(p in Players)(waiting_time[p]);
+array[1..num_pieces]  of var 0..total_duration: start;          % start time of each piece
+array[1..num_players] of var 0..total_duration: first_start;    % first time a player must be present
+array[1..num_players] of var 0..total_duration: last_end;       % last time a player must be present
+array[1..num_players] of var 0..total_duration: waiting;        % waiting time of each player
 
 % Constraints
-constraint
-    all_different(pos);
+include "globals.mzn";
 
-% participating pieces must lie inside the personal interval
-constraint
-    forall(p in Players, i in Pieces where rehearsal[p,i] = 1)(
-        first_p[p] <= pos[i] /\ pos[i] <= last_p[p]
-    );
+% 1. Pieces are rehearsed sequentially (no overlap)
+constraint disjunctive(start, duration);
 
-% interval consistency
-constraint
-    forall(p in Players)(
-        first_p[p] <= last_p[p]
-    );
+% 2. Finish within the overall horizon
+constraint forall(i in 1..num_pieces)(
+  start[i] + duration[i] <= total_duration
+);
 
-% indicate whether a piece lies in a player’s interval
+% 3. Earliest and latest presence for each player
 constraint
-    forall(p in Players, i in Pieces)(
-        between[p,i] = (first_p[p] <= pos[i] /\ pos[i] <= last_p[p])
-    );
+  forall(p in 1..num_players) (
+    minimum(first_start[p],
+            [ start[i] + (1 - rehearsal[p,i]) * BIG
+              | i in 1..num_pieces ]) /\
+    maximum(last_end[p],
+            [ start[i] + duration[i] - (1 - rehearsal[p,i]) * BIG
+              | i in 1..num_pieces ])
+  );
 
-% compute presence time of every player
+% 4. Waiting time definition (non-negative by bounds)
 constraint
-    forall(p in Players)(
-        present_time[p] = sum(i in Pieces)(duration[i] * bool2int(between[p,i]))
-    );
-
-% waiting time definition
-constraint
-    forall(p in Players)(
-        waiting_time[p] = present_time[p] - playing_time[p]
-    );
+  forall(p in 1..num_players)(
+    waiting[p] = last_end[p] - first_start[p] - play_duration[p]
+  );
 
 % Objective
-solve minimize total_waiting;
+solve minimize sum(p in 1..num_players)(waiting[p]);

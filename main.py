@@ -107,6 +107,169 @@ def run_cot_with_validation_strategy(client, problem, idx, output_dir):
         return False
 
 
+def run_cot_strategy(client, problem, idx, output_dir):
+    """Run the Chain of Thought strategy (single-stage)"""
+    try:
+        # Prepare data
+        problem_data = utils.prepare_problem_data(problem)
+
+        # Generate code with chain of thought
+        cot_prompt = utils.load_file('prompts/cot_prompt.txt')
+        code = utils.call_openai_api(
+            client,
+            cot_prompt.format(
+                problem_description=problem_data['description'],
+                data_nomenclature=problem_data['data_nomenclature']
+            )
+        )
+
+        if not code:
+            return False
+
+        # Save the code
+        utils.save_solution(output_dir, f"problem_{idx}", code)
+        return True
+
+    except Exception as e:
+        print(f"Error in CoT strategy for problem {idx}: {e}")
+        return False
+
+
+def run_cot_with_grammar_check_strategy(client, problem, idx, output_dir):
+    """Run the CoT + Grammar Check strategy (2-stage)"""
+    try:
+        # Prepare data
+        problem_data = utils.prepare_problem_data(problem)
+
+        # Stage 1: Generate initial code with chain of thought
+        cot_prompt = utils.load_file('prompts/cot_prompt.txt')
+        initial_code = utils.call_openai_api(
+            client,
+            cot_prompt.format(
+                problem_description=problem_data['description'],
+                data_nomenclature=problem_data['data_nomenclature']
+            )
+        )
+
+        if not initial_code:
+            return False
+
+        time.sleep(2)
+
+        current_code = initial_code
+
+        # Check syntax of initial code
+        syntax_error_message = utils.check_syntax(initial_code, problem['data.dzn'])
+
+        # Stage 2: Grammar-based correction if syntax error exists
+        if syntax_error_message:
+            grammar_prompt = utils.load_file('prompts/grammar_prompt.txt')
+            minizinc_grammar = utils.load_file('grammar.mzn')
+            
+            grammar_corrected_code = utils.call_openai_api(
+                client,
+                grammar_prompt.format(
+                    problem_description=problem_data['description'],
+                    data_nomenclature=problem_data['data_nomenclature'],
+                    current_code=current_code,
+                    syntax_error_message=syntax_error_message,
+                    minizinc_grammar=minizinc_grammar
+                )
+            )
+            
+            if grammar_corrected_code:
+                current_code = grammar_corrected_code
+
+        # Save the final code
+        utils.save_solution(output_dir, f"problem_{idx}", current_code)
+        return True
+
+    except Exception as e:
+        print(f"Error in CoT + Grammar Check strategy for problem {idx}: {e}")
+        return False
+
+
+###########################################################
+# Three-call Strategies
+###########################################################
+def run_cot_validation_grammar_strategy(client, problem, idx, output_dir):
+    """Run the CoT + Validation + Grammar Check strategy (3-stage)"""
+    try:
+        # Prepare data
+        problem_data = utils.prepare_problem_data(problem)
+
+        # Stage 1: Generate initial code with chain of thought
+        cot_prompt = utils.load_file('prompts/cot_prompt.txt')
+        initial_code = utils.call_openai_api(
+            client,
+            cot_prompt.format(
+                problem_description=problem_data['description'],
+                data_nomenclature=problem_data['data_nomenclature']
+            )
+        )
+
+        if not initial_code:
+            return False
+
+        time.sleep(2)
+
+        current_code = initial_code
+
+        # Check syntax of initial code
+        syntax_error_message = utils.check_syntax(initial_code, problem['data.dzn'])
+
+        # Stage 2: Validation if syntax error exists
+        if syntax_error_message:
+            validation_prompt = utils.load_file('prompts/validation_prompt.txt')
+            validated_code = utils.call_openai_api(
+                client,
+                validation_prompt.format(
+                    problem_description=problem_data['description'],
+                    data_nomenclature=problem_data['data_nomenclature'],
+                    objective_type=problem_data['objective_type'],
+                    final_code=initial_code,
+                    syntax_error_message=syntax_error_message
+                )
+            )
+            
+            if validated_code:
+                current_code = validated_code
+                # Check syntax again after validation
+                syntax_error_message = utils.check_syntax(validated_code, problem['data.dzn'])
+            
+            time.sleep(2)
+
+        # Stage 3: Grammar-based correction if syntax error still exists
+        if syntax_error_message:
+            grammar_prompt = utils.load_file('prompts/grammar_prompt.txt')
+            minizinc_grammar = utils.load_file('grammar.mzn')
+            
+            grammar_corrected_code = utils.call_openai_api(
+                client,
+                grammar_prompt.format(
+                    problem_description=problem_data['description'],
+                    data_nomenclature=problem_data['data_nomenclature'],
+                    current_code=current_code,
+                    syntax_error_message=syntax_error_message,
+                    minizinc_grammar=minizinc_grammar
+                )
+            )
+            
+            if grammar_corrected_code:
+                current_code = grammar_corrected_code
+
+        # Save the final code
+        utils.save_solution(output_dir, f"problem_{idx}", current_code)
+        return True
+
+    except Exception as e:
+        print(f"Error in CoT + Validation + Grammar Check strategy for problem {idx}: {e}")
+        return False
+
+
+###########################################################
+# Four and Five-call Strategies
+###########################################################
 def run_compositional_strategy(client, problem, idx, output_dir, validate=True):
     """Run the compositional stitch strategy"""
     try:
@@ -203,8 +366,8 @@ def main():
                         help='OpenAI model to use')
     parser.add_argument('--strategies', nargs='+',
                         default=['baseline'],
-                        choices=['baseline', 'knowledge_graph', 'cot_with_validation', 'compositional',
-                                 'compositional_with_validation', 'all'],
+                        choices=['baseline', 'cot', 'knowledge_graph', 'cot_with_validation', 'cot_with_grammar_check',
+                                 'cot_validation_grammar', 'compositional', 'compositional_with_validation', 'all'],
                         help='Strategies to run')
     parser.add_argument('--problem-ids', nargs='+', type=int,
                         help='Specific problem IDs to process')
@@ -240,7 +403,10 @@ def main():
 
     # Determine which strategies to run
     if 'all' in args.strategies:
-        strategies = ['baseline', 'knowledge_graph', 'cot_with_validation', 'compositional',
+        strategies = ['baseline', 'cot', 
+                      'knowledge_graph', 'cot_with_validation', 'cot_with_grammar_check',
+                      'cot_validation_grammar', 
+                      'compositional', 
                       'compositional_with_validation']
     else:
         strategies = args.strategies
@@ -257,9 +423,13 @@ def main():
     strategy_functions = {
         # Single GPT call
         'baseline': run_baseline_strategy,
+        'cot': run_cot_strategy,
         # Two GPT calls
         'knowledge_graph': run_knowledge_graph_strategy,
         'cot_with_validation': run_cot_with_validation_strategy,
+        'cot_with_grammar_check': run_cot_with_grammar_check_strategy,
+        # Three GPT calls
+        'cot_validation_grammar': run_cot_validation_grammar_strategy,
         # Four GPT calls
         'compositional': lambda c, p, i, o: run_compositional_strategy(c, p, i, o, validate=False),
         # Five GPT calls

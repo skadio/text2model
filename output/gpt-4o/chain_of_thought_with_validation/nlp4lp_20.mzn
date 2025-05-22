@@ -4,117 +4,101 @@ int: M;
 
 set of int: OILS   = 1..I;
 set of int: MONTHS = 1..M;
+set of int: MONTHS0 = 0..M;          % for inventories including month 0
 
-/* -------------------- data -------------------- */
-array[MONTHS, OILS] of float: BuyPrice;          % buying price of oil i in month m
-float: SellPrice;                                % selling price of the final product
+array[MONTHS, OILS] of float: BuyPrice;        % price of oil i in month m  (m,i)
+float: SellPrice;                              % selling price of final product
 
-array[OILS] of bool: IsVegetable;                % vegetable indicator
+array[OILS] of bool: IsVegetable;              % true  -> vegetable oil
+int: MaxVegRefiningPerMonth;
+int: MaxNonVegRefiningPerMonth;
 
-float: MaxVegRefiningPerMonth;                   % veg-oil refining capacity
-float: MaxNonVegRefiningPerMonth;                % non-veg oil refining capacity
+int: StorageSize;                              % total storage capacity
+float: StorageCost;                            % storage cost per ton per month
 
-float: StorageSize;                              % total storage capacity (all oils together)
-float: StorageCost;                              % cost per ton stored per month
+float: MaxHardness;                            % technological upper bound
+float: MinHardness;                            % technological lower bound
+array[OILS] of float: Hardness;                % hardness of each oil
 
-float: MaxHardness;                              % technological hardness limits
-float: MinHardness;
+int: InitialAmount;                            % starting (and ending) stock per oil
+int: MinUsage;                                 % minimum usage when an oil is used
 
-array[OILS] of float: Hardness;                  % hardness of each oil
-
-float: InitialAmount;                            % initial (and final) inventory of every oil
-float: MinUsage;                                 % minimum usage if an oil is used
-
-array[OILS, OILS] of int: Dependencies;          % usage dependencies (0/1)
+array[OILS, OILS] of int: Dependencies;        % 1 => if i used then j must be used
 
 
-/* ------------------ derived ------------------- */
-float: HardnessMax = max(i in OILS)(Hardness[i]);
-float: BigM        = StorageSize + MaxVegRefiningPerMonth + MaxNonVegRefiningPerMonth;
-
-set of int: VegOils    = { i | i in OILS where IsVegetable[i] };
-set of int: NonVegOils = { i | i in OILS where not IsVegetable[i] };
+% Derived constant
+int: MaxCapacity = MaxVegRefiningPerMonth + MaxNonVegRefiningPerMonth;   % big-M for usage
 
 
-/* ------------------ variables ----------------- */
-array[MONTHS, OILS] of var 0.0..BigM:        Buy;     % tons bought
-array[MONTHS, OILS] of var 0.0..BigM:        Use;     % tons refined / used
-array[MONTHS, OILS] of var 0.0..StorageSize: Store;   % inventory at end of month
-array[MONTHS, OILS] of var bool:             Used;    % true if oil i is used in month m
+% Variables
+array[OILS, MONTHS]  of var 0..StorageSize: BuyQty;                      % tons bought
+array[OILS, MONTHS]  of var 0..MaxCapacity: UseQty;                      % tons refined / used
+array[OILS, MONTHS]  of var bool: UseFlag;                               % 1 if oil i used in month m
+array[OILS, MONTHS0] of var 0..StorageSize: Stock;                       % inventory (month 0..M)
 
-array[MONTHS] of var 0.0..BigM*I:            TotalUse;         % total refined each month
-array[MONTHS] of var float:                  WeightedHardness; % Σ hardness*use each month
+array[MONTHS] of var 0..MaxCapacity*I: TotalUse;                         % total refined each month
+array[MONTHS] of var float: HardSum;                                     % Σ hardness*usage per month
 
-
-/* ----------------- constraints ---------------- */
-
-/* 1. Link usage decision with quantity */
-constraint
-  forall(m in MONTHS, i in OILS)(
-        Use[m,i] >=        MinUsage * bool2int(Used[m,i])
-    /\  Use[m,i] <=           BigM   * bool2int(Used[m,i])
-  );
-
-/* 2. At most three oils can be used per month */
-constraint
-  forall(m in MONTHS)(
-        sum(i in OILS)(bool2int(Used[m,i])) <= 3
-  );
-
-/* 3. Usage dependencies (if i is used, j must also be used) */
-constraint
-  forall(m in MONTHS, i in OILS, j in OILS where Dependencies[i,j] = 1)(
-        bool2int(Used[m,i]) <= bool2int(Used[m,j])
-  );
-
-/* 4. Material balance for every oil */
-constraint
-  forall(i in OILS)(
-        float(InitialAmount) + Buy[1,i] = Use[1,i] + Store[1,i]
-  ) /\
-  forall(m in 2..M, i in OILS)(
-        Store[m-1,i] + Buy[m,i] = Use[m,i] + Store[m,i]
-  );
-
-/* 5. End-of-horizon inventory requirement */
-constraint
-  forall(i in OILS)(
-        Store[M,i] = InitialAmount
-  );
-
-/* 6. Global storage capacity */
-constraint
-  forall(m in MONTHS)(
-        sum(i in OILS)(Store[m,i]) <= StorageSize
-  );
-
-/* 7. Refining capacities */
-constraint
-  forall(m in MONTHS)(
-        sum(i in VegOils   )(Use[m,i]) <= MaxVegRefiningPerMonth /\
-        sum(i in NonVegOils)(Use[m,i]) <= MaxNonVegRefiningPerMonth
-  );
-
-/* 8. Totals for each month */
-constraint
-  forall(m in MONTHS)(
-        TotalUse[m]         = sum(i in OILS)(Use[m,i]) /\
-        WeightedHardness[m] = sum(i in OILS)(Hardness[i] * Use[m,i])
-  );
-
-/* 9. Hardness specification (skipped when nothing is produced) */
-constraint
-  forall(m in MONTHS)(
-        (TotalUse[m] = 0.0) \/
-        ( float(MinHardness) * TotalUse[m] <= WeightedHardness[m] /\
-          WeightedHardness[m] <= float(MaxHardness) * TotalUse[m] )
-  );
+var float: Profit;                                                       % objective
 
 
-/* ------------------ objective ----------------- */
-var float: Profit =
-        SellPrice * sum(m in MONTHS)(TotalUse[m])
-      - sum(m in MONTHS, i in OILS)(BuyPrice[m,i] * Buy[m,i])
-      - StorageCost * sum(m in MONTHS, i in OILS)(Store[m,i]);
+% Constraints
+% Inventory initial and final levels
+constraint forall(i in OILS)(
+    Stock[i,0] = InitialAmount /\ Stock[i,M] = InitialAmount
+);
 
+% Material balance
+constraint forall(i in OILS, m in MONTHS)(
+    Stock[i,m-1] + BuyQty[i,m] - UseQty[i,m] = Stock[i,m]
+);
+
+% Storage capacity
+constraint forall(m in MONTHS0)(
+    sum(i in OILS)(Stock[i,m]) <= StorageSize
+);
+
+% Link usage quantities to indicator variables
+constraint forall(i in OILS, m in MONTHS)(
+    UseQty[i,m] >= MinUsage * bool2int(UseFlag[i,m]) /\
+    UseQty[i,m] <= MaxCapacity * bool2int(UseFlag[i,m])
+);
+
+% At most three oils can be used each month
+constraint forall(m in MONTHS)(
+    sum(i in OILS)(bool2int(UseFlag[i,m])) <= 3
+);
+
+% Dependency constraints
+constraint forall(m in MONTHS, i in OILS, j in OILS where Dependencies[i,j] = 1)(
+    bool2int(UseFlag[i,m]) <= bool2int(UseFlag[j,m])
+);
+
+% Refining capacity limits
+constraint forall(m in MONTHS)(
+    sum(i in OILS where IsVegetable[i])    (UseQty[i,m]) <= MaxVegRefiningPerMonth /\
+    sum(i in OILS where not IsVegetable[i])(UseQty[i,m]) <= MaxNonVegRefiningPerMonth
+);
+
+% Compute totals and hardness sums
+constraint forall(m in MONTHS)(
+    TotalUse[m] = sum(i in OILS)(UseQty[i,m]) /\
+    HardSum[m]  = sum(i in OILS)(Hardness[i] * UseQty[i,m])
+);
+
+% Hardness bounds when anything is produced
+constraint forall(m in MONTHS)(
+    (TotalUse[m] > 0) -> (
+        MinHardness * TotalUse[m] <= HardSum[m] /\
+        HardSum[m] <= MaxHardness * TotalUse[m]
+    )
+);
+
+% Profit definition
+constraint Profit =
+        sum(m in MONTHS)( SellPrice * TotalUse[m] )
+      - sum(i in OILS, m in MONTHS)( BuyPrice[m,i] * BuyQty[i,m] )
+      - sum(i in OILS, m in MONTHS)( StorageCost * Stock[i,m] );
+
+% Objective
 solve maximize Profit;

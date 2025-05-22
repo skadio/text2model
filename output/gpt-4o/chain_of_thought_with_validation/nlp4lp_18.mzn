@@ -4,38 +4,39 @@ array[1..N] of float: Bought;
 array[1..N] of float: BuyPrice;
 array[1..N] of float: CurrentPrice;
 array[1..N] of float: FuturePrice;
-float: TransactionRate;          % expressed as a percentage, e.g., 1.0 = 1 %
-float: TaxRate;                  % expressed as a percentage, e.g., 15.0 = 15 %
-float: K;                        % amount of money to raise (net)
+float: TransactionRate;          % percentage, e.g., 1.0 means 1 %
+float: TaxRate;                  % percentage, e.g., 15.0 means 15 %
+float: K;                        % cash the investor needs to raise
 
-% Derived data
-array[1..N] of float: PosGain = [ max(0.0, CurrentPrice[i] - BuyPrice[i]) | i in 1..N ];
-float: MaxBought = max(i in 1..N)(Bought[i]);
+% Derived constants
+float: transRate = TransactionRate / 100.0;
+float: taxRate   = TaxRate / 100.0;
+array[1..N] of float: positiveGain =
+  [ max(0.0, CurrentPrice[i] - BuyPrice[i]) | i in 1..N ];
+float: maxBought = max(Bought);
 
 % Variables
-array[1..N] of var 0.0..MaxBought: Sell;   % number of shares to sell
+array[1..N] of var 0.0..maxBought: Sell;   % number of shares to sell
 
 % Constraints
 constraint
   forall(i in 1..N) (
-    Sell[i] <= Bought[i]        % cannot sell more than currently held
+    Sell[i] <= Bought[i]               % cannot sell more than owned
+  );
+
+var float: netCash =
+  sum(i in 1..N)(
+       Sell[i] * CurrentPrice[i] * (1.0 - transRate)   % after transaction cost
+     - taxRate * Sell[i] * positiveGain[i]             % minus tax on gains
   );
 
 constraint
-  (
-    /* Net cash raised = gross revenue − transaction costs − taxes */
-    let {
-      float: tc = TransactionRate / 100.0,
-      float: tr = TaxRate / 100.0
-    } in
-      sum(i in 1..N)( Sell[i] * CurrentPrice[i] )                           % gross
-    - tc * sum(i in 1..N)( Sell[i] * CurrentPrice[i] )                      % transaction cost
-    - tr * sum(i in 1..N)( Sell[i] * PosGain[i] )                           % capital-gains tax
-    >= K
-  );
+  netCash >= K;                                        % cash requirement
 
 % Objective
-solve maximize
+var float: futureValue =
   sum(i in 1..N)(
-      (Bought[i] - Sell[i]) * FuturePrice[i]    % expected value of remaining shares
+      (Bought[i] - Sell[i]) * FuturePrice[i]           % expected value next year
   );
+
+solve maximize futureValue;

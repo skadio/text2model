@@ -14,37 +14,39 @@ array[1..num_not_with, 1..2] of int: not_with;
 int: num_requires;
 array[1..num_requires, 1..2] of int: requires;
 
-set of int: PROJECTS = 1..num_projects;
-
 % Variables
-array[PROJECTS] of var 0..1: selected;
-
-var 0..sum(values) : total_value = sum(i in PROJECTS)(values[i] * selected[i]);
+array[1..num_projects] of var 0..1: select;
 
 % Constraints
 % Budget limit
 constraint
-    sum(i in PROJECTS)(budgets[i] * selected[i]) <= max_budget;
+    sum(i in 1..num_projects)(budgets[i] * select[i]) <= max_budget;
 
 % Personnel limit
 constraint
-    sum(i in PROJECTS)(personell[i] * selected[i]) <= max_persons;
+    sum(i in 1..num_projects)(personell[i] * select[i]) <= max_persons;
 
-% Maximum number of projects
+% Maximum number of projects that can be selected
 constraint
-    sum(i in PROJECTS)(selected[i]) <= max_projects;
+    sum(i in 1..num_projects)(select[i]) <= max_projects;
 
-% Projects that cannot be selected together
+% Incompatibility constraints (projects that cannot be selected together)
 constraint
-    forall(p in 1..num_not_with)(
-        selected[not_with[p,1]] + selected[not_with[p,2]] <= 1
+    forall(p in 1..num_not_with) (
+        let { int: i = not_with[p,1];
+              int: j = not_with[p,2]; } in
+        select[i] + select[j] <= 1
     );
 
-% Projects that must be selected together
+% Requirement constraints (projects that must be selected together)
 constraint
-    forall(r in 1..num_requires)(
-        selected[requires[r,1]] == selected[requires[r,2]]
+    forall(p in 1..num_requires) (
+        let { int: i = requires[p,1];
+              int: j = requires[p,2]; } in
+        select[i] == select[j]
     );
 
 % Objective
+var int: total_value = sum(i in 1..num_projects)(values[i] * select[i]);
+
 solve maximize total_value;

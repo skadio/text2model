@@ -1,50 +1,40 @@
-% Parameters
 int: A;
-int: Budget;
+set of int: ADS = 1..A;
 
-array[1..A] of int: Costs;            % cost per click of advertisement type a
-array[1..A] of int: MaxClicks;        % upper bound on purchasable clicks of type a
-array[1..A] of int: YoungClicks;      % percentage (0-100) of clicks coming from ages 18-25 for ad a
-array[1..A] of int: OldClicks;        % percentage (0-100) of clicks coming from ages 26+ for ad a
-array[1..A] of int: UniqueClicks;     % percentage (0-100) of clicks that are unique for ad a
+array[ADS] of int: Costs;         % cost per click (or per unit)
+array[ADS] of int: MaxClicks;     % maximum purchasable clicks
+array[ADS] of int: YoungClicks;   % % of young clicks (0–100)
+array[ADS] of int: OldClicks;     % % of old clicks (0–100)
+array[ADS] of int: UniqueClicks;  % % of unique clicks (0–100)
 
-int: GoalYoung;                       % required 18-25 clicks
-int: GoalOld;                         % required 26+  clicks
-int: GoalUniqueYoung;                 % required unique 18-25 clicks
-int: GoalUniqueOld;                   % required unique 26+  clicks
+int: Budget;                      % total advertising budget
 
-% Auxiliary bound for decision variables
+int: GoalYoung;                   % required young clicks
+int: GoalOld;                     % required old clicks
+int: GoalUniqueYoung;             % required unique young clicks
+int: GoalUniqueOld;               % required unique old clicks
+
 int: MaxClickBound = max(MaxClicks);
 
-% Variables
-array[1..A] of var 0..MaxClickBound: Clicks;   % number of clicks to purchase from ad a
-
-% Constraints
-constraint
-    forall(a in 1..A)(
-        Clicks[a] <= MaxClicks[a]          % respect the individual upper limits
-    );
-
-% Budget constraint
-constraint
-    sum(a in 1..A)( Clicks[a] * Costs[a] ) <= Budget;
-
-% Age-specific click goals  (multiply by 100 to avoid fractions)
-constraint
-    sum(a in 1..A)( Clicks[a] * YoungClicks[a] ) >= GoalYoung * 100;
+array[ADS] of var 0..MaxClickBound: clicks;    % clicks to purchase from each ad
 
 constraint
-    sum(a in 1..A)( Clicks[a] * OldClicks[a] )   >= GoalOld   * 100;
-
-% Unique click goals per age category (multiply by 10 000 = 100 * 100)
-constraint
-    sum(a in 1..A)( Clicks[a] * YoungClicks[a] * UniqueClicks[a] ) 
-        >= GoalUniqueYoung * 10000;
+  forall(a in ADS)(clicks[a] <= MaxClicks[a]);
 
 constraint
-    sum(a in 1..A)( Clicks[a] * OldClicks[a]   * UniqueClicks[a] )
-        >= GoalUniqueOld   * 10000;
+  sum(a in ADS)(Costs[a] * clicks[a]) <= Budget;
 
-% Objective
+constraint
+  sum(a in ADS)(YoungClicks[a] * clicks[a]) >= 100 * GoalYoung;
+
+constraint
+  sum(a in ADS)(OldClicks[a] * clicks[a]) >= 100 * GoalOld;
+
+constraint
+  sum(a in ADS)(UniqueClicks[a] * YoungClicks[a] * clicks[a]) >= 10000 * GoalUniqueYoung;
+
+constraint
+  sum(a in ADS)(UniqueClicks[a] * OldClicks[a] * clicks[a]) >= 10000 * GoalUniqueOld;
+
 solve maximize
-    sum(a in 1..A)( Clicks[a] * UniqueClicks[a] );
+  sum(a in ADS)(UniqueClicks[a] * clicks[a]);

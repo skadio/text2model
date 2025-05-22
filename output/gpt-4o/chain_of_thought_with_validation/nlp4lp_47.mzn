@@ -1,35 +1,43 @@
 % Parameters
-int: P;
-int: M;
+int: P;                    % Number of parts
+int: M;                    % Number of machines
 
-array[1..M, 1..P] of int: TimeRequired;
-array[1..M] of int: MachineCosts;
-array[1..M] of int: Availability;
-array[1..P] of int: Prices;
-array[1..P] of int: MinBatches;
+set of int: PARTS    = 1..P;
+set of int: MACHINES = 1..M;
 
-% A loose upper bound derived from machine availability
-int: BigM = max([ Availability[m] | m in 1..M ]);
+array[MACHINES, PARTS] of int: TimeRequired;   % hours per batch
+array[MACHINES]          of int: MachineCosts; % cost per machine-hour
+array[MACHINES]          of int: Availability; % monthly machine hours
+array[PARTS]             of int: Prices;       % revenue per batch
+array[PARTS]             of int: MinBatches;   % contractual minimum output
+
+% Auxiliary constants (upper bounds for decision variables)
+array[PARTS] of int: MaxBatches =
+   [ min( [ Availability[m] div max(1,TimeRequired[m,p])
+           | m in MACHINES ] )
+   | p in PARTS ];
+
+int: GlobalUpperBound = max(MaxBatches);
 
 % Variables
-array[1..P] of var 0..BigM: Batches;
+array[PARTS] of var 0..GlobalUpperBound: Batches;
 
 % Constraints
 constraint
-  forall(p in 1..P)(
-    Batches[p] >= MinBatches[p]
-  );
+   forall(p in PARTS)(
+      Batches[p] >= MinBatches[p] /\
+      Batches[p] <= MaxBatches[p]
+   );
 
 constraint
-  forall(m in 1..M)(
-    sum(p in 1..P)( TimeRequired[m, p] * Batches[p] ) <= Availability[m]
-  );
+   forall(m in MACHINES)(
+      sum(p in PARTS)( TimeRequired[m,p] * Batches[p] ) <= Availability[m]
+   );
 
 % Objective
-var int: Profit =
-     sum(p in 1..P)( Prices[p] * Batches[p] )
-   - sum(m in 1..M)(
-       MachineCosts[m] * sum(p in 1..P)( TimeRequired[m, p] * Batches[p] )
-     );
-
-solve maximize Profit;
+solve maximize
+   sum(p in PARTS)( Prices[p] * Batches[p] )
+ - sum(m in MACHINES)(
+       MachineCosts[m] *
+       sum(p in PARTS)( TimeRequired[m,p] * Batches[p] )
+   );

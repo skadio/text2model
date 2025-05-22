@@ -9,26 +9,30 @@ int: TimePerAlmond;
 int: TimePerPistachio;
 int: MinAlmondRatio;
 
-% Upper-bound helpers (computed from available resources)
-int: UB_Almond    = min(TotalButter div ButterPerAlmond , TotalFlour div FlourPerAlmond );
-int: UB_Pistachio = min(TotalButter div ButterPerPistachio , TotalFlour div FlourPerPistachio);
+% Derived upper bounds to keep variables finite
+int: MaxAlmondByButter  = TotalButter div ButterPerAlmond;
+int: MaxAlmondByFlour   = TotalFlour  div FlourPerAlmond;
+int: MaxAlmond          = min(MaxAlmondByButter, MaxAlmondByFlour);
+
+int: MaxPistByButter    = TotalButter div ButterPerPistachio;
+int: MaxPistByFlour     = TotalFlour  div FlourPerPistachio;
+int: MaxPistachio       = min(MaxPistByButter, MaxPistByFlour);
 
 % Variables
-var 0..UB_Almond   : AlmondCroissants;
-var 0..UB_Pistachio: PistachioCroissants;
+var 0..MaxAlmond    : AlmondCroissants;
+var 0..MaxPistachio : PistachioCroissants;
 
 % Constraints
-constraint ButterPerAlmond  * AlmondCroissants
-        + ButterPerPistachio * PistachioCroissants
-        <= TotalButter;
+constraint
+    AlmondCroissants * ButterPerAlmond +
+    PistachioCroissants * ButterPerPistachio <= TotalButter;
 
-constraint FlourPerAlmond  * AlmondCroissants
-        + FlourPerPistachio * PistachioCroissants
-        <= TotalFlour;
+constraint
+    AlmondCroissants * FlourPerAlmond +
+    PistachioCroissants * FlourPerPistachio <= TotalFlour;
 
-constraint AlmondCroissants >= MinAlmondRatio * PistachioCroissants;
+constraint
+    AlmondCroissants >= MinAlmondRatio * PistachioCroissants;
 
 % Objective
-solve minimize
-       TimePerAlmond  * AlmondCroissants
-     + TimePerPistachio * PistachioCroissants;
+solve maximize AlmondCroissants + PistachioCroissants;

@@ -1,22 +1,23 @@
 % Parameters
-int: r;
-int: c;
-float: Z;
-float: M;
+int: r;                 % Number of rows
+int: c;                 % Number of columns
+float: Z;               % Minimum (zero) value
+float: M;               % Maximum value
 
-set of int: ROWS = 1..r;
-set of int: COLS = 1..c;
-set of int: INNER_ROWS = { i | i in ROWS where i > 1 /\ i < r };
-set of int: INNER_COLS = { j | j in COLS where j > 1 /\ j < c };
+set of int: Row = 1..r;
+set of int: Col = 1..c;
+
+% Optional data that might be present in the .dzn file
+array[Row, Col] of float: x = array2d(Row, Col, [Z | i in Row, j in Col]);
 
 % Variables
-array[ROWS, COLS] of var Z..M: V;
+array[Row, Col] of var Z..M: u;
 
-% Constraints
+% Interior finite-difference constraints
 constraint
-  forall(i in INNER_ROWS, j in INNER_COLS) (
-    4.0 * V[i,j] = V[i-1,j] + V[i+1,j] + V[i,j-1] + V[i,j+1]
+  forall(i in 2..r-1, j in 2..c-1)(
+    u[i,j] = (u[i-1,j] + u[i+1,j] + u[i,j-1] + u[i,j+1]) / 4.0
   );
 
 % Objective
-solve minimize V[1,1];
+solve minimize u[1,1];

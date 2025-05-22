@@ -1,70 +1,85 @@
-int: M;
-int: K;
-int: I;
+int: M;                       % number of machine types
+int: K;                       % number of product types
+int: I;                       % number of planning periods (months)
 
-array[1..M] of int: NumMachines;
-array[1..K] of float: Profit;
-array[1..K, 1..M] of float: Time;
-array[1..M] of int: Downtime;
-array[1..K, 1..I] of int: Limit;
+set of int: MACHINES  = 1..M;
+set of int: PRODUCTS  = 1..K;
+set of int: PERIODS   = 1..I;
 
-float: StorePrice;
-int: KeepQuantity;
-float: WorkHours;
+/* ------------------------------------------------------------------ */
+/* input data                                                         */
+/* ------------------------------------------------------------------ */
+array[MACHINES]              of int   : NumMachines;   % available machines
+array[PRODUCTS]              of float : Profit;        % profit per unit sold
+array[PRODUCTS, MACHINES]    of float : Time;          % processing time (h) of a product on a machine
+array[MACHINES]              of int   : Downtime;      % months each machine type must be down
+array[PRODUCTS, PERIODS]     of int   : Limit;         % maximum sales per period
+float: StorePrice;                                       % inventory cost per unit per month
+int:   KeepQuantity;                                     % storage capacity and required ending stock
+float: WorkHours;                                        % hours in one shift
+/* ------------------------------------------------------------------ */
+/* derived constants                                                  */
+/* ------------------------------------------------------------------ */
+float: HoursPerMonth = 2.0 * 24.0 * WorkHours;           % 2 shifts/day, 24 days/month
 
-float: HoursPerMonth = WorkHours * 2.0 * 24.0;
-
-array[1..K * I] of int: Limit_flat = [ Limit[k, t] | k in 1..K, t in 1..I ];
-int: MaxLimit = max(Limit_flat);
-int: MaxStock = max([KeepQuantity, 100]);
-int: MaxShip  = MaxLimit + MaxStock;
-
-set of int: PRODUCTS = 1..K;
-set of int: MACHINES = 1..M;
-set of int: PERIODS  = 1..I;
-
-array[PRODUCTS, PERIODS] of var 0..MaxLimit : prod;
-array[PRODUCTS, PERIODS] of var 0..MaxShip  : ship;
-array[PRODUCTS, PERIODS] of var 0..MaxStock : stock;
-array[MACHINES, PERIODS] of var 0..1        : down;
-
-constraint
-  forall(k in PRODUCTS, t in PERIODS)(
-    prod[k, t] <= Limit[k, t]
-  );
-
-constraint
-  forall(k in PRODUCTS)(
-    stock[k, 1] = prod[k, 1] - ship[k, 1]
-  );
-
-constraint
-  forall(k in PRODUCTS, t in 2..I)(
-    stock[k, t] = stock[k, t - 1] + prod[k, t] - ship[k, t]
-  );
-
-constraint
-  forall(k in PRODUCTS, t in PERIODS)(
-    stock[k, t] >= KeepQuantity
-  );
-
-constraint
-  forall(m in MACHINES, t in PERIODS)(
-    sum(k in PRODUCTS)(
-      Time[k, m] * int2float(prod[k, t])
-    )
-    <= int2float(NumMachines[m]) * (1.0 - int2float(down[m, t])) * HoursPerMonth
-  );
-
+int: LimitMax = max(k in PRODUCTS, t in PERIODS)(Limit[k,t]);
+int: XMax     = LimitMax + KeepQuantity;                 % upper bound for production
+/* ------------------------------------------------------------------ */
+/* decision variables                                                 */
+/* ------------------------------------------------------------------ */
+array[PRODUCTS, PERIODS] of var 0..XMax        : x;      % produced units
+array[PRODUCTS, PERIODS] of var 0..LimitMax    : y;      % sold units
+array[PRODUCTS, PERIODS] of var 0..KeepQuantity: s;      % inventory at end of period
+array[MACHINES, PERIODS]  of var 0..1          : down;   % 1 if machine type m is down in period i
+/* ------------------------------------------------------------------ */
+/* constraints                                                        */
+/* ------------------------------------------------------------------ */
+% 1. maintenance requirements
 constraint
   forall(m in MACHINES)(
-    sum(t in PERIODS)(down[m, t]) = Downtime[m]
+    sum(i in PERIODS)(down[m,i]) = Downtime[m]
   );
 
-solve maximize
-  sum(k in PRODUCTS, t in PERIODS)(
-    Profit[k] * int2float(ship[k, t])
-  )
-  - StorePrice * sum(k in PRODUCTS, t in PERIODS)(
-    int2float(stock[k, t])
+% 2. capacity per machine and period
+constraint
+  forall(m in MACHINES, i in PERIODS)(
+    sum(k in PRODUCTS)(Time[k,m] * x[k,i])
+      <= HoursPerMonth * NumMachines[m] * (1 - down[m,i])
   );
+
+% 3. inventory balance
+constraint
+  forall(k in PRODUCTS)(
+    x[k,1] - y[k,1] = s[k,1]
+  );
+
+constraint
+  forall(k in PRODUCTS, i in 2..I)(
+    s[k,i-1] + x[k,i] - y[k,i] = s[k,i]
+  );
+
+% 4. sales limited by market
+constraint
+  forall(k in PRODUCTS, i in PERIODS)(
+    y[k,i] <= Limit[k,i]
+  );
+
+% 5. storage capacity
+constraint
+  forall(k in PRODUCTS, i in PERIODS)(
+    s[k,i] <= KeepQuantity
+  );
+
+% 6. required ending inventory
+constraint
+  forall(k in PRODUCTS)(
+    s[k,I] >= KeepQuantity
+  );
+/* ------------------------------------------------------------------ */
+/* objective                                                          */
+/* ------------------------------------------------------------------ */
+var float: total_profit =
+      sum(k in PRODUCTS, i in PERIODS)(Profit[k] * y[k,i])
+    - StorePrice * sum(k in PRODUCTS, i in PERIODS)(s[k,i]);
+
+solve maximize total_profit;

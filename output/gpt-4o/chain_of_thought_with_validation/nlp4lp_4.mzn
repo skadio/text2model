@@ -1,22 +1,22 @@
 % Parameters
-int: Period;                           % consecutive working days (1..7)
-array[1..7] of int: Demand;            % nurses required for each day (Mon-Sun)
-
-set of int: DAYS = 1..7;               % index set for the week
-
-% Upper bound on the total number of nurses possibly needed
-int: MaxN = sum(d in DAYS)(Demand[d]);
+int: Period;                                   % Consecutive working days for every nurse
+array[1..7] of int: Demand;                    % Night-shift demand for each day of the week
+int: MaxNurses = sum(i in 1..7)(Demand[i]);    % Safe upper bound on required nurses
 
 % Variables
-array[DAYS] of var 0..MaxN: NursesStart;   % NursesStart[d] = nurses whose first working day is day d
+array[1..7] of var 0..MaxNurses: Start;        % Start[d] = nurses whose 7-day cycle starts on day d
+var 0..MaxNurses: TotalNurses;                 % Total nurses hired
 
 % Constraints
 constraint
-    forall(day in DAYS)(
-        sum(start in DAYS)(
-            NursesStart[start] * bool2int( ((day - start + 7) mod 7) < Period )
-        ) >= Demand[day]
+    TotalNurses = sum(d in 1..7)(Start[d]);
+
+constraint
+    forall(t in 1..7)(
+        sum(d in 1..7)(
+            Start[d] * bool2int( ((t - d + 7) mod 7) < Period )
+        ) >= Demand[t]
     );
 
 % Objective
-solve minimize sum(start in DAYS)(NursesStart[start]);
+solve minimize TotalNurses;

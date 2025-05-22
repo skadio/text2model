@@ -1,37 +1,53 @@
+% Parameters
 include "globals.mzn";
 
 int: n;
-array[1..n] of int: b;
-array[1..n] of int: t;
+set of int: TYPES = 1..n;
+
+array[TYPES] of int: b;       % Number of bottles of each type
+array[TYPES] of int: t;       % Amount of liquid in each bottle type
+
 int: num_people;
+set of int: PEOPLE = 1..num_people;
 
-int: max_b = max(b);
+int: total_bottles = sum(i in TYPES)(b[i]);
+int: total_liquid  = sum(i in TYPES)(b[i] * t[i]);
 
-array[1..num_people, 1..n] of var 0..max_b: x;
-var 0..sum(b): B;
-var 0..sum(i in 1..n)(t[i] * b[i]): L;
+constraint total_bottles mod num_people == 0;
+constraint total_liquid  mod num_people == 0;
+
+int: bottles_per_person = total_bottles div num_people;
+int: liquid_per_person  = total_liquid  div num_people;
+
+% Variables
+array[PEOPLE, TYPES] of var int: x;   % x[p,i] = bottles of type i given to person p
+
+% Constraints
+constraint
+    forall(p in PEOPLE, i in TYPES)(
+        0 <= x[p,i] /\ x[p,i] <= b[i]
+    );
 
 constraint
-  forall(i in 1..n)(
-    sum(p in 1..num_people)(x[p,i]) = b[i]
-  );
+    forall(i in TYPES)(
+        sum(p in PEOPLE)(x[p,i]) == b[i]
+    );
 
 constraint
-  forall(p in 1..num_people)(
-    sum(i in 1..n)(x[p,i]) = B
-  );
+    forall(p in PEOPLE)(
+        sum(i in TYPES)(x[p,i]) == bottles_per_person
+    );
 
 constraint
-  forall(p in 1..num_people)(
-    sum(i in 1..n)(t[i] * x[p,i]) = L
-  );
-
-constraint sum(b) = num_people * B;
-constraint sum(i in 1..n)(t[i] * b[i]) = num_people * L;
+    forall(p in PEOPLE)(
+        sum(i in TYPES)(t[i] * x[p,i]) == liquid_per_person
+    );
 
 constraint
-  forall(p in 1..num_people-1)(
-    lex_lesseq([x[p,i] | i in 1..n], [x[p+1,i] | i in 1..n])
-  );
+    forall(p in PEOPLE where p < num_people)(
+        lex_lesseq([x[p,i] | i in TYPES],
+                   [x[p+1,i] | i in TYPES])
+    );
 
+% Objective
 solve satisfy;

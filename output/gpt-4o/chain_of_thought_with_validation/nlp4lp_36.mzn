@@ -1,17 +1,16 @@
 % Parameters
-int: C;                                    % Total capacity of the knapsack
-array[int] of int: Value;                  % Value of each item
-array[int] of int: Size;                   % Size  of each item
+int: C;                                   % Total capacity of the knapsack
 
-set of int: Items = index_set(Value);      % Derived index set for items (1..K)
+array[int] of int: Value;                 % Value of each item
+set of int: ITEMS = index_set(Value);     % Derived index set of items
+array[ITEMS] of int: Size;                % Size of each item
 
-% Variables
-array[Items] of var 0..1: x;               % x[i] = 1 if item i is chosen, 0 otherwise
+% Decision variables
+array[ITEMS] of var 0..1: x;              % x[i] = 1 if item i is selected
 
-% Constraints
+% Capacity constraint
 constraint
-    sum(i in Items)( Size[i] * x[i] ) <= C;   % Capacity constraint
+    sum(i in ITEMS)(Size[i] * x[i]) <= C;
 
 % Objective
-solve maximize
-    sum(i in Items)( Value[i] * x[i] );
+solve maximize sum(i in ITEMS)(Value[i] * x[i]);

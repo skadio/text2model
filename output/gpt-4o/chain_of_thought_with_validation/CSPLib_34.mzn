@@ -5,26 +5,32 @@ int: building_cost;
 array[1..n_suppliers] of int: capacity;
 array[1..n_stores, 1..n_suppliers] of int: cost_matrix;
 
+set of int: SUPPLIERS = 1..n_suppliers;
+set of int: STORES    = 1..n_stores;
+
 % Variables
-array[1..n_suppliers] of var 0..1: open;                 % 1 if warehouse is opened
-array[1..n_stores, 1..n_suppliers] of var 0..1: assign;  % 1 if store is supplied by warehouse
+array[SUPPLIERS] of var 0..1: y;                         % 1 if warehouse i is opened
+array[STORES, SUPPLIERS] of var 0..1: x;                 % 1 if store s served by warehouse i
 
 % Constraints
-constraint forall(s in 1..n_stores)(
-    sum(w in 1..n_suppliers)(assign[s,w]) = 1
-);
+constraint
+    forall(s in STORES) (
+        sum(i in SUPPLIERS)(x[s,i]) == 1                 % each store assigned exactly one warehouse
+    );
 
-constraint forall(s in 1..n_stores, w in 1..n_suppliers)(
-    assign[s,w] <= open[w]
-);
+constraint
+    forall(i in SUPPLIERS) (
+        sum(s in STORES)(x[s,i]) <= capacity[i]          % respect warehouse capacity
+    );
 
-constraint forall(w in 1..n_suppliers)(
-    sum(s in 1..n_stores)(assign[s,w]) <= capacity[w]
-);
+constraint
+    forall(s in STORES, i in SUPPLIERS) (
+        x[s,i] <= y[i]                                   % cannot assign to a closed warehouse
+    );
 
 % Objective
 var int: total_cost =
-    sum(w in 1..n_suppliers)(building_cost * open[w]) +
-    sum(s in 1..n_stores, w in 1..n_suppliers)(cost_matrix[s,w] * assign[s,w]);
+    sum(i in SUPPLIERS)(building_cost * y[i]) +
+    sum(s in STORES, i in SUPPLIERS)(cost_matrix[s,i] * x[s,i]);
 
 solve minimize total_cost;

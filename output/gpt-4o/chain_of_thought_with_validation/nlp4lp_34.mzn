@@ -1,64 +1,82 @@
+% -------------------------
 % Parameters
-int: T;
-int: K;
+% -------------------------
+array[int] of int: Demand;           % electricity demand per period
 
-set of int: PERIOD = 1..T;
-set of int: TYPE   = 1..K;
+int: K;                              % number of generator types
 
-array[PERIOD] of int: Demand;
-array[TYPE]   of int: NumGenerator;
-array[TYPE]   of int: MinLevel;
-array[TYPE]   of int: MaxLevel;
-array[TYPE]   of int: RunCost;
-array[TYPE]   of float: ExtraCost;
-array[TYPE]   of int: StartCost;
+array[1..K] of int: NumGenerator;    % available units of each type
+array[1..K] of int: MinLevel;        % minimum production of a unit (MW)
+array[1..K] of int: MaxLevel;        % maximum production of a unit (MW)
 
-% (Helpful derived constants)
-int: MaxNumGenerator = max(NumGenerator);
-int: MaxPower        = max([ MaxLevel[k] * NumGenerator[k] | k in TYPE ]);
-float: MaxPowerF     = int2float(MaxPower);
+array[1..K] of float: RunCost;       % cost for running one unit at MinLevel
+array[1..K] of float: ExtraCost;     % cost per extra MW above MinLevel
+array[1..K] of float: StartCost;     % start-up cost for one unit
 
-% Variables
-array[TYPE, PERIOD] of var 0..MaxNumGenerator: units_on;         % number of running units
-array[TYPE, PERIOD] of var 0..MaxNumGenerator: units_start;      % units started in period
-array[TYPE, PERIOD] of var 0.0..MaxPowerF:      power;           % total power produced
+% -------------------------
+% Derived sets & constants
+% -------------------------
+set of int: PERIODS = index_set(Demand);
+int: T = card(PERIODS);              % number of periods (deduced)
 
+set of int: TYPES   = 1..K;
+
+array[TYPES] of int: ExtraCap =
+    [ MaxLevel[k] - MinLevel[k] | k in TYPES ];
+
+int: maxNumGen    = max(NumGenerator);
+int: maxExtraUnit = max(ExtraCap);
+int: M_up         = maxNumGen * maxExtraUnit;   % upper bound for extra MW
+
+% -------------------------
+% Decision variables
+% -------------------------
+array[TYPES, PERIODS] of var 0..maxNumGen: x;     % units running
+array[TYPES, PERIODS] of var 0..M_up     : up;    % MW above minimum
+array[TYPES, PERIODS] of var 0..maxNumGen: start; % units started
+
+% -------------------------
 % Constraints
+% -------------------------
+
+% 1. Meet demand each period
 constraint
-  % Production bounds for every type and period
-  forall(k in TYPE, t in PERIOD)(
-        power[k,t] >= int2float(units_on[k,t] * MinLevel[k])
-    /\  power[k,t] <= int2float(units_on[k,t] * MaxLevel[k])
+  forall(t in PERIODS)(
+    sum(k in TYPES)(
+        MinLevel[k] * x[k,t] + up[k,t]
+    ) >= Demand[t]
   );
 
+% 2. Extra production limited by technical capability
 constraint
-  % Demand must be met exactly each period
-  forall(t in PERIOD)(
-        sum(k in TYPE)( power[k,t] ) = int2float(Demand[t])
+  forall(k in TYPES, t in PERIODS)(
+    up[k,t] <= ExtraCap[k] * x[k,t]
   );
 
+% 3. Cannot run more units than available
 constraint
-  % Units_on is limited by availability
-  forall(k in TYPE, t in PERIOD)(
-        units_on[k,t] <= NumGenerator[k]
+  forall(k in TYPES, t in PERIODS)(
+    x[k,t] <= NumGenerator[k]
   );
 
+% 4. Start-up accounting
 constraint
-  % Start-up accounting
-  forall(k in TYPE)(
-        units_start[k,1] = units_on[k,1]
+  forall(k in TYPES)(
+    start[k,1] = x[k,1]
+  )
+  /\
+  forall(k in TYPES, t in 2..T)(
+    start[k,t] >= x[k,t] - x[k,t-1]
   );
 
-constraint
-  forall(k in TYPE, t in 2..T)(
-        units_start[k,t] >= units_on[k,t] - units_on[k,t-1] /\
-        units_start[k,t] <= units_on[k,t]                     % optional upper bound
+% -------------------------
+% Objective: minimise total cost
+% -------------------------
+var float: total_cost =
+  sum(k in TYPES, t in PERIODS)(
+        RunCost[k]  * int2float(x[k,t])
+      + ExtraCost[k]* int2float(up[k,t])
+      + StartCost[k]* int2float(start[k,t])
   );
 
-% Objective
-solve minimize
-  sum(k in TYPE, t in PERIOD)(
-        int2float(RunCost[k] * units_on[k,t])                                   % running at minimum
-      + ExtraCost[k] * ( power[k,t] - int2float(units_on[k,t] * MinLevel[k]) )  % extra production
-      + int2float(StartCost[k] * units_start[k,t])                              % start-up cost
-  );
+solve minimize total_cost;

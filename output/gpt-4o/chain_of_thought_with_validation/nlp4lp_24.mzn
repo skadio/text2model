@@ -1,106 +1,93 @@
-% Parameters
 int: K;                               % Number of worker categories
-int: I;                               % Number of planning years
+int: I;                               % Planning horizon (years)
 
-set of int: Categories = 1..K;
-set of int: Years      = 1..I;
+array[1..K, 1..I] of float: Requirement;     % Man-power requirement per category & year
+array[1..K]       of float: Strength;        % Current (experienced) work-force (> 1 year)
 
-array[Categories, Years] of int: Requirement;      % Man-power requirement
-array[Categories]          of int: Strength;       % Present strength ( > 1-year service )
+array[1..K] of float: LessOneWaste;          % Leaving rate (< 1 year)
+array[1..K] of float: MoreOneWaste;          % Leaving rate (≥ 1 year)
 
-array[Categories] of float: LessOneWaste;          % Given – not explicitly used
-array[Categories] of float: MoreOneWaste;          % Given – not explicitly used
+array[1..K] of float: Recruit;              % Maximum external recruits per year & category
+array[1..K] of float: CostRedundancy;       % Redundancy cost per worker
 
-array[Categories]          of int: Recruit;        % Maximum external recruits / year
-array[Categories]          of int: CostRedundancy; % Redundancy cost / worker
+int:    NumOverman;                         % Company-wide limit on over-staffing
+array[1..K] of float: CostOverman;          % Cost per over-manned worker
 
-int: NumOverman;                                   % Company-wide over-manning limit / year
-array[Categories] of int: CostOverman;             % Cost / over-manned worker
-
-int: NumShortwork;                                 % Company-wide short-time limit / year
-array[Categories] of int: CostShort;               % Cost / short-time worker
-
-
-% Pre-calculated upper bounds
-int: MaxRecruit  = max(c in Categories)(Recruit[c]);
-int: MaxStrength = max(c in Categories)(Strength[c]);
-int: MaxStaff    = MaxStrength + I * MaxRecruit;   % Crude global upper bound on staff
+int:    NumShortwork;                       % Company-wide limit on short-time workers
+array[1..K] of float: CostShort;            % Cost per short-time worker
 
 
 % Decision variables
-array[Categories, Years] of var 0..MaxRecruit: Recruited;    % External recruits
-array[Categories, Years] of var 0..MaxStaff:  Redundant;     % Redundancies
-array[Categories, Years] of var 0..MaxStaff:  Shortwork;     % Workers on short-time
-array[Categories, Years] of var 0..MaxStaff:  Overman;       % Extra staff above need
-array[Categories, Years] of var 0..MaxStaff:  Staff;         % Staff employed at year end
-
-var int: TotalCost;                                          % Objective value
+array[1..K, 1..I]   of var float: xRecruit;     % Recruits in year t
+array[1..K, 1..I]   of var float: xRedund;      % Redundancies in year t
+array[1..K, 1..I]   of var float: xShort;       % Short-time workers in year t
+array[1..K, 1..I]   of var float: xOver;        % Over-manned workers in year t
+array[1..K, 1..I+1] of var float: Exp;          % Experienced workers at start of each year
 
 
-% Constraints
-
-% 1. Respect recruitment limits
+% Initial experienced work-force
 constraint
-  forall(c in Categories, y in Years)(
-    Recruited[c,y] <= Recruit[c]
+  forall(k in 1..K) (
+    Exp[k,1] = Strength[k]
   );
 
-% 2. Workforce balance (year 1)
+% Work-force evolution
 constraint
-  forall(c in Categories)(
-    Staff[c,1] = Strength[c] + Recruited[c,1] - Redundant[c,1]
+  forall(k in 1..K, t in 1..I) (
+     Exp[k,t+1] =
+        (1.0 - MoreOneWaste[k]) * (Exp[k,t] - xRedund[k,t]) +
+        (1.0 - LessOneWaste[k]) *  xRecruit[k,t]
   );
 
-% 3. Workforce balance (subsequent years)
+% Recruitment upper bounds
 constraint
-  forall(c in Categories, y in 2..I)(
-    Staff[c,y] = Staff[c,y-1] + Recruited[c,y] - Redundant[c,y]
+  forall(k in 1..K, t in 1..I) (
+    xRecruit[k,t] <= Recruit[k]
   );
 
-% 4. Production capacity:
-%    Every short-time worker counts as 0.5 FTE
+% Redundancies only from experienced workers
 constraint
-  forall(c in Categories, y in Years)(
-    2 * Staff[c,y] - Shortwork[c,y]
-      = 2 * Requirement[c,y] + 2 * Overman[c,y]
+  forall(k in 1..K, t in 1..I) (
+    xRedund[k,t] <= Exp[k,t]
   );
 
-% 5. Company-wide limits on over-manning and short-time working
-constraint forall(y in Years)(
-  sum(c in Categories)(Overman[c,y]) <= NumOverman
-);
-
-constraint forall(y in Years)(
-  sum(c in Categories)(Shortwork[c,y]) <= NumShortwork
-);
-
-% 6. Logical bounds
+% Short-time workers limit
 constraint
-  forall(c in Categories, y in Years)(
-       Shortwork[c,y] <= Staff[c,y] /\
-       Overman[c,y]   <= Staff[c,y]
+  forall(k in 1..K, t in 1..I) (
+    xShort[k,t] <= Exp[k,t] + xRecruit[k,t] - xRedund[k,t]
   );
 
-% 7. Redundancies cannot exceed available personnel
+% Meet production requirement (allowing over-staff and short-time working)
 constraint
-  forall(c in Categories)(
-    Redundant[c,1] <= Strength[c] + Recruited[c,1]
+  forall(k in 1..K, t in 1..I) (
+    (Exp[k,t] + xRecruit[k,t] - xRedund[k,t])      % Workers on books
+    - 0.5 * xShort[k,t]                            % Short-time counts as 0.5
+    = Requirement[k,t] + xOver[k,t]                % Demand + possible over-staff
   );
 
+% Company-wide yearly limits
 constraint
-  forall(c in Categories, y in 2..I)(
-    Redundant[c,y] <= Staff[c,y-1] + Recruited[c,y]
+  forall(t in 1..I) (
+       sum(k in 1..K)(xShort[k,t]) <= NumShortwork /\
+       sum(k in 1..K)(xOver[k,t])  <= NumOverman
   );
 
-% 8. Cost computation
+% Non-negativity
 constraint
-  TotalCost =
-    sum(c in Categories, y in Years)(
-          CostRedundancy[c] * Redundant[c,y]
-        + CostOverman[c]    * Overman[c,y]
-        + CostShort[c]      * Shortwork[c,y]
-    );
+  forall(k in 1..K, t in 1..I) (
+        xRecruit[k,t] >= 0 /\ xRedund[k,t] >= 0 /\
+        xShort[k,t]  >= 0 /\ xOver[k,t]   >= 0
+  ) /\
+  forall(k in 1..K, t in 1..I+1) (
+        Exp[k,t] >= 0
+  );
 
+% Cost minimisation
+var float: TotalCost =
+      sum(k in 1..K, t in 1..I)(
+            CostRedundancy[k] * xRedund[k,t]  +
+            CostOverman[k]    * xOver[k,t]    +
+            CostShort[k]      * xShort[k,t]
+      );
 
-% Objective
 solve minimize TotalCost;

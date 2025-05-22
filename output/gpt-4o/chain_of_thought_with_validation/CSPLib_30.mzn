@@ -1,4 +1,3 @@
-% Parameters
 int: n_courses;
 int: n_periods;
 
@@ -10,38 +9,26 @@ int: courses_per_period_ub;
 
 array[1..n_courses] of int: course_load;
 
-set of int: COURSES = 1..n_courses;
-set of int: PERIODS = 1..n_periods;
+array[1..n_courses] of var 1..n_periods: course_period;
 
-% Variables
-array[COURSES] of var PERIODS: period_of_course;
-
-array[PERIODS] of var load_per_period_lb..load_per_period_ub: load_period;
-array[PERIODS] of var courses_per_period_lb..courses_per_period_ub: courses_period;
+array[1..n_periods] of var load_per_period_lb..load_per_period_ub: period_load;
+array[1..n_periods] of var courses_per_period_lb..courses_per_period_ub: period_courses;
 
 var load_per_period_lb..load_per_period_ub: max_load;
 
-% Constraints
 constraint
-  forall(p in PERIODS) (
-    load_period[p] = sum(c in COURSES)(course_load[c] * bool2int(period_of_course[c] = p))
+  forall(p in 1..n_periods) (
+    period_load[p] =
+      sum(c in 1..n_courses)(course_load[c] * bool2int(course_period[c] = p))
   );
 
 constraint
-  forall(p in PERIODS) (
-    courses_period[p] = sum(c in COURSES)(bool2int(period_of_course[c] = p))
+  forall(p in 1..n_periods) (
+    period_courses[p] =
+      sum(c in 1..n_courses)(bool2int(course_period[c] = p))
   );
 
 constraint
-  forall(p in PERIODS) (
-    load_per_period_lb <= load_period[p] /\
-    load_period[p] <= load_per_period_ub /\
-    courses_per_period_lb <= courses_period[p] /\
-    courses_period[p] <= courses_per_period_ub
-  );
+  max_load = max(p in 1..n_periods)(period_load[p]);
 
-constraint
-  forall(p in PERIODS) (load_period[p] <= max_load);
-
-% Objective
 solve minimize max_load;

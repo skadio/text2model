@@ -1,33 +1,26 @@
-include "globals.mzn";
+include "alldifferent.mzn";
 
-% Parameters
 int: num_skis;
 int: num_skiers;
+array[1..num_skis]   of int: ski_heights;
+array[1..num_skiers] of int: skier_heights;
 
-set of int: SKIS   = 1..num_skis;
-set of int: SKIERS = 1..num_skiers;
-
-array[SKIS]   of int: ski_heights;
-array[SKIERS] of int: skier_heights;
-
-% Derived constants
-int: max_ski_height   = max(i in SKIS)(ski_heights[i]);
-int: min_ski_height   = min(i in SKIS)(ski_heights[i]);
-int: max_skier_height = max(j in SKIERS)(skier_heights[j]);
-int: min_skier_height = min(j in SKIERS)(skier_heights[j]);
-
-int: MAX_ABS_DIFF = max(max_ski_height, max_skier_height) - min(min_ski_height, min_skier_height);
-
-% Variables
-array[SKIERS] of var SKIS: assign;                 % ski chosen for each skier
-array[SKIERS] of var 0..MAX_ABS_DIFF: diff;        % absolute disparity for each skier
-
-% Constraints
-constraint num_skis >= num_skiers;                 % feasibility check
-constraint all_different(assign);                  % each ski used at most once
-constraint forall(s in SKIERS)(
-    diff[s] = abs(ski_heights[assign[s]] - skier_heights[s])
+int: max_ski_height   = max(ski_heights);
+int: min_ski_height   = min(ski_heights);
+int: max_skier_height = max(skier_heights);
+int: min_skier_height = min(skier_heights);
+int: max_possible_diff = max(
+    abs(max_ski_height   - min_skier_height),
+    abs(max_skier_height - min_ski_height)
 );
 
-% Objective
-solve minimize sum(s in SKIERS)(diff[s]);
+array[1..num_skiers] of var 1..num_skis: ski_of_skier;
+array[1..num_skiers] of var 0..max_possible_diff: disparity;
+
+constraint num_skis >= num_skiers;
+constraint alldifferent(ski_of_skier);
+constraint forall(i in 1..num_skiers) (
+    disparity[i] = abs(skier_heights[i] - ski_heights[ski_of_skier[i]])
+);
+
+solve minimize sum(i in 1..num_skiers)(disparity[i]);

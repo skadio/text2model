@@ -8,30 +8,32 @@ array[1..courses, 1..courses] of 0..1: conflict;
 array[1..courses] of int: requirement;
 
 % Variables
-array[1..courses, 1..periods] of var 0..1: lect;   % lect[i,j] = 1 if course i is scheduled in period j
+array[1..courses, 1..periods] of var 0..1: x;   % x[i,p] = 1 if course i has a lecture in period p
 
 % Constraints
+% Availability
 constraint
-    forall(i in 1..courses, j in 1..periods) (
-        lect[i,j] <= available[i,j]            % respect availability
-    );
+  forall(i in 1..courses, p in 1..periods) (
+    available[i,p] = 0 -> x[i,p] = 0
+  );
 
+% Lecture requirement per course
 constraint
-    forall(i in 1..courses) (
-        sum(j in 1..periods)(lect[i,j]) = requirement[i]   % satisfy lecture requirements
-    );
+  forall(i in 1..courses) (
+    sum(p in 1..periods)(x[i,p]) = requirement[i]
+  );
 
+% Period capacity (rooms)
 constraint
-    forall(j in 1..periods) (
-        sum(i in 1..courses)(lect[i,j]) <= rooms           % period capacity
-    );
+  forall(p in 1..periods) (
+    sum(i in 1..courses)(x[i,p]) <= rooms
+  );
 
+% Conflict constraints
 constraint
-    forall(j in 1..periods,
-           i in 1..courses,
-           k in i+1..courses where conflict[i,k] = 1) (
-        lect[i,j] + lect[k,j] <= 1                         % no conflicting courses in same period
-    );
+  forall(i,j in 1..courses where i < j /\ conflict[i,j] = 1, p in 1..periods) (
+    x[i,p] + x[j,p] <= 1
+  );
 
 % Objective
 solve satisfy;

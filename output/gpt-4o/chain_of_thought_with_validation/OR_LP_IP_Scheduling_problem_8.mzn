@@ -6,29 +6,30 @@ int: part_time_pay;
 int: full_time_shift;
 int: part_time_shift;
 
-% Derived constants
-int: maxWorkers = sum(i in 0..n-1)(demand[i]);
-int: ft_cost_per_worker = full_time_pay * full_time_shift;
-int: pt_cost_per_worker = part_time_pay * part_time_shift;
+set of int: Days = 0..n-1;
+
+% Upper bound on the number of staff that could ever be needed
+int: maxStaff = sum(d in Days)(demand[d]);
 
 % Variables
-array[0..n-1] of var 0..maxWorkers: FTStart;   % full-time workers whose work cycle starts on day d
-array[0..n-1] of var 0..maxWorkers: PTStart;   % part-time workers whose work cycle starts on day d
-var 0..maxWorkers * max(full_time_pay * full_time_shift,
-                        part_time_pay  * part_time_shift) * n: total_cost;
+array[Days] of var 0..maxStaff: FT;   % full-time workers beginning on each day
+array[Days] of var 0..maxStaff: PT;   % part-time workers beginning on each day
 
 % Constraints
 constraint
-  total_cost =
-      ft_cost_per_worker * sum(d in 0..n-1)(FTStart[d]) +
-      pt_cost_per_worker * sum(d in 0..n-1)(PTStart[d]);
-
-constraint
-  forall(t in 0..n-1)(
-      sum(s in 0..n-1 where ((t - s + n) mod n) < full_time_shift)(FTStart[s]) +
-      sum(s in 0..n-1 where ((t - s + n) mod n) < part_time_shift)(PTStart[s])
-      >= demand[t]
-  );
+  forall(t in Days) (
+    sum(s in Days)(
+      FT[s] * bool2int( ((t - s + n) mod n) < full_time_shift )
+    )
+  + sum(s in Days)(
+      PT[s] * bool2int( ((t - s + n) mod n) < part_time_shift )
+    )
+  >= demand[t]
+);
 
 % Objective
-solve minimize total_cost;
+solve minimize
+  sum(s in Days)(
+      FT[s] * full_time_shift * full_time_pay
+    + PT[s] * part_time_shift * part_time_pay
+  );

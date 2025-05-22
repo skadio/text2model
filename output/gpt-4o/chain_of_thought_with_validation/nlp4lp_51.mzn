@@ -1,56 +1,53 @@
+% Parameters
 int: W;
-set of int: Weeks = 1..W;
 
 float: RegularCost;
 float: OvertimeCost;
+
 float: AssemblyTime;
 float: MaterialCost;
 float: SellingPrice;
 float: HoldingCost;
 float: SalvageValue;
 
-array[Weeks] of int: Demand;
-array[Weeks] of int: RegularLabor;
-array[Weeks] of int: OvertimeLabor;
+array[1..W] of int: Demand;
+array[1..W] of float: RegularLabor;
+array[1..W] of float: OvertimeLabor;
 
-array[Weeks] of var int: Produced;          % baskets assembled in week w
-array[Weeks] of var float: RegUsed;         % regular labour hours used in week w
-array[Weeks] of var float: OverUsed;        % overtime labour hours used in week w
-array[0..W] of var int: Inventory;          % end-of-week inventory (Inventory[0] = 0)
+set of int: Weeks = 1..W;
 
-% Initial inventory
-constraint Inventory[0] = 0;
+% Decision variables
+array[Weeks] of var 0.0..: RegHours;
+array[Weeks] of var 0.0..: OvertimeHours;
+array[Weeks] of var 0.0..: Prod;
+array[Weeks] of var 0.0..: Inv;
 
-% Labour-capacity limits
-constraint
-  forall(w in Weeks)(
-    0.0 <= RegUsed[w] /\ RegUsed[w] <= int2float(RegularLabor[w])
-  );
-constraint
-  forall(w in Weeks)(
-    0.0 <= OverUsed[w] /\ OverUsed[w] <= int2float(OvertimeLabor[w])
-  );
+% Production relation
+constraint forall(w in Weeks)(
+  Prod[w] = (RegHours[w] + OvertimeHours[w]) / AssemblyTime
+);
 
-% Production requires labour
-constraint
-  forall(w in Weeks)(
-    RegUsed[w] + OverUsed[w] = AssemblyTime * int2float(Produced[w])
-  );
+% Labor limits
+constraint forall(w in Weeks)(
+  RegHours[w] <= RegularLabor[w] /\
+  OvertimeHours[w] <= OvertimeLabor[w]
+);
 
-% Inventory balance and non-negativity
-constraint
-  forall(w in Weeks)(
-    Inventory[w] = Inventory[w-1] + Produced[w] - Demand[w] /\
-    Inventory[w] >= 0
-  );
+% Inventory balance
+constraint Inv[1] = Prod[1] - int2float(Demand[1]);
 
-% Objective: maximise total profit over the season
+constraint forall(w in 2..W)(
+  Inv[w] = Inv[w-1] + Prod[w] - int2float(Demand[w])
+);
+
+% Non-negativity of inventory
+constraint forall(w in Weeks)(Inv[w] >= 0.0);
+
+% Objective: maximise profit
 solve maximize
-      sum(w in Weeks)(SellingPrice * int2float(Demand[w]))          % revenue (fixed)
-    + SalvageValue * int2float(Inventory[W])                        % salvage value
-    - sum(w in Weeks)(                                              % costs
-          RegularCost  * RegUsed[w] +
-          OvertimeCost * OverUsed[w] +
-          MaterialCost * int2float(Produced[w]) +
-          HoldingCost  * int2float(Inventory[w-1])
-      );
+      SellingPrice * sum(w in Weeks)(int2float(Demand[w]))
+    + SalvageValue * Inv[W]
+    - HoldingCost  * sum(w in 1..(W-1))(Inv[w])
+    - MaterialCost * sum(w in Weeks)(Prod[w])
+    - RegularCost  * sum(w in Weeks)(RegHours[w])
+    - OvertimeCost * sum(w in Weeks)(OvertimeHours[w]);

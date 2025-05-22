@@ -1,34 +1,28 @@
-% Parameters
-int: ndepts;                    % Number of departments
-int: ncities;                   % Number of cities (including the host city)
-int: ncitiesm1;                 % Number of cities excluding the host city (may remain unused)
+int: ndepts;                       % number of departments
+int: ncities;                      % number of cities (including the host)
+int: ncitiesm1;                    % number of cities excluding the host (may be unused)
 
-set of int: Depts  = 1..ndepts;
-set of int: Cities = 1..ncities;
+array[1..ndepts, 1..ncities] of float: benefit;   % benefit[d,c]
+array[1..ncities, 1..ncities] of float: dist;     % communication cost between cities
+array[1..ndepts, 1..ndepts] of float: comm;       % communication amount between departments
 
-array[Depts, Cities] of int: benefit;          % Benefit of locating each department in each city
-array[Cities, Cities] of int: dist;            % Communication cost per unit between cities
-array[Depts, Depts] of int: comm;              % Quantity of communication between departments
+int: max_cap_per_city = 3;                         % capacity per city
 
+array[1..ndepts] of var 1..ncities: loc;           % city chosen for each department
 
-% Variables
-array[Depts] of var Cities: loc;               % City chosen for each department
-
-
-% Constraints
 constraint
-    forall(c in Cities)(
-        sum(d in Depts)(bool2int(loc[d] = c)) <= 3     % Capacity: max 3 departments per city
-    );
+  forall(c in 1..ncities)(
+    sum(d in 1..ndepts)(bool2int(loc[d] == c)) <= max_cap_per_city
+  );
 
+var float: total_benefit = 
+  sum(d in 1..ndepts)(benefit[d, loc[d]]);
 
-% Objective
-var int: total_benefit =
-    sum(d in Depts)( benefit[d, loc[d]] );
+var float: total_comm_cost =
+  sum(d1 in 1..ndepts, d2 in d1+1..ndepts)(
+    comm[d1, d2] * dist[loc[d1], loc[d2]]
+  );
 
-var int: total_comm_cost =
-    sum(d1 in Depts, d2 in d1+1..ndepts)(
-        comm[d1, d2] * dist[loc[d1], loc[d2]]
-    );
+var float: total_savings = total_benefit - total_comm_cost;
 
-solve maximize total_benefit - total_comm_cost;
+solve maximize total_savings;

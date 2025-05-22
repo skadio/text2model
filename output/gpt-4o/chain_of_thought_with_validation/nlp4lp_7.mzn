@@ -1,45 +1,26 @@
-% Parameters
-int: T;                       % Time horizon (number of discrete steps)
+int: T;                       % Time duration (number of discrete steps)
 float: X0;                    % Initial position
 float: V0;                    % Initial velocity
-float: XT;                    % Target position at time T
-float: VT;                    % Target velocity at time T
+float: XT;                    % Target position
+float: VT;                    % Target velocity
 
-set of int: TS       = 0..T;      % Indices for states (inclusive)
-set of int: TS_PREV  = 0..T-1;    % Indices for control steps (accelerations)
+set of int: TIME = 0..T;      % Instants 0 … T
+set of int: STEP = 0..T-1;    % Intervals 0 … T-1
 
-% Variables
-array[TS]      of var float: x;   % Position at each timestep
-array[TS]      of var float: v;   % Velocity at each timestep
-array[TS_PREV] of var float: a;   % Acceleration (control) at each timestep
-var float: max_abs_acc;           % Maximum absolute acceleration to be minimised
+array[TIME] of var float: x;  % Position at each instant
+array[TIME] of var float: v;  % Velocity at each instant
+array[STEP] of var float: a;  % Control accelerations
+var float: M;                 % Maximum absolute acceleration
 
-% Constraints
-%
-% Initial conditions
-constraint
-    x[0] = X0 /\ v[0] = V0;
+constraint x[0] = X0;
+constraint v[0] = V0;
+constraint x[T] = XT;
+constraint v[T] = VT;
 
-% Final conditions
-constraint
-    x[T] = XT /\ v[T] = VT;
+constraint forall(t in STEP)(x[t+1] = x[t] + v[t]);
+constraint forall(t in STEP)(v[t+1] = v[t] + a[t]);
+constraint forall(t in STEP)(abs(a[t]) <= M);
 
-% Discrete-time dynamics
-constraint
-    forall(t in TS_PREV) (
-        x[t+1] = x[t] + v[t] /\
-        v[t+1] = v[t] + a[t]
-    );
+constraint M >= 0.0;
 
-% Definition of maximum absolute acceleration
-constraint
-    max_abs_acc >= 0;
-
-constraint
-    forall(t in TS_PREV) (
-        max_abs_acc >=  a[t] /\
-        max_abs_acc >= -a[t]
-    );
-
-% Objective
-solve minimize max_abs_acc;
+solve minimize M;

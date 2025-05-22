@@ -1,45 +1,48 @@
+% Parameters
 int: K;
-set of int: Mineral = 1..K;
+set of int: MINERALS = 1..K;
 
 float: SteelQuantity;
+
 float: ManganesePercent;
 float: SiliconMinPercent;
 float: SiliconMaxPercent;
 
-array[Mineral] of float: SiliconContent;
-array[Mineral] of float: ManganeseContent;
+array[MINERALS] of float: SiliconContent;
+array[MINERALS] of float: ManganeseContent;
 
 float: ManganesePrice;
-array[Mineral] of float: MaterialCost;
+array[MINERALS] of float: MaterialCost;
 
 float: SellingPrice;
 float: MeltingPrice;
 
-array[Mineral] of var 0.0..SteelQuantity: Qty;
-var 0.0..SteelQuantity: MnAdd;
-var float: Profit;
+% Variables
+array[MINERALS] of var 0.0..SteelQuantity: useMineral;   % tons of each mineral
+var 0.0..SteelQuantity: addManganese;                    % tons of pure manganese added
+
+% Constraints
+constraint
+    sum(i in MINERALS)(useMineral[i]) + addManganese = SteelQuantity;
 
 constraint
-    sum(m in Mineral)(Qty[m]) + MnAdd = SteelQuantity;
+    sum(i in MINERALS)(useMineral[i] * ManganeseContent[i])
+    + 100.0 * addManganese
+    >= ManganesePercent * SteelQuantity;
 
 constraint
-    sum(m in Mineral)(Qty[m] * ManganeseContent[m] / 100.0) + MnAdd
-        >= ManganesePercent / 100.0 * SteelQuantity;
+    sum(i in MINERALS)(useMineral[i] * SiliconContent[i])
+    >= SiliconMinPercent * SteelQuantity;
 
 constraint
-    SiliconMinPercent / 100.0 * SteelQuantity
-        <= sum(m in Mineral)(Qty[m] * SiliconContent[m] / 100.0);
+    sum(i in MINERALS)(useMineral[i] * SiliconContent[i])
+    <= SiliconMaxPercent * SteelQuantity;
 
-constraint
-    sum(m in Mineral)(Qty[m] * SiliconContent[m] / 100.0)
-        <= SiliconMaxPercent / 100.0 * SteelQuantity;
-
-constraint
-    Profit =
+% Objective
+var float: profit =
         SellingPrice * SteelQuantity
-        - (
-            sum(m in Mineral)(Qty[m] * (MaterialCost[m] + MeltingPrice))
-            + MnAdd * (ManganesePrice + MeltingPrice)
-          );
+      - ( sum(i in MINERALS)(useMineral[i] * MaterialCost[i])
+          + addManganese * ManganesePrice
+          + MeltingPrice * SteelQuantity );
 
-solve maximize Profit;
+solve maximize profit;

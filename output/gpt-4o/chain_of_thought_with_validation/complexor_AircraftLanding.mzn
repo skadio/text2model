@@ -1,73 +1,72 @@
 % Parameters
 int: TotalAircrafts;
 
-array[1..TotalAircrafts] of int: EarliestLandingTime;
-array[1..TotalAircrafts] of int: LatestLandingTime;
-array[1..TotalAircrafts] of int: TargetLandingTime;
-array[1..TotalAircrafts] of int: PenaltyTimeAfterTarget;
-array[1..TotalAircrafts] of int: PenaltyTimeBeforeTarget;
-array[1..TotalAircrafts, 1..TotalAircrafts] of int: SeparationTimeMatrix;
+set of int: AIRCRAFT = 1..TotalAircrafts;
 
-% Derived constants for Big-M construction
-int: MaxLatestLandingTime  = max(i in 1..TotalAircrafts)(LatestLandingTime[i]);
-int: MinEarliestLandingTime = min(i in 1..TotalAircrafts)(EarliestLandingTime[i]);
-int: MaxSeparationTime      = max(i, j in 1..TotalAircrafts)(SeparationTimeMatrix[i,j]);
-int: BigM = (MaxLatestLandingTime - MinEarliestLandingTime) + MaxSeparationTime;
+array[AIRCRAFT] of int: EarliestLandingTime;
+array[AIRCRAFT] of int: LatestLandingTime;
+array[AIRCRAFT] of int: TargetLandingTime;
+array[AIRCRAFT] of int: PenaltyTimeAfterTarget;
+array[AIRCRAFT] of int: PenaltyTimeBeforeTarget;
+array[AIRCRAFT, AIRCRAFT] of int: SeparationTimeMatrix;
 
 % Variables
-array[1..TotalAircrafts] of var int: LandingTime;
+array[AIRCRAFT] of var int: LandingTime;     % actual landing times
+array[AIRCRAFT] of var int: Early;           % minutes landed before target
+array[AIRCRAFT] of var int: Late;            % minutes landed after target
 
-array[1..TotalAircrafts] of var int: EarlyDeviation;   % minutes landed before target
-array[1..TotalAircrafts] of var int: LateDeviation;    % minutes landed after  target
+array[AIRCRAFT, AIRCRAFT] of var bool: Before;  % Before[i,j] = true  -> i lands before j
 
-array[1..TotalAircrafts, 1..TotalAircrafts] of var bool: Before;  % Before[i,j] = true iff aircraft i lands before j
+var int: TotalPenalty;                       % objective value
 
-var int: TotalPenalty;
+% Pre-computed bounds for Early and Late
+array[AIRCRAFT] of int: EarlyMax = [max(0, TargetLandingTime[i] - EarliestLandingTime[i]) | i in AIRCRAFT];
+array[AIRCRAFT] of int: LateMax  = [max(0, LatestLandingTime[i]  - TargetLandingTime[i]) | i in AIRCRAFT];
 
 % Constraints
-% 1. Landing time windows
+% 1. Time window for every aircraft
 constraint
-  forall(i in 1..TotalAircrafts) (
-      EarliestLandingTime[i] <= LandingTime[i] /\
-      LandingTime[i] <= LatestLandingTime[i]
+  forall(i in AIRCRAFT)(
+    EarliestLandingTime[i] <= LandingTime[i] /\
+    LandingTime[i] <= LatestLandingTime[i]
   );
 
-% 2. Define earliness and lateness with respect to target
+% 2. Relation between landing time and earliness / lateness
 constraint
-  forall(i in 1..TotalAircrafts) (
-      LandingTime[i] + EarlyDeviation[i] - LateDeviation[i] = TargetLandingTime[i]
+  forall(i in AIRCRAFT)(
+    LandingTime[i] = TargetLandingTime[i] - Early[i] + Late[i]
   );
 
-% 3. Bounds on earliness and lateness deviations
+% 3. Bounds for Early and Late
 constraint
-  forall(i in 1..TotalAircrafts) (
-      0 <= EarlyDeviation[i] /\ EarlyDeviation[i] <= TargetLandingTime[i] - EarliestLandingTime[i] /\
-      0 <= LateDeviation[i]  /\ LateDeviation[i]  <= LatestLandingTime[i]  - TargetLandingTime[i]
+  forall(i in AIRCRAFT)(
+    0 <= Early[i] /\ Early[i] <= EarlyMax[i] /\
+    0 <= Late[i]  /\ Late[i]  <= LateMax[i]
   );
 
-% 4. Symmetry and diagonals for ordering variables
+% 4. Exactly one order between any two different aircraft
 constraint
-  forall(i in 1..TotalAircrafts) (
-      Before[i,i] = false
+  forall(i, j in AIRCRAFT where i != j)(
+    Before[i,j] <-> not Before[j,i]
+  ) /\
+  forall(i in AIRCRAFT)(
+    Before[i,i] = false
   );
 
+% 5. Separation constraints
 constraint
-  forall(i, j in 1..TotalAircrafts where i < j) (
-      bool2int(Before[i,j]) + bool2int(Before[j,i]) = 1
+  forall(i, j in AIRCRAFT where i < j)(
+      ( Before[i,j] ->
+          LandingTime[j] - LandingTime[i] >= SeparationTimeMatrix[i,j] )
+   /\ ( not Before[i,j] ->
+          LandingTime[i] - LandingTime[j] >= SeparationTimeMatrix[j,i] )
   );
 
-% 5. Separation requirements using Big-M
+% Objective: minimize total penalty
 constraint
-  forall(i, j in 1..TotalAircrafts where i <> j) (
-      LandingTime[j] - LandingTime[i] + BigM * (1 - bool2int(Before[i,j]))
-      >= SeparationTimeMatrix[i,j]
-  );
-
-% Objective
-constraint
-  TotalPenalty = sum(i in 1..TotalAircrafts)(
-                    PenaltyTimeBeforeTarget[i] * EarlyDeviation[i] +
-                    PenaltyTimeAfterTarget[i]  * LateDeviation[i]
-                );
+  TotalPenalty = sum(i in AIRCRAFT)(
+                    PenaltyTimeBeforeTarget[i] * Early[i] +
+                    PenaltyTimeAfterTarget[i]  * Late[i]
+                 );
 
 solve minimize TotalPenalty;

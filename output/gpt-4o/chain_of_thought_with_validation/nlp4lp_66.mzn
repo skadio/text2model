@@ -1,15 +1,28 @@
 % Parameters
 int: N;
-int: StartCity;                     % Index of the city where the tour starts and ends (1‥N)
-array[1..N, 1..N] of int: Distances;
+int: StartCity;                       % 0-based index of the departure city
+array[1..N, 1..N] of int: Distances;  % symmetric distance matrix
+
+% Derived sets & constants
+set of int: Cities = 1..N;
+int: StartCity1 = StartCity + 1;      % 1-based counterpart (1-based index)
+int: maxTotalDistance = sum(i in Cities, j in Cities)(Distances[i, j]);
 
 % Variables
-array[1..N] of var 1..N: succ;      % succ[i] is the city visited immediately after city i
-var int: total_distance;            % total length of the tour
+array[1..N] of var Cities: tour;      % visit sequence (first position is the start city)
+var 0..maxTotalDistance: TotalDistance;
 
 % Constraints
-constraint circuit(succ);                                          % single Hamiltonian cycle
-constraint total_distance = sum(i in 1..N)(Distances[i, succ[i]]); % compute tour length
+constraint tour[1] = StartCity1;
+constraint all_different(tour);
+
+% Symmetry-breaking
+constraint tour[2] < tour[N];
+
+constraint
+    TotalDistance =
+        sum(k in 1..N-1)(Distances[tour[k], tour[k+1]])
+      + Distances[tour[N], tour[1]];
 
 % Objective
-solve minimize total_distance;
+solve minimize TotalDistance;

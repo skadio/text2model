@@ -1,28 +1,36 @@
 % Parameters
 int: n;
-set of int: Items = 1..n;
-
-array[Items] of int: a;
-
+array[1..n] of int: a;
 int: k;
-set of int: Groups = 1..k;
+
+int: total_sum = sum(i in 1..n)(a[i]);
 
 % Variables
-array[Items] of var Groups: grp;               % group assignment for each item
-array[Groups] of var 0..sum(a): load;          % total value in each group
-var 0..sum(a): max_load;                       % maximum load among all groups
+array[1..n, 1..k] of var 0..1: x;                 % x[i,g] = 1 if item i is in group g
+array[1..k] of var 0..total_sum: group_sum;       % sum of values in each group
+var 0..total_sum: max_group_sum;                  % maximum group sum (to be minimized)
 
 % Constraints
 constraint
-  forall(g in Groups) (
-    load[g] = sum(i in Items)( a[i] * bool2int(grp[i] == g) )
-);
+    forall(i in 1..n)(
+        sum(g in 1..k)(x[i,g]) = 1                % each item assigned to exactly one group
+    );
 
 constraint
-  sum(g in Groups)( load[g] ) = sum(a);
+    forall(g in 1..k)(
+        group_sum[g] = sum(i in 1..n)(a[i] * x[i,g])
+    );
 
 constraint
-  max_load = max(load);
+    forall(g in 1..k)(
+        group_sum[g] <= max_group_sum             % max_group_sum is at least every group sum
+    );
+
+% Optional symmetry breaking (can improve search)
+constraint
+    forall(g in 1..k-1)(
+        group_sum[g] <= group_sum[g+1]
+    );
 
 % Objective
-solve minimize max_load;
+solve minimize max_group_sum;

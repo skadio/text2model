@@ -5,39 +5,27 @@ int: HoldingCost;
 array[1..N] of int: Price;
 array[1..N] of int: Cost;
 
-set of int: T = 1..N;
+set of int: Periods = 1..N;
 
 % Variables
-array[T] of var 0..Capacity: Stock;   % inventory level at the end of each period
-array[T] of var 0..Capacity: Buy;     % quantity bought in each period
-array[T] of var 0..Capacity: Sell;    % quantity sold in each period
+array[Periods] of var 0..Capacity: buy;      % units bought in period t
+array[Periods] of var 0..Capacity: sell;     % units sold  in period t
+array[0..N]     of var 0..Capacity: stock;   % inventory level at end of period t
+var int: profit;
 
 % Constraints
+constraint stock[0] = 0;
+constraint
+  forall(t in Periods)(
+    stock[t] = stock[t-1] + buy[t] - sell[t]
+  );
+constraint stock[N] = 0;
 
-% Inventory balance
-constraint Stock[1] = Buy[1] - Sell[1];
-constraint forall(t in 2..N)(
-    Stock[t] = Stock[t-1] + Buy[t] - Sell[t]
-);
-
-% Capacity limit
-constraint forall(t in T)(
-    Stock[t] <= Capacity
-);
-
-% Cannot sell more than available stock within a period
-constraint Sell[1] <= Buy[1];
-constraint forall(t in 2..N)(
-    Sell[t] <= Stock[t-1] + Buy[t]
-);
-
-% Ending inventory must be zero
-constraint Stock[N] = 0;
+constraint
+  profit =
+    sum(t in Periods)(Price[t] * sell[t])
+  - sum(t in Periods)(Cost[t]  * buy[t])
+  - sum(t in Periods)(HoldingCost * stock[t]);
 
 % Objective
-solve maximize
-    sum(t in T)(
-        Sell[t] * Price[t]
-      - Buy[t]  * Cost[t]
-      - HoldingCost * Stock[t]
-    );
+solve maximize profit;

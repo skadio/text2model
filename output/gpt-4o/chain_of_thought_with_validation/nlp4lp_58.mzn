@@ -1,75 +1,96 @@
 % Parameters
-int: M;
-int: P;
+int: M;                                 % Number of machines
+int: P;                                 % Number of parts (batches) to be produced
 
-set of int: Machines = 1..M;
-set of int: Parts    = 1..P;
+array[1..M, 1..P] of int: TimeRequired; % Hours on machine m to produce one batch of part p
+array[1..M] of int: MachineCosts;       % Cost per hour for machine m
+array[1..M] of int: Availability;       % Monthly availability (in hours) for machine m
+array[1..P] of int: Prices;             % Selling price per batch of part p
+array[1..P] of int: MinBatches;         % Contractual minimum batches for part p
 
-array[Machines, Parts] of int: TimeRequired;   % hours per batch
-array[Machines]          of int: MachineCosts; % €/hour (machines 2..M)
-array[Machines]          of int: Availability; % monthly hours (machines 2..M, 1 = standard-hour limit)
-array[Parts]             of int: Prices;       % € per batch sold
-array[Parts]             of int: MinBatches;   % contractual minimum batches
+int: StandardCost;                      % Labour cost per hour (machine 1, standard hours)
+int: OvertimeCost;                      % Labour cost per hour (machine 1, overtime hours)
+int: OvertimeHour;                      % Standard-hour limit for machine 1
+int: MinProfit;                         % Minimum desired profit
 
-int: StandardCost;   % €/h for first machine up to Availability[1]
-int: OvertimeCost;   % €/h for first machine beyond Availability[1]
-int: OvertimeHour;   % maximum overtime hours on first machine
-int: MinProfit;      % required minimum profit
+% ---------------------------------------------------------------------------
+% Auxiliary constants for upper bounds (computed only from parameters)
 
+% Largest number of batches that can be produced for each part, given
+% the most restrictive NON-outsourced machine (machines 2..M).
+array[1..P] of int: MaxBatches = [
+    if M > 1 /\ exists(m in 2..M)(TimeRequired[m,p] > 0) then
+        min([ Availability[m] div TimeRequired[m,p]
+              | m in 2..M where TimeRequired[m,p] > 0 ])
+    else
+        1000000                 % Practically unbounded if no such machine
+    endif
+| p in 1..P];
 
-% Decision variables
-int: MaxBatch = 10_000;                      % coarse upper bound for production
-array[Parts]   of var 0..MaxBatch: Batches;  % batches produced per part
+% Maximum number of hours that could ever be required on each machine
+array[1..M] of int: MaxHours =
+   [ if m == 1 then
+        sum(p in 1..P)(MaxBatches[p] * TimeRequired[m,p])
+     else
+        Availability[m]
+     endif
+   | m in 1..M];
 
-array[Machines] of var int: TimeUsed;        % hours used on every machine
-var 0..OvertimeHour: Overtime;               % overtime hours on the first machine
-var int: Profit;                             % total profit to maximise
+% ---------------------------------------------------------------------------
+% Variables
+array[1..P] of var int: Batches;                      % Produced batches
+array[1..M] of var 0..MaxHours[m]: Hours;             % Hours actually used on each machine
 
+var 0..OvertimeHour: StdHours;                        % Standard hours on machine 1
+var 0..MaxHours[1]:   OvtHours;                       % Overtime hours on machine 1
 
+var int: Revenue;                                     % Total revenue
+var int: Cost;                                        % Total production cost
+var int: Profit;                                      % Profit to be maximised
+
+% ---------------------------------------------------------------------------
 % Constraints
-% Machine loads
-constraint
-  forall(m in Machines)(
-    TimeUsed[m] = sum(p in Parts)(TimeRequired[m,p] * Batches[p])
-  );
 
-% Contractual minimum production
+% 1) Link hours used on each machine to chosen batch quantities
 constraint
-  forall(p in Parts)(Batches[p] >= MinBatches[p]);
+    forall(m in 1..M) (
+        Hours[m] = sum(p in 1..P)( TimeRequired[m,p] * Batches[p] )
+    );
 
-% Capacity limits for machines 2..M
+% 2) Capacity limits for NON-outsourced machines (machines 2..M)
 constraint
-  forall(m in Machines where m != 1)(
-    TimeUsed[m] <= Availability[m]
-  );
+    forall(m in 2..M) (
+        Hours[m] <= Availability[m]
+    );
 
-% Standard/overtime relations on machine 1
+% 3) Contractual minimum batches per part
 constraint
-    TimeUsed[1] - Overtime <= Availability[1] /\
-    Overtime >= TimeUsed[1] - Availability[1] /\
-    Overtime <= TimeUsed[1]                /\
-    Overtime <= OvertimeHour;
+    forall(p in 1..P) (
+        Batches[p] >= MinBatches[p] /\ Batches[p] <= MaxBatches[p]
+    );
 
-% Profit computation
+% 4) Split hours on outsourced machine 1 into standard and overtime
+constraint StdHours + OvtHours = Hours[1];
+constraint StdHours <= OvertimeHour;
+
+% 5) Define revenue, cost, and profit
 constraint
-  Profit =
-      % revenue
-      sum(p in Parts)(Prices[p] * Batches[p])
-      -
-      % cost on first machine
-      ( StandardCost * (TimeUsed[1] - Overtime)
-        + OvertimeCost * Overtime )
-      -
-      % costs on machines 2..M
-      sum(m in Machines where m != 1)(
-        sum(p in Parts)(
-          TimeRequired[m,p] * Batches[p] * MachineCosts[m]
-        )
-      );
+    Revenue = sum(p in 1..P)( Prices[p] * Batches[p] );
 
-% Required minimum profit
+constraint
+    Cost =
+          % Machine operating costs (all machines)
+          sum(m in 1..M)( MachineCosts[m] * Hours[m] )
+        + % Labour costs on outsourced machine 1
+          StandardCost * StdHours
+        + OvertimeCost * OvtHours;
+
+constraint
+    Profit = Revenue - Cost;
+
+% 6) Minimum profit requirement
 constraint Profit >= MinProfit;
 
-
+% ---------------------------------------------------------------------------
 % Objective
 solve maximize Profit;

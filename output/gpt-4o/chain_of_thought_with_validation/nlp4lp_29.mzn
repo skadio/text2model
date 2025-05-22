@@ -1,45 +1,45 @@
-% Parameters
-int: K;                                 % Number of industries
-set of int: INDUSTRIES = 1..K;
+int: K;
 
-array[INDUSTRIES] of float: ManpowerOne;          % Man-power per unit for operation one
-array[INDUSTRIES] of float: ManpowerTwo;          % Man-power per unit for operation two
-array[INDUSTRIES] of float: Stock;                % Initial stock levels
-array[INDUSTRIES] of float: Capacity;             % Existing productive capacity
-array[INDUSTRIES] of float: Demand;               % Exogenous consumption demand
+array[1..K] of float: ManpowerOne;
+array[1..K] of float: ManpowerTwo;
 
-array[INDUSTRIES, INDUSTRIES] of float: InputOne; % Input coefficients for operation one
-array[INDUSTRIES, INDUSTRIES] of float: InputTwo; % Input coefficients for operation two
+array[1..K] of float: Stock;
+array[1..K] of float: Capacity;
+array[1..K] of float: Demand;
 
-float: BIG = 1.0e9;                               % A sufficiently large upper bound
+array[1..K, 1..K] of float: InputOne;
+array[1..K, 1..K] of float: InputTwo;
 
-% Variables
-array[INDUSTRIES] of var 0.0..BIG: prod_one;      % Output produced via operation one
-array[INDUSTRIES] of var 0.0..BIG: build_two;     % Activity level of operation two
+float: bigM = 1.0e12;
 
-% Constraints
-% 1. Production cannot exceed existing capacity.
+array[1..K] of var 0.0..bigM: Prod;
+array[1..K] of var 0.0..bigM: Build;
+array[1..K] of var -bigM..bigM: EndStock;
+
 constraint
-  forall(i in INDUSTRIES) (
-    prod_one[i] <= Capacity[i]
+  forall(i in 1..K) (
+    Prod[i] <= Capacity[i]
   );
 
-% 2. Material balance for every industry:
-%    Initial stock + own production must cover
-%    demand plus all inter-industry input requirements.
 constraint
-  forall(i in INDUSTRIES) (
-    Stock[i] + prod_one[i] >=
-      Demand[i] +
-      sum(j in INDUSTRIES) (
-        InputOne[j,i] * prod_one[j] +   % inputs required for op-1 in industry j
-        InputTwo[j,i] * build_two[j]    % inputs required for op-2 in industry j
-      )
+  forall(i in 1..K) (
+    Prod[i] + Stock[i] >= Demand[i]
   );
 
-% Objective
-maximize
-  sum(i in INDUSTRIES) (
-    ManpowerOne[i] * prod_one[i] +
-    ManpowerTwo[i] * build_two[i]
+constraint
+  forall(i in 1..K) (
+    EndStock[i] = Stock[i] + Prod[i] - Demand[i]
   );
+
+constraint
+  forall(i in 1..K) (
+    EndStock[i] >= 0.0
+  );
+
+constraint
+  forall(j in 1..K) (
+    sum(i in 1..K)(InputOne[i, j] * Prod[i] + InputTwo[i, j] * Build[i]) <= Stock[j] + Prod[j]
+  );
+
+solve maximize
+  sum(i in 1..K)(ManpowerOne[i] * Prod[i] + ManpowerTwo[i] * Build[i]);

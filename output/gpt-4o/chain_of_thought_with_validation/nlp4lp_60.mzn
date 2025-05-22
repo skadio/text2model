@@ -1,46 +1,37 @@
-% Parameters
 int: N;
 int: W;
 
-array[1..N, 1..W-1] of float: WestTime;
-array[1..N-1, 1..W] of float: NorthTime;
+set of int: Streets  = 1..N;        % east-west streets (row index)
+set of int: Avenues  = 1..W;        % north-south avenues (column index)
+set of int: WestSegs = 1..W-1;      % segments between successive avenues
+set of int: NorthSegs = 1..N-1;     % segments between successive streets
 
-% Decision variables: whether a segment is used
-array[1..N, 1..W-1] of var bool: west_use;
-array[1..N-1, 1..W] of var bool: north_use;
+array[Streets, WestSegs]  of float: WestTime;   % time to move west
+array[NorthSegs, Avenues] of float: NorthTime;  % time to move north
 
-% Total travel time
-var float: total_time =
-    sum(n in 1..N, w in 1..W-1)(
-        int2float(bool2int(west_use[n,w])) * WestTime[n,w]
-    )
-  + sum(n in 1..N-1, w in 1..W)(
-        int2float(bool2int(north_use[n,w])) * NorthTime[n,w]
-    );
+array[Streets, WestSegs]  of var 0..1: WestUsed;   % 1 if segment taken
+array[NorthSegs, Avenues] of var 0..1: NorthUsed;  % 1 if segment taken
 
-% Required number of moves in each direction
+% Flow-balance at every intersection
 constraint
-    sum(n in 1..N,   w in 1..W-1)( bool2int(west_use[n,w]) ) = W - 1 /\
-    sum(n in 1..N-1, w in 1..W  )( bool2int(north_use[n,w]) ) = N - 1;
+  forall(n in Streets, w in Avenues) (
+        ( (if w <= W-1 then WestUsed[n,w]  else 0 endif)
+        + (if n <= N-1 then NorthUsed[n,w] else 0 endif) )
+      - ( (if w > 1 then WestUsed[n,w-1]   else 0 endif)
+        + (if n > 1 then NorthUsed[n-1,w]  else 0 endif) )
+      =
+        ( if n == 1 /\ w == 1 then  1
+          elseif n == N /\ w == W then -1
+          else 0 endif )
+  );
 
-% Flow conservation at every intersection
-constraint
-    forall(n in 1..N, w in 1..W) (
-        let {
-            var int: flow_in =
-                (if n > 1 then bool2int(north_use[n-1,w]) else 0 endif) +
-                (if w > 1 then bool2int(west_use[n,w-1])  else 0 endif),
-            var int: flow_out =
-                (if n < N then bool2int(north_use[n,w])   else 0 endif) +
-                (if w < W then bool2int(west_use[n,w])    else 0 endif)
-        } in
-            if n = 1 /\ w = 1 then
-                flow_out - flow_in = 1
-            elseif n = N /\ w = W then
-                flow_in - flow_out = 1
-            else
-                flow_in = flow_out
-            endif
-    );
+% Exactly W-1 west moves and N-1 north moves
+constraint sum(n in Streets,  w in WestSegs)(WestUsed[n,w])  = W - 1;
+constraint sum(n in NorthSegs, w in Avenues)(NorthUsed[n,w]) = N - 1;
 
-solve minimize total_time;
+% Objective: minimise total travel time
+var float: totalTime =
+      sum(n in Streets,  w in WestSegs)( WestTime[n,w]  * float(WestUsed[n,w]) )
+    + sum(n in NorthSegs, w in Avenues)( NorthTime[n,w] * float(NorthUsed[n,w]) );
+
+solve minimize totalTime;

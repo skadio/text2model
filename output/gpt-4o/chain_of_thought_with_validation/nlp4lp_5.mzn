@@ -1,54 +1,45 @@
-% Parameters
 int: NumLinks;
-set of int: Links = 1..NumLinks;
-
-array[Links] of int: StartNode;
-array[Links] of int: EndNode;
-array[Links] of int: Capacity;
-array[Links] of int: Cost;
-
 int: NumFlowReqs;
+
+array[1..NumLinks] of int: StartNode;
+array[1..NumLinks] of int: EndNode;
+array[1..NumLinks] of int: Capacity;
+array[1..NumLinks] of int: Cost;
+
+array[1..NumFlowReqs] of int: SourceNode;
+array[1..NumFlowReqs] of int: DestinationNode;
+array[1..NumFlowReqs] of int: DataRate;
+
+set of int: Links = 1..NumLinks;
 set of int: Flows = 1..NumFlowReqs;
+set of int: Nodes =
+        { StartNode[l] | l in Links }
+      union { EndNode[l] | l in Links }
+      union { SourceNode[f] | f in Flows }
+      union { DestinationNode[f] | f in Flows };
 
-array[Flows] of int: SourceNode;
-array[Flows] of int: DestinationNode;
-array[Flows] of int: DataRate;
+int: MaxCapacity = max(Capacity);
 
-/* derive the set of nodes present in the network */
-int: NumNodes =
-    max([ max(StartNode), max(EndNode), max(SourceNode), max(DestinationNode) ]);
-set of int: Nodes = 1..NumNodes;
+array[Links, Flows] of var 0..MaxCapacity: flow;
+var int: TotalCost;
 
-/* handy upper‐bound for variable domains */
-int: MaxCap = max(Capacity);
-
-% Variables
-array[Flows, Links] of var 0..MaxCap: Flow;        % flow of commodity f on link l
-var int: TotalCost = sum(f in Flows, l in Links)(Flow[f,l] * Cost[l]);
-
-% Constraints
-/* link‐capacity constraints (total over all commodities) */
 constraint
   forall(l in Links)(
-    sum(f in Flows)(Flow[f,l]) <= Capacity[l]
-  );
+    sum(f in Flows)(flow[l,f]) <= Capacity[l]
+);
 
-/* individual commodity flow must not exceed link capacity */
-constraint
-  forall(f in Flows, l in Links)(
-    Flow[f,l] <= Capacity[l]
-  );
-
-/* flow conservation for every commodity at every node */
 constraint
   forall(f in Flows, n in Nodes)(
-    sum(l in Links where StartNode[l] == n)(Flow[f,l]) -
-    sum(l in Links where EndNode[l] == n)(Flow[f,l])
+    sum(l in Links where StartNode[l] == n)(flow[l,f]) -
+    sum(l in Links where EndNode[l]   == n)(flow[l,f])
     =
-    ( if n == SourceNode[f] then  DataRate[f]
-      elseif n == DestinationNode[f] then -DataRate[f]
-      else 0 endif )
-  );
+    if n == SourceNode[f] then  DataRate[f]
+    elseif n == DestinationNode[f] then -DataRate[f]
+    else 0
+    endif
+);
 
-% Objective
+constraint
+  TotalCost = sum(l in Links, f in Flows)(flow[l,f] * Cost[l]);
+
 solve minimize TotalCost;

@@ -5,34 +5,42 @@ float: InitialVelocity;
 float: FinalPosition;
 float: FinalVelocity;
 
-% Index sets
-set of int: Times = 0..TotalTime;
-set of int: Steps = 0..TotalTime-1;
+% Auxiliary sets
+set of int: Time       = 0..TotalTime;        % indices for states (position & velocity)
+set of int: TimeAccel  = 0..TotalTime-1;      % indices for control inputs
 
-% A sufficiently large bound for variables
+% A generous bound for all state and control variables
 float: BIG = 1.0e6;
 
 % Variables
-array[Times] of var -BIG..BIG: x;        % Position at each time step
-array[Times] of var -BIG..BIG: v;        % Velocity at each time step
-array[Steps] of var -BIG..BIG: a;        % Acceleration (control) at each step
-array[Steps] of var 0.0..BIG: fuel;      % |a_t|  (fuel consumption proxy)
+array[Time]      of var -BIG..BIG: pos;       % position  x_t
+array[Time]      of var -BIG..BIG: vel;       % velocity  v_t
+array[TimeAccel] of var -BIG..BIG: acc;       % acceleration a_t  (control)
+array[TimeAccel] of var  0.0..BIG:  fuel;     % |a_t|, linearised absolute value
 
 % Constraints
-constraint x[0] = InitialPosition;
-constraint v[0] = InitialVelocity;
+%
+% Initial conditions
+constraint pos[0] = InitialPosition;
+constraint vel[0] = InitialVelocity;
 
-% Discrete-time dynamics
-constraint forall(t in Steps)( x[t+1] = x[t] + v[t] );
-constraint forall(t in Steps)( v[t+1] = v[t] + a[t] );
+% Dynamics
+constraint
+  forall(t in TimeAccel)(
+       pos[t+1] = pos[t] + vel[t] /\
+       vel[t+1] = vel[t] + acc[t]
+  );
 
-% Absolute-value linearisation for fuel
-constraint forall(t in Steps)( fuel[t] >=  a[t] );
-constraint forall(t in Steps)( fuel[t] >= -a[t] );
+% Final (target) conditions
+constraint pos[TotalTime] = FinalPosition;
+constraint vel[TotalTime] = FinalVelocity;
 
-% Target conditions at time T
-constraint x[TotalTime] = FinalPosition;
-constraint v[TotalTime] = FinalVelocity;
+% Absolute-value linearisation: fuel[t] = |acc[t]|
+constraint
+  forall(t in TimeAccel)(
+       fuel[t] >=  acc[t] /\
+       fuel[t] >= -acc[t]
+  );
 
 % Objective
-solve minimize sum(t in Steps)( fuel[t] );
+solve minimize sum(t in TimeAccel)(fuel[t]);

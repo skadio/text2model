@@ -1,33 +1,55 @@
 include "globals.mzn";
 
 % Parameters
-int: S;                                   % Number of slots on every template
-int: t;                                   % Number of templates
-int: n;                                   % Number of design variations
-array[1..n] of int: d;                    % Minimum demand for every design
-int: total_demand = sum(j in 1..n)(d[j]); % Useful upper-bound
+int: S;                                 % number of slots per template
+int: t;                                 % number of templates
+int: n;                                 % number of design variations
+array[1..n] of int: d;                  % minimum demand for each variation
+
+int: TOTDEM = sum(v in 1..n)(d[v]);     % total demand over all variations
 
 % Variables
-array[1..t,1..n] of var 0..S: a;                    % a[i,j] = slots of design j on template i
-array[1..t]       of var 0..total_demand: x;        % Sheets printed of template i
-array[1..n]       of var 0..total_demand: surplus;  % Surplus produced for every design
+array[1..t, 1..n] of var 0..S: a;                   % slots of variation v on template k
+array[1..t]          of var 0..TOTDEM: p;           % runs of template k
+array[1..t, 1..n] of var 0..S*TOTDEM: prod;         % output of variation v from template k
+array[1..n]       of var 0..S*TOTDEM: production;   % total output of variation v
+var 0..S*TOTDEM: surplus;                           % total surplus over all variations
 
 % Constraints
+% 1. Every template must allocate exactly S slots
 constraint
-    forall(i in 1..t) (               % Every template has exactly S slots
-        sum(j in 1..n)(a[i,j]) = S
-    );
+  forall(k in 1..t) (
+    sum(v in 1..n)(a[k,v]) = S
+  );
 
+% 2. Compute produced quantity of each variation on each template
 constraint
-    forall(j in 1..n) (               % Production covers demand plus surplus
-        sum(i in 1..t)(a[i,j] * x[i]) = d[j] + surplus[j]
-    );
+  forall(k in 1..t, v in 1..n) (
+    prod[k,v] = a[k,v] * p[k]
+  );
 
+% 3. Aggregate production over templates
 constraint
-    forall(i in 1..t-1) (             % Templates ordered lexicographically
-        lex_lesseq([a[i,j] | j in 1..n],
-                   [a[i+1,j] | j in 1..n])
-    );
+  forall(v in 1..n) (
+    production[v] = sum(k in 1..t)(prod[k,v])
+  );
+
+% 4. Meet or exceed demand for every variation
+constraint
+  forall(v in 1..n) (
+    production[v] >= d[v]
+  );
+
+% 5. Define total surplus
+constraint
+  surplus = sum(v in 1..n)(production[v]) - TOTDEM;
+
+% 6. Lexicographic ordering of templates
+constraint
+  forall(k in 1..t-1) (
+    lex_lesseq([a[k,v] | v in 1..n],
+               [a[k+1,v] | v in 1..n])
+  );
 
 % Objective
-solve minimize sum(j in 1..n)(surplus[j]);
+solve minimize surplus;

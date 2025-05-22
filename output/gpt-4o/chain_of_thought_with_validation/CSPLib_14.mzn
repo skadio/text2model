@@ -1,101 +1,243 @@
+% ---------------------------------------------------------------------------
 % Parameters
+% ---------------------------------------------------------------------------
 int: height;
 int: width;
 int: maxship;
 
-set of int: ROWS = 1..height;
-set of int: COLS = 1..width;
-set of int: LENGTHS = 1..maxship;
-set of int: ORIENT = 1..2;          % 1 = horizontal, 2 = vertical
+% 0 = unknown, 1 = known water, 2 = known ship
+array [1..height, 1..width] of int: hint;
 
-array[ROWS,COLS]        of int: hint;      % 0 = water, 1 = ship, others = unknown
-array[ROWS]             of int: rowsum;    % row totals
-array[COLS]             of int: colsum;    % column totals
-array[LENGTHS]          of int: ship;      % fleet composition
+array [1..height] of int: rowsum;          % occupied squares in each row
+array [1..width]  of int: colsum;          % occupied squares in each column
 
-% ----------------- build every possible ship placement -----------------
-% number of placements
-int: numPlacements =
-   sum(l in LENGTHS)( height*(width-l+1) + width*(height-l+1) );
+array [1..maxship] of int: ship;           % ship[l] = number of ships of length l
 
-set of int: PLACEMENTS = 1..numPlacements;
 
-% start-position/orientation/length description for each placement
-array[PLACEMENTS] of int: plac_len =
-      [ l | l in LENGTHS, r in ROWS, c in 1..width-l+1 ] ++
-      [ l | l in LENGTHS, r in 1..height-l+1, c in COLS ];
+% ---------------------------------------------------------------------------
+% Basic sets
+% ---------------------------------------------------------------------------
+set of int: Rows    = 1..height;
+set of int: Cols    = 1..width;
+set of int: Lengths = 1..maxship;
 
-array[PLACEMENTS] of int: plac_orient =
-      [ 1 | l in LENGTHS, r in ROWS, c in 1..width-l+1 ] ++
-      [ 2 | l in LENGTHS, r in 1..height-l+1, c in COLS ];
 
-array[PLACEMENTS] of int: plac_row =
-      [ r | l in LENGTHS, r in ROWS, c in 1..width-l+1 ] ++
-      [ r | l in LENGTHS, r in 1..height-l+1, c in COLS ];
+% ---------------------------------------------------------------------------
+% Decision variables
+% ---------------------------------------------------------------------------
+array [Rows, Cols] of var 0..1: ship_cell;              % 1 = ship, 0 = water
 
-array[PLACEMENTS] of int: plac_col =
-      [ c | l in LENGTHS, r in ROWS, c in 1..width-l+1 ] ++
-      [ c | l in LENGTHS, r in 1..height-l+1, c in COLS ];
+array [Lengths, Rows, Cols] of var bool: place_h;       % horizontal ships
+array [Lengths, Rows, Cols] of var bool: place_v;       % vertical   ships
 
-% Variables
-array[PLACEMENTS]              of var bool: place;           % true  => ship is taken
-array[ROWS,COLS]               of var 0..1: board;           % 1 = occupied by (some) ship part
 
-% ----------------- helper predicate for placement conflicts ------------
-predicate placements_conflict(int: p, int: q) =
-   exists(i in 0..plac_len[p]-1,
-          j in 0..plac_len[q]-1)(
-        let {
-            int: r1 = plac_row[p] + bool2int(plac_orient[p]=2)*i,
-            int: c1 = plac_col[p] + bool2int(plac_orient[p]=1)*i,
-            int: r2 = plac_row[q] + bool2int(plac_orient[q]=2)*j,
-            int: c2 = plac_col[q] + bool2int(plac_orient[q]=1)*j
-        } in
-            abs(r1-r2) <= 1 /\ abs(c1-c2) <= 1
-   );
-
-% Constraints
-% 1. Link placements to the board
+% ---------------------------------------------------------------------------
+% 1.  Disable placements that do not fit completely on the board
+% ---------------------------------------------------------------------------
 constraint
-   forall(r in ROWS, c in COLS)(
-        board[r,c] =
-          sum(p in PLACEMENTS where
-               ( plac_orient[p] = 1 /\ r = plac_row[p] /\
-                 c >= plac_col[p] /\ c < plac_col[p] + plac_len[p] )
-            \/ ( plac_orient[p] = 2 /\ c = plac_col[p] /\
-                 r >= plac_row[p] /\ r < plac_row[p] + plac_len[p] )
-          )( bool2int(place[p]) )
-   );
-
-% 2. Row and column totals
-constraint
-   forall(r in ROWS)(
-        sum(c in COLS)( board[r,c] ) = rowsum[r]
-   );
+  forall(l in Lengths, r in Rows, c in Cols where c > width  - l + 1) (
+        not place_h[l,r,c]
+  );
 
 constraint
-   forall(c in COLS)(
-        sum(r in ROWS)( board[r,c] ) = colsum[c]
-   );
+  forall(l in Lengths, r in Rows, c in Cols where r > height - l + 1) (
+        not place_v[l,r,c]
+  );
 
-% 3. Fleet composition
+% Length-1 ships only counted once (horizontal)
+constraint forall(r in Rows, c in Cols)( not place_v[1,r,c] );
+
+
+% ---------------------------------------------------------------------------
+% 2.  Relation between placements and occupied cells
+% ---------------------------------------------------------------------------
 constraint
-   forall(l in LENGTHS)(
-        sum(p in PLACEMENTS where plac_len[p] = l)( bool2int(place[p]) ) = ship[l]
-   );
+  forall(rr in Rows, cc in Cols)(
+        ship_cell[rr,cc] =
+          sum(l in Lengths, c in Cols where c <= cc /\ cc <= c + l - 1)(
+                bool2int(place_h[l, rr, c])
+          )
+        +
+          sum(l in Lengths, r in Rows where r <= rr /\ rr <= r + l - 1)(
+                bool2int(place_v[l, r, cc])
+          )
+  );
 
-% 4. Ships may not touch (orthogonally or diagonally)
+% no overlap (already implied, but kept for clarity)
 constraint
-   forall(p in PLACEMENTS, q in PLACEMENTS where q > p /\ placements_conflict(p,q))(
-        bool2int(place[p]) + bool2int(place[q]) <= 1
-   );
+  forall(rr in Rows, cc in Cols)(
+        ship_cell[rr,cc] <= 1
+  );
 
-% 5. Incorporate given hints
+
+% ---------------------------------------------------------------------------
+% 3.  Fleet composition
+% ---------------------------------------------------------------------------
 constraint
-   forall(r in ROWS, c in COLS where hint[r,c] = 0)( board[r,c] = 0 );
+  forall(l in Lengths)(
+        sum(r in Rows, c in Cols)( bool2int(place_h[l,r,c]) ) +
+        sum(r in Rows, c in Cols)( bool2int(place_v[l,r,c]) ) = ship[l]
+  );
+
+
+% ---------------------------------------------------------------------------
+% 4.  Surrounding-water constraints
+%      (ships are straight and never adjacent, even diagonally)
+% ---------------------------------------------------------------------------
+
+% 4a. Horizontal ships ------------------------------------------------------
+
+% occupied cells
+constraint
+  forall(l in Lengths, r in Rows, c in Cols, k in 0..l-1
+         where c + l - 1 <= width)(
+        place_h[l,r,c] -> ship_cell[r, c+k] = 1
+  );
+
+% cells directly above
+constraint
+  forall(l in Lengths, r in 2..height, c in Cols, k in 0..l-1
+         where c + l - 1 <= width)(
+        place_h[l,r,c] -> ship_cell[r-1, c+k] = 0
+  );
+
+% cells directly below
+constraint
+  forall(l in Lengths, r in 1..height-1, c in Cols, k in 0..l-1
+         where c + l - 1 <= width)(
+        place_h[l,r,c] -> ship_cell[r+1, c+k] = 0
+  );
+
+% cell immediately left
+constraint
+  forall(l in Lengths, r in Rows, c in 2..width, 
+         where c + l - 1 <= width)(
+        place_h[l,r,c] -> ship_cell[r, c-1] = 0
+  );
+
+% cell immediately right
+constraint
+  forall(l in Lengths, r in Rows, c in Cols
+         where c + l - 1 < width)(
+        place_h[l,r,c] -> ship_cell[r, c+l] = 0
+  );
+
+% diagonals at left end
+constraint
+  forall(l in Lengths, r in 2..height, c in 2..width
+         where c + l - 1 <= width)(
+        place_h[l,r,c] -> ship_cell[r-1, c-1] = 0
+  );
+constraint
+  forall(l in Lengths, r in 1..height-1, c in 2..width
+         where c + l - 1 <= width)(
+        place_h[l,r,c] -> ship_cell[r+1, c-1] = 0
+  );
+
+% diagonals at right end
+constraint
+  forall(l in Lengths, r in 2..height, c in Cols
+         where c + l - 1 < width)(
+        place_h[l,r,c] -> ship_cell[r-1, c+l] = 0
+  );
+constraint
+  forall(l in Lengths, r in 1..height-1, c in Cols
+         where c + l - 1 < width)(
+        place_h[l,r,c] -> ship_cell[r+1, c+l] = 0
+  );
+
+
+% 4b. Vertical ships --------------------------------------------------------
+
+% occupied cells
+constraint
+  forall(l in Lengths, r in Rows, c in Cols, k in 0..l-1
+         where r + l - 1 <= height)(
+        place_v[l,r,c] -> ship_cell[r+k, c] = 1
+  );
+
+% cells directly left
+constraint
+  forall(l in Lengths, r in Rows, c in 2..width, k in 0..l-1
+         where r + l - 1 <= height)(
+        place_v[l,r,c] -> ship_cell[r+k, c-1] = 0
+  );
+
+% cells directly right
+constraint
+  forall(l in Lengths, r in Rows, c in 1..width-1, k in 0..l-1
+         where r + l - 1 <= height)(
+        place_v[l,r,c] -> ship_cell[r+k, c+1] = 0
+  );
+
+% cell immediately above
+constraint
+  forall(l in Lengths, r in 2..height, c in Cols
+         where r + l - 1 <= height)(
+        place_v[l,r,c] -> ship_cell[r-1, c] = 0
+  );
+
+% cell immediately below
+constraint
+  forall(l in Lengths, r in Rows, c in Cols
+         where r + l - 1 < height)(
+        place_v[l,r,c] -> ship_cell[r+l, c] = 0
+  );
+
+% diagonals at top end
+constraint
+  forall(l in Lengths, r in 2..height, c in 2..width
+         where r + l - 1 <= height)(
+        place_v[l,r,c] -> ship_cell[r-1, c-1] = 0
+  );
+constraint
+  forall(l in Lengths, r in 2..height, c in 1..width-1
+         where r + l - 1 <= height)(
+        place_v[l,r,c] -> ship_cell[r-1, c+1] = 0
+  );
+
+% diagonals at bottom end
+constraint
+  forall(l in Lengths, r in Rows, c in 2..width
+         where r + l - 1 < height)(
+        place_v[l,r,c] -> ship_cell[r+l, c-1] = 0
+  );
+constraint
+  forall(l in Lengths, r in Rows, c in 1..width-1
+         where r + l - 1 < height)(
+        place_v[l,r,c] -> ship_cell[r+l, c+1] = 0
+  );
+
+
+% ---------------------------------------------------------------------------
+% 5.  Row and column sums
+% ---------------------------------------------------------------------------
+constraint
+  forall(r in Rows)(
+        sum(c in Cols)( ship_cell[r,c] ) = rowsum[r]
+  );
 
 constraint
-   forall(r in ROWS, c in COLS where hint[r,c] = 1)( board[r,c] = 1 );
+  forall(c in Cols)(
+        sum(r in Rows)( ship_cell[r,c] ) = colsum[c]
+  );
 
+
+% ---------------------------------------------------------------------------
+% 6.  Apply given hints
+% ---------------------------------------------------------------------------
+constraint
+  forall(r in Rows, c in Cols where hint[r,c] = 1)(
+        ship_cell[r,c] = 0
+  );
+
+constraint
+  forall(r in Rows, c in Cols where hint[r,c] = 2)(
+        ship_cell[r,c] = 1
+  );
+
+
+% ---------------------------------------------------------------------------
 % Objective
+% ---------------------------------------------------------------------------
 solve satisfy;

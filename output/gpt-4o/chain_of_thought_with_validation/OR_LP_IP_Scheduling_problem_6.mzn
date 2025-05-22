@@ -1,39 +1,43 @@
 % Parameters
 int: n;
 int: num_edges;
-array[1..num_edges, 1..2] of int: E;   % E[e,1] = tail, E[e,2] = head
-array[1..num_edges] of int: a;         % capacities
-int: s;                                 % source node
-int: t;                                 % sink   node
-
-set of int: NODES = 1..n;
+set of int: N = 1..n;
 set of int: EDGES = 1..num_edges;
 
-int: max_cap = max(a);                          
-int: total_cap_out_s = sum(e in EDGES where E[e,1] = s)(a[e]);  % bound for total flow
+array[EDGES, 1..2] of int: E;     % E[e,1] = tail, E[e,2] = head
+array[EDGES] of int: a;            % capacities for each arc, aligned with EDGES
+
+int: s;                            % source node
+int: t;                            % sink   node
+
+int: max_cap     = max(a);         % largest individual capacity
+int: total_cap   = sum(a);         % upper bound for the total flow
 
 % Variables
-array[EDGES] of var 0..max_cap: f;               % flow on each arc
-var 0..total_cap_out_s: total_flow;              % objective variable
+array[EDGES] of var 0..max_cap: f; % flow on each arc
+var 0..total_cap: F;               % total flow from s to t
 
 % Constraints
 constraint
     forall(e in EDGES)(
-        f[e] <= a[e]                             % capacity on every arc
+        f[e] <= a[e]               % capacity constraints
+    );
+
+set of int: N_internal = {u | u in N where u != s /\ u != t};
+
+constraint
+    forall(u in N_internal)(
+        sum([f[e] | e in EDGES where E[e,2] = u]) =   % inflow
+        sum([f[e] | e in EDGES where E[e,1] = u])     % outflow
     );
 
 constraint
-    forall(i in NODES where i != s /\ i != t)(
-        sum(e in EDGES where E[e,2] = i)(f[e])   % inflow
-        =
-        sum(e in EDGES where E[e,1] = i)(f[e])   % outflow
-    );
+    F = sum([f[e] | e in EDGES where E[e,1] = s])     % net outflow from source
+      - sum([f[e] | e in EDGES where E[e,2] = s]);
 
 constraint
-    total_flow =
-        sum(e in EDGES where E[e,1] = s)(f[e])   % flow leaving the source
-        -
-        sum(e in EDGES where E[e,2] = s)(f[e]);  % (minus) flow entering the source
+    F = sum([f[e] | e in EDGES where E[e,2] = t])     % net inflow to sink
+      - sum([f[e] | e in EDGES where E[e,1] = t]);
 
 % Objective
-solve maximize total_flow;
+solve maximize F;

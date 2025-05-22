@@ -7,65 +7,96 @@ int: cols;
 int: col_rule_len;
 array[1..cols, 1..col_rule_len] of int: col_rules;
 
-set of int: Rows = 1..rows;
-set of int: Cols = 1..cols;
-set of int: RowRules = 1..row_rule_len;
-set of int: ColRules = 1..col_rule_len;
-
 % Variables
-array[Rows, Cols] of var 0..1: cell;
+array[1..rows, 1..cols] of var 0..1: grid;
 
-array[Rows, RowRules] of var 1..cols: row_start;
-array[Cols, ColRules] of var 1..rows: col_start;
+array[1..rows, 1..row_rule_len] of var 0..cols: row_start;      % 0 = “unused”
+array[1..cols, 1..col_rule_len] of var 0..rows: col_start;      % 0 = “unused”
+
+array[1..rows, 1..cols, 1..row_rule_len] of var 0..1: in_block_row;
+array[1..rows, 1..cols, 1..col_rule_len] of var 0..1: in_block_col;
 
 % Constraints
-
-% Row blocks fit within the grid
+%
+% --- row start positions --------------------------------------------------
 constraint
-  forall(r in Rows, k in RowRules where row_rules[r,k] > 0)(
-    row_start[r,k] + row_rules[r,k] - 1 <= cols
+  forall(r in 1..rows, k in 1..row_rule_len)(
+      (row_rules[r,k] == 0) -> (row_start[r,k] = 0)
   );
 
-% Row blocks are ordered and separated by at least one blank square
 constraint
-  forall(r in Rows, k in 1..row_rule_len-1
-         where row_rules[r,k] > 0 /\ row_rules[r,k+1] > 0)(
-    row_start[r,k+1] >= row_start[r,k] + row_rules[r,k] + 1
+  forall(r in 1..rows, k in 1..row_rule_len)(
+      (row_rules[r,k] > 0) ->
+         ( row_start[r,k] >= 1 /\
+           row_start[r,k] + row_rules[r,k] - 1 <= cols )
   );
 
-% Column blocks fit within the grid
+% keep required gap (= at least one blank) between consecutive blocks
 constraint
-  forall(c in Cols, k in ColRules where col_rules[c,k] > 0)(
-    col_start[c,k] + col_rules[c,k] - 1 <= rows
+  forall(r in 1..rows, k in 1..row_rule_len-1)(
+      (row_rules[r,k] > 0 /\ row_rules[r,k+1] > 0) ->
+         ( row_start[r,k] + row_rules[r,k] + 1 <= row_start[r,k+1] )
   );
 
-% Column blocks are ordered and separated by at least one blank square
+% --- column start positions ----------------------------------------------
 constraint
-  forall(c in Cols, k in 1..col_rule_len-1
-         where col_rules[c,k] > 0 /\ col_rules[c,k+1] > 0)(
-    col_start[c,k+1] >= col_start[c,k] + col_rules[c,k] + 1
+  forall(c in 1..cols, k in 1..col_rule_len)(
+      (col_rules[c,k] == 0) -> (col_start[c,k] = 0)
   );
 
-% Link row starts to shaded cells
 constraint
-  forall(r in Rows, c in Cols)(
-    cell[r,c] =
-      bool2int(
-        or([ row_rules[r,k] > 0 /\
-             row_start[r,k] <= c /\ c <= row_start[r,k] + row_rules[r,k] - 1
-             | k in RowRules ])
-      )
+  forall(c in 1..cols, k in 1..col_rule_len)(
+      (col_rules[c,k] > 0) ->
+         ( col_start[c,k] >= 1 /\
+           col_start[c,k] + col_rules[c,k] - 1 <= rows )
   );
 
-% Link column starts to shaded cells (consistency)
 constraint
-  forall(r in Rows, c in Cols)(
-    cell[r,c] =
-      bool2int(
-        or([ col_rules[c,k] > 0 /\
-             col_start[c,k] <= r /\ r <= col_start[c,k] + col_rules[c,k] - 1
-             | k in ColRules ])
-      )
+  forall(c in 1..cols, k in 1..col_rule_len-1)(
+      (col_rules[c,k] > 0 /\ col_rules[c,k+1] > 0) ->
+         ( col_start[c,k] + col_rules[c,k] + 1 <= col_start[c,k+1] )
+  );
+
+% --- membership of cells in row blocks -----------------------------------
+constraint
+  forall(r in 1..rows, c in 1..cols, k in 1..row_rule_len)(
+      (row_rules[r,k] == 0) ->
+         (in_block_row[r,c,k] = 0)
+  );
+
+constraint
+  forall(r in 1..rows, c in 1..cols, k in 1..row_rule_len)(
+      (row_rules[r,k] > 0) ->
+         (in_block_row[r,c,k] = bool2int(
+               row_start[r,k] <= c /\
+               c < row_start[r,k] + row_rules[r,k]))
+  );
+
+% --- membership of cells in column blocks --------------------------------
+constraint
+  forall(r in 1..rows, c in 1..cols, k in 1..col_rule_len)(
+      (col_rules[c,k] == 0) ->
+         (in_block_col[r,c,k] = 0)
+  );
+
+constraint
+  forall(r in 1..rows, c in 1..cols, k in 1..col_rule_len)(
+      (col_rules[c,k] > 0) ->
+         (in_block_col[r,c,k] = bool2int(
+               col_start[c,k] <= r /\
+               r < col_start[c,k] + col_rules[c,k]))
+  );
+
+% --- link row representation to grid -------------------------------------
+constraint
+  forall(r in 1..rows, c in 1..cols)(
+      grid[r,c] = sum(k in 1..row_rule_len)(in_block_row[r,c,k])
+  );
+
+% --- link column representation to grid ----------------------------------
+constraint
+  forall(r in 1..rows, c in 1..cols)(
+      grid[r,c] = sum(k in 1..col_rule_len)(in_block_col[r,c,k])
   );
 
 % Objective

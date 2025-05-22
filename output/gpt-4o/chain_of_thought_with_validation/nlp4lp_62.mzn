@@ -1,44 +1,59 @@
 int: M;
 int: P;
 
-set of int: Machines = 1..M;
-set of int: Parts    = 1..P;
+set of int: MACHINES = 1..M;
+set of int: PARTS    = 1..P;
 
-array[Machines, Parts] of int: TimeRequired;   % hours per batch on machine m for part p
-array[Machines]          of int: MachineCosts; % cost per machine hour on machine m
-array[Machines]          of int: Availability; % total hours available on machine m
-array[Parts]             of int: Prices;       % selling price per batch of part p
-array[Parts]             of int: SetupTime;    % one-time setup (machine 1) if part p is produced
+array[MACHINES, PARTS] of int: TimeRequired;
+array[MACHINES]            of int: MachineCosts;
+array[MACHINES]            of int: Availability;
+array[PARTS]               of int: Prices;
+array[PARTS]               of int: SetupTime;
 
-int: BigBound = max(Availability);             % coarse upper bound on number of batches
+/* Upper bound on batches of each part (tightest machine capacity) */
+array[PARTS] of int: MaxBatchesPerPart =
+  [ min( [ if TimeRequired[m,p] > 0 then Availability[m] div TimeRequired[m,p]
+           else Availability[m] endif | m in MACHINES ] )
+  | p in PARTS ];
 
-array[Parts]   of var 0..BigBound: Batches;    % number of 100-part batches produced
-array[Parts]   of var 0..1:         Produce;   % 1 if at least one batch of part p is produced
+/* Uniform upper bound so a single domain can be used for all x[p] */
+int: XUB = max(p in PARTS)(MaxBatchesPerPart[p]);
 
-array[Machines] of var 0..sum(Availability): HoursUsed;   % actual hours used on each machine
+/* Decision variables */
+array[PARTS]    of var 0..XUB: x;              % batches of each part
+array[PARTS]    of var bool:  produced;        % produced[p] = 1 iff x[p] > 0
+array[MACHINES] of var int:   machineTime;     % hours used on each machine
+var int: totalCost;
+var int: totalRevenue;
+var int: profit;
 
-% Link Produce and Batches
+/* Link production quantity and produced flag */
 constraint
-    forall(p in Parts) (
-        (Batches[p] <= Produce[p] * BigBound) /\
-        (Batches[p] >= Produce[p])            % at least one batch if produced
-    );
+  forall(p in PARTS)(
+    (x[p] > 0) <-> produced[p] /\
+    x[p] <= MaxBatchesPerPart[p]
+  );
 
-% Machine capacity and hours used
+/* Machine-time calculations (setup on machine 1 only) */
 constraint
-    forall(m in Machines) (
-        HoursUsed[m] =
-            sum(p in Parts)(TimeRequired[m,p] * Batches[p]) +
-            (if m = 1 then sum(p in Parts)(SetupTime[p] * Produce[p]) else 0 endif)
-    );
+  forall(m in MACHINES)(
+    machineTime[m] =
+      sum(p in PARTS)(
+        TimeRequired[m,p] * x[p] +
+        (if m == 1 then SetupTime[p] * bool2int(produced[p]) else 0 endif)
+      )
+  );
 
+/* Capacity limits */
 constraint
-    forall(m in Machines) (
-        HoursUsed[m] <= Availability[m]
-    );
+  forall(m in MACHINES)(
+    machineTime[m] <= Availability[m]
+  );
 
-var int: TotalRevenue = sum(p in Parts)(Prices[p] * Batches[p]);
-var int: TotalCost    = sum(m in Machines)(MachineCosts[m] * HoursUsed[m]);
-var int: Profit       = TotalRevenue - TotalCost;
+/* Cost, revenue, and profit */
+constraint totalCost    = sum(m in MACHINES)(MachineCosts[m] * machineTime[m]);
+constraint totalRevenue = sum(p in PARTS)(Prices[p] * x[p]);
+constraint profit       = totalRevenue - totalCost;
 
-solve maximize Profit;
+/* Objective */
+solve maximize profit;

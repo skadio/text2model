@@ -1,20 +1,21 @@
 % Parameters
 int: n;
 int: m;
-array[1..n, 1..m] of int: grid;
+
+set of int: Rows = 1..n;
+set of int: Cols = 1..m;
+
+array[Rows, Cols] of int: grid;
 
 % Variables
-array[1..n] of var 1..m: path;        % column chosen in each row
-var int: total_sum;                   % total value collected along the path
+array[Rows] of var Cols: path;   % path[r] = chosen column in row r
 
 % Constraints
 constraint
-    forall(r in 1..n-1) (
-        abs(path[r+1] - path[r]) <= 1     % move straight, down-left, or down-right
-    );
-
-constraint
-    total_sum = sum(r in 1..n)( grid[r, path[r]] );   % accumulate the selected values
+  forall(r in 1..n-1)(
+    abs(path[r+1] - path[r]) <= 1
+  );
 
 % Objective
-solve maximize total_sum;
+solve maximize
+  sum(r in Rows)(grid[r, path[r]]);

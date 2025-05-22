@@ -1,56 +1,60 @@
 % Parameters
 int: T;
-set of int: Time = 1..T;
-
-array[Time] of int: Demands;
-array[Time] of int: UnloadCosts;
-array[Time] of int: UnloadCapacity;
-
+array[1..T] of int: Demands;
+array[1..T] of int: UnloadCosts;
+array[1..T] of int: UnloadCapacity;
 int: HoldingCost;
 int: MaxContainer;
 int: InitContainer;
-
 int: NumCranes;
 int: CraneCapacity;
 int: CraneCost;
 
-% Derived parameter
-int: MaxUnloadCap = max(UnloadCapacity);
+% Largest unloading capacity (used for uniform variable bounds)
+int: MaxUnload = max(t in 1..T)(UnloadCapacity[t]);
 
 % Variables
-array[Time] of var 0..MaxUnloadCap: Unload;             % containers unloaded
-array[Time] of var 0..MaxContainer: EndInv;             % end-of-month inventory
-array[Time] of var 0..NumCranes: CranesRented;          % cranes rented
+array[1..T] of var 0..MaxUnload: Unload;            % containers unloaded in month t
+array[1..T] of var 0..MaxContainer: StartInv;        % inventory at start of month t
+array[1..T] of var 0..MaxContainer: EndInv;          % inventory at end of month t
+array[1..T] of var 0..NumCranes: RentCranes;         % cranes rented in month t
 
 % Constraints
-% 1. Unloading capacity
-constraint
-  forall(t in Time) (
-    Unload[t] <= UnloadCapacity[t]
-  );
+% 1. Inventory linkage
+constraint StartInv[1] = InitContainer;
+constraint forall(t in 2..T)(
+  StartInv[t] = EndInv[t-1]
+);
 
-% 2. Inventory balance
-constraint
-  EndInv[1] = InitContainer + Unload[1] - Demands[1];
+% 2. Flow balance
+constraint forall(t in 1..T)(
+  StartInv[t] + Unload[t] = Demands[t] + EndInv[t]
+);
 
-constraint
-  forall(t in 2..T) (
-    EndInv[t] = EndInv[t-1] + Unload[t] - Demands[t]
-  );
+% 3. Unloading capacity limits
+constraint forall(t in 1..T)(
+  Unload[t] <= UnloadCapacity[t]
+);
 
-% 3. Yard capacity and final empty yard
+% 4. Yard capacity limits
+constraint forall(t in 1..T)(
+  EndInv[t] <= MaxContainer
+);
+
+% 5. Crane loading capacity
+constraint forall(t in 1..T)(
+  Demands[t] <= RentCranes[t] * CraneCapacity
+);
+
+% 6. No inventory after the last month
 constraint EndInv[T] = 0;
-
-% 4. Crane capacity to meet demand
-constraint
-  forall(t in Time) (
-    CranesRented[t] * CraneCapacity >= Demands[t]
-  );
 
 % Objective
 var int: TotalCost =
-    sum(t in Time)(Unload[t]   * UnloadCosts[t]) +
-    sum(t in Time)(EndInv[t]   * HoldingCost)   +
-    sum(t in Time)(CranesRented[t] * CraneCost);
+  sum(t in 1..T)(
+        Unload[t]    * UnloadCosts[t]
+      + EndInv[t]    * HoldingCost
+      + RentCranes[t]* CraneCost
+  );
 
 solve minimize TotalCost;

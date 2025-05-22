@@ -1,22 +1,22 @@
 % Parameters
-int: K;                                % Number of food types
-int: M;                                % Number of nutrients
+int: K;
+int: M;
 
-array[1..K] of float: Price;           % Price of each food type
-array[1..M] of float: Demand;          % Required amount of each nutrient
-array[1..K, 1..M] of float: Nutrition; % Nutrient content of each food type
+array[1..K] of int: Price;
+array[1..M] of int: Demand;
+array[1..K, 1..M] of int: Nutrition;
+
+float: BIG = 1.0e6;
 
 % Variables
-array[1..K] of var float: x;           % Amount of each food to purchase
+array[1..K] of var 0.0..BIG: Quantity;
 
 % Constraints
 constraint
-    forall(k in 1..K)( x[k] >= 0.0 );                                   % Non-negativity
-constraint
-    forall(m in 1..M)(                                                   % Meet every nutrient demand
-        sum(k in 1..K)( Nutrition[k, m] * x[k] ) >= Demand[m]
-    );
+  forall(m in 1..M)(
+    sum(k in 1..K)( int2float(Nutrition[k, m]) * Quantity[k] ) >= int2float(Demand[m])
+  );
 
 % Objective
-var float: TotalCost = sum(k in 1..K)( Price[k] * x[k] );
-solve minimize TotalCost;
+solve minimize
+  sum(k in 1..K)( int2float(Price[k]) * Quantity[k] );

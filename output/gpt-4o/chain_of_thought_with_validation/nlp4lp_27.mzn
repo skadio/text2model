@@ -1,61 +1,76 @@
-int: K;
-int: T = 5;                         % planning horizon: years 0 … 5
-set of int: Years       = 0..T;     % indices for production / capacity / build
-set of int: StockYears  = 0..T+1;   % indices for stocks (need year 6 to absorb year-5 demand)
+int: K;                                    % Number of industries
+set of int: INDUSTRIES = 1..K;
 
-array[1..K,1..K] of float: InputOne;
-array[1..K]       of float: ManpowerOne;
-array[1..K,1..K] of float: InputTwo;
-array[1..K]       of float: ManpowerTwo;
-array[1..K]       of float: Stock;        % initial stocks (year 0)
-array[1..K]       of float: Capacity;     % initial productive capacities (year 0)
-float: ManpowerLimit;
-array[1..K]       of float: Demand;       % exogenous yearly demand (years 1 … 5)
+int: Y = 5;                                % Planning horizon (years 0..Y)
+set of int: YEARS              = 0..Y;
+set of int: YEARS_BEFORE_LAST  = 0..Y-1;
 
-% Decision variables
-array[1..K,Years]      of var 0.0..1e12: prod;   % production of each industry, each year
-array[1..K,Years]      of var 0.0..1e12: build;  % capacity-building activity (decided in year t)
-array[1..K,StockYears] of var 0.0..1e12: stock;  % stock at the start of each year
-array[1..K,Years]      of var 0.0..1e12: cap;    % productive capacity at the start of each year
+/* Technical-coefficient data */
+array[INDUSTRIES, INDUSTRIES] of float: InputOne;   % Inputs for next-year production
+array[INDUSTRIES]              of float: ManpowerOne;
 
-% Initial conditions
-constraint forall(i in 1..K)(
-    stock[i,0] = Stock[i] /\
-    cap[i,0]   = Capacity[i]
+array[INDUSTRIES, INDUSTRIES] of float: InputTwo;   % Inputs for capacity building
+array[INDUSTRIES]              of float: ManpowerTwo;
+
+/* Initial stocks and capacities (year 0) */
+array[INDUSTRIES] of float: Stock;
+array[INDUSTRIES] of float: Capacity;
+
+float: ManpowerLimit;                            % Yearly manpower limit
+array[INDUSTRIES] of float: Demand;              % Exogenous consumption (years 1..Y)
+
+float: BIG = 1.0e12;                             % Generic upper bound
+
+/* Decision variables */
+array[INDUSTRIES, YEARS] of var 0.0..BIG: prod;   % Output produced in year t
+array[INDUSTRIES, YEARS] of var 0.0..BIG: inv;    % Investment outlays in year t
+array[INDUSTRIES, YEARS] of var 0.0..BIG: stock;  % End-of-year inventories
+array[INDUSTRIES, YEARS] of var 0.0..BIG: cap;    % Capacity available at start of year t
+
+/* Initial conditions (year 0) */
+constraint forall(i in INDUSTRIES)(
+  cap[i,0] = Capacity[i]
+);
+constraint forall(i in INDUSTRIES)(
+  stock[i,0] = Stock[i]
 );
 
-% Capacity evolution with two-year lag
+/* Capacity evolution: investment in year t boosts capacity from year t+2 on */
 constraint
-    forall(i in 1..K, t in 1..T)(
-        cap[i,t] = cap[i,t-1] + (if t >= 2 then build[i,t-2] else 0.0 endif)
-);
+  forall(i in INDUSTRIES, t in 1..Y)(
+    cap[i,t] = cap[i,t-1] + (if t >= 2 then inv[i,t-2] else 0.0 endif)
+  );
 
-% Production cannot exceed available capacity
+/* Production limited by available capacity */
 constraint
-    forall(i in 1..K, t in Years)(
-        prod[i,t] <= cap[i,t]
-);
+  forall(i in INDUSTRIES, t in YEARS)(
+    prod[i,t] <= cap[i,t]
+  );
 
-% Stock balance and non-negativity
+/* Yearly manpower constraint */
 constraint
-    forall(j in 1..K, t in Years)(
-        stock[j,t+1] = stock[j,t]
-                       - sum(i in 1..K)(InputOne[i,j] * prod[i,t])
-                       - sum(i in 1..K)(InputTwo[i,j] * build[i,t])
-                       - (if t == 0 then 0.0 else Demand[j] endif)
-                       + prod[j,t]
-    )
-    /\ forall(j in 1..K, s in StockYears)( stock[j,s] >= 0.0 );
+  forall(t in YEARS)(
+    sum(i in INDUSTRIES)(
+      ManpowerOne[i] * prod[i,t] + ManpowerTwo[i] * inv[i,t]
+    ) <= ManpowerLimit
+  );
 
-% Yearly manpower limit
+/* Material balance for years 0 .. Y-1 */
 constraint
-    forall(t in Years)(
-        sum(i in 1..K)(
-            ManpowerOne[i] * prod[i,t] +
-            ManpowerTwo[i] * build[i,t]
-        ) <= ManpowerLimit
-);
+  forall(i in INDUSTRIES, t in YEARS_BEFORE_LAST)(
+    prod[i,t] +
+    (if t == 0 then Stock[i] else stock[i,t-1] endif) =
+    (if t > 0 then Demand[i] else 0.0 endif) +
+    sum(j in INDUSTRIES)( InputOne[i,j] * prod[j,t+1] ) +
+    sum(j in INDUSTRIES)( InputTwo[i,j] * inv[j,t] ) +
+    stock[i,t]
+  );
 
-% Objective: maximise total productive capacity at the end of year 5
-solve maximize
-    sum(i in 1..K)( cap[i,T] );
+/* Final-year balance (no further input requirements) */
+constraint
+  forall(i in INDUSTRIES)(
+    prod[i,Y] + stock[i,Y-1] = Demand[i] + stock[i,Y]
+  );
+
+/* Objective: maximise total capacity at end of horizon */
+solve maximize sum(i in INDUSTRIES)( cap[i,Y] );
