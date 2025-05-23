@@ -1,0 +1,30 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:CarSelectionProblem a rdfs:Class ;
+    rdfs:label "Car Selection Problem" ;
+    rdfs:comment "The problem of assigning participants to cars in a way that maximizes the total number of assignments." .
+
+opt:ParticipantNum a rdf:Property ;
+    rdfs:label "Total number of participants" ;
+    rdfs:range xsd:integer ;
+    rdfs:domain opt:CarSelectionProblem .
+
+opt:CarNum a rdf:Property ;
+    rdfs:label "Total number of available cars" ;
+    rdfs:range xsd:integer ;
+    rdfs:domain opt:CarSelectionProblem .
+
+opt:InterestMatrix a rdf:Property ;
+    rdfs:label "Interest matrix" ;
+    rdfs:comment "A binary matrix indicating whether a participant is interested in a particular car (1 for interested and 0 for not interested)" ;
+    rdfs:range xsd:string ;
+    rdfs:domain opt:CarSelectionProblem .
+
+opt:MaximizeAssignments a rdf:Property ;
+    rdfs:label "Maximize assignments" ;
+    rdfs:comment "The objective is to maximize the number of participants who get cars they are interested in." ;
+    rdfs:range xsd:integer ;
+    rdfs:domain opt:CarSelectionProblem .

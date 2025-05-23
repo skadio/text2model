@@ -1,0 +1,62 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fillapix: <http://www.example.org/fillapix#> .
+
+fillapix:Grid a rdfs:Class ;
+    rdfs:label "Grid" ;
+    rdfs:comment "A grid of the Fill-a-Pix puzzle" .
+
+fillapix:gridSize a rdf:Property ;
+    rdfs:label "grid size" ;
+    rdfs:comment "Size of the grid (number of rows and columns)" ;
+    rdfs:domain fillapix:Grid ;
+    rdfs:range xsd:integer .
+
+fillapix:Clue a rdfs:Class ;
+    rdfs:label "Clue" ;
+    rdfs:comment "A clue in the Fill-a-Pix puzzle" .
+
+fillapix:clueValue a rdf:Property ;
+    rdfs:label "clue value" ;
+    rdfs:comment "Value of the clue indicating the number of painted squares" ;
+    rdfs:domain fillapix:Clue ;
+    rdfs:range xsd:integer .
+
+fillapix:Square a rdfs:Class ;
+    rdfs:label "Square" ;
+    rdfs:comment "A square in the Fill-a-Pix puzzle grid" .
+
+fillapix:isPainted a rdf:Property ;
+    rdfs:label "is painted" ;
+    rdfs:comment "Indicates if a square is painted or not" ;
+    rdfs:domain fillapix:Square ;
+    rdfs:range xsd:boolean .
+
+fillapix:hasClue a rdf:Property ;
+    rdfs:label "has clue" ;
+    rdfs:comment "Indicates if a square has a clue or not" ;
+    rdfs:domain fillapix:Square ;
+    rdfs:range fillapix:Clue .
+
+fillapix:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:comment "The Fill-a-Pix optimization problem" .
+
+fillapix:hasGrid a rdf:Property ;
+    rdfs:label "has grid" ;
+    rdfs:comment "The grid associated with the optimization problem" ;
+    rdfs:domain fillapix:OptimizationProblem ;
+    rdfs:range fillapix:Grid .
+
+fillapix:hasObjective a rdf:Property ;
+    rdfs:label "has objective" ;
+    rdfs:comment "The objective of the optimization problem" ;
+    rdfs:domain fillapix:OptimizationProblem ;
+    rdfs:range rdfs:Literal .
+
+fillapix:hasConstraint a rdf:Property ;
+    rdfs:label "has constraint" ;
+    rdfs:comment "The constraints of the optimization problem" ;
+    rdfs:domain fillapix:OptimizationProblem ;
+    rdfs:range rdfs:Literal .

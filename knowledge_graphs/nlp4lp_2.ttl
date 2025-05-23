@@ -1,0 +1,103 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dec: <http://www.example.org/dec#> .
+
+dec:DEC a rdfs:Class ;
+    rdfs:label "Digital Equipment Corporation" .
+
+dec:System a rdfs:Class ;
+    rdfs:label "System" ;
+    rdfs:subClassOf dec:DEC .
+
+dec:GP a rdfs:Class ;
+    rdfs:label "General Purpose System" ;
+    rdfs:subClassOf dec:System .
+
+dec:WS a rdfs:Class ;
+    rdfs:label "Workstation System" ;
+    rdfs:subClassOf dec:System .
+
+dec:Price a rdf:Property ;
+    rdfs:label "Price" ;
+    rdfs:domain dec:System ;
+    rdfs:range xsd:float .
+
+dec:DiskDrives a rdf:Property ;
+    rdfs:label "Disk Drives" ;
+    rdfs:domain dec:System ;
+    rdfs:range xsd:float .
+
+dec:MemoryBoards a rdf:Property ;
+    rdfs:label "Memory Boards" ;
+    rdfs:domain dec:System ;
+    rdfs:range xsd:float .
+
+dec:MaxCpu a rdf:Property ;
+    rdfs:label "Maximum CPUs" ;
+    rdfs:domain dec:DEC ;
+    rdfs:range xsd:float .
+
+dec:MinDisk a rdf:Property ;
+    rdfs:label "Minimum Disk Drives" ;
+    rdfs:domain dec:DEC ;
+    rdfs:range xsd:float .
+
+dec:MaxDisk a rdf:Property ;
+    rdfs:label "Maximum Disk Drives" ;
+    rdfs:domain dec:DEC ;
+    rdfs:range xsd:float .
+
+dec:MinMemory a rdf:Property ;
+    rdfs:label "Minimum Memory Boards" ;
+    rdfs:domain dec:DEC ;
+    rdfs:range xsd:float .
+
+dec:MaxMemory a rdf:Property ;
+    rdfs:label "Maximum Memory Boards" ;
+    rdfs:domain dec:DEC ;
+    rdfs:range xsd:float .
+
+dec:Demand a rdf:Property ;
+    rdfs:label "Demand" ;
+    rdfs:domain dec:System ;
+    rdfs:range xsd:float .
+
+dec:DemandGP a rdf:Property ;
+    rdfs:label "Demand for General Purpose Systems" ;
+    rdfs:domain dec:DEC ;
+    rdfs:range xsd:float .
+
+dec:DemandWS a rdf:Property ;
+    rdfs:label "Demand for Workstation Systems" ;
+    rdfs:domain dec:DEC ;
+    rdfs:range xsd:float .
+
+dec:Preorder a rdf:Property ;
+    rdfs:label "Preorder" ;
+    rdfs:domain dec:System ;
+    rdfs:range xsd:float .
+
+dec:AltMemory a rdf:Property ;
+    rdfs:label "Alternative Memory" ;
+    rdfs:domain dec:DEC ;
+    rdfs:range xsd:float .
+
+dec:AltCompatible a rdf:Property ;
+    rdfs:label "Alternative Memory Compatibility" ;
+    rdfs:domain dec:System ;
+    rdfs:range xsd:boolean .
+
+dec:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:subClassOf dec:DEC .
+
+dec:Objective a rdf:Property ;
+    rdfs:label "Objective" ;
+    rdfs:domain dec:OptimizationProblem ;
+    rdfs:range xsd:string .
+
+dec:Constraint a rdf:Property ;
+    rdfs:label "Constraint" ;
+    rdfs:domain dec:OptimizationProblem ;
+    rdfs:range xsd:string .

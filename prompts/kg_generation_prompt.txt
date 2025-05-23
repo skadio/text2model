@@ -1,0 +1,40 @@
+Given an optimization problem description and the nomenclature to be used for parameters.
+
+Please generate a knowledge-graph.
+
+Problem Description:
+{problem_description}
+
+Input Data Nomenclature:
+{data_nomenclature}
+
+Steps to Generate a Knowledge Graph (KG):
+
+1. Identify Parameters:
+- Extract each parameter individually, specifying its type and name.
+- Ensure that parameter names are aligned with the predefined nomenclature.
+- Record any explicit bounds for parameters, if specified.
+- Validate against the problem description to ensure that all relevant parameters are included, checking for any implicitly stated ones.
+
+2. Identify Variables:
+- Identify each variable, noting their types and names.
+- Align variable names with the nomenclature provided, ensuring consistency.
+- Determine and document any bounds (explicit or inferred) for the variables.
+- Cross-verify with the problem description to confirm all necessary variables are accounted for, including those not explicitly mentioned in the nomenclature.
+
+3. Identify Constraints:
+- Detail each constraint separately, recording its description, formula, and associated variables.
+- Classify constraints based on their nature (e.g., linear, nonlinear, global etc..).
+- Highlight if any constraints are global, impacting multiple variables or conditions across the model.
+
+4. Identify Objective:
+- Clearly define the objective function, including its description, mathematical representation, and the variables it affects.
+- Note the type of optimization (minimization, maximization, satisfy) and any relevant constraints tied to the objective.
+- Ensure the objective aligns with the overall goal of the optimization problem as described.
+
+5. Generate Turtle (TTL) Representation:
+- Construct the Turtle format representation using the gathered information on parameters, variables, constraints, and the objective.
+- Sequentially organize the definitions of parameters, variables, constraints, and the objective within the Turtle file.
+- Avoid generalizing the problem statement; focus on defining each component distinctly as outlined in the steps.
+
+Please do not generate any other token other than the knowledge graph itself. No titles, description or markup necessary.

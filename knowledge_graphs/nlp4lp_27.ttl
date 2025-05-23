@@ -1,0 +1,75 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimization#> .
+
+:Problem1 a opt:OptimizationProblem ;
+    opt:hasParameter :K, :InputOne, :ManpowerOne, :InputTwo, :ManpowerTwo, :Stock, :Capacity, :ManpowerLimit, :Demand ;
+    opt:hasVariable :Strategy ;
+    opt:hasConstraint :Constraint1, :Constraint2, :Constraint3, :Constraint4, :Constraint5 ;
+    opt:hasObjective :Objective1 .
+
+:K a opt:Parameter ;
+    rdfs:label "Total number of years in the planning horizon" ;
+    rdfs:range xsd:integer .
+
+:InputOne a opt:Parameter ;
+    rdfs:label "Input one coefficients matrix" ;
+    rdfs:range xsd:float .
+
+:ManpowerOne a opt:Parameter ;
+    rdfs:label "Manpower coefficients for input one" ;
+    rdfs:range xsd:float .
+
+:InputTwo a opt:Parameter ;
+    rdfs:label "Input two coefficients matrix" ;
+    rdfs:range xsd:float .
+
+:ManpowerTwo a opt:Parameter ;
+    rdfs:label "Manpower coefficients for input two" ;
+    rdfs:range xsd:float .
+
+:Stock a opt:Parameter ;
+    rdfs:label "Initial stock level for each of the productive units" ;
+    rdfs:range xsd:integer .
+
+:Capacity a opt:Parameter ;
+    rdfs:label "Productive capacity for each productive unit" ;
+    rdfs:range xsd:integer .
+
+:ManpowerLimit a opt:Parameter ;
+    rdfs:label "Company-wide manpower limit" ;
+    rdfs:range xsd:float .
+
+:Demand a opt:Parameter ;
+    rdfs:label "Demand for each of the productive units at the end of the planning horizon" ;
+    rdfs:range xsd:float .
+
+:Strategy a opt:Variable ;
+    rdfs:label "Strategy to maximize total productive capacity" ;
+    rdfs:range xsd:float .
+
+:Constraint1 a opt:Constraint ;
+    rdfs:label "Manpower limit constraint" ;
+    opt:hasVariable :Strategy .
+
+:Constraint2 a opt:Constraint ;
+    rdfs:label "Stock level constraint" ;
+    opt:hasVariable :Strategy .
+
+:Constraint3 a opt:Constraint ;
+    rdfs:label "Productive capacity constraint" ;
+    opt:hasVariable :Strategy .
+
+:Constraint4 a opt:Constraint ;
+    rdfs:label "Input one constraint" ;
+    opt:hasVariable :Strategy .
+
+:Constraint5 a opt:Constraint ;
+    rdfs:label "Input two constraint" ;
+    opt:hasVariable :Strategy .
+
+:Objective1 a opt:Objective ;
+    rdfs:label "Maximize total productive capacity" ;
+    opt:hasVariable :Strategy ;
+    opt:isTypeOf opt:Maximization .

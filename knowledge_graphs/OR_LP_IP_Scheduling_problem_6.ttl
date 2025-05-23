@@ -1,0 +1,61 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimization#> .
+
+:MaximumFlowProblem a opt:OptimizationProblem ;
+    opt:hasObjective :Objective1 ;
+    opt:hasConstraint :Constraint1, :Constraint2 ;
+    opt:hasParameter :Parameter1, :Parameter2, :Parameter3, :Parameter4, :Parameter5, :Parameter6 ;
+    opt:hasVariable :Variable1 .
+
+:Parameter1 a opt:Parameter ;
+    rdfs:label "n" ;
+    rdfs:comment "Number of nodes in the network" ;
+    rdfs:range xsd:integer .
+
+:Parameter2 a opt:Parameter ;
+    rdfs:label "num_edges" ;
+    rdfs:comment "Number of arcs in the network" ;
+    rdfs:range xsd:integer .
+
+:Parameter3 a opt:Parameter ;
+    rdfs:label "E" ;
+    rdfs:comment "Set of arcs represented as pairs of nodes" ;
+    rdfs:range xsd:array .
+
+:Parameter4 a opt:Parameter ;
+    rdfs:label "a" ;
+    rdfs:comment "Capacities of each arc in the network" ;
+    rdfs:range xsd:array .
+
+:Parameter5 a opt:Parameter ;
+    rdfs:label "s" ;
+    rdfs:comment "Source node" ;
+    rdfs:range xsd:integer .
+
+:Parameter6 a opt:Parameter ;
+    rdfs:label "t" ;
+    rdfs:comment "Sink node" ;
+    rdfs:range xsd:integer .
+
+:Variable1 a opt:Variable ;
+    rdfs:label "flow" ;
+    rdfs:comment "Flow on each arc" ;
+    rdfs:range xsd:array .
+
+:Constraint1 a opt:Constraint ;
+    rdfs:label "Flow conservation" ;
+    rdfs:comment "The flow into a node equals the flow out of it, for all nodes except the source and sink" ;
+    opt:hasVariable :Variable1 .
+
+:Constraint2 a opt:Constraint ;
+    rdfs:label "Capacity constraint" ;
+    rdfs:comment "The flow on an arc cannot exceed its capacity" ;
+    opt:hasVariable :Variable1 .
+
+:Objective1 a opt:Objective ;
+    rdfs:label "Maximize total flow" ;
+    rdfs:comment "Maximize the total flow from the source to the sink" ;
+    opt:hasVariable :Variable1 ;
+    opt:optimizationType opt:Maximization .

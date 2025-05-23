@@ -1,0 +1,53 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:W rdf:type rdfs:Class ;
+    rdfs:label "Number of weeks in planning period" ;
+    rdfs:comment "Scalar value representing the number of weeks in the planning period" .
+
+opt:RegularCost rdf:type rdfs:Class ;
+    rdfs:label "Cost of regular labor per unit of time" ;
+    rdfs:comment "Scalar value representing the cost of regular labor per unit of time" .
+
+opt:OvertimeCost rdf:type rdfs:Class ;
+    rdfs:label "Cost of overtime labor per unit of time" ;
+    rdfs:comment "Scalar value representing the cost of overtime labor per unit of time" .
+
+opt:AssemblyTime rdf:type rdfs:Class ;
+    rdfs:label "Time required to assemble a single basket" ;
+    rdfs:comment "Scalar value representing the time required to assemble a single basket" .
+
+opt:MaterialCost rdf:type rdfs:Class ;
+    rdfs:label "Cost of materials per basket" ;
+    rdfs:comment "Scalar value representing the cost of materials per basket" .
+
+opt:SellingPrice rdf:type rdfs:Class ;
+    rdfs:label "Selling price per basket" ;
+    rdfs:comment "Scalar value representing the selling price per basket" .
+
+opt:HoldingCost rdf:type rdfs:Class ;
+    rdfs:label "Holding cost per basket per unit of time" ;
+    rdfs:comment "Scalar value representing the holding cost per basket per unit of time" .
+
+opt:SalvageValue rdf:type rdfs:Class ;
+    rdfs:label "Salvage value per unsold basket at the end of the season" ;
+    rdfs:comment "Scalar value representing the salvage value per unsold basket at the end of the season" .
+
+opt:Demand rdf:type rdfs:Class ;
+    rdfs:label "Demand for baskets in week w" ;
+    rdfs:comment "Array of size W representing the demand for baskets in each week" .
+
+opt:RegularLabor rdf:type rdfs:Class ;
+    rdfs:label "Number of regular labor units available in week w" ;
+    rdfs:comment "Array of size W representing the number of regular labor units available in each week" .
+
+opt:OvertimeLabor rdf:type rdfs:Class ;
+    rdfs:label "Number of overtime labor units available in week w" ;
+    rdfs:comment "Array of size W representing the number of overtime labor units available in each week" .
+
+opt:OptimizationProblem rdf:type rdfs:Class ;
+    rdfs:label "Optimization problem" ;
+    rdfs:comment "The optimization problem to maximize the profit over the season" ;
+    rdfs:subClassOf opt:W, opt:RegularCost, opt:OvertimeCost, opt:AssemblyTime, opt:MaterialCost, opt:SellingPrice, opt:HoldingCost, opt:SalvageValue, opt:Demand, opt:RegularLabor, opt:OvertimeLabor .

@@ -1,0 +1,36 @@
+@prefix : <http://www.semanticweb.org/ontologies/golomb-ruler#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:GolombRuler a rdfs:Class ;
+    rdfs:label "Golomb Ruler" ;
+    rdfs:comment "A set of m integers 0 = a_1 < a_2 < ... < a_m such that the m(m-1)/2 differences a_j - a_i, 1 <= i < j <= m are distinct." .
+
+:m a rdf:Property ;
+    rdfs:label "Number of marks" ;
+    rdfs:comment "Number of marks on the Golomb ruler" ;
+    rdfs:domain :GolombRuler ;
+    rdfs:range xsd:integer .
+
+:a a rdf:Property ;
+    rdfs:label "Mark positions" ;
+    rdfs:comment "Positions of the marks on the Golomb ruler" ;
+    rdfs:domain :GolombRuler ;
+    rdfs:range xsd:integer .
+
+:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:comment "The objective is to find the optimal or near optimal Golomb ruler of minimum length." .
+
+:objective a rdf:Property ;
+    rdfs:label "Objective" ;
+    rdfs:comment "Find the length of the smallest Golomb ruler with m marks" ;
+    rdfs:domain :OptimizationProblem ;
+    rdfs:range xsd:integer .
+
+:constraint a rdf:Property ;
+    rdfs:label "Constraint" ;
+    rdfs:comment "Symmetry can be removed by adding the constraint that a_2 - a_1 < a_m - a_{m-1} where the first difference is less than the last." ;
+    rdfs:domain :OptimizationProblem ;
+    rdfs:range xsd:string .

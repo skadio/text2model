@@ -1,0 +1,52 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimizationProblem#> .
+
+opt:CombinatorialAuctionProblem
+    rdf:type owl:Class ;
+    rdfs:subClassOf opt:OptimizationProblem ;
+    rdfs:comment "Combinatorial auction problem where bidders can give bids for sets of items. The auctioneer needs to generate an optimal selection that maximizes revenue."@en .
+
+opt:num_items
+    rdf:type owl:DatatypeProperty ;
+    rdfs:domain opt:CombinatorialAuctionProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of items available in the auction."@en .
+
+opt:max_item
+    rdf:type owl:DatatypeProperty ;
+    rdfs:domain opt:CombinatorialAuctionProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Maximum item in the auction."@en .
+
+opt:num_bids
+    rdf:type owl:DatatypeProperty ;
+    rdfs:domain opt:CombinatorialAuctionProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of bids in the auction."@en .
+
+opt:packages
+    rdf:type owl:DatatypeProperty ;
+    rdfs:domain opt:CombinatorialAuctionProblem ;
+    rdfs:range xsd:array ;
+    rdfs:comment "Binary Matrix containing the packages (sets of items) for each bid, 0 if contained, 1 if not."@en .
+
+opt:bids
+    rdf:type owl:DatatypeProperty ;
+    rdfs:domain opt:CombinatorialAuctionProblem ;
+    rdfs:range xsd:array ;
+    rdfs:comment "Array containing the bid amount for each bid."@en .
+
+opt:hasObjective
+    rdf:type owl:ObjectProperty ;
+    rdfs:domain opt:CombinatorialAuctionProblem ;
+    rdfs:range opt:Objective ;
+    rdfs:comment "The objective of the combinatorial auction problem is to maximize the total bid amount."@en .
+
+opt:hasConstraint
+    rdf:type owl:ObjectProperty ;
+    rdfs:domain opt:CombinatorialAuctionProblem ;
+    rdfs:range opt:Constraint ;
+    rdfs:comment "The constraint of the combinatorial auction problem is that any two bids in the subset do not share an item."@en .

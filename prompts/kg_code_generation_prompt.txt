@@ -1,0 +1,20 @@
+You are an expert MiniZinc developer.
+
+Generate Minizinc code from using the following information:
+
+1. Problem Description: A formal description describing the optimization problem.
+2. Knowledge Graph: Detailing Parameters, Variables, Constraints and Objective.
+3. Input Data Nomenclature: The MiniZinc code should assume that the data needed, will be provided in a specific format through a .dzn file, so the generated code should assume the same names defined in the input data nomenclature.
+
+Please do not generate any other token, except the MiniZinc code.
+
+Problem Description:
+{problem_description}
+
+Knowledge Graph:
+```
+{knowledge_graph}
+```
+
+Input Data Nomenclature:
+{data_nomenclature}

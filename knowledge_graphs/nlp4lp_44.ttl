@@ -1,0 +1,41 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:FileBackupProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:N, opt:Capacity, opt:Size ;
+    opt:hasVariable opt:Distribution ;
+    opt:hasConstraint opt:CapacityConstraint ;
+    opt:hasObjective opt:MinimizeDisks .
+
+opt:N a opt:Parameter ;
+    rdfs:label "Number of files" ;
+    rdfs:comment "The total number of files to be backed up" ;
+    rdfs:range xsd:integer .
+
+opt:Capacity a opt:Parameter ;
+    rdfs:label "Floppy disk capacity" ;
+    rdfs:comment "The total storage capacity of a single floppy disk" ;
+    rdfs:range xsd:float .
+
+opt:Size a opt:Parameter ;
+    rdfs:label "File sizes" ;
+    rdfs:comment "The size of each file to be backed up" ;
+    rdfs:range xsd:float .
+
+opt:Distribution a opt:Variable ;
+    rdfs:label "File distribution" ;
+    rdfs:comment "The distribution of files across the floppy disks" ;
+    rdfs:range xsd:integer .
+
+opt:CapacityConstraint a opt:Constraint ;
+    rdfs:label "Capacity constraint" ;
+    rdfs:comment "The total size of files on a disk must not exceed the disk's capacity" ;
+    opt:constrains opt:Distribution .
+
+opt:MinimizeDisks a opt:Objective ;
+    rdfs:label "Minimize number of disks" ;
+    rdfs:comment "The goal is to minimize the number of floppy disks used for backup" ;
+    opt:optimizationType opt:Minimization ;
+    opt:constrains opt:Distribution .

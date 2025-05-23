@@ -1,0 +1,67 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix vrptw: <http://www.example.org/vrptw#> .
+
+vrptw:CustomerCount a owl:DatatypeProperty ;
+    rdfs:domain vrptw:VRPTW ;
+    rdfs:range xsd:integer .
+
+vrptw:VehicleCount a owl:DatatypeProperty ;
+    rdfs:domain vrptw:VRPTW ;
+    rdfs:range xsd:integer .
+
+vrptw:CustomerDemand a owl:DatatypeProperty ;
+    rdfs:domain vrptw:Customer ;
+    rdfs:range xsd:integer .
+
+vrptw:CustomerLBTW a owl:DatatypeProperty ;
+    rdfs:domain vrptw:Customer ;
+    rdfs:range xsd:integer .
+
+vrptw:CustomerUBTW a owl:DatatypeProperty ;
+    rdfs:domain vrptw:Customer ;
+    rdfs:range xsd:integer .
+
+vrptw:CustomerDistance a owl:DatatypeProperty ;
+    rdfs:domain vrptw:Customer ;
+    rdfs:range xsd:integer .
+
+vrptw:CustomerServiceTime a owl:DatatypeProperty ;
+    rdfs:domain vrptw:Customer ;
+    rdfs:range xsd:integer .
+
+vrptw:VehicleCapacity a owl:DatatypeProperty ;
+    rdfs:domain vrptw:Vehicle ;
+    rdfs:range xsd:integer .
+
+vrptw:VRPTW a owl:Class ;
+    rdfs:subClassOf [ a owl:Restriction ;
+                      owl:onProperty vrptw:CustomerCount ;
+                      owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty vrptw:VehicleCount ;
+                      owl:cardinality "1"^^xsd:nonNegativeInteger ] .
+
+vrptw:Customer a owl:Class ;
+    rdfs:subClassOf [ a owl:Restriction ;
+                      owl:onProperty vrptw:CustomerDemand ;
+                      owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty vrptw:CustomerLBTW ;
+                      owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty vrptw:CustomerUBTW ;
+                      owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty vrptw:CustomerDistance ;
+                      owl:cardinality "1"^^xsd:nonNegativeInteger ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty vrptw:CustomerServiceTime ;
+                      owl:cardinality "1"^^xsd:nonNegativeInteger ] .
+
+vrptw:Vehicle a owl:Class ;
+    rdfs:subClassOf [ a owl:Restriction ;
+                      owl:onProperty vrptw:VehicleCapacity ;
+                      owl:cardinality "1"^^xsd:nonNegativeInteger ] .

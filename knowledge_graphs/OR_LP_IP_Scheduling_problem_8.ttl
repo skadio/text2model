@@ -1,0 +1,54 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <http://www.example.com/> .
+
+:WorkforceManagementProblem a owl:Class ;
+    rdfs:subClassOf :OptimizationProblem .
+
+:n a owl:DatatypeProperty ;
+    rdfs:domain :WorkforceManagementProblem ;
+    rdfs:range xsd:integer .
+
+:demand a owl:DatatypeProperty ;
+    rdfs:domain :WorkforceManagementProblem ;
+    rdfs:range xsd:integer .
+
+:full_time_pay a owl:DatatypeProperty ;
+    rdfs:domain :WorkforceManagementProblem ;
+    rdfs:range xsd:integer .
+
+:part_time_pay a owl:DatatypeProperty ;
+    rdfs:domain :WorkforceManagementProblem ;
+    rdfs:range xsd:integer .
+
+:full_time_shift a owl:DatatypeProperty ;
+    rdfs:domain :WorkforceManagementProblem ;
+    rdfs:range xsd:integer .
+
+:part_time_shift a owl:DatatypeProperty ;
+    rdfs:domain :WorkforceManagementProblem ;
+    rdfs:range xsd:integer .
+
+:hasVariable a owl:ObjectProperty ;
+    rdfs:domain :WorkforceManagementProblem ;
+    rdfs:range :Variable .
+
+:Variable a owl:Class .
+
+:hasConstraint a owl:ObjectProperty ;
+    rdfs:domain :WorkforceManagementProblem ;
+    rdfs:range :Constraint .
+
+:Constraint a owl:Class .
+
+:hasObjective a owl:ObjectProperty ;
+    rdfs:domain :WorkforceManagementProblem ;
+    rdfs:range :Objective .
+
+:Objective a owl:Class ;
+    rdfs:subClassOf :MinimizationObjective .
+
+:MinimizationObjective a owl:Class ;
+    rdfs:subClassOf :Objective .

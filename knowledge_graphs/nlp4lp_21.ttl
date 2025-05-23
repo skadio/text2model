@@ -1,0 +1,65 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:M a rdf:Property ;
+    rdfs:label "Number of types of machines" ;
+    rdfs:range xsd:integer .
+
+opt:K a rdf:Property ;
+    rdfs:label "Number of types of products" ;
+    rdfs:range xsd:integer .
+
+opt:I a rdf:Property ;
+    rdfs:label "Number of time periods" ;
+    rdfs:range xsd:integer .
+
+opt:NumMachines a rdf:Property ;
+    rdfs:label "Number of machines" ;
+    rdfs:range xsd:integer .
+
+opt:Profit a rdf:Property ;
+    rdfs:label "Profit for product k" ;
+    rdfs:range xsd:float .
+
+opt:Time a rdf:Property ;
+    rdfs:label "Time taken by product k on machine m" ;
+    rdfs:range xsd:float .
+
+opt:Maintain a rdf:Property ;
+    rdfs:label "Maintenance time for machine m in time period i" ;
+    rdfs:range xsd:integer .
+
+opt:Limit a rdf:Property ;
+    rdfs:label "Limit of storing product k for time period i" ;
+    rdfs:range xsd:integer .
+
+opt:StorePrice a rdf:Property ;
+    rdfs:label "Price for storing products" ;
+    rdfs:range xsd:float .
+
+opt:KeepQuantity a rdf:Property ;
+    rdfs:label "Quantity of product k to keep" ;
+    rdfs:range xsd:integer .
+
+opt:WorkHours a rdf:Property ;
+    rdfs:label "Number of working hours" ;
+    rdfs:range xsd:float .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:OptimizationProblemInstance a opt:OptimizationProblem ;
+    opt:M 5 ;
+    opt:K 7 ;
+    opt:I 6 ;
+    opt:NumMachines 4 ;
+    opt:Profit 10 ;
+    opt:Time 0.5 ;
+    opt:Maintain 1 ;
+    opt:Limit 500 ;
+    opt:StorePrice 0.5 ;
+    opt:KeepQuantity 100 ;
+    opt:WorkHours 8.0 .

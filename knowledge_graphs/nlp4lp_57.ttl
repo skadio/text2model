@@ -1,0 +1,59 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <http://www.example.com/ontology#> .
+
+:NumMachines a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:integer .
+
+:NumParts a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:integer .
+
+:TimeRequired a owl:ObjectProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range :TimeMatrix .
+
+:MachineCosts a owl:ObjectProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range :CostVector .
+
+:Availability a owl:ObjectProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range :AvailabilityVector .
+
+:Prices a owl:ObjectProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range :PriceVector .
+
+:MinBatches a owl:ObjectProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range :BatchVector .
+
+:StandardCost a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:decimal .
+
+:OvertimeCost a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:decimal .
+
+:OvertimeHour a owl:ObjectProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range :OvertimeVector .
+
+:Problem a owl:Class .
+
+:TimeMatrix a owl:Class .
+
+:CostVector a owl:Class .
+
+:AvailabilityVector a owl:Class .
+
+:PriceVector a owl:Class .
+
+:BatchVector a owl:Class .
+
+:OvertimeVector a owl:Class .

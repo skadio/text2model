@@ -1,0 +1,46 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimization#> .
+
+:RoadIlluminationProblem a opt:OptimizationProblem ;
+    opt:hasParameter :N, :M, :Coefficients, :DesiredIlluminations ;
+    opt:hasVariable :LampPowers ;
+    opt:hasConstraint :IlluminationConstraint ;
+    opt:hasObjective :MinimizeErrorObjective .
+
+:N a opt:Parameter ;
+    rdfs:label "N" ;
+    rdfs:comment "Number of different illuminations" ;
+    rdfs:range xsd:integer .
+
+:M a opt:Parameter ;
+    rdfs:label "M" ;
+    rdfs:comment "Number of lamp powers" ;
+    rdfs:range xsd:integer .
+
+:Coefficients a opt:Parameter ;
+    rdfs:label "Coefficients" ;
+    rdfs:comment "Coefficients relating lamp powers to illumination" ;
+    rdfs:range xsd:float .
+
+:DesiredIlluminations a opt:Parameter ;
+    rdfs:label "DesiredIlluminations" ;
+    rdfs:comment "Desired level of illuminations" ;
+    rdfs:range xsd:float .
+
+:LampPowers a opt:Variable ;
+    rdfs:label "LampPowers" ;
+    rdfs:comment "Powers of the lamps" ;
+    rdfs:range xsd:float .
+
+:IlluminationConstraint a opt:Constraint ;
+    rdfs:label "IlluminationConstraint" ;
+    rdfs:comment "The illumination of the i-th segment is assumed to be \sum_{j=1}^{M} coeff_{i,j} power_j" ;
+    opt:hasVariable :LampPowers, :Coefficients .
+
+:MinimizeErrorObjective a opt:Objective ;
+    rdfs:label "MinimizeErrorObjective" ;
+    rdfs:comment "Minimize the absolute error between the illuminations which are a result of choosing the lamp powers and the desired illuminations" ;
+    opt:hasVariable :LampPowers, :DesiredIlluminations ;
+    opt:isMinimizationObjective true .

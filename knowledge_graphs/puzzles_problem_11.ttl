@@ -1,0 +1,65 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:bottle_distribution
+  rdf:type opt:OptimizationProblem ;
+  opt:hasParameter opt:n, opt:b, opt:t, opt:num_people ;
+  opt:hasVariable opt:allocation ;
+  opt:hasConstraint opt:equal_bottles, opt:equal_liquid, opt:lexicographical_order ;
+  opt:hasObjective opt:equal_distribution .
+
+opt:n
+  rdf:type opt:Parameter ;
+  rdfs:label "n" ;
+  rdfs:comment "Number of bottle types" ;
+  rdfs:range xsd:integer .
+
+opt:b
+  rdf:type opt:Parameter ;
+  rdfs:label "b" ;
+  rdfs:comment "Number of bottles of each type" ;
+  rdfs:range xsd:integer .
+
+opt:t
+  rdf:type opt:Parameter ;
+  rdfs:label "t" ;
+  rdfs:comment "Number of bottles with each type of fill amount" ;
+  rdfs:range xsd:integer .
+
+opt:num_people
+  rdf:type opt:Parameter ;
+  rdfs:label "num_people" ;
+  rdfs:comment "Number of people" ;
+  rdfs:range xsd:integer .
+
+opt:allocation
+  rdf:type opt:Variable ;
+  rdfs:label "allocation" ;
+  rdfs:comment "Allocation of bottles to each person" ;
+  rdfs:range xsd:integer .
+
+opt:equal_bottles
+  rdf:type opt:Constraint ;
+  rdfs:label "equal_bottles" ;
+  rdfs:comment "Each person gets the same number of bottles" ;
+  opt:relatesTo opt:allocation .
+
+opt:equal_liquid
+  rdf:type opt:Constraint ;
+  rdfs:label "equal_liquid" ;
+  rdfs:comment "Each person gets the same amount of liquid" ;
+  opt:relatesTo opt:allocation .
+
+opt:lexicographical_order
+  rdf:type opt:Constraint ;
+  rdfs:label "lexicographical_order" ;
+  rdfs:comment "Allocations should be in lexicographical order" ;
+  opt:relatesTo opt:allocation .
+
+opt:equal_distribution
+  rdf:type opt:Objective ;
+  rdfs:label "equal_distribution" ;
+  rdfs:comment "Distribute bottles such that each person gets the same number of bottles and the same amount of liquid" ;
+  opt:relatesTo opt:allocation .

@@ -1,0 +1,51 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sb: <http://www.example.org/solitairebattleships#> .
+
+sb:height a rdf:Property ;
+    rdfs:domain sb:SolitaireBattleships ;
+    rdfs:range xsd:integer .
+
+sb:width a rdf:Property ;
+    rdfs:domain sb:SolitaireBattleships ;
+    rdfs:range xsd:integer .
+
+sb:maxship a rdf:Property ;
+    rdfs:domain sb:SolitaireBattleships ;
+    rdfs:range xsd:integer .
+
+sb:hint a rdf:Property ;
+    rdfs:domain sb:SolitaireBattleships ;
+    rdfs:range xsd:array .
+
+sb:rowsum a rdf:Property ;
+    rdfs:domain sb:SolitaireBattleships ;
+    rdfs:range xsd:array .
+
+sb:colsum a rdf:Property ;
+    rdfs:domain sb:SolitaireBattleships ;
+    rdfs:range xsd:array .
+
+sb:ship a rdf:Property ;
+    rdfs:domain sb:SolitaireBattleships ;
+    rdfs:range xsd:array .
+
+sb:SolitaireBattleships a rdfs:Class ;
+    rdfs:comment "A class representing the Solitaire Battleships problem" .
+
+sb:Board a rdfs:Class ;
+    rdfs:subClassOf sb:SolitaireBattleships ;
+    rdfs:comment "A class representing the board in the Solitaire Battleships problem" .
+
+sb:Ship a rdfs:Class ;
+    rdfs:subClassOf sb:SolitaireBattleships ;
+    rdfs:comment "A class representing the ships in the Solitaire Battleships problem" .
+
+sb:Constraint a rdfs:Class ;
+    rdfs:subClassOf sb:SolitaireBattleships ;
+    rdfs:comment "A class representing the constraints in the Solitaire Battleships problem" .
+
+sb:Objective a rdfs:Class ;
+    rdfs:subClassOf sb:SolitaireBattleships ;
+    rdfs:comment "A class representing the objective in the Solitaire Battleships problem" .

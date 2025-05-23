@@ -1,0 +1,48 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimization#> .
+
+opt:GridSize a rdf:Property ;
+    rdfs:label "n" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Size of the grid - number of rows and columns" .
+
+opt:Huts a rdf:Property ;
+    rdfs:label "huts" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range opt:Grid ;
+    rdfs:comment "Grid representing the location of villagers in need of relief supplies" .
+
+opt:Grid a rdfs:Class ;
+    rdfs:label "Grid" ;
+    rdfs:comment "A 2D array representing the grid of the problem" .
+
+opt:Problem a rdfs:Class ;
+    rdfs:label "Problem" ;
+    rdfs:comment "The optimization problem of coordinating relief efforts" .
+
+opt:AirDropLocations a rdf:Property ;
+    rdfs:label "airDropLocations" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range opt:Grid ;
+    rdfs:comment "The chosen airdrop locations on the grid" .
+
+opt:MinimizeTotalDistance a rdf:Property ;
+    rdfs:label "minimizeTotalDistance" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:boolean ;
+    rdfs:comment "Objective to minimize the sum of squared distances of huts to their closest relief package destination" .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" ;
+    rdfs:comment "Constraints of the problem" .
+
+opt:TwoAirDropLocations a opt:Constraint ;
+    rdfs:label "twoAirDropLocations" ;
+    rdfs:comment "Constraint that exactly two airdrop locations can be chosen" .
+
+opt:ClosestAirDropLocation a opt:Constraint ;
+    rdfs:label "closestAirDropLocation" ;
+    rdfs:comment "Constraint that each villager will pick up supplies from the nearest drop location" .

@@ -1,0 +1,49 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:DepartmentRelocationProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:K, opt:L, opt:Benefit, opt:Communication, opt:Cost ;
+    opt:hasVariable opt:DepartmentLocation ;
+    opt:hasConstraint opt:LocationLimit ;
+    opt:hasObjective opt:MinimizeCost .
+
+opt:K a opt:Parameter ;
+    rdfs:label "Number of departments" ;
+    rdfs:comment "The total number of departments in the company." ;
+    rdfs:range xsd:integer .
+
+opt:L a opt:Parameter ;
+    rdfs:label "Number of possible locations" ;
+    rdfs:comment "The total number of possible locations for relocation." ;
+    rdfs:range xsd:integer .
+
+opt:Benefit a opt:Parameter ;
+    rdfs:label "Benefit of department k being located at location l" ;
+    rdfs:comment "The benefit derived from relocating department k to location l." ;
+    rdfs:range xsd:float .
+
+opt:Communication a opt:Parameter ;
+    rdfs:label "Communication costs between departments k and j" ;
+    rdfs:comment "The cost of communication between department k and department j." ;
+    rdfs:range xsd:float .
+
+opt:Cost a opt:Parameter ;
+    rdfs:label "Cost of locating at location l with requirement m" ;
+    rdfs:comment "The cost of locating a department at location l with requirement m." ;
+    rdfs:range xsd:float .
+
+opt:DepartmentLocation a opt:Variable ;
+    rdfs:label "Department location" ;
+    rdfs:comment "The location of each department." ;
+    rdfs:range xsd:integer .
+
+opt:LocationLimit a opt:Constraint ;
+    rdfs:label "Location limit" ;
+    rdfs:comment "No more than three departments can be located in the same city." .
+
+opt:MinimizeCost a opt:Objective ;
+    rdfs:label "Minimize cost" ;
+    rdfs:comment "The objective is to minimize the overall yearly cost." ;
+    opt:optimizationType opt:Minimization .

@@ -1,0 +1,48 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:Deliver a rdf:Property ;
+    rdfs:label "Deliver" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Demand for the product in each period i" .
+
+opt:StorageCost a rdf:Property ;
+    rdfs:label "StorageCost" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Cost to hold one unit of product in storage for one period" .
+
+opt:SwitchCost a rdf:Property ;
+    rdfs:label "SwitchCost" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Cost to switch the production from one period to another" .
+
+opt:T a rdf:Property ;
+    rdfs:label "T" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Total number of periods" .
+
+opt:Problem a rdfs:Class ;
+    rdfs:label "Problem" ;
+    rdfs:comment "Optimization problem to minimize the total cost of the production and inventory schedule over the next few months" .
+
+opt:Variable a rdfs:Class ;
+    rdfs:label "Variable" ;
+    rdfs:comment "Variables used in the optimization problem" .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" ;
+    rdfs:comment "Constraints used in the optimization problem" .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective" ;
+    rdfs:comment "Objective function of the optimization problem" .
+
+opt:Variable rdfs:subClassOf opt:Problem .
+opt:Constraint rdfs:subClassOf opt:Problem .
+opt:Objective rdfs:subClassOf opt:Problem .

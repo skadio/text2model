@@ -1,0 +1,59 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix knap: <http://www.example.org/knapsack#> .
+
+knap:num_projects rdf:type rdfs:Literal ;
+                  rdfs:label "Number of projects to select from" ;
+                  rdfs:range xsd:integer .
+
+knap:max_budget rdf:type rdfs:Literal ;
+                rdfs:label "Budget limit in million Swedish kronor" ;
+                rdfs:range xsd:integer .
+
+knap:max_persons rdf:type rdfs:Literal ;
+                 rdfs:label "Number of persons available" ;
+                 rdfs:range xsd:integer .
+
+knap:max_projects rdf:type rdfs:Literal ;
+                  rdfs:label "Maximum number of projects that can be selected" ;
+                  rdfs:range xsd:integer .
+
+knap:values rdf:type rdfs:Literal ;
+            rdfs:label "Values of each project in thousand Swedish kronor" ;
+            rdfs:range xsd:integer .
+
+knap:budgets rdf:type rdfs:Literal ;
+             rdfs:label "Budgets of each project in million Swedish kronor" ;
+             rdfs:range xsd:integer .
+
+knap:personell rdf:type rdfs:Literal ;
+               rdfs:label "Personnel required for each project" ;
+               rdfs:range xsd:integer .
+
+knap:not_with rdf:type rdfs:Literal ;
+              rdfs:label "Projects that cannot be selected together" ;
+              rdfs:range xsd:integer .
+
+knap:requires rdf:type rdfs:Literal ;
+              rdfs:label "Projects that must be selected together" ;
+              rdfs:range xsd:integer .
+
+knap:KnapsackProblem rdf:type rdfs:Class ;
+                     rdfs:label "Knapsack (investment) problem" ;
+                     rdfs:subClassOf rdfs:Resource .
+
+knap:hasParameter rdf:type rdf:Property ;
+                  rdfs:label "has parameter" ;
+                  rdfs:domain knap:KnapsackProblem ;
+                  rdfs:range rdfs:Literal .
+
+knap:hasConstraint rdf:type rdf:Property ;
+                   rdfs:label "has constraint" ;
+                   rdfs:domain knap:KnapsackProblem ;
+                   rdfs:range rdfs:Literal .
+
+knap:hasObjective rdf:type rdf:Property ;
+                  rdfs:label "has objective" ;
+                  rdfs:domain knap:KnapsackProblem ;
+                  rdfs:range rdfs:Literal .

@@ -1,0 +1,63 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:InitialPosition a rdf:Property ;
+    rdfs:label "Initial position of the object" ;
+    rdfs:range xsd:float .
+
+opt:InitialVelocity a rdf:Property ;
+    rdfs:label "Initial velocity of the object" ;
+    rdfs:range xsd:float .
+
+opt:FinalPosition a rdf:Property ;
+    rdfs:label "Final position of the object" ;
+    rdfs:range xsd:float .
+
+opt:FinalVelocity a rdf:Property ;
+    rdfs:label "Final velocity of the object" ;
+    rdfs:range xsd:float .
+
+opt:TotalTime a rdf:Property ;
+    rdfs:label "Total time over which the object is moving" ;
+    rdfs:range xsd:integer .
+
+opt:Rocket a rdfs:Class ;
+    rdfs:label "Rocket" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:rocket1 a opt:Rocket ;
+    opt:InitialPosition "0"^^xsd:float ;
+    opt:InitialVelocity "0"^^xsd:float ;
+    opt:FinalPosition "1"^^xsd:float ;
+    opt:FinalVelocity "0"^^xsd:float ;
+    opt:TotalTime "20"^^xsd:integer .
+
+opt:Acceleration a rdf:Property ;
+    rdfs:label "Acceleration at each timestep" ;
+    rdfs:range xsd:float .
+
+opt:MinimizeFuel a rdf:Property ;
+    rdfs:label "Minimize total fuel consumption" ;
+    rdfs:range xsd:float .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraints of the optimization problem" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:constraint1 a opt:Constraint ;
+    rdfs:label "Rocket's position and velocity at each timestep" ;
+    rdfs:comment "x_{t+1} = x_t + v_t, v_{t+1} = v_t + a_t" .
+
+opt:constraint2 a opt:Constraint ;
+    rdfs:label "Rocket's final position and velocity" ;
+    rdfs:comment "Rocket should reach the target position with the target speed at the target time" .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective of the optimization problem" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:objective1 a opt:Objective ;
+    rdfs:label "Minimize total fuel consumption" ;
+    rdfs:comment "Minimize \sum_{t=0}^{T-1} |a_t|" .

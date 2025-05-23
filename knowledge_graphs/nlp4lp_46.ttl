@@ -1,0 +1,35 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:RawMaterials rdf:type rdfs:Class .
+opt:Products rdf:type rdfs:Class .
+opt:Available rdf:type rdfs:Property ;
+    rdfs:domain opt:RawMaterials ;
+    rdfs:range xsd:integer .
+opt:Requirements rdf:type rdfs:Property ;
+    rdfs:domain opt:Products ;
+    rdfs:range opt:RawMaterials .
+opt:Prices rdf:type rdfs:Property ;
+    rdfs:domain opt:Products ;
+    rdfs:range xsd:float .
+opt:Costs rdf:type rdfs:Property ;
+    rdfs:domain opt:Products ;
+    rdfs:range xsd:float .
+opt:Demands rdf:type rdfs:Property ;
+    rdfs:domain opt:Products ;
+    rdfs:range xsd:integer .
+opt:MaximizeProfit rdf:type opt:OptimizationProblem ;
+    opt:hasObjectiveFunction opt:ProfitFunction ;
+    opt:hasConstraint opt:MaterialAvailabilityConstraint , opt:ProductDemandConstraint .
+opt:ProfitFunction rdf:type opt:ObjectiveFunction ;
+    opt:hasVariable opt:Products ;
+    opt:hasParameter opt:Prices , opt:Costs ;
+    opt:optimizationType "Maximization"^^xsd:string .
+opt:MaterialAvailabilityConstraint rdf:type opt:Constraint ;
+    opt:hasVariable opt:Products ;
+    opt:hasParameter opt:Available , opt:Requirements .
+opt:ProductDemandConstraint rdf:type opt:Constraint ;
+    opt:hasVariable opt:Products ;
+    opt:hasParameter opt:Demands .

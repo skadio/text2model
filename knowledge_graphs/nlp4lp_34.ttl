@@ -1,0 +1,67 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:TotalPeriods a rdf:Property ;
+    rdfs:label "T" ;
+    rdfs:range xsd:integer .
+
+opt:TotalGenerators a rdf:Property ;
+    rdfs:label "K" ;
+    rdfs:range xsd:integer .
+
+opt:Demand a rdf:Property ;
+    rdfs:label "Demand" ;
+    rdfs:range xsd:integer .
+
+opt:NumberGenerator a rdf:Property ;
+    rdfs:label "NumGenerator" ;
+    rdfs:range xsd:integer .
+
+opt:MinLevel a rdf:Property ;
+    rdfs:label "MinLevel" ;
+    rdfs:range xsd:integer .
+
+opt:MaxLevel a rdf:Property ;
+    rdfs:label "MaxLevel" ;
+    rdfs:range xsd:integer .
+
+opt:RunCost a rdf:Property ;
+    rdfs:label "RunCost" ;
+    rdfs:range xsd:integer .
+
+opt:ExtraCost a rdf:Property ;
+    rdfs:label "ExtraCost" ;
+    rdfs:range xsd:float .
+
+opt:StartCost a rdf:Property ;
+    rdfs:label "StartCost" ;
+    rdfs:range xsd:integer .
+
+opt:PowerStationOptimization a opt:OptimizationProblem ;
+    rdfs:label "Power Station Optimization" ;
+    opt:hasParameter opt:TotalPeriods, opt:TotalGenerators, opt:Demand, opt:NumberGenerator, opt:MinLevel, opt:MaxLevel, opt:RunCost, opt:ExtraCost, opt:StartCost ;
+    opt:hasVariable opt:GeneratorWorking ;
+    opt:hasConstraint opt:MeetDemand, opt:GeneratorAvailability, opt:GeneratorProductionLevel ;
+    opt:hasObjective opt:MinimizeCost .
+
+opt:GeneratorWorking a opt:Variable ;
+    rdfs:label "GeneratorWorking" ;
+    opt:belongsTo opt:PowerStationOptimization .
+
+opt:MeetDemand a opt:Constraint ;
+    rdfs:label "Meet Demand" ;
+    opt:belongsTo opt:PowerStationOptimization .
+
+opt:GeneratorAvailability a opt:Constraint ;
+    rdfs:label "Generator Availability" ;
+    opt:belongsTo opt:PowerStationOptimization .
+
+opt:GeneratorProductionLevel a opt:Constraint ;
+    rdfs:label "Generator Production Level" ;
+    opt:belongsTo opt:PowerStationOptimization .
+
+opt:MinimizeCost a opt:Objective ;
+    rdfs:label "Minimize Cost" ;
+    opt:belongsTo opt:PowerStationOptimization .

@@ -1,0 +1,83 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:SeaportOptimizationProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:T, opt:Demands, opt:UnloadCosts, opt:UnloadCapacity, opt:HoldingCost, opt:MaxContainer, opt:InitContainer, opt:NumCranes, opt:CraneCapacity, opt:CraneCost ;
+    opt:hasVariable opt:ContainersUnloaded, opt:ContainersHeld, opt:CranesRented ;
+    opt:hasConstraint opt:UnloadingCapacityConstraint, opt:StorageCapacityConstraint, opt:CraneCapacityConstraint, opt:InitialFinalContainerConstraint ;
+    opt:hasObjective opt:MinimizeCostObjective .
+
+opt:T a opt:Parameter ;
+    rdfs:label "The number of time periods" ;
+    rdfs:range xsd:integer .
+
+opt:Demands a opt:Parameter ;
+    rdfs:label "Demand at time t" ;
+    rdfs:range xsd:integer .
+
+opt:UnloadCosts a opt:Parameter ;
+    rdfs:label "Unloading cost at time t" ;
+    rdfs:range xsd:integer .
+
+opt:UnloadCapacity a opt:Parameter ;
+    rdfs:label "Unloading capacity at time t" ;
+    rdfs:range xsd:integer .
+
+opt:HoldingCost a opt:Parameter ;
+    rdfs:label "Cost for holding containers" ;
+    rdfs:range xsd:integer .
+
+opt:MaxContainer a opt:Parameter ;
+    rdfs:label "Maximum number of containers that can be held" ;
+    rdfs:range xsd:integer .
+
+opt:InitContainer a opt:Parameter ;
+    rdfs:label "Initial number of containers at the start" ;
+    rdfs:range xsd:integer .
+
+opt:NumCranes a opt:Parameter ;
+    rdfs:label "Number of cranes available for unloading" ;
+    rdfs:range xsd:integer .
+
+opt:CraneCapacity a opt:Parameter ;
+    rdfs:label "Capacity of each crane" ;
+    rdfs:range xsd:integer .
+
+opt:CraneCost a opt:Parameter ;
+    rdfs:label "Cost for renting each crane" ;
+    rdfs:range xsd:integer .
+
+opt:ContainersUnloaded a opt:Variable ;
+    rdfs:label "Number of containers unloaded at time t" ;
+    rdfs:range xsd:integer .
+
+opt:ContainersHeld a opt:Variable ;
+    rdfs:label "Number of containers held at time t" ;
+    rdfs:range xsd:integer .
+
+opt:CranesRented a opt:Variable ;
+    rdfs:label "Number of cranes rented at time t" ;
+    rdfs:range xsd:integer .
+
+opt:UnloadingCapacityConstraint a opt:Constraint ;
+    rdfs:label "Unloading capacity constraint" ;
+    opt:hasVariable opt:ContainersUnloaded .
+
+opt:StorageCapacityConstraint a opt:Constraint ;
+    rdfs:label "Storage capacity constraint" ;
+    opt:hasVariable opt:ContainersHeld .
+
+opt:CraneCapacityConstraint a opt:Constraint ;
+    rdfs:label "Crane capacity constraint" ;
+    opt:hasVariable opt:CranesRented .
+
+opt:InitialFinalContainerConstraint a opt:Constraint ;
+    rdfs:label "Initial and final container constraint" ;
+    opt:hasVariable opt:ContainersHeld .
+
+opt:MinimizeCostObjective a opt:Objective ;
+    rdfs:label "Minimize total cost" ;
+    opt:hasVariable opt:ContainersUnloaded, opt:ContainersHeld, opt:CranesRented ;
+    opt:isTypeOf opt:Minimization .

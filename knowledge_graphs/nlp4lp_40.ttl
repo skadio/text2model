@@ -1,0 +1,49 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:K a rdf:Property ;
+    rdfs:label "Number of different spare parts" ;
+    rdfs:range xsd:integer .
+
+opt:S a rdf:Property ;
+    rdfs:label "Number of machines capable of making the spare parts" ;
+    rdfs:range xsd:integer .
+
+opt:Time a rdf:Property ;
+    rdfs:label "Time taken to make spare part k on machine s" ;
+    rdfs:range rdf:Seq .
+
+opt:Profit a rdf:Property ;
+    rdfs:label "Profit obtained from making spare part k" ;
+    rdfs:range rdf:Seq .
+
+opt:Capacity a rdf:Property ;
+    rdfs:label "Capacity of machine s for the spare parts" ;
+    rdfs:range rdf:Seq .
+
+opt:Problem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:subClassOf opt:Optimization .
+
+opt:ProblemInstance a opt:Problem ;
+    opt:K "5"^^xsd:integer ;
+    opt:S "2"^^xsd:integer ;
+    opt:Time (2 3 1 2 3 2 3 1 1 1) ;
+    opt:Profit (30 20 40 25 10) ;
+    opt:Capacity (700 1000) .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" ;
+    rdfs:subClassOf opt:Optimization .
+
+opt:ConstraintInstance a opt:Constraint ;
+    rdfs:comment "Each shop has a capacity of working hours it cannot exceed" .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective" ;
+    rdfs:subClassOf opt:Optimization .
+
+opt:ObjectiveInstance a opt:Objective ;
+    rdfs:comment "Determine the quantities of each spare part to be made during the month to maximize profit" .

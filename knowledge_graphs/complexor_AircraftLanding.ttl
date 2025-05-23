@@ -1,0 +1,53 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <http://www.example.com/aircraftlandingproblem#> .
+
+:TotalAircrafts a owl:DatatypeProperty ;
+    rdfs:domain :AircraftLandingProblem ;
+    rdfs:range xsd:integer .
+
+:EarliestLandingTime a owl:DatatypeProperty ;
+    rdfs:domain :Aircraft ;
+    rdfs:range xsd:integer .
+
+:LatestLandingTime a owl:DatatypeProperty ;
+    rdfs:domain :Aircraft ;
+    rdfs:range xsd:integer .
+
+:TargetLandingTime a owl:DatatypeProperty ;
+    rdfs:domain :Aircraft ;
+    rdfs:range xsd:integer .
+
+:PenaltyTimeAfterTarget a owl:DatatypeProperty ;
+    rdfs:domain :Aircraft ;
+    rdfs:range xsd:integer .
+
+:PenaltyTimeBeforeTarget a owl:DatatypeProperty ;
+    rdfs:domain :Aircraft ;
+    rdfs:range xsd:integer .
+
+:SeparationTimeMatrix a owl:DatatypeProperty ;
+    rdfs:domain :Aircraft ;
+    rdfs:range xsd:integer .
+
+:Aircraft a owl:Class ;
+    rdfs:subClassOf :AircraftLandingProblem .
+
+:AircraftLandingProblem a owl:Class ;
+    rdfs:subClassOf :OptimizationProblem .
+
+:OptimizationProblem a owl:Class ;
+    rdfs:subClassOf :Problem .
+
+:Problem a owl:Class .
+
+:Constraint a owl:Class ;
+    rdfs:subClassOf :Problem .
+
+:Objective a owl:Class ;
+    rdfs:subClassOf :Problem .
+
+:Variable a owl:Class ;
+    rdfs:subClassOf :Problem .
