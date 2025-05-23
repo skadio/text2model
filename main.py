@@ -13,31 +13,31 @@ import utils
 ###########################################################
 # Single-call Strategy
 ###########################################################
-def run_baseline_strategy(client, problem, idx, output_dir):
+def run_baseline_strategy(client, problem, problem_identifier, output_dir):
     """Run the baseline single-prompt strategy"""
     try:
         prompt = utils.create_baseline_prompt(problem)
         solution = utils.call_openai_api(client, prompt)
 
         if solution:
-            utils.save_solution(output_dir, f"problem_{idx}", solution)
+            utils.save_solution(output_dir, problem_identifier, solution)
             return True
         return False
     except Exception as e:
-        print(f"Error in baseline strategy for problem {idx}: {e}")
+        print(f"Error in baseline strategy for problem {problem_identifier}: {e}")
         return False
 
 
 ###########################################################
 # Two-call Strategies
 ###########################################################
-def run_knowledge_graph_strategy(client, problem, idx, output_dir):
+def run_knowledge_graph_strategy(client, problem, problem_identifier, output_dir):
     """Run the strategy using knowledge graphs"""
     try:
         # Check if knowledge graph exists
-        kg_path = f"knowledge_graphs/problem_{idx}.ttl"
+        kg_path = f"knowledge_graphs/{problem_identifier}.ttl"
         if not os.path.exists(kg_path):
-            print(f"Knowledge graph not found for problem {idx}")
+            print(f"Knowledge graph not found for problem {problem_identifier}")
             return False
 
         problem_data = utils.prepare_problem_data(problem)
@@ -54,16 +54,16 @@ def run_knowledge_graph_strategy(client, problem, idx, output_dir):
         solution = utils.call_openai_api(client, prompt)
 
         if solution:
-            utils.save_solution(output_dir, f"problem_{idx}", solution)
+            utils.save_solution(output_dir, problem_identifier, solution)
             return True
         return False
 
     except Exception as e:
-        print(f"Error in knowledge graph strategy for problem {idx}: {e}")
+        print(f"Error in knowledge graph strategy for problem {problem_identifier}: {e}")
         return False
 
 
-def run_cot_with_code_validation_strategy(client, problem, idx, output_dir):
+def run_cot_with_code_validation_strategy(client, problem, problem_identifier, output_dir):
     """Run the cot strategy with additional code validation"""
     try:
         # Prepare data
@@ -97,17 +97,16 @@ def run_cot_with_code_validation_strategy(client, problem, idx, output_dir):
         )
 
         if validated_code:
-            identifier = problem_data['identifier']
-            utils.save_solution(output_dir, identifier, validated_code)
+            utils.save_solution(output_dir, problem_identifier, validated_code)
             return True
         return False
 
     except Exception as e:
-        print(f"Error in two-stage strategy for problem {idx}: {e}")
+        print(f"Error in two-stage strategy for problem {problem_identifier}: {e}")
         return False
 
 
-def run_cot_strategy(client, problem, idx, output_dir):
+def run_cot_strategy(client, problem, problem_identifier, output_dir):
     """Run the Chain of Thought strategy (single-stage)"""
     try:
         # Prepare data
@@ -127,15 +126,15 @@ def run_cot_strategy(client, problem, idx, output_dir):
             return False
 
         # Save the code
-        utils.save_solution(output_dir, f"problem_{idx}", code)
+        utils.save_solution(output_dir, problem_identifier, code)
         return True
 
     except Exception as e:
-        print(f"Error in CoT strategy for problem {idx}: {e}")
+        print(f"Error in CoT strategy for problem {problem_identifier}: {e}")
         return False
 
 
-def run_cot_with_grammar_validation_strategy(client, problem, idx, output_dir):
+def run_cot_with_grammar_validation_strategy(client, problem, problem_identifier, output_dir):
     """Run the CoT + Grammar Validation strategy (2-stage)"""
     try:
         # Prepare data
@@ -181,18 +180,18 @@ def run_cot_with_grammar_validation_strategy(client, problem, idx, output_dir):
                 current_code = grammar_corrected_code
 
         # Save the final code
-        utils.save_solution(output_dir, f"problem_{idx}", current_code)
+        utils.save_solution(output_dir, problem_identifier, current_code)
         return True
 
     except Exception as e:
-        print(f"Error in CoT + Grammar Check strategy for problem {idx}: {e}")
+        print(f"Error in CoT + Grammar Check strategy for problem {problem_identifier}: {e}")
         return False
 
 
 ###########################################################
 # Three-call Strategies
 ###########################################################
-def run_cot_with_code_and_grammar_validation_strategy(client, problem, idx, output_dir):
+def run_cot_with_code_and_grammar_validation_strategy(client, problem, problem_identifier, output_dir):
     """Run the CoT + Code Validation + Grammar Validation strategy (3-stage)"""
     try:
         # Prepare data
@@ -259,18 +258,18 @@ def run_cot_with_code_and_grammar_validation_strategy(client, problem, idx, outp
                 current_code = grammar_corrected_code
 
         # Save the final code
-        utils.save_solution(output_dir, f"problem_{idx}", current_code)
+        utils.save_solution(output_dir, problem_identifier, current_code)
         return True
 
     except Exception as e:
-        print(f"Error in CoT + Validation + Grammar Check strategy for problem {idx}: {e}")
+        print(f"Error in CoT + Validation + Grammar Check strategy for problem {problem_identifier}: {e}")
         return False
 
 
 ###########################################################
 # Four and Five-call Strategies
 ###########################################################
-def run_compositional_strategy(client, problem, idx, output_dir, validate=True):
+def run_compositional_strategy(client, problem, problem_identifier, output_dir, validate=True):
     """Run the compositional stitch strategy"""
     try:
         problem_data = utils.prepare_problem_data(problem)
@@ -347,16 +346,16 @@ def run_compositional_strategy(client, problem, idx, output_dir, validate=True):
             )
 
             if validated_code:
-                utils.save_solution(output_dir, f"problem_{idx}", validated_code)
+                utils.save_solution(output_dir, problem_identifier, validated_code)
                 return True
             return False
         else:
             # Save without validation
-            utils.save_solution(output_dir, f"problem_{idx}", final_code)
+            utils.save_solution(output_dir, problem_identifier, final_code)
             return True
 
     except Exception as e:
-        print(f"Error in stitch strategy for problem {idx}: {e}")
+        print(f"Error in stitch strategy for problem {problem_identifier}: {e}")
         return False
 
 
@@ -366,8 +365,8 @@ def main():
                         help='OpenAI model to use')
     parser.add_argument('--strategies', nargs='+',
                         default=['baseline'],
-                        choices=['baseline', 'cot', 'knowledge_graph', 'cot_with_validation', 'cot_with_grammar_check',
-                                 'cot_validation_grammar', 'compositional', 'compositional_with_validation', 'all'],
+                        choices=['baseline', 'cot', 'knowledge_graph', 'cot_with_code_validation', 'cot_with_grammar_validation',
+                                 'cot_with_code_and_grammar_validation', 'compositional', 'compositional_with_code_validation', 'all'],
                         help='Strategies to run')
     parser.add_argument('--problem-ids', nargs='+', type=int,
                         help='Specific problem IDs to process')
@@ -403,8 +402,8 @@ def main():
 
     # Determine which strategies to run
     if 'all' in args.strategies:
-        strategies = ['baseline', 'cot', 'knowledge_graph', 'cot_with_validation', 'cot_with_grammar_check',
-                      'cot_validation_grammar', 'compositional', 'compositional_with_validation']
+        strategies = ['baseline', 'cot', 'knowledge_graph', 'cot_with_code_validation', 'cot_with_grammar_validation',
+                      'cot_with_code_and_grammar_validation', 'compositional', 'compositional_with_code_validation']
     else:
         strategies = args.strategies
 
@@ -449,7 +448,8 @@ def main():
         results[strategy] = {'success': 0, 'failed': 0}
 
         for idx, problem in tqdm(problems_to_process, desc=f"{strategy} progress"):
-            success = strategy_functions[strategy](client, problem, idx, output_dir)
+            problem_identifier = ast.literal_eval(problem['input.json'])['metadata']['identifier']
+            success = strategy_functions[strategy](client, problem, problem_identifier, output_dir)
 
             if success:
                 results[strategy]['success'] += 1

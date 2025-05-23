@@ -1,6 +1,6 @@
 # MiniZinc Code Generation using LLMs
 
-A unified pipeline for generating MiniZinc code using different prompting strategies with OpenAI's GPT models.
+A unified pipeline for generating MiniZinc code for all the problems in [Text2Zinc](https://huggingface.co/datasets/skadio/text2zinc) dataset using different prompting strategies with OpenAI's GPT models.
 
 ## Setup
 
@@ -70,7 +70,7 @@ python evaluate.py --create-leaderboard-only
 ```
 
 The evaluation will:
-1. Load problems from the HuggingFace dataset
+1. Load problems from the [HuggingFace dataset](https://huggingface.co/datasets/skadio/text2zinc)
 2. Run each generated MiniZinc file with the corresponding data
 3. Compare outputs with expected solutions
 4. Calculate execution and solution accuracy
@@ -102,12 +102,13 @@ Results are broken down by:
 | gpt-4  | compositional                        | 43.64              | 20.0              | 31.82         | 110                | 22              | 2025-05-22 13:46:05 |
 | gpt-4  | baseline                             | 32.73              | 17.27             | 25.0          | 110                | 19              | 2025-05-22 13:48:56 |
 
+Current leaderboard on [Huggingface](https://huggingface.co/spaces/skadio/text2zinc-leaderboard)
 
 ## Repository Structure
 
 ```
 ├── knowledge_graphs/                                            # Directory for knowledge graph files
-│   └── problem_N.ttl
+│   └── problem_identifier.ttl
 ├── output/                                                      # Output directory (created automatically)
 │   ├── gpt-4/
 │   │   ├── vanilla/
@@ -152,6 +153,20 @@ output/
 │   └── leaderboard.csv
 ```
 - `summary.json` inside each strategy contains overall success/failure counts for each strategy
+  - `model_name`: Model name e.g. "gpt-4"
+  - `strategy_name`: Strategy name e.g. "cot"
+  - `evaluation_date`: Evaluation date-time stamp for record keeping
+  - `execution_accuracy`: % of problems that executed without errors
+  - `solution_accuracy`: % of problems with correct solutions
+  - `average_score`: Average of execution and solution accuracy
+  - `satisfaction_execution_accuracy`: % of satisfaction problems that executed without errors
+  - `satisfaction_solution_accuracy`: % of satisfaction problems with correct solutions
+  - `optimization_execution_accuracy`: % of optimization problems that executed without errors
+  - `optimization_solution_accuracy`:  of optimization problems with correct solutions
+  - `problems_attempted`: Total number of problems attempted (number of problems in the dataset)
+  - `problems_solved`: Total number of problems with correct solutions
+  - `satisfaction_problems`: Number of satisfaction problems in the dataset
+  - `optimization_problems`: Number of optimization problems in the dataset
 - `detailed_results.json` inside each strategy contains
   - `problem_id`: Current problem id
   - `problem_type`: Problem type, either optimization or satisfaction
