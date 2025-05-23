@@ -1,3 +1,4 @@
+import ast
 import os
 import time
 
@@ -44,6 +45,7 @@ def process_dataset(api_key, output_dir="knowledge_graphs"):
 
     # Process each problem
     for idx, problem in enumerate(tqdm(dataset['train'])):
+        problem_identifier = ast.literal_eval(problem['input.json'])['metadata']['identifier']
         try:
             prompt = create_kg_prompt(problem)
 
@@ -51,16 +53,16 @@ def process_dataset(api_key, output_dir="knowledge_graphs"):
 
             # Save solution if successful
             if solution:
-                save_kg_solution(output_dir, f"problem_{idx}", solution)
-                print(f"Successfully processed problem {idx}")
+                save_kg_solution(output_dir, problem_identifier, solution)
+                print(f"Successfully processed problem {problem_identifier}")
             else:
-                print(f"Failed to generate solution for problem {idx}")
+                print(f"Failed to generate solution for problem {problem_identifier}")
 
             # Add delay to respect rate limits
             time.sleep(API_CONFIG['sleep_time'])
 
         except Exception as e:
-            print(f"Error processing problem {idx}: {str(e)}")
+            print(f"Error processing problem {problem_identifier}: {str(e)}")
             continue
 
 

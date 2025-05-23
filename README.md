@@ -1,6 +1,6 @@
-# MiniZinc Code Generation using LLMs
+# Text2Zinc Leaderboard Code Generation and Evaluation
 
-A unified pipeline for generating MiniZinc code for all the problems in [Text2Zinc](https://huggingface.co/datasets/skadio/text2zinc) dataset using different prompting strategies with OpenAI's GPT models.
+A unified pipeline for generating/evaluating MiniZinc code for all the problems in [Text2Zinc](https://huggingface.co/datasets/skadio/text2zinc) dataset using different prompting strategies with OpenAI's GPT models.
 
 ## Setup
 
@@ -28,28 +28,28 @@ python main.py --strategies baseline cot --model gpt-4o
 
 ### Run on specific problem IDs:
 ```bash
-python main.py --strategies vanilla --problem-ids 0 1 2 10 --model gpt-4
+python main.py --strategies baseline --problem-ids 0 1 2 10 --model gpt-4
 ```
 
 ## Available Strategies
 
-### Single API call
+### Single API/LLM call
 1. **baseline**: This is a naive approach to generate Minizinc code prompting LLMs without any explicit instructions except the problem and data description.
 2. **cot**: This approach uses a chain intermediate steps/thoughts and general guiding principles when generating Minizinc code.
 
-### Two API calls
+### Two API/LLM calls
 1. **knowledge_graph**: This approach generates a structured knowledge graph representation of important information in the problem, followed by the code generation building on the intermediate structured representation generated.
 2. **cot_with_code_validation**: This approach combines chain-of-thought with an additional step of code validation with a generic checklist to improve the previously generated code.
 3. **cot_with_grammar_validation**: This approach combines, chain-of-thought with an additional step to check grammar using Minizinc Context Free Grammar.
 
-### Three API calls
+### Three API/LLM calls
 1. **cot_with_code_and_grammar_validation**: This approach combines, chain-of-thought with two additional steps, one to check grammar using Minizinc Context Free Grammar and code validation explained previously.
 
-### Four API calls
+### Four API/LLM calls
 1. **compositional**: This approach splits the code generation into four steps, generate parameters & variables, constraints, objective and a final prompt to stitch these intermediate outputs together.
 
-### Five API calls
-1. **compositional_with_code_validation**: This approach adds a code validation step to compositional approach.
+### Five API/LLM calls
+1. **compositional_with_code_validation**: This approach adds a code validation step to the compositional approach.
 
 ## Evaluation
 
@@ -108,24 +108,31 @@ Current leaderboard on [Huggingface](https://huggingface.co/spaces/skadio/text2z
 
 ```
 ├── knowledge_graphs/                                            # Directory for knowledge graph files
-│   └── problem_identifier.ttl
+│   └── `problem_identifier`.ttl                                 # e.g. problem_identifier: `non_linear_problem_9` from the dataset
+│   └── ...
 ├── output/                                                      # Output directory (created automatically)
 │   ├── gpt-4/
-│   │   ├── vanilla/
-│   │   ├── two_stage/
+│   │   ├── baseline/
+│   │   ├── compositional/
+│   │   ├── compositional_with_code_validation/
+│   │   ├── cot/
+│   │   ├── cot_with_code_and_grammar_validation/
+│   │   ├── cot_with_code_validation/
+│   │   ├── cot_with_grammar_validation/
 │   │   ├── knowledge_graph/
-│   │   ├── stitch/
-│   │   └── summary.json
 │   └── gpt-4o/
 │       └── ...
 ├── prompts/                                                     # Directory for prompt templates
-│   ├── code_generation_prompt.txt
+│   ├── code_stitching_prompt.txt
+│   ├── code_validation_prompt.txt
 │   ├── constraint_generation_prompt.txt
 │   ├── cot_prompt.txt
-│   ├── kg_generation_prompt.txt
-│   ├── objective_generation_prompt.txt
-│   ├── parameter_and_varaible_generation_prompt.txt
-│   └── validation_prompt.txt
+│   ├── grammar_validation_prompt.txt
+│   ├── kg_code_generation_prompt.txt
+│   └── kg_generation_prompt.txt
+│   └── objective_generation_prompt.txt
+│   └── parameter_and_variable_generation_prompt.txt
+├── evaluate.py                                                  # Script to evaluate generated minizinc code
 ├── generate_knowledge_graph.py                                  # Script to generate knowledge graphs
 ├── grammar.mzn                                                  # MiniZinc grammar (https://github.com/MiniZinc/libminizinc/blob/master/docs/en/grammar.mzn)
 ├── main.py                                                      # Main script to run all strategies
@@ -140,8 +147,7 @@ Generated MiniZinc files are saved in a hierarchical structure:
 output/
 ├── [model_name]/
 │   ├── [strategy_name]/
-│   │   ├── problem_0.mzn
-│   │   ├── problem_1.mzn
+│   │   ├── `problem_identifier`.mzn
 │   │   └── ...
 │   └── ...
 ├── evaluation_results/
@@ -150,6 +156,7 @@ output/
 │   │   │   ├── summary.json
 │   │   │   └── detailed_results.json
 │   │   └── ...
+│   └── ...
 │   └── leaderboard.csv
 ```
 - `summary.json` inside each strategy contains overall success/failure counts for each strategy
