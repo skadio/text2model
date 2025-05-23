@@ -1,0 +1,18 @@
+You are given a MiniZinc model that has syntax errors. Your task is to fix these syntax errors using the MiniZinc grammar specification provided below.
+
+**Problem Description:**
+{problem_description}
+
+**Data Nomenclature:**
+{data_nomenclature}
+
+**Current Code with Syntax Errors:**
+{current_code}
+
+**Error message after execution:**
+{syntax_error_message}
+
+**MiniZinc Grammar Specification:**
+{minizinc_grammar}
+
+Using the grammar specification above, carefully analyze the syntax errors and correct the code. Please provide the corrected MiniZinc code that adheres to the grammar specification and resolves all syntax errors. Output only the complete and corrected MiniZinc code without additional comments.

@@ -64,7 +64,7 @@ def run_knowledge_graph_strategy(client, problem, idx, output_dir):
 
 
 def run_cot_with_code_validation_strategy(client, problem, idx, output_dir):
-    """Run the cot with validation strategy with chain of thought and validation"""
+    """Run the cot strategy with additional code validation"""
     try:
         # Prepare data
         problem_data = utils.prepare_problem_data(problem)
@@ -85,7 +85,7 @@ def run_cot_with_code_validation_strategy(client, problem, idx, output_dir):
         time.sleep(2)
 
         # Stage 2: Validate and refine
-        validation_prompt = utils.load_file('prompts/validation_prompt.txt')
+        validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
         validated_code = utils.call_openai_api(
             client,
             validation_prompt.format(
@@ -136,7 +136,7 @@ def run_cot_strategy(client, problem, idx, output_dir):
 
 
 def run_cot_with_grammar_validation_strategy(client, problem, idx, output_dir):
-    """Run the CoT + Grammar Check strategy (2-stage)"""
+    """Run the CoT + Grammar Validation strategy (2-stage)"""
     try:
         # Prepare data
         problem_data = utils.prepare_problem_data(problem)
@@ -163,7 +163,7 @@ def run_cot_with_grammar_validation_strategy(client, problem, idx, output_dir):
 
         # Stage 2: Grammar-based correction if syntax error exists
         if syntax_error_message:
-            grammar_prompt = utils.load_file('prompts/grammar_prompt.txt')
+            grammar_prompt = utils.load_file('prompts/grammar_validation_prompt.txt')
             minizinc_grammar = utils.load_file('grammar.mzn')
 
             grammar_corrected_code = utils.call_openai_api(
@@ -193,7 +193,7 @@ def run_cot_with_grammar_validation_strategy(client, problem, idx, output_dir):
 # Three-call Strategies
 ###########################################################
 def run_cot_with_code_and_grammar_validation_strategy(client, problem, idx, output_dir):
-    """Run the CoT + Validation + Grammar Check strategy (3-stage)"""
+    """Run the CoT + Code Validation + Grammar Validation strategy (3-stage)"""
     try:
         # Prepare data
         problem_data = utils.prepare_problem_data(problem)
@@ -220,7 +220,7 @@ def run_cot_with_code_and_grammar_validation_strategy(client, problem, idx, outp
 
         # Stage 2: Validation if syntax error exists
         if syntax_error_message:
-            validation_prompt = utils.load_file('prompts/validation_prompt.txt')
+            validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
             validated_code = utils.call_openai_api(
                 client,
                 validation_prompt.format(
@@ -241,7 +241,7 @@ def run_cot_with_code_and_grammar_validation_strategy(client, problem, idx, outp
 
         # Stage 3: Grammar-based correction if syntax error still exists
         if syntax_error_message:
-            grammar_prompt = utils.load_file('prompts/grammar_prompt.txt')
+            grammar_prompt = utils.load_file('prompts/grammar_validation_prompt.txt')
             minizinc_grammar = utils.load_file('grammar.mzn')
 
             grammar_corrected_code = utils.call_openai_api(
@@ -318,7 +318,7 @@ def run_compositional_strategy(client, problem, idx, output_dir, validate=True):
         time.sleep(2)
 
         # Step 4: Generate final code
-        code_prompt = utils.load_file('prompts/code_generation_prompt.txt')
+        code_prompt = utils.load_file('prompts/code_stitching_prompt.txt')
         final_code = utils.call_openai_api(
             client,
             code_prompt.format(
@@ -335,7 +335,7 @@ def run_compositional_strategy(client, problem, idx, output_dir, validate=True):
         if validate:
             time.sleep(2)
             # Step 5: Validate
-            validation_prompt = utils.load_file('prompts/validation_prompt.txt')
+            validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
             validated_code = utils.call_openai_api(
                 client,
                 validation_prompt.format(

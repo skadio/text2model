@@ -126,6 +126,7 @@ Results are broken down by:
 │   ├── parameter_and_varaible_generation_prompt.txt
 │   └── validation_prompt.txt
 ├── generate_knowledge_graph.py                                  # Script to generate knowledge graphs
+├── grammar.mzn                                                  # MiniZinc grammar (https://github.com/MiniZinc/libminizinc/blob/master/docs/en/grammar.mzn)
 ├── main.py                                                      # Main script to run all strategies
 ├── utils.py                                                     # Utility functions for common operations
 └── README.md
