@@ -1,6 +1,6 @@
 # Text2Zinc Leaderboard Code Generation and Evaluation
 
-A unified pipeline for generating/evaluating MiniZinc code for all the problems in [Text2Zinc](https://huggingface.co/datasets/skadio/text2zinc) dataset using different prompting strategies with OpenAI's GPT models.
+A unified pipeline for generating/evaluating MiniZinc code for all the **verified** problems in [Text2Zinc](https://huggingface.co/datasets/skadio/text2zinc) dataset using different prompting strategies with OpenAI's GPT models.
 
 ## Setup
 

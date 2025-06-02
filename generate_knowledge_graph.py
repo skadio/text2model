@@ -3,7 +3,7 @@ import os
 import time
 
 import openai
-from datasets import load_dataset
+from datasets import DatasetDict, load_dataset
 from tqdm import tqdm
 
 from utils import API_CONFIG, call_openai_api, load_file, prepare_problem_data
@@ -41,6 +41,13 @@ def process_dataset(api_key, output_dir="knowledge_graphs"):
     # Load dataset
     print("Loading dataset...")
     dataset = load_dataset("skadio/text2zinc")
+    
+    # Only select verified problems
+    verified_train = dataset["train"].filter(lambda x: x["is_verified"])
+    dataset = DatasetDict({
+        "train": verified_train
+    })
+    
     print(f"Loaded dataset with {len(dataset['train'])} examples")
 
     # Process each problem
