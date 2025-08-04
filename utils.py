@@ -4,7 +4,17 @@ import re
 import subprocess
 from typing import Any, Dict, List, Optional, Tuple
 
+import openai
 from langchain_ollama import ChatOllama
+
+# Global OpenAI API configuration
+API_CONFIG = {
+    'model': 'gpt-4',
+    'temperature': 0,
+    'max_tokens': 4096,
+    'sleep_time': 3
+}
+
 
 def extract_code_blocks(text: str) -> str:
     """Extract code blocks from markdown-formatted text"""
@@ -20,7 +30,7 @@ def extract_json_blocks(text: str) -> str:
 
 
 def call_api(client, model: str, prompt: str) -> Optional[str]:
-    if model == "gpt-4" or model == "gpt-4o":
+    if model in ["gpt-4","gpt-4o","o3-mini","gpt-4o-mini"]:
         solution = call_openai_api(client, prompt)
         return solution
     else:
@@ -28,15 +38,31 @@ def call_api(client, model: str, prompt: str) -> Optional[str]:
         return solution
 
 
-def call_openai_api(client: Any, prompt: str) -> Optional[str]:
+def call_openai_api(client: openai.OpenAI, prompt: str) -> Optional[str]:
     """Call OpenAI API with the given prompt"""
     try:
-        response = client.get_resp_llm_gateway(prompt)
-        return extract_code_blocks(response)
+        # Map model names - use o3 for gpt-4o
+        model_name = API_CONFIG['model']
+        if model_name == 'gpt-4o':
+            model_name = 'o3-2025-04-16'
+
+        params = {
+            "model": model_name,
+            "messages": [{"role": "user", "content": prompt}]
+        }
+
+        # Add temperature and max_tokens only for non-reasoning models
+        if API_CONFIG['model'] != 'gpt-4o':
+            params["temperature"] = API_CONFIG['temperature']
+            params["max_tokens"] = API_CONFIG['max_tokens']
+
+        completion = client.chat.completions.create(**params)
+        result = completion.choices[0].message.content.strip()
+        return extract_code_blocks(result)
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
         return None
-
+        
 
 def call_ollama_api(client: ChatOllama, prompt: str) -> Optional[str]:
     """Call ChatOllama with the given prompt"""
