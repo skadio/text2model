@@ -5,6 +5,7 @@ import os
 import time
 
 import openai
+from langchain_ollama import ChatOllama
 from datasets import DatasetDict, load_dataset
 from tqdm import tqdm
 
@@ -14,11 +15,11 @@ import utils
 ###########################################################
 # Single-call Strategy
 ###########################################################
-def run_baseline_strategy(client, problem, problem_identifier, output_dir):
+def run_baseline_strategy(client, model, problem, problem_identifier, output_dir):
     """Run the baseline single-prompt strategy"""
     try:
         prompt = utils.create_baseline_prompt(problem)
-        solution = utils.call_openai_api(client, prompt)
+        solution = utils.call_api(client, model, prompt)
 
         if solution:
             utils.save_solution(output_dir, problem_identifier, solution)
@@ -32,7 +33,7 @@ def run_baseline_strategy(client, problem, problem_identifier, output_dir):
 ###########################################################
 # Two-call Strategies
 ###########################################################
-def run_knowledge_graph_strategy(client, problem, problem_identifier, output_dir):
+def run_knowledge_graph_strategy(client, model, problem, problem_identifier, output_dir):
     """Run the strategy using knowledge graphs"""
     try:
         # Check if knowledge graph exists
@@ -49,10 +50,10 @@ def run_knowledge_graph_strategy(client, problem, problem_identifier, output_dir
         prompt = kg_prompt.format(
             problem_description=problem_data['description'],
             knowledge_graph=knowledge_graph,
-            data_nomenclature=problem_data['data_nomenclature']
+            input_data=problem_data['data_nomenclature']
         )
 
-        solution = utils.call_openai_api(client, prompt)
+        solution = utils.call_api(client, model, prompt)
 
         if solution:
             utils.save_solution(output_dir, problem_identifier, solution)
@@ -64,7 +65,7 @@ def run_knowledge_graph_strategy(client, problem, problem_identifier, output_dir
         return False
 
 
-def run_cot_with_code_validation_strategy(client, problem, problem_identifier, output_dir):
+def run_cot_with_code_validation_strategy(client, model, problem, problem_identifier, output_dir):
     """Run the cot strategy with additional code validation"""
     try:
         # Prepare data
@@ -72,11 +73,12 @@ def run_cot_with_code_validation_strategy(client, problem, problem_identifier, o
 
         # Stage 1: Generate initial code with chain of thought
         cot_prompt = utils.load_file('prompts/cot_prompt.txt')
-        initial_code = utils.call_openai_api(
+        initial_code = utils.call_api(
             client,
+            model,
             cot_prompt.format(
                 problem_description=problem_data['description'],
-                data_nomenclature=problem_data['data_nomenclature']
+                input_data=problem_data['data_nomenclature']
             )
         )
 
@@ -87,11 +89,12 @@ def run_cot_with_code_validation_strategy(client, problem, problem_identifier, o
 
         # Stage 2: Validate and refine
         validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
-        validated_code = utils.call_openai_api(
+        validated_code = utils.call_api(
             client,
+            model,
             validation_prompt.format(
                 problem_description=problem_data['description'],
-                data_nomenclature=problem_data['data_nomenclature'],
+                input_data=problem_data['data_nomenclature'],
                 objective_type=problem_data['objective_type'],
                 final_code=initial_code
             )
@@ -107,7 +110,7 @@ def run_cot_with_code_validation_strategy(client, problem, problem_identifier, o
         return False
 
 
-def run_cot_strategy(client, problem, problem_identifier, output_dir):
+def run_cot_strategy(client, model, problem, problem_identifier, output_dir):
     """Run the Chain of Thought strategy (single-stage)"""
     try:
         # Prepare data
@@ -115,11 +118,12 @@ def run_cot_strategy(client, problem, problem_identifier, output_dir):
 
         # Generate code with chain of thought
         cot_prompt = utils.load_file('prompts/cot_prompt.txt')
-        code = utils.call_openai_api(
+        code = utils.call_api(
             client,
+            model,
             cot_prompt.format(
                 problem_description=problem_data['description'],
-                data_nomenclature=problem_data['data_nomenclature']
+                input_data=problem_data['data_nomenclature']
             )
         )
 
@@ -135,7 +139,7 @@ def run_cot_strategy(client, problem, problem_identifier, output_dir):
         return False
 
 
-def run_cot_with_grammar_validation_strategy(client, problem, problem_identifier, output_dir):
+def run_cot_with_grammar_validation_strategy(client, model, problem, problem_identifier, output_dir):
     """Run the CoT + Grammar Validation strategy (2-stage)"""
     try:
         # Prepare data
@@ -143,11 +147,12 @@ def run_cot_with_grammar_validation_strategy(client, problem, problem_identifier
 
         # Stage 1: Generate initial code with chain of thought
         cot_prompt = utils.load_file('prompts/cot_prompt.txt')
-        initial_code = utils.call_openai_api(
+        initial_code = utils.call_api(
             client,
+            model,
             cot_prompt.format(
                 problem_description=problem_data['description'],
-                data_nomenclature=problem_data['data_nomenclature']
+                input_data=problem_data['data_nomenclature']
             )
         )
 
@@ -166,11 +171,12 @@ def run_cot_with_grammar_validation_strategy(client, problem, problem_identifier
             grammar_prompt = utils.load_file('prompts/grammar_validation_prompt.txt')
             minizinc_grammar = utils.load_file('grammar.mzn')
 
-            grammar_corrected_code = utils.call_openai_api(
+            grammar_corrected_code = utils.call_api(
                 client,
+                model,
                 grammar_prompt.format(
                     problem_description=problem_data['description'],
-                    data_nomenclature=problem_data['data_nomenclature'],
+                    input_data=problem_data['data_nomenclature'],
                     current_code=current_code,
                     syntax_error_message=syntax_error_message,
                     minizinc_grammar=minizinc_grammar
@@ -192,7 +198,7 @@ def run_cot_with_grammar_validation_strategy(client, problem, problem_identifier
 ###########################################################
 # Three-call Strategies
 ###########################################################
-def run_cot_with_code_and_grammar_validation_strategy(client, problem, problem_identifier, output_dir):
+def run_cot_with_code_and_grammar_validation_strategy(client, model, problem, problem_identifier, output_dir):
     """Run the CoT + Code Validation + Grammar Validation strategy (3-stage)"""
     try:
         # Prepare data
@@ -200,11 +206,12 @@ def run_cot_with_code_and_grammar_validation_strategy(client, problem, problem_i
 
         # Stage 1: Generate initial code with chain of thought
         cot_prompt = utils.load_file('prompts/cot_prompt.txt')
-        initial_code = utils.call_openai_api(
+        initial_code = utils.call_api(
             client,
+            model,
             cot_prompt.format(
                 problem_description=problem_data['description'],
-                data_nomenclature=problem_data['data_nomenclature']
+                input_data=problem_data['data_nomenclature']
             )
         )
 
@@ -221,11 +228,12 @@ def run_cot_with_code_and_grammar_validation_strategy(client, problem, problem_i
         # Stage 2: Validation if syntax error exists
         if syntax_error_message:
             validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
-            validated_code = utils.call_openai_api(
+            validated_code = utils.call_api(
                 client,
+                model,
                 validation_prompt.format(
                     problem_description=problem_data['description'],
-                    data_nomenclature=problem_data['data_nomenclature'],
+                    input_data=problem_data['data_nomenclature'],
                     objective_type=problem_data['objective_type'],
                     final_code=initial_code,
                     syntax_error_message=syntax_error_message
@@ -244,11 +252,12 @@ def run_cot_with_code_and_grammar_validation_strategy(client, problem, problem_i
             grammar_prompt = utils.load_file('prompts/grammar_validation_prompt.txt')
             minizinc_grammar = utils.load_file('grammar.mzn')
 
-            grammar_corrected_code = utils.call_openai_api(
+            grammar_corrected_code = utils.call_api(
                 client,
+                model,
                 grammar_prompt.format(
                     problem_description=problem_data['description'],
-                    data_nomenclature=problem_data['data_nomenclature'],
+                    input_data=problem_data['data_nomenclature'],
                     current_code=current_code,
                     syntax_error_message=syntax_error_message,
                     minizinc_grammar=minizinc_grammar
@@ -270,18 +279,19 @@ def run_cot_with_code_and_grammar_validation_strategy(client, problem, problem_i
 ###########################################################
 # Four and Five-call Strategies
 ###########################################################
-def run_compositional_strategy(client, problem, problem_identifier, output_dir, validate=True):
+def run_compositional_strategy(client, model, problem, problem_identifier, output_dir, validate=True):
     """Run the compositional stitch strategy"""
     try:
         problem_data = utils.prepare_problem_data(problem)
 
         # Step 1: Generate parameters and variables
         param_prompt = utils.load_file('prompts/parameter_and_variable_generation_prompt.txt')
-        params_vars = utils.call_openai_api(
+        params_vars = utils.call_api(
             client,
+            model,
             param_prompt.format(
                 problem_description=problem_data['description'],
-                data_nomenclature=problem_data['data_nomenclature']
+                input_data=problem_data['data_nomenclature']
             )
         )
         if not params_vars:
@@ -290,11 +300,12 @@ def run_compositional_strategy(client, problem, problem_identifier, output_dir, 
 
         # Step 2: Generate constraints
         constraint_prompt = utils.load_file('prompts/constraint_generation_prompt.txt')
-        constraints = utils.call_openai_api(
+        constraints = utils.call_api(
             client,
+            model,
             constraint_prompt.format(
                 problem_description=problem_data['description'],
-                data_nomenclature=problem_data['data_nomenclature'],
+                input_data=problem_data['data_nomenclature'],
                 parameters_and_variables=params_vars
             )
         )
@@ -304,11 +315,12 @@ def run_compositional_strategy(client, problem, problem_identifier, output_dir, 
 
         # Step 3: Generate objective
         objective_prompt = utils.load_file('prompts/objective_generation_prompt.txt')
-        objective = utils.call_openai_api(
+        objective = utils.call_api(
             client,
+            model,
             objective_prompt.format(
                 problem_description=problem_data['description'],
-                data_nomenclature=problem_data['data_nomenclature'],
+                input_data=problem_data['data_nomenclature'],
                 parameters_and_variables=params_vars,
                 constraints=constraints
             )
@@ -319,11 +331,12 @@ def run_compositional_strategy(client, problem, problem_identifier, output_dir, 
 
         # Step 4: Generate final code
         code_prompt = utils.load_file('prompts/code_stitching_prompt.txt')
-        final_code = utils.call_openai_api(
+        final_code = utils.call_api(
             client,
+            model,
             code_prompt.format(
                 problem_description=problem_data['description'],
-                data_nomenclature=problem_data['data_nomenclature'],
+                input_data=problem_data['data_nomenclature'],
                 parameters_and_variables=params_vars,
                 constraints=constraints,
                 objective=objective
@@ -336,11 +349,12 @@ def run_compositional_strategy(client, problem, problem_identifier, output_dir, 
             time.sleep(2)
             # Step 5: Validate
             validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
-            validated_code = utils.call_openai_api(
+            validated_code = utils.call_api(
                 client,
+                model,
                 validation_prompt.format(
                     problem_description=problem_data['description'],
-                    data_nomenclature=problem_data['data_nomenclature'],
+                    input_data=problem_data['data_nomenclature'],
                     objective_type=problem_data['objective_type'],
                     final_code=final_code
                 )
@@ -360,14 +374,73 @@ def run_compositional_strategy(client, problem, problem_identifier, output_dir, 
         return False
 
 
+###########################################################
+# Agentic Strategies
+###########################################################
+def run_agents_strategy(client, problem, problem_identifier, output_dir):
+    """Run the agents strategy (workers -> assembler)"""
+    try:
+        # Prepare data
+        problem_data = utils.prepare_problem_data(problem)
+
+        # Store the code snippets from individual agents
+        hints = ""
+
+        PROMPT_DIR = Path("prompts/global_constraint_prompts")
+        # Read all the prompts from the gloabl_constraint prompts folder
+        for prompt in PROMPT_DIR.glob("*.txt"):
+            ind_prompt = utils.load_file(prompt)
+            ind_prompt = ind_prompt + f"""
+                **Problem description**:
+                {problem_data['description']}
+
+                **Input data**:
+                {problem_data['data_nomenclature']}
+                """
+
+            code = utils.call_api(client, model, ind_prompt)
+            # Add the global constraint type to the output
+            code = utils.extract_global_constraint(ind_prompt) + ": \n" + code + "\n"
+            # If there is global constraint detected, add it to hints
+            if "FALSE" not in code:
+                hints += code
+
+        # Assembler to join the code together and make modifications
+        assembler_prompt = utils.load_file('prompts/assembler_prompt.txt')
+        assembler_prompt = assembler_prompt + f"""
+                **Problem description**:
+                {problem_data['description']}
+
+                **Input data**:
+                {problem_data['data_nomenclature']}
+
+                **Hints**:
+                {hints}
+                """
+
+        code = utils.call_api(client, model, assembler_prompt)
+
+        if not code:
+            return False
+
+        # Save the code
+        utils.save_solution(output_dir, problem_identifier, code)
+        return True
+
+    except Exception as e:
+        print(f"Error in agents strategy for problem {problem_identifier}: {e}")
+        return False
+
+
 def main():
     parser = argparse.ArgumentParser(description='Generate MiniZinc code using different prompting strategies')
-    parser.add_argument('--model', default='gpt-4', choices=['gpt-4', 'gpt-4o'],
-                        help='OpenAI model to use')
+    parser.add_argument('--model', default='gpt-4', choices=['gpt-4', 'gpt-4o', 'phi4'],
+                        help='LLM model to use')
     parser.add_argument('--strategies', nargs='+',
                         default=['baseline'],
                         choices=['baseline', 'cot', 'knowledge_graph', 'cot_with_code_validation', 'cot_with_grammar_validation',
-                                 'cot_with_code_and_grammar_validation', 'compositional', 'compositional_with_code_validation', 'all'],
+                                 'cot_with_code_and_grammar_validation', 'compositional', 'compositional_with_code_validation', 
+                                 'agents', 'all'],
                         help='Strategies to run')
     parser.add_argument('--problem-ids', nargs='+', type=int,
                         help='Specific problem IDs to process')
@@ -384,17 +457,25 @@ def main():
 
     args = parser.parse_args()
 
-    if not args.api_key:
-        raise ValueError("OpenAI API key not provided. Set OPENAI_API_KEY environment variable or use --api-key")
+    if args.model == "gpt-4" or args.model == "gpt-4o":
+        if not args.api_key:
+            raise ValueError("OpenAI API key not provided. Set OPENAI_API_KEY environment variable or use --api-key")
 
-    # Initialize OpenAI client
-    client = openai.OpenAI(api_key=args.api_key)
+        # Initialize OpenAI client
+        client = openai.OpenAI(api_key=args.api_key)
 
-    # Set global API parameters
-    utils.API_CONFIG['temperature'] = args.temperature
-    utils.API_CONFIG['max_tokens'] = args.max_tokens
-    utils.API_CONFIG['sleep_time'] = args.sleep_time
-    utils.API_CONFIG['model'] = args.model
+        # Set global API parameters
+        utils.API_CONFIG['temperature'] = args.temperature
+        utils.API_CONFIG['max_tokens'] = args.max_tokens
+        utils.API_CONFIG['sleep_time'] = args.sleep_time
+        utils.API_CONFIG['model'] = args.model
+    else:
+        # Initialize Ollama client
+        client = ChatOllama(
+                model=args.model,
+                temperature=args.temperature,
+                max_tokens=args.max_tokens,
+                sleep_time=args.sleep_time)
 
     # Load dataset
     print("Loading dataset...")
@@ -410,7 +491,8 @@ def main():
     # Determine which strategies to run
     if 'all' in args.strategies:
         strategies = ['baseline', 'cot', 'knowledge_graph', 'cot_with_code_validation', 'cot_with_grammar_validation',
-                      'cot_with_code_and_grammar_validation', 'compositional', 'compositional_with_code_validation']
+                      'cot_with_code_and_grammar_validation', 'compositional', 'compositional_with_code_validation',
+                      'agents']
     else:
         strategies = args.strategies
 
@@ -442,7 +524,10 @@ def main():
         'compositional': lambda c, p, i, o: run_compositional_strategy(c, p, i, o, validate=False),
 
         # Five GPT calls
-        'compositional_with_code_validation': run_compositional_strategy
+        'compositional_with_code_validation': run_compositional_strategy,
+
+        # Agentic Framework
+        'agents': run_agents_strategy
     }
 
     # Process problems

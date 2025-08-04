@@ -16,7 +16,7 @@ Also, make sure to follow the following principles when generating the code:
 
 **General Principles**:
 1. The generated code should assume that data will be provided via a ".dzn" file. Do not declare values directly from the input data nomenclature and examples within the MiniZinc model.
-2. Adhere to the input data nomenclature and examples precisely when declaring input parameter names and their data types.
+2. Adhere to the input data and examples precisely when declaring input parameter names and their data types.
 3. Use bounded variables whenever possible. If bounds are explicit (e.g., non-negative), include them as constraints.
 4. When defining arrays of variables, ensure bounds are integers. Apply element-wise constraints in a separate constraint block if bounds depend on array elements.
 5. When defining arrays of variables, ensure bounding constraints are applied separately rather than during initialization to avoid type mismatches.
@@ -31,5 +31,5 @@ Also, make sure to follow the following principles when generating the code:
 **Problem Description**:
 {problem_description}
 
-**Input Data Nomenclature and Examples**:
-{data_nomenclature}
+**Input Data**:
+{input_data}

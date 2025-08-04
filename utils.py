@@ -23,8 +23,13 @@ def extract_code_blocks(text: str) -> str:
     return matches[0] if matches else text
 
 
+def extract_global_constraint(text):
+    first_line = text.splitlines()[0]
+    return re.findall(r'`(.*?)`', first_line)
+
+
 def call_api(client, model: str, prompt: str) -> Optional[str]:
-    if model in ["gpt-4","gpt-4o","o3-mini","gpt-4o-mini"]:
+    if model in ["gpt-4","gpt-4o"]:
         solution = call_openai_api(client, prompt)
         return solution
     else:
