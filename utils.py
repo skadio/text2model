@@ -4,16 +4,7 @@ import re
 import subprocess
 from typing import Any, Dict, List, Optional, Tuple
 
-import openai
-
-# Global API configuration
-API_CONFIG = {
-    'model': 'gpt-4',
-    'temperature': 0,
-    'max_tokens': 4096,
-    'sleep_time': 3
-}
-
+from langchain_ollama import ChatOllama
 
 def extract_code_blocks(text: str) -> str:
     """Extract code blocks from markdown-formatted text"""
@@ -21,30 +12,42 @@ def extract_code_blocks(text: str) -> str:
     matches = pattern.findall(text)
     return matches[0] if matches else text
 
+def extract_json_blocks(text: str) -> str:
+    """Extract code blocks from markdown-formatted text"""
+    pattern = re.compile(r'```json(?:\w+)?\n(.*?)\n```', re.DOTALL)
+    matches = pattern.findall(text)
+    return matches[0] if matches else text
 
-def call_openai_api(client: openai.OpenAI, prompt: str) -> Optional[str]:
+
+def call_api(client, model: str, prompt: str) -> Optional[str]:
+    if model == "gpt-4" or model == "gpt-4o":
+        solution = call_openai_api(client, prompt)
+        return solution
+    else:
+        solution = call_ollama_api(client, prompt)
+        return solution
+
+
+def call_openai_api(client: Any, prompt: str) -> Optional[str]:
     """Call OpenAI API with the given prompt"""
     try:
-        # Map model names - use o3 for gpt-4o
-        model_name = API_CONFIG['model']
-        if model_name == 'gpt-4o':
-            model_name = 'o3-2025-04-16'
-
-        params = {
-            "model": model_name,
-            "messages": [{"role": "user", "content": prompt}]
-        }
-
-        # Add temperature and max_tokens only for non-reasoning models
-        if API_CONFIG['model'] != 'gpt-4o':
-            params["temperature"] = API_CONFIG['temperature']
-            params["max_tokens"] = API_CONFIG['max_tokens']
-
-        completion = client.chat.completions.create(**params)
-        result = completion.choices[0].message.content.strip()
-        return extract_code_blocks(result)
+        response = client.get_resp_llm_gateway(prompt)
+        return extract_code_blocks(response)
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
+        return None
+
+
+def call_ollama_api(client: ChatOllama, prompt: str) -> Optional[str]:
+    """Call ChatOllama with the given prompt"""
+    try:
+        messages = [
+            {"role": "user", "content": prompt},
+        ]
+        result = client.invoke(messages).content.strip()
+        return extract_code_blocks(result)
+    except Exception as e:
+        print(f"Error calling ChatOllama: {e}")
         return None
 
 
@@ -136,7 +139,10 @@ def create_data_nomenclature(input_data: Dict[str, Any], dzn_data: List[Tuple[st
 def prepare_problem_data(problem: Dict[str, Any]) -> Dict[str, Any]:
     """Prepare problem data for use in prompts"""
     input_data = ast.literal_eval(problem['input.json'])
-    dzn_data = parse_dzn_string(problem['data.dzn'])
+    if problem['data.dzn']:
+        dzn_data = parse_dzn_string(problem['data.dzn'])
+    else:
+        dzn_data = ""
     data_nomenclature = create_data_nomenclature(input_data, dzn_data)
 
     return {
