@@ -26,8 +26,8 @@ Also, make sure to follow the following principles when generating the code:
 **Problem Description**:
 {problem_description}
 
-**Input Data Nomenclature and Examples**:
-{data_nomenclature}
+**Input Data**:
+{input_data}
 
 **Parameters and Variables**:
 ```minizinc

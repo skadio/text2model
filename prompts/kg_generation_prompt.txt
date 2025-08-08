@@ -5,8 +5,8 @@ Please generate a knowledge-graph.
 Problem Description:
 {problem_description}
 
-Input Data Nomenclature:
-{data_nomenclature}
+Input Data:
+{input_data}
 
 Steps to Generate a Knowledge Graph (KG):
 

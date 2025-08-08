@@ -30,8 +30,8 @@ Ensure the following principles for syntactic accuracy and logical consistency:
 **Problem Description**:
 {problem_description}
 
-**Input Data Nomenclature and Examples**:
-{data_nomenclature}
+**Input Data**:
+{input_data}
 
 **Parameters and Variables**:
 ```minizinc

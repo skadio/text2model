@@ -1,0 +1,1 @@
+reversed_string = S[::-1]

@@ -1,0 +1,1 @@
+array[1..N, 1..G, 1..S] of var 0..max: x;

@@ -5,8 +5,8 @@ Review the generated MiniZinc code to ensure correctness and alignment with the 
 **Problem Description:**  
 {problem_description}
 
-**Input Data Nomenclature and Examples:**  
-{data_nomenclature}
+**Input Data:**  
+{input_data}
 
 **Objective Type:**  
 {objective_type}

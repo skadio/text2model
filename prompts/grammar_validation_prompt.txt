@@ -3,8 +3,8 @@ You are given a MiniZinc model that has syntax errors. Your task is to fix these
 **Problem Description:**
 {problem_description}
 
-**Data Nomenclature:**
-{data_nomenclature}
+**Input Data:**
+{input_data}
 
 **Current Code with Syntax Errors:**
 {current_code}

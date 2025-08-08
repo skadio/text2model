@@ -1,0 +1,16 @@
+{
+  "model_name": "assembler",
+  "strategy_name": "gpt-oss:20b",
+  "evaluation_date": "2025-08-05 23:50:31",
+  "execution_accuracy": 17.27,
+  "solution_accuracy": 8.18,
+  "average_score": 12.73,
+  "satisfaction_execution_accuracy": 10.0,
+  "satisfaction_solution_accuracy": 0.0,
+  "optimization_execution_accuracy": 18.0,
+  "optimization_solution_accuracy": 9.0,
+  "problems_attempted": 110,
+  "problems_solved": 9,
+  "satisfaction_problems": 10,
+  "optimization_problems": 100
+}

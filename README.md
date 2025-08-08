@@ -6,7 +6,7 @@ A unified pipeline for generating/evaluating MiniZinc code for all the **verifie
 
 1. Install dependencies:
 ```bash
-pip install openai datasets tqdm
+pip install openai datasets tqdm langchain_ollama
 ```
 
 2. Set your OpenAI API key:
@@ -50,6 +50,9 @@ python main.py --strategies baseline --problem-ids 0 1 2 10 --model gpt-4
 
 ### Five API/LLM calls
 1. **compositional_with_code_validation**: This approach adds a code validation step to the compositional approach.
+
+### Mutiple API/LLM calls
+1. **agents**: This approach first have individual agents focusing on every type of specific global constraints and get the code output. Then it have an assembler to combine the code together.
 
 ## Evaluation
 

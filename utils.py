@@ -5,8 +5,9 @@ import subprocess
 from typing import Any, Dict, List, Optional, Tuple
 
 import openai
+from langchain_ollama import ChatOllama
 
-# Global API configuration
+# Global OpenAI API configuration
 API_CONFIG = {
     'model': 'gpt-4',
     'temperature': 0,
@@ -20,6 +21,20 @@ def extract_code_blocks(text: str) -> str:
     pattern = re.compile(r'```(?:\w+)?\n(.*?)\n```', re.DOTALL)
     matches = pattern.findall(text)
     return matches[0] if matches else text
+
+
+def extract_global_constraint(text):
+    first_line = text.splitlines()[0]
+    return re.findall(r'`(.*?)`', first_line)
+
+
+def call_api(client, model: str, prompt: str) -> Optional[str]:
+    if model in ["gpt-4","gpt-4o"]:
+        solution = call_openai_api(client, prompt)
+        return solution
+    else:
+        solution = call_ollama_api(client, prompt)
+        return solution
 
 
 def call_openai_api(client: openai.OpenAI, prompt: str) -> Optional[str]:
@@ -45,6 +60,19 @@ def call_openai_api(client: openai.OpenAI, prompt: str) -> Optional[str]:
         return extract_code_blocks(result)
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
+        return None
+        
+
+def call_ollama_api(client: ChatOllama, prompt: str) -> Optional[str]:
+    """Call ChatOllama with the given prompt"""
+    try:
+        messages = [
+            {"role": "user", "content": prompt},
+        ]
+        result = client.invoke(messages).content.strip()
+        return extract_code_blocks(result)
+    except Exception as e:
+        print(f"Error calling ChatOllama: {e}")
         return None
 
 
@@ -136,7 +164,10 @@ def create_data_nomenclature(input_data: Dict[str, Any], dzn_data: List[Tuple[st
 def prepare_problem_data(problem: Dict[str, Any]) -> Dict[str, Any]:
     """Prepare problem data for use in prompts"""
     input_data = ast.literal_eval(problem['input.json'])
-    dzn_data = parse_dzn_string(problem['data.dzn'])
+    if problem['data.dzn']:
+        dzn_data = parse_dzn_string(problem['data.dzn'])
+    else:
+        dzn_data = ""
     data_nomenclature = create_data_nomenclature(input_data, dzn_data)
 
     return {
