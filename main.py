@@ -541,7 +541,7 @@ def main():
 
         for idx, problem in tqdm(problems_to_process, desc=f"{strategy} progress"):
             problem_identifier = ast.literal_eval(problem['input.json'])['metadata']['identifier']
-            success = strategy_functions[strategy](client, problem, problem_identifier, output_dir)
+            success = strategy_functions[strategy](client, args.model, problem, problem_identifier, output_dir)
 
             if success:
                 results[strategy]['success'] += 1
