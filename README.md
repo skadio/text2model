@@ -7,6 +7,7 @@ The repository provides a pipeline for Text-to-Model translation. The benchmarks
 * [Text2Zinc Dataset](https://huggingface.co/datasets/skadio/text2zinc)
 * [Text2Zinc Editor](https://huggingface.co/spaces/skadio/text2zinc-editor)
 * [Gala: Global LLM Agents for Text-to-Model Translation](https://arxiv.org/abs/2509.08970)
+* [Ner4Opt](https://link.springer.com/article/10.1007/s10601-024-09376-5) and [repo](https://github.com/skadio/ner4opt)
 
 ## Setup
 
