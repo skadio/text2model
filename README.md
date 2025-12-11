@@ -1,6 +1,12 @@
-# Text2Zinc Leaderboard Code Generation and Evaluation
+# Text2Model: Modeling Co-Pilots for Text-to-Model Translation
 
-A unified pipeline for generating/evaluating MiniZinc code for all the **verified** problems in [Text2Zinc](https://huggingface.co/datasets/skadio/text2zinc) dataset using different prompting strategies with OpenAI's GPT models.
+Modeling co-pilots for text-to-model translation. The benchmarks are based on the [Text2Zinc](https://huggingface.co/datasets/skadio/text2zinc) using different LLM strategies via OpenAI's GPT models.
+
+* [Text2Model Leaderboard]()
+* [Text2Zinc: A Cross-Domain Dataset for Modeling Optimization and Satisfaction Problems in MiniZinc](https://arxiv.org/abs/2503.10642)
+* [Text2Zinc Dataset](https://huggingface.co/datasets/skadio/text2zinc)
+* [Text2Zinc Editor](https://huggingface.co/spaces/skadio/text2zinc-editor)
+* [Gala: Global LLM Agents for Text-to-Model Translation](https://arxiv.org/abs/2509.08970)
 
 ## Setup
 
