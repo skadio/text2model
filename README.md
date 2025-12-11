@@ -38,7 +38,7 @@ python main.py --strategies baseline cot --model gpt-4o
 python main.py --strategies baseline --problem-ids 0 1 2 10 --model gpt-4
 ```
 
-## Available Strategies
+## Text2Model Co-Pilots
 
 ### Single API/LLM call
 1. **baseline**: This is a naive approach to generate Minizinc code prompting LLMs without any explicit instructions except the problem and data description.
