@@ -1,8 +1,8 @@
 # Text2Model: Modeling Co-Pilots for Text-to-Model Translation
 
-Modeling co-pilots for text-to-model translation. The benchmarks are based on the [Text2Zinc](https://huggingface.co/datasets/skadio/text2zinc) using different LLM strategies via OpenAI's GPT models.
+The repository provides a pipeline for Text-to-Model translation. The benchmarks are based on the [Text2Zinc dataset](https://huggingface.co/datasets/skadio/text2zinc) using different LLM strategies via OpenAI's GPT models.
 
-* [Text2Model Leaderboard]()
+* [Text2Model Leaderboard](https://huggingface.co/spaces/skadio/text2model-leaderboard)
 * [Text2Zinc: A Cross-Domain Dataset for Modeling Optimization and Satisfaction Problems in MiniZinc](https://arxiv.org/abs/2503.10642)
 * [Text2Zinc Dataset](https://huggingface.co/datasets/skadio/text2zinc)
 * [Text2Zinc Editor](https://huggingface.co/spaces/skadio/text2zinc-editor)
