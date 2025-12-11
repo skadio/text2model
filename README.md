@@ -53,13 +53,13 @@ python main.py --strategies baseline --problem-ids 0 1 2 10 --model gpt-4
 1. **cot_with_code_and_grammar_validation**: This approach combines, chain-of-thought with two additional steps, one to check grammar using Minizinc Context Free Grammar and code validation explained previously.
 
 ### Four API/LLM calls
-1. **compositional**: This approach splits the code generation into four steps, generate parameters & variables, constraints, objective and a final prompt to stitch these intermediate outputs together.
+1. **agents**: This compositional approach splits the code generation into four steps, generate parameters & variables, constraints, objective and a final prompt to stitch these intermediate outputs together.
 
 ### Five API/LLM calls
-1. **compositional_with_code_validation**: This approach adds a code validation step to the compositional approach.
+1. **agents_with_code_validation**: This compositional approach adds a code validation step to the compositional approach.
 
 ### Mutiple API/LLM calls
-1. **agents**: This approach first have individual agents focusing on every type of specific global constraints and get the code output. Then it have an assembler to combine the code together.
+1. **global_agents**: This glboal agents approach first have individual agents focusing on every type of specific global constraints and get the code output. Then it have an assembler to combine the code together. See Gala paper. 
 
 ## Evaluation
 
@@ -97,22 +97,8 @@ Results are broken down by:
 - Satisfaction problems
 - Optimization problems
 
-### Current Leaderboard
-| model  | strategy                             | execution_accuracy | solution_accuracy | average_score | problems_attempted | problems_solved | evaluation_date     |
-|--------|--------------------------------------|--------------------|-------------------|---------------|--------------------|-----------------|---------------------|
-| gpt-4o | cot_with_code_validation             | 80.91              | 41.82             | 61.36         | 110                | 46              | 2025-05-22 13:32:11 |
-| gpt-4o | cot_with_code_and_grammar_validation | 73.64              | 40.0              | 56.82         | 110                | 44              | 2025-05-22 13:36:30 |
-| gpt-4o | cot                                  | 60.91              | 34.55             | 47.73         | 110                | 38              | 2025-05-22 13:34:29 |
-| gpt-4  | cot_with_code_and_grammar_validation | 70.0               | 24.55             | 47.27         | 110                | 27              | 2025-05-22 13:50:56 |
-| gpt-4  | cot_with_grammar_validation          | 62.73              | 22.73             | 42.73         | 110                | 25              | 2025-05-22 13:38:44 |
-| gpt-4  | cot                                  | 57.27              | 28.18             | 42.73         | 110                | 31              | 2025-05-22 13:49:54 |
-| gpt-4  | cot_with_code_validation             | 57.27              | 28.18             | 42.73         | 110                | 31              | 2025-05-22 13:42:43 |
-| gpt-4  | knowledge_graph                      | 48.18              | 25.45             | 36.82         | 110                | 28              | 2025-05-22 13:37:45 |
-| gpt-4  | compositional_with_code_validation   | 43.64              | 20.91             | 32.27         | 110                | 23              | 2025-05-22 13:41:40 |
-| gpt-4  | compositional                        | 43.64              | 20.0              | 31.82         | 110                | 22              | 2025-05-22 13:46:05 |
-| gpt-4  | baseline                             | 32.73              | 17.27             | 25.0          | 110                | 19              | 2025-05-22 13:48:56 |
-
-Current leaderboard on [Huggingface](https://huggingface.co/spaces/skadio/text2zinc-leaderboard)
+## Leaderboard 
+[Text2Model-Leaderboard](https://huggingface.co/spaces/skadio/text2model-leaderboard)
 
 ## Repository Structure
 
@@ -122,26 +108,11 @@ Current leaderboard on [Huggingface](https://huggingface.co/spaces/skadio/text2z
 │   └── ...
 ├── output/                                                      # Output directory (created automatically)
 │   ├── gpt-4/
-│   │   ├── baseline/
-│   │   ├── compositional/
-│   │   ├── compositional_with_code_validation/
-│   │   ├── cot/
-│   │   ├── cot_with_code_and_grammar_validation/
-│   │   ├── cot_with_code_validation/
-│   │   ├── cot_with_grammar_validation/
-│   │   ├── knowledge_graph/
+│       └── ...
 │   └── gpt-4o/
 │       └── ...
 ├── prompts/                                                     # Directory for prompt templates
-│   ├── code_stitching_prompt.txt
-│   ├── code_validation_prompt.txt
-│   ├── constraint_generation_prompt.txt
-│   ├── cot_prompt.txt
-│   ├── grammar_validation_prompt.txt
-│   ├── kg_code_generation_prompt.txt
-│   └── kg_generation_prompt.txt
-│   └── objective_generation_prompt.txt
-│   └── parameter_and_variable_generation_prompt.txt
+└── ...
 ├── evaluate.py                                                  # Script to evaluate generated minizinc code
 ├── generate_knowledge_graph.py                                  # Script to generate knowledge graphs
 ├── grammar.mzn                                                  # MiniZinc grammar (https://github.com/MiniZinc/libminizinc/blob/master/docs/en/grammar.mzn)
@@ -150,7 +121,7 @@ Current leaderboard on [Huggingface](https://huggingface.co/spaces/skadio/text2z
 └── README.md
 ```
 
-### Output Folder Structure
+## Output Folder Structure
 
 Generated MiniZinc files are saved in a hierarchical structure:
 ```
