@@ -1,0 +1,16 @@
+{
+  "model_name": "o3-mini",
+  "strategy_name": "global_agents",
+  "evaluation_date": "2025-12-19 15:05:00",
+  "execution_accuracy": 57.89,
+  "solution_accuracy": 33.68,
+  "average_score": 45.79,
+  "satisfaction_execution_accuracy": 62.5,
+  "satisfaction_solution_accuracy": 25.0,
+  "optimization_execution_accuracy": 57.47,
+  "optimization_solution_accuracy": 34.48,
+  "problems_attempted": 95,
+  "problems_solved": 32,
+  "satisfaction_problems": 8,
+  "optimization_problems": 87
+}

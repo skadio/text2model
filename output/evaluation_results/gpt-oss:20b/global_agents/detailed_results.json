@@ -1,0 +1,992 @@
+[
+  {
+    "problem_id": "CSPLib_12",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpcgp1dwk2.mzn:58.10:\n         | k in 1..row_rule_len]) > 0\n         ^\nError: syntax error, unexpected '|'\n\n/tmp/tmpcgp1dwk2.mzn:69.10:\n         | k in 1..col_rule_len]) > 0\n         ^\nError: syntax error, unexpected '|'\n"
+  },
+  {
+    "problem_id": "CSPLib_14",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmplvt1uh9l.mzn:62.13-15:\n            int: nr = r + dr;\n            ^^^\nError: syntax error, unexpected int, expecting '{'\n\n/tmp/tmplvt1uh9l.mzn:64.9-10:\n        in\n        ^^\nError: syntax error, unexpected in, expecting end of file\n"
+  },
+  {
+    "problem_id": "CSPLib_2",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "No objective value found in output"
+  },
+  {
+    "problem_id": "CSPLib_22",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `shifts'\n/tmp/tmp_8s1hic8.dzn:14.1-93.1\n"
+  },
+  {
+    "problem_id": "CSPLib_28",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpu5e99rua.mzn:22.17-25:\n  count([block[i',j] | i' in 1..b, j in 1..k], i, r[i])\n                ^^^^^^^^^\nError: syntax error, unexpected identifier, expecting ]\n"
+  },
+  {
+    "problem_id": "CSPLib_30",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "20.0"
+  },
+  {
+    "problem_id": "CSPLib_34",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "383.0"
+  },
+  {
+    "problem_id": "CSPLib_39",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpvgq9i381.mzn:17.5-12:\n    involved[p,k] = (rehearsal[p,k] == 1);\n    ^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpvgq9i381.mzn:28.5-10:\n    inside[p,k] =\n    ^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpvgq9i381.mzn:41.5-12:\n    presence[p] = sum(k in 1..num_pieces)(\n    ^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "CSPLib_54",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmp45rb_gjj.mzn:21.16-18:\n        string row = concat([ if queens[i] == j then \"Q\" else \".\" endif | j in 1..n ])\n               ^^^\nError: syntax error, unexpected identifier, expecting ++ or ':'\n"
+  },
+  {
+    "problem_id": "CSPLib_6",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: array index set expression has invalid type, expected `set of int', actual `set of float'\n/tmp/tmpn6kpj87z.mzn:9.7-20\n"
+  },
+  {
+    "problem_id": "CSPLib_8",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmp9iq_1wj8.mzn:45.56:\n           \" at (\", show(x[i]), \",\", show(y[i]), \")\\n\" | i in 1..n_containers ])\n                                                       ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "LPWP_128",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "970.0"
+  },
+  {
+    "problem_id": "LPWP_232",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple type errors:\nError: type error:   symbol error: variable `CircularTables' must be defined (did you forget to specify a data file?)\n/tmp/tmphbqztmok.mzn:7.1-19\n\nError: type error:   symbol error: variable `RectangularTables' must be defined (did you forget to specify a data file?)\n/tmp/tmphbqztmok.mzn:8.1-22\n"
+  },
+  {
+    "problem_id": "LPWP_53",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "750.0"
+  },
+  {
+    "problem_id": "LPWP_66",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmp72jrsbbp.mzn:5.28-29:\nvar int: AlmondCroissants  >= 0;   % number of almond croissants\n                           ^^\nError: syntax error, unexpected >=, expecting end of file\n\n/tmp/tmp72jrsbbp.mzn:6.30-31:\nvar int: PistachioCroissants >= 0;  % number of pistachio croissants\n                             ^^\nError: syntax error, unexpected >=, expecting end of file\n"
+  },
+  {
+    "problem_id": "LPWP_85",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple type errors:\nError: type error:   symbol error: variable `NetAcres' must be defined (did you forget to specify a data file?)\n/tmp/tmpx5rvm8if.mzn:4.1-13\n\nError: type error:   symbol error: variable `LineAcres' must be defined (did you forget to specify a data file?)\n/tmp/tmpx5rvm8if.mzn:5.1-14\n"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_1",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "7.0"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_18",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpyoq5ne9y.mzn:23.38-45:\nconstraint sum(i in 1..num_projects) selected[i] * budgets[i] <= max_budget;\n                                     ^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpyoq5ne9y.mzn:24.38-45:\nconstraint sum(i in 1..num_projects) selected[i] * personell[i] <= max_persons;\n                                     ^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpyoq5ne9y.mzn:25.38-45:\nconstraint sum(i in 1..num_projects) selected[i] <= max_projects;\n                                     ^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpyoq5ne9y.mzn:38.50-57:\nvar int: total_value = sum(i in 1..num_projects) selected[i] * values[i];\n                                                 ^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_2",
+    "problem_type": "satisfaction",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": ""
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_28",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpq7z4s11b.mzn:22.39-52:\n  total_cost = sum(i in 1..num_parts) product_stores[i, assignment[i]]\n                                      ^^^^^^^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_31",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpa_ew21ay.mzn:53.5-10:\n    forall(i in 1..num_jobs, m in 1..num_machines);\n    ^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_4",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpxzwb8vp2.mzn:9.14:\nvar 1..n: d1x, d1y;\n             ^\nError: syntax error, unexpected ',', expecting end of file\n\n/tmp/tmpxzwb8vp2.mzn:10.14:\nvar 1..n: d2x, d2y;\n             ^\nError: syntax error, unexpected ',', expecting end of file\n\n/tmp/tmpxzwb8vp2.mzn:14.36:\narray[1..n, 1..n] of var int: dist1, dist2, dmin;\n                                   ^\nError: syntax error, unexpected ',', expecting end of file\n"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_5",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "8.0"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_6",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `i', did you mean `n'?\n/tmp/tmpc6o1iqlk.mzn:11.33\n"
+  },
+  {
+    "problem_id": "OR_LP_IP_Scheduling_problem_8",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpqcmrw8l6.mzn:18.38-43:\nint: total_demand = sum(d in 0..n-1) demand[d];   % upper bound on any worker count\n                                     ^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpqcmrw8l6.mzn:35.9-65:\n    sum(s in 0..n-1 where ( (d - s + n) mod n ) < full_time_shift) ft_start[s]\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nError: syntax error, 'where' expression outside generator call\n\n/tmp/tmpqcmrw8l6.mzn:35.68-75:\n    sum(s in 0..n-1 where ( (d - s + n) mod n ) < full_time_shift) ft_start[s]\n                                                                   ^^^^^^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmpqcmrw8l6.mzn:46.22-29:\n    sum(s in 0..n-1) ft_start[s] * full_time_pay * full_time_shift\n                     ^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "combinatorial_problem_1",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: no function or predicate with name `ite' found, did you mean `write'?\n/tmp/tmpeexbf_7b.mzn:17.35-62\n"
+  },
+  {
+    "problem_id": "combinatorial_problem_31",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: if-then-else with var condition cannot have type `string'\n/tmp/tmp_df3rzvw.mzn:54.14-66\n"
+  },
+  {
+    "problem_id": "combinatorial_problem_32",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpvl8i1gaq.mzn:22.36-39:\narray[1..num_people] of var float: diff;\n                                   ^^^^\nError: syntax error, unexpected diff, expecting identifier\n\n/tmp/tmpvl8i1gaq.mzn:47.5-8:\n    diff[p] = abs(drive_counts[p] - obligation[p])\n    ^^^^\nError: syntax error, unexpected diff\n\n/tmp/tmpvl8i1gaq.mzn:51.40-43:\nsolve minimize sum(p in 1..num_people)(diff[p]);\n                                       ^^^^\nError: syntax error, unexpected diff\n\n/tmp/tmpvl8i1gaq.mzn:58.27-30:\n  \"Diffs        = \", show(diff), \"\\n\"\n                          ^^^^\nError: syntax error, unexpected diff\n"
+  },
+  {
+    "problem_id": "combinatorial_problem_7",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "11.0"
+  },
+  {
+    "problem_id": "complexor_AircraftAssignment",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpay_h0rk7.mzn:17.30:\n    sum(j in 1..TotalRoutes) x[i,j] <= Availability[i]\n                             ^\nError: syntax error, unexpected identifier\n\n/tmp/tmpay_h0rk7.mzn:22.32-39:\n    sum(i in 1..TotalAircraft) Capacity[i,j] * x[i,j] >= Demand[j]\n                               ^^^^^^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmpay_h0rk7.mzn:34.13:\n            | i in 1..TotalAircraft ])\n            ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "complexor_AircraftLanding",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpbep7w5_d.mzn:43.53-59:\nvar int: totalPenalty = sum(i in 1..TotalAircrafts) penalty[i];\n                                                    ^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "complexor_CFLP",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmp_zqer0rh.mzn:31.1-8:\nminimize\n^^^^^^^^\nError: syntax error, unexpected minimize, expecting end of file\n"
+  },
+  {
+    "problem_id": "complexor_CapacitatedWarehouseLocation",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpqd21ek02.mzn:29.34-39:\n  sum(i in 1..NumberOfLocations) assign[i,j] = 1\n                                 ^^^^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmpqd21ek02.mzn:34.34-47:\n  sum(j in 1..NumberOfCustomers) CustomerDemand[j] * assign[i,j]\n                                 ^^^^^^^^^^^^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmpqd21ek02.mzn:43.5-25:\n    ServiceAllocationCost[i,j] * assign[i,j];\n    ^^^^^^^^^^^^^^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpqd21ek02.mzn:46.34-51:\n  sum(i in 1..NumberOfLocations) WarehouseFixedCost[i] * open[i];\n                                 ^^^^^^^^^^^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "complexor_CarSelection",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: 2-dimensional array accessed with 1 expression\n/tmp/tmpjrh3d0z0.mzn:17.27-40\n"
+  },
+  {
+    "problem_id": "complexor_TSP",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmp4rg9dw05.mzn:29.33:\n    sum(j in 1..DestinationNum) x[i,j] <= Supply[i]\n                                ^\nError: syntax error, unexpected identifier\n\n/tmp/tmp4rg9dw05.mzn:35.28:\n    sum(i in 1..OriginNum) x[i,j] == Demand[j]\n                           ^\nError: syntax error, unexpected identifier\n\n/tmp/tmp4rg9dw05.mzn:41.69-72:\nvar int: totalCost = sum(i in 1..OriginNum, j in 1..DestinationNum) Cost[i,j] * x[i,j];\n                                                                    ^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "complexor_VRPTW",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmp1bbrk4bd.mzn:26.14:\n  | i in 0..N];\n             ^\nError: syntax error, unexpected ], expecting |]\n\n/tmp/tmp1bbrk4bd.mzn:39.18-20:\n  sum(j in 0..N) arc[0][j][k] == 1 /\\          % one outgoing arc from depot\n                 ^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmp1bbrk4bd.mzn:45.29-31:\n  sum(k in 1..M, j in 0..N) arc[i][j][k] == 1 /\\   % one outgoing arc\n                            ^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmp1bbrk4bd.mzn:51.35-37:\n  visited[i][k] = (sum(j in 0..N) arc[j][i][k] == 1)\n                                  ^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmp1bbrk4bd.mzn:56.18-31:\n  sum(i in 1..N) CustomerDemand[i] * (if visited[i][k] then 1 else 0) <= VehicleCapacity[k]\n                 ^^^^^^^^^^^^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmp1bbrk4bd.mzn:101.10:\n         | k in 1..M ])\n         ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "nlp4lp_1",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "76.0"
+  },
+  {
+    "problem_id": "nlp4lp_10",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `Coefficients'\n/tmp/tmppcjh5iy6.dzn:3.1-66\n"
+  },
+  {
+    "problem_id": "nlp4lp_11",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmp25lmqx43.mzn:23.20-23:\n    sum(s in 1..S) flow[n,g,s] == Population[n,g]\n                   ^^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmp25lmqx43.mzn:29.20-23:\n    sum(n in 1..N) flow[n,g,s] <= Capacity[s,g]\n                   ^^^^\nError: syntax error, unexpected identifier\n"
+  },
+  {
+    "problem_id": "nlp4lp_12",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "1100.0"
+  },
+  {
+    "problem_id": "nlp4lp_13",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: 2-dimensional array accessed with 1 expression\n/tmp/tmpsulcnpw2.mzn:15.21\n"
+  },
+  {
+    "problem_id": "nlp4lp_14",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `M', did you mean `x'?\n/tmp/tmp18woz2wm.dzn:1.1-5\n"
+  },
+  {
+    "problem_id": "nlp4lp_15",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `i', did you mean `q'?\n/tmp/tmpg55cc8o4.mzn:25.36\n"
+  },
+  {
+    "problem_id": "nlp4lp_16",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `inf'\n/tmp/tmpr35g0zwr.mzn:15.23-25\n"
+  },
+  {
+    "problem_id": "nlp4lp_17",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmp4jcuyzgl.mzn:35.61:\n    concat([ show(x[l]), if l < L then \", \" else \"\\n\" endif | l in 1..L ])\n                                                            ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "nlp4lp_18",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmp12ms2jle.mzn:20.34-38:\n    sell[i] >= 0.0 /\\ sell[i] <= float(Bought[i])\n                                 ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmp12ms2jle.mzn:31.4-8:\n  (float(Bought[i]) - sell[i]) * FuturePrice[i]\n   ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmp12ms2jle.mzn:35.25-29:\nconstraint netRaised >= float(K);\n                        ^^^^^\nError: syntax error, unexpected float\n"
+  },
+  {
+    "problem_id": "nlp4lp_19",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmp38_wuivy.mzn:54.20-24:\n    sum(i in 1..I) store[m,i] <= StorageSize\n                   ^^^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmp38_wuivy.mzn:72.81-84:\n    - StorageCost * sum(m in 1..M)( sum(i in 1..I)( store[m,i] ) );  -- storage cost\n                                                                                ^^^^\nError: syntax error, unexpected identifier, expecting ++ or ':'\n"
+  },
+  {
+    "problem_id": "nlp4lp_2",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmp9aihisq5.mzn:41.21-25:\nfloat: maxDemandF = float(maxDemand);\n                    ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmp9aihisq5.mzn:50.32-36:\n    forall(i in 1..N) (x[i] >= float(Preorder[i])) /\\\n                               ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmp9aihisq5.mzn:76.44-48:\nvar float: profit = sum(i in 1..N) (x[i] * float(Price[i]));\n                                           ^^^^^\nError: syntax error, unexpected float\n"
+  },
+  {
+    "problem_id": "nlp4lp_20",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpzr55lfaw.mzn:49.5-10:\n    refine[m,i] >= MinUsage * (bool2int(use[m,i]));\n    ^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpzr55lfaw.mzn:57.5-9:\n    count(use[m,1..I], true, oilCount[m]) <= 3;\n    ^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpzr55lfaw.mzn:61.5-7:\n    sum(i in 1..I) (bool2int(IsVegetable[i]) * refine[m,i]) <= MaxVegRefiningPerMonth;\n    ^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpzr55lfaw.mzn:64.5-7:\n    sum(i in 1..I) ((1 - bool2int(IsVegetable[i])) * refine[m,i]) <= MaxNonVegRefiningPerMonth;\n    ^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpzr55lfaw.mzn:70.6:\n     :\n     ^\nError: syntax error, unexpected ':'\n\n/tmp/tmpzr55lfaw.mzn:75.5-11:\n    storage[m,i] >= 0 /\\ storage[m,i] <= StorageSize;\n    ^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpzr55lfaw.mzn:79.5-11:\n"
+  },
+  {
+    "problem_id": "nlp4lp_21",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpvi7u8pdk.mzn:56.10-14:\n        (float(NumMachines[m]) - float(Maintain[i,m])) * TotalHours\n         ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmpvi7u8pdk.mzn:71.77:\n             concat([ \"  Product \", show(k), \": \", show(produce[k,i]), \"\\n\" | k in 1..K ])\n                                                                            ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "nlp4lp_22",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpyqwnm8ut.mzn:38.20-23:\n    sum(k in 1..K) prod[i,k] * Time[k,m] <=\n                   ^^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmpyqwnm8ut.mzn:73.32:\n    concat([ \"P\", show(k), \" \" | k in 1..K]), \"\\n\",\n                               ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "nlp4lp_23",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `LessOneWaste'\n/tmp/tmpjfoizcuf.dzn:3.1-31\n"
+  },
+  {
+    "problem_id": "nlp4lp_24",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmp6arsqeep.mzn:36.19-21:\nconstraint forall(k,t)(W[k,t] >= 0);          % workforce can\u2019t be negative\n                  ^^^\nError: illegal expression in generator call\n\n/tmp/tmp6arsqeep.mzn:41.19-21:\n);\n                  ^^^\nError: illegal expression in generator call\n\n/tmp/tmp6arsqeep.mzn:48.19-21:\n);\n                  ^^^\nError: illegal expression in generator call\n"
+  },
+  {
+    "problem_id": "nlp4lp_25",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: 2-dimensional array accessed with 1 expression\n/tmp/tmpd1vb2gc3.mzn:50.11-17\n"
+  },
+  {
+    "problem_id": "nlp4lp_27",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmp1r352xcl.mzn:93.31-33:\nsolve maximize sum(i in 1..K) cap[i,Y];\n                              ^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "nlp4lp_28",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpqv2scskt.mzn:47.64:\n  concat([ show(t), \": \", show([prod[t][k] | k in 1..K]), \"\\n\" | t in 1..K]),\n                                                               ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "nlp4lp_29",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpya8dwivm.mzn:95.58:\n                      \", x2 = \", show(x2[t,j]), \"\\n\" ] ) | j in 1..K ])\n                                                         ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "nlp4lp_3",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: type error in operator application for `'^''. No matching operator found with left-hand side type `string' and right-hand side type `string'\n/tmp/tmpth8kmw5c.mzn:49.12-25\n"
+  },
+  {
+    "problem_id": "nlp4lp_30",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpf3il4awv.mzn:24.32-44:\n   sum(k in 1..K, j in k+1..K) Communication[k,j] * Cost[loc[k], loc[j]];\n                               ^^^^^^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpf3il4awv.mzn:28.19-27:\n   sum(k in 1..K) int2float( Benefit[k, loc[k]] );\n                  ^^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "nlp4lp_31",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmppas13pwy.mzn:15.16-60\n  in call 'sum'\n  in array comprehension expression\n    with i = 1\n  in call 'abs'\n/snap/minizinc/1183/share/minizinc/std/stdlib/stdlib_math.mzn:600.3-617.7\n  in if-then-else expression\n/snap/minizinc/1183/share/minizinc/std/stdlib/stdlib_math.mzn:601.5-610.9\n  in if-then-else expression\n/snap/minizinc/1183/share/minizinc/std/stdlib/stdlib_math.mzn:606.7-609.12\n  in let expression\n/snap/minizinc/1183/share/minizinc/std/stdlib/stdlib_math.mzn:608.20-34\n  in call 'float_abs'\n/snap/minizinc/1183/share/minizinc/linear/redefinitions.mzn:90.3-108.7\n  in if-then-else expression\n/snap/minizinc/1183/share/minizinc/linear/redefinitions.mzn:95.5-103.35\n  in let expression\n/snap/minizinc/1183/share/minizinc/linear/redefinitions.mzn:97.10-103.35\n  in binary '/\\' operator expression\n"
+  },
+  {
+    "problem_id": "nlp4lp_32",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "1.725"
+  },
+  {
+    "problem_id": "nlp4lp_33",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpn4_bp4io.mzn:5.14-15:\nvar float: a in -1e6..1e6;\n             ^^\nError: syntax error, unexpected in, expecting end of file\n\n/tmp/tmpn4_bp4io.mzn:6.14-15:\nvar float: b in -1e6..1e6;\n             ^^\nError: syntax error, unexpected in, expecting end of file\n\n/tmp/tmpn4_bp4io.mzn:7.14-15:\nvar float: c in -1e6..1e6;\n             ^^\nError: syntax error, unexpected in, expecting end of file\n\n/tmp/tmpn4_bp4io.mzn:14.13-16:\n      float pred = c * ObservedXValues[k] * ObservedXValues[k]\n            ^^^^\nError: syntax error, unexpected identifier, expecting ++ or ':'\n"
+  },
+  {
+    "problem_id": "nlp4lp_34",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpxytai7vz.mzn:50.29-31:\n    sum(u in 1..totalUnits) gen[t,u] == Demand[t]\n                            ^^^\nError: syntax error, unexpected identifier\n"
+  },
+  {
+    "problem_id": "nlp4lp_35",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpjlk8cyv1.mzn:20.30-40:\n    sum(k in 1..NumProducts) ProduceTime[k,s] * produce[k] <= AvailableTime[s]\n                             ^^^^^^^^^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmpjlk8cyv1.mzn:25.49-54:\nvar int: totalProfit = sum(k in 1..NumProducts) Profit[k] * produce[k];\n                                                ^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "nlp4lp_36",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: evaluation error: Index set mismatch. Declared index set of `Value' is [1..infinity], but is assigned to array with index set [1..2]. You may need to coerce the index sets using the array1d function.\n/tmp/tmpekduo9m1.mzn:4.1-24\n  in variable declaration for 'Value'\n"
+  },
+  {
+    "problem_id": "nlp4lp_37",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": true,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "4.0"
+  },
+  {
+    "problem_id": "nlp4lp_38",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "970.0"
+  },
+  {
+    "problem_id": "nlp4lp_39",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpfs22vr4f.mzn:13.27-31:\narray[1..K] of var 0.0 .. float(AlloyQuantity): x;  % quantity of each alloy used\n                          ^^^^^\nError: syntax error, unexpected float, expecting ++ or ':'\n"
+  },
+  {
+    "problem_id": "nlp4lp_4",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error:   symbol error: variable `N' must be defined (did you forget to specify a data file?)\n/tmp/tmp6kjnp4tu.mzn:11.1-6\n"
+  },
+  {
+    "problem_id": "nlp4lp_40",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpd81rn8x8.mzn:18.20-22:\n    sum(k in 1..K) qty[k] * Time[k,s] <= Capacity[s]\n                   ^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmpd81rn8x8.mzn:22.39-41:\nvar int: totalProfit = sum(k in 1..K) qty[k] * Profit[k];\n                                      ^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "nlp4lp_41",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `Demand', did you mean `demand'?\n/tmp/tmpow9spsz4.dzn:2.1-27\n"
+  },
+  {
+    "problem_id": "nlp4lp_42",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "No objective value found in output"
+  },
+  {
+    "problem_id": "nlp4lp_43",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpan51xf9a.mzn:24.36:\n    - ( sum(x[i] * MaterialCost[i] | i in 1..K) + y * ManganesePrice\n                                   ^\nError: syntax error, unexpected '|', expecting ')'\n\n/tmp/tmpan51xf9a.mzn:30.41:\nconstraint sum(x[i] * SiliconContent[i] | i in 1..K)\n                                        ^\nError: syntax error, unexpected '|', expecting ')'\n\n/tmp/tmpan51xf9a.mzn:32.41:\nconstraint sum(x[i] * SiliconContent[i] | i in 1..K)\n                                        ^\nError: syntax error, unexpected '|', expecting ')'\n\n/tmp/tmpan51xf9a.mzn:35.43:\nconstraint sum(x[i] * ManganeseContent[i] | i in 1..K) + y\n                                          ^\nError: syntax error, unexpected '|', expecting ')'\n"
+  },
+  {
+    "problem_id": "nlp4lp_44",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `Capacity', did you mean `capacity'?\n/tmp/tmp_t_r4jz6.dzn:2.1-12\n"
+  },
+  {
+    "problem_id": "nlp4lp_45",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmp4sx658co.mzn:32.40:\nconstraint forall(d in 1..D)(p in 1..P)(\n                                       ^\nError: syntax error, unexpected '(', expecting end of file\n"
+  },
+  {
+    "problem_id": "nlp4lp_46",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpa5x7lcyr.mzn:23.20-31:\n    sum(j in 1..M) Requirements[i][j] * prod[j] <= Available[i]\n                   ^^^^^^^^^^^^\nError: syntax error, unexpected identifier\n"
+  },
+  {
+    "problem_id": "nlp4lp_47",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": true,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "9600.0"
+  },
+  {
+    "problem_id": "nlp4lp_48",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `MaxClicks', did you mean `MaxBlocks'?\n/tmp/tmpclm9fh8i.dzn:9.1-27\n"
+  },
+  {
+    "problem_id": "nlp4lp_49",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `inf'\n/tmp/tmpjttrtsji.mzn:17.30-32\n"
+  },
+  {
+    "problem_id": "nlp4lp_5",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmp7607b93r.mzn:49.5:\n    } in\n    ^\nError: syntax error, unexpected '}'\n"
+  },
+  {
+    "problem_id": "nlp4lp_50",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpdhg3rf4z.mzn:20.59:\n    cover[s] = start[s] + (if s > 1 then start[s-1] else 0)\n                                                          ^\nError: syntax error, unexpected ')'\n"
+  },
+  {
+    "problem_id": "nlp4lp_51",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpzj9ncabn.mzn:32.23-27:\n    /\\ RegHours[w] <= float(RegularLabor[w])\n                      ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmpzj9ncabn.mzn:61.113:\n    [ show(w), \" | \", show(P[w]), \" | \", show(RegHours[w]), \" | \", show(OvrHours[w]), \" | \", show(I[w+1]), \"\\n\" | w in 1..W ];\n                                                                                                                ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "nlp4lp_52",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmp6u8wsekc.mzn:27.41-52:\nconstraint totalUsage <= sum(m in 1..M) Availability[m];\n                                        ^^^^^^^^^^^^\nError: syntax error, unexpected identifier, expecting end of file\n"
+  },
+  {
+    "problem_id": "nlp4lp_53",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmp6djnd51p.mzn:33.37-41:\nvar float: revenue = sum(p in 1..P)(float(Prices[p]) * x[p]);\n                                    ^^^^^\nError: syntax error, unexpected float\n"
+  },
+  {
+    "problem_id": "nlp4lp_54",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "70300.0"
+  },
+  {
+    "problem_id": "nlp4lp_55",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpmhm5lcdf.mzn:16.20:\n    sum(c in 1..C) x[p,c] <= Supply[p]\n                   ^\nError: syntax error, unexpected identifier\n\n/tmp/tmpmhm5lcdf.mzn:21.20:\n    sum(p in 1..P) x[p,c] == Demand[c]\n                   ^\nError: syntax error, unexpected identifier\n\n/tmp/tmpmhm5lcdf.mzn:25.48:\nvar int: totalCost = sum(p in 1..P, c in 1..C) x[p,c] * TransmissionCosts[p,c];\n                                               ^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpmhm5lcdf.mzn:32.73:\n    concat([ \"Plant \", show(p), \": \", show([x[p,c] | c in 1..C]), \"\\n\"] | p in 1..P)\n                                                                        ^\nError: syntax error, unexpected '|', expecting ')'\n"
+  },
+  {
+    "problem_id": "nlp4lp_56",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpiphojtyt.mzn:34.27:\n    sum(l in 1..NumPorts) x[k,l] <= Supply[k]\n                          ^\nError: syntax error, unexpected identifier\n\n/tmp/tmpiphojtyt.mzn:40.31:\n    sum(k in 1..NumTerminals) x[k,l] >= Demand[l]\n                              ^\nError: syntax error, unexpected identifier\n\n/tmp/tmpiphojtyt.mzn:46.67-70:\nvar int: total_cost = sum(k in 1..NumTerminals, l in 1..NumPorts) Cost[k,l] * x[k,l];\n                                                                  ^^^^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpiphojtyt.mzn:58.11:\n          | k in 1..NumTerminals ])\n          ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "nlp4lp_57",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: assertion failed: Variable X_INTRODUCED_60_ needs finite upper bound for a big-M constraint, current domain -infinity..infinity\n/tmp/tmp2t0bfikf.mzn:45.3-46.61\n  in binary '=' operator expression\n  in binary '+' operator expression\n  in array literal\n/tmp/tmp2t0bfikf.mzn:46.28-61\n  in call 'max'\n/snap/minizinc/1183/share/minizinc/std/stdlib/stdlib_math.mzn:462.3-465.8\n  in let expression\n/snap/minizinc/1183/share/minizinc/std/stdlib/stdlib_math.mzn:464.16-61\n  in call 'int_max'\n/snap/minizinc/1183/share/minizinc/linear/redefinitions.mzn:87.57-84\n  in call 'array_int_maximum'\n/snap/minizinc/1183/share/minizinc/linear/redefinitions-2.0.mzn:13.3-54\n  in call 'array_int_minimum_I'\n/snap/minizinc/1183/share/minizinc/linear/redefinitions.mzn:118.3-148.7\n  in let expression\n/snap/minizinc/1183/share/minizinc/linear/redefinitions.mzn:128.8-148.7\n  in if-then-else expression\n/snap/minizinc/1183/share/minizinc/linear/redefinitions.mzn:133.5-147.5\n  in let expression\n/snap/minizinc/1183/sh"
+  },
+  {
+    "problem_id": "nlp4lp_58",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: assertion failed: Variable X_INTRODUCED_82_ needs finite upper bound for a big-M constraint, current domain -infinity..infinity\n/snap/minizinc/1183/share/minizinc/linear/redefs_lin_imp.mzn:79.3-87.7\n  in if-then-else expression\n/snap/minizinc/1183/share/minizinc/linear/redefs_lin_imp.mzn:86.5-64\n  in call 'aux_int_eq_if_1'\n/snap/minizinc/1183/share/minizinc/linear/redefs_lin_halfreifs.mzn:32.3-44.7\n  in if-then-else expression\n/snap/minizinc/1183/share/minizinc/linear/redefs_lin_halfreifs.mzn:43.5-56\n  in binary '/\\' operator expression\n  in call 'aux_int_le_if_1'\n/snap/minizinc/1183/share/minizinc/linear/redefs_lin_halfreifs.mzn:152.65-98\n  in call 'aux_int_le_zero_if_0'\n/snap/minizinc/1183/share/minizinc/linear/redefs_lin_halfreifs.mzn:78.3-108.7\n  in if-then-else expression\n/snap/minizinc/1183/share/minizinc/linear/redefs_lin_halfreifs.mzn:103.5-107.20\n  in binary '/\\' operator expression\n  in call 'assert'\n"
+  },
+  {
+    "problem_id": "nlp4lp_6",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `TotalTime'\n/tmp/tmpd4r27hxt.dzn:5.1-14\n"
+  },
+  {
+    "problem_id": "nlp4lp_60",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpmag5mowa.mzn:17.40:\n    (if W > 1 then takeWest[1,1] else 0) +\n                                       ^\nError: syntax error, unexpected ')'\n\n/tmp/tmpmag5mowa.mzn:22.42:\n    (if W > 1 then takeWest[N,W-1] else 0) +\n                                         ^\nError: syntax error, unexpected ')'\n\n/tmp/tmpmag5mowa.mzn:27.39:\n    forall(n in 1..N, w in 1..W where !(n==1 /\\ w==1) /\\ !(n==N /\\ w==W)) (\n                                      ^\nError: syntax error, unexpected invalid token\n\n/tmp/tmpmag5mowa.mzn:31.64:\n            var int: out = (if n < N then takeNorth[n,w] else 0) +\n                                                               ^\nError: syntax error, unexpected ')'\n"
+  },
+  {
+    "problem_id": "nlp4lp_61",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "250250.0"
+  },
+  {
+    "problem_id": "nlp4lp_62",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: no function or predicate with this signature found: `min(int)'\nCannot use the following functions or predicates with the same identifier:\nfunction $$E : min(set of $$E: x);\n    (argument 1 expects type set of int, but type int given)\nfunction var $$E : min(var set of $$E: xs);\n    (argument 1 expects type var set of int, but type int given)\nfunction $$T : min(array [$X] of opt $$T: x):: promise_commutative;\n    (argument 1 expects type array[$_] of opt int, but type int given)\nfunction var $$T : min(array [$U] of var $$T: x):: promise_commutative;\n    (argument 1 expects type array[$_] of var int, but type int given)\nfunction var $$T : min(array [$X] of var opt $$T: x):: promise_commutative;\n    (argument 1 expects type array[$_] of var opt int, but type int given)\nfunction float : min(array [$X] of opt float: x):: promise_commutative;\n    (argument 1 expects type array[$_] of opt float, but type int given)\nfunction var float : min(array [$U] of var float: x):: promi"
+  },
+  {
+    "problem_id": "nlp4lp_63",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpiy7p7jlh.dzn:8.5:\n    |1, 1, 0, 0, 0, 0, 1, 0| % Translator 1\n    ^\nError: syntax error, unexpected '|'\n"
+  },
+  {
+    "problem_id": "nlp4lp_64",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: initialisation value for `values' has invalid type-inst: expected `array[int] of int', actual `array[int] of set of int'\n/tmp/tmp00zhlxhe.mzn:12.30-35\n"
+  },
+  {
+    "problem_id": "nlp4lp_65",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpeb1rzvvp.mzn:54.15:\n      typeStr = if useIsolate[i] then \"Isolate\" else \"Scan\",\n              ^\nError: syntax error, unexpected =, expecting ++ or ':'\n"
+  },
+  {
+    "problem_id": "nlp4lp_66",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpp07suhme.mzn:23.44:\n            tour[ if i < N then i+1 else 1 ]\n                                           ^\nError: syntax error, unexpected ]\n"
+  },
+  {
+    "problem_id": "nlp4lp_67",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `maxInt'\n/tmp/tmplaiw_qk8.mzn:14.23-28\n"
+  },
+  {
+    "problem_id": "nlp4lp_7",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "1.0"
+  },
+  {
+    "problem_id": "nlp4lp_8",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `k'\n/tmp/tmpvd4cccn7.mzn:14.36\n"
+  },
+  {
+    "problem_id": "nlp4lp_9",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpk1lb4u4j.mzn:33.8-12:\n  sum([float(i) * p[i] | i in 0..K]) = ExpectedZ;\n       ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmpk1lb4u4j.mzn:36.8-12:\n  sum([float(i * i) * p[i] | i in 0..K]) = ExpectedZSquared;\n       ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmpk1lb4u4j.mzn:41.23-27:\n  fourthMoment = sum([float(i ^ 4) * p[i] | i in 0..K]);\n                      ^^^^^\nError: syntax error, unexpected float\n"
+  },
+  {
+    "problem_id": "non_linear_problem_10",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: cannot determine coercion from type array[int,int] of float to type array[int,int] of int\n/tmp/tmprgmzs52s.dzn:17.8-22.30\n"
+  },
+  {
+    "problem_id": "non_linear_problem_15",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmph68hb5u5.mzn:28.19:\n      | j in 1..c | i in 1..r\n                  ^\nError: syntax error, unexpected '|', expecting ]\n"
+  },
+  {
+    "problem_id": "non_linear_problem_23",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: evaluation error: Abort: Unable to create linear formulation for the `float_times(X_INTRODUCED_20_, X_INTRODUCED_237_, X_INTRODUCED_535_)`\n\tconstraint. To flatten this instance a quadratic constraint is required, but the\n\tusage of these constraints is currently disabled for the selected solver. Define\n\t`QuadrFloat=true` if your solver supports quadratic constraints, or use\n\tinteger variables.\n/snap/minizinc/1183/share/minizinc/linear/redefinitions.mzn:331.3-345.7\n  in if-then-else expression\n/snap/minizinc/1183/share/minizinc/linear/redefinitions.mzn:338.5-344.5\n  in call 'abort'\n"
+  },
+  {
+    "problem_id": "non_linear_problem_9",
+    "problem_type": "minimization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmpex4438vh.mzn:52.18-61:\n    show([ first(w in 1..num_warehouses where assign[c,w] = 1) | c in 1..num_customers ]), \"\\n\",\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nError: syntax error, 'where' expression outside generator call\n"
+  },
+  {
+    "problem_id": "puzzles_problem_1",
+    "problem_type": "maximization",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: 2-dimensional array accessed with 1 expression\n/tmp/tmp5eb2bxo6.mzn:17.36-39\n"
+  },
+  {
+    "problem_id": "puzzles_problem_11",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Multiple syntax errors:\n/tmp/tmpflaekpmt.mzn:10.37:\nint: total_bottles = sum(i in 1..n) b[i];\n                                    ^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpflaekpmt.mzn:11.37:\nint: total_liquid  = sum(i in 1..n) t[i] * b[i];\n                                    ^\nError: syntax error, unexpected identifier, expecting end of file\n\n/tmp/tmpflaekpmt.mzn:24.27-31:\n  sum(p in 1..num_people) alloc[p,i] = b[i]          % use all bottles\n                          ^^^^^\nError: syntax error, unexpected identifier\n\n/tmp/tmpflaekpmt.mzn:28.18-22:\n  sum(i in 1..n) alloc[p,i]      = bottles_per_person /\\  % same number of bottles\n                 ^^^^^\nError: syntax error, unexpected identifier\n"
+  },
+  {
+    "problem_id": "puzzles_problem_12",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "/tmp/tmph97yyk11.mzn:5.12:\nvar int: w1, w2, h1, h2;   % dimensions of the sub\u2011rectangles\n           ^\nError: syntax error, unexpected ',', expecting end of file\n"
+  },
+  {
+    "problem_id": "puzzles_problem_13",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: 2-dimensional array accessed with 1 expression\n/tmp/tmpfbz_jyph.mzn:18.3-8\n"
+  },
+  {
+    "problem_id": "puzzles_problem_31",
+    "problem_type": "satisfaction",
+    "execution_success": false,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "Error: type error: undefined identifier `X', did you mean `n'?\n/tmp/tmpg4dgcadi.dzn:7.5\n"
+  }
+]

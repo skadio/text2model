@@ -396,7 +396,7 @@ def main():
     parser.add_argument('--output-dir', default='output', help='Base output directory')
     parser.add_argument('--model', help='Specific model to evaluate (e.g., gpt-4)')
     parser.add_argument('--strategy', help='Specific strategy to evaluate')
-    parser.add_argument('--timeout', type=int, default=60, help='Timeout in seconds for each problem')
+    parser.add_argument('--timeout', type=int, default=120, help='Timeout in seconds for each problem')
     parser.add_argument('--solver', default='highs', help='MiniZinc solver to use')
     parser.add_argument('--create-leaderboard-only', action='store_true',
                         help='Only create leaderboard from existing results')

@@ -1,7 +1,7 @@
 {
-  "model_name": "assembler",
-  "strategy_name": "gpt-oss:20b",
-  "evaluation_date": "2025-08-05 23:50:31",
+  "model_name": "gpt-oss:20b",
+  "strategy_name": "global_agents",
+  "evaluation_date": "2025-12-19 15:01:31",
   "execution_accuracy": 17.27,
   "solution_accuracy": 8.18,
   "average_score": 12.73,
