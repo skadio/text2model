@@ -3,10 +3,11 @@ import ast
 import json
 import os
 import time
+from pathlib import Path
 
 import openai
-from langchain_ollama import ChatOllama
 from datasets import DatasetDict, load_dataset
+from langchain_ollama import ChatOllama
 from tqdm import tqdm
 
 import utils
@@ -279,8 +280,8 @@ def run_cot_with_code_and_grammar_validation_strategy(client, model, problem, pr
 ###########################################################
 # Four and Five-call Strategies
 ###########################################################
-def run_compositional_strategy(client, model, problem, problem_identifier, output_dir, validate=True):
-    """Run the compositional stitch strategy"""
+def run_agents_strategy(client, model, problem, problem_identifier, output_dir, validate=True):
+    """Run the agents strategy"""
     try:
         problem_data = utils.prepare_problem_data(problem)
 
@@ -370,15 +371,15 @@ def run_compositional_strategy(client, model, problem, problem_identifier, outpu
             return True
 
     except Exception as e:
-        print(f"Error in stitch strategy for problem {problem_identifier}: {e}")
+        print(f"Error in agents strategy for problem {problem_identifier}: {e}")
         return False
 
 
 ###########################################################
-# Agentic Strategies
+# Global Agentic (GALA) Strategies
 ###########################################################
-def run_agents_strategy(client, problem, problem_identifier, output_dir):
-    """Run the agents strategy (workers -> assembler)"""
+def run_gala_strategy(client, model, problem, problem_identifier, output_dir):
+    """Run the gala strategy (workers -> assembler)"""
     try:
         # Prepare data
         problem_data = utils.prepare_problem_data(problem)
@@ -386,10 +387,10 @@ def run_agents_strategy(client, problem, problem_identifier, output_dir):
         # Store the code snippets from individual agents
         hints = ""
 
-        PROMPT_DIR = Path("prompts/global_constraint_prompts")
-        # Read all the prompts from the gloabl_constraint prompts folder
-        for prompt in PROMPT_DIR.glob("*.txt"):
-            ind_prompt = utils.load_file(prompt)
+        prompt_dir = Path("prompts/global_constraint_prompts")
+        # Read all the prompts from the global_constraint prompts folder
+        for prompt in prompt_dir.glob("*.txt"):
+            ind_prompt = utils.load_file(str(prompt))
             ind_prompt = ind_prompt + f"""
                 **Problem description**:
                 {problem_data['description']}
@@ -428,7 +429,7 @@ def run_agents_strategy(client, problem, problem_identifier, output_dir):
         return True
 
     except Exception as e:
-        print(f"Error in agents strategy for problem {problem_identifier}: {e}")
+        print(f"Error in gala strategy for problem {problem_identifier}: {e}")
         return False
 
 
@@ -439,8 +440,8 @@ def main():
     parser.add_argument('--strategies', nargs='+',
                         default=['baseline'],
                         choices=['baseline', 'cot', 'knowledge_graph', 'cot_with_code_validation', 'cot_with_grammar_validation',
-                                 'cot_with_code_and_grammar_validation', 'compositional', 'compositional_with_code_validation', 
-                                 'agents', 'all'],
+                                 'cot_with_code_and_grammar_validation', 'agents', 'agents_with_code_validation',
+                                 'gala', 'all'],
                         help='Strategies to run')
     parser.add_argument('--problem-ids', nargs='+', type=int,
                         help='Specific problem IDs to process')
@@ -474,8 +475,7 @@ def main():
         client = ChatOllama(
                 model=args.model,
                 temperature=args.temperature,
-                max_tokens=args.max_tokens,
-                sleep_time=args.sleep_time)
+                num_predict=args.max_tokens)
 
     # Load dataset
     print("Loading dataset...")
@@ -491,8 +491,8 @@ def main():
     # Determine which strategies to run
     if 'all' in args.strategies:
         strategies = ['baseline', 'cot', 'knowledge_graph', 'cot_with_code_validation', 'cot_with_grammar_validation',
-                      'cot_with_code_and_grammar_validation', 'compositional', 'compositional_with_code_validation',
-                      'agents']
+                      'cot_with_code_and_grammar_validation', 'agents', 'agents_with_code_validation',
+                      'gala']
     else:
         strategies = args.strategies
 
@@ -521,13 +521,13 @@ def main():
         'cot_with_code_and_grammar_validation': run_cot_with_code_and_grammar_validation_strategy,
 
         # Four GPT calls
-        'compositional': lambda c, p, i, o: run_compositional_strategy(c, p, i, o, validate=False),
+        'agents': lambda c, m, p, i, o: run_agents_strategy(c, m, p, i, o, validate=False),
 
         # Five GPT calls
-        'compositional_with_code_validation': run_compositional_strategy,
+        'agents_with_code_validation': run_agents_strategy,
 
-        # Agentic Framework
-        'agents': run_agents_strategy
+        # Global Agentic Strategy
+        'gala': run_gala_strategy
     }
 
     # Process problems

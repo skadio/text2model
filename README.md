@@ -53,13 +53,13 @@ python main.py --strategies baseline --problem-ids 0 1 2 10 --model gpt-4
 1. **cot_with_code_and_grammar_validation**: This approach combines, chain-of-thought with two additional steps, one to check grammar using Minizinc Context Free Grammar and code validation explained previously.
 
 ### Four API/LLM calls
-1. **agents**: This compositional approach splits the code generation into four steps, generate parameters & variables, constraints, objective and a final prompt to stitch these intermediate outputs together.
+1. **agents**: This agents approach splits the code generation into four steps, generate parameters & variables, constraints, objective and a final prompt to stitch these intermediate outputs together.
 
 ### Five API/LLM calls
-1. **agents_with_code_validation**: This compositional approach adds a code validation step to the compositional approach.
+1. **agents_with_code_validation**: This agents approach adds a code validation step to the agents approach.
 
-### Mutiple API/LLM calls
-1. **global_agents**: This glboal agents approach first have individual agents focusing on every type of specific global constraints and get the code output. Then it have an assembler to combine the code together. See Gala paper. 
+### Multiple API/LLM calls
+1. **global_agents**: This global agents approach first have individual agents focusing on every type of specific global constraints and get the code output. Then it have an assembler to combine the code together. See Gala paper. 
 
 ## Evaluation
 
