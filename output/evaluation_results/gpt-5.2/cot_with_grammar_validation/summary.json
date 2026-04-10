@@ -1,0 +1,16 @@
+{
+  "model_name": "gpt-5.2",
+  "strategy_name": "cot_with_grammar_validation",
+  "evaluation_date": "2026-02-13 11:22:16",
+  "execution_accuracy": 95.26,
+  "solution_accuracy": 54.03,
+  "average_score": 74.64,
+  "satisfaction_execution_accuracy": 83.33,
+  "satisfaction_solution_accuracy": 0.0,
+  "optimization_execution_accuracy": 95.61,
+  "optimization_solution_accuracy": 55.61,
+  "problems_attempted": 211,
+  "problems_solved": 114,
+  "satisfaction_problems": 6,
+  "optimization_problems": 205
+}

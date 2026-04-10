@@ -44,6 +44,7 @@ def run_knowledge_graph_strategy(client, model, problem, problem_identifier, out
             return False
 
         problem_data = utils.prepare_problem_data(problem)
+        effective_input_data = utils.get_effective_input_data(problem_data)
         knowledge_graph = utils.load_file(kg_path)
 
         # Create KG-enhanced prompt
@@ -51,7 +52,7 @@ def run_knowledge_graph_strategy(client, model, problem, problem_identifier, out
         prompt = kg_prompt.format(
             problem_description=problem_data['description'],
             knowledge_graph=knowledge_graph,
-            input_data=problem_data['data_nomenclature']
+            input_data=effective_input_data
         )
 
         solution = utils.call_api(client, model, prompt)
@@ -67,10 +68,11 @@ def run_knowledge_graph_strategy(client, model, problem, problem_identifier, out
 
 
 def run_cot_with_code_validation_strategy(client, model, problem, problem_identifier, output_dir):
-    """Run the cot strategy with additional code validation"""
+    """Run the cot strategy with conditional code validation (only if compilation fails)"""
     try:
         # Prepare data
         problem_data = utils.prepare_problem_data(problem)
+        effective_input_data = utils.get_effective_input_data(problem_data)
 
         # Stage 1: Generate initial code with chain of thought
         cot_prompt = utils.load_file('prompts/cot_prompt.txt')
@@ -79,32 +81,41 @@ def run_cot_with_code_validation_strategy(client, model, problem, problem_identi
             model,
             cot_prompt.format(
                 problem_description=problem_data['description'],
-                input_data=problem_data['data_nomenclature']
+                input_data=effective_input_data
             )
         )
 
         if not initial_code:
             return False
 
-        time.sleep(2)
+        current_code = initial_code
 
-        # Stage 2: Validate and refine
-        validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
-        validated_code = utils.call_api(
-            client,
-            model,
-            validation_prompt.format(
-                problem_description=problem_data['description'],
-                input_data=problem_data['data_nomenclature'],
-                objective_type=problem_data['objective_type'],
-                final_code=initial_code
+        # Check if the code compiles (handle empty dzn)
+        dzn_data = problem.get('data.dzn') or ""
+        syntax_error_message = utils.check_syntax(initial_code, dzn_data)
+
+        # Stage 2: Validate and refine ONLY if there's a compilation error
+        if syntax_error_message:
+            time.sleep(2)
+
+            validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
+            validated_code = utils.call_api(
+                client,
+                model,
+                validation_prompt.format(
+                    problem_description=problem_data['description'],
+                    input_data=effective_input_data,
+                    objective_type=problem_data['objective_type'],
+                    final_code=initial_code,
+                    syntax_error_message=syntax_error_message
+                )
             )
-        )
 
-        if validated_code:
-            utils.save_solution(output_dir, problem_identifier, validated_code)
-            return True
-        return False
+            if validated_code:
+                current_code = validated_code
+
+        utils.save_solution(output_dir, problem_identifier, current_code)
+        return True
 
     except Exception as e:
         print(f"Error in two-stage strategy for problem {problem_identifier}: {e}")
@@ -116,6 +127,7 @@ def run_cot_strategy(client, model, problem, problem_identifier, output_dir):
     try:
         # Prepare data
         problem_data = utils.prepare_problem_data(problem)
+        effective_input_data = utils.get_effective_input_data(problem_data)
 
         # Generate code with chain of thought
         cot_prompt = utils.load_file('prompts/cot_prompt.txt')
@@ -124,7 +136,7 @@ def run_cot_strategy(client, model, problem, problem_identifier, output_dir):
             model,
             cot_prompt.format(
                 problem_description=problem_data['description'],
-                input_data=problem_data['data_nomenclature']
+                input_data=effective_input_data
             )
         )
 
@@ -145,6 +157,7 @@ def run_cot_with_grammar_validation_strategy(client, model, problem, problem_ide
     try:
         # Prepare data
         problem_data = utils.prepare_problem_data(problem)
+        effective_input_data = utils.get_effective_input_data(problem_data)
 
         # Stage 1: Generate initial code with chain of thought
         cot_prompt = utils.load_file('prompts/cot_prompt.txt')
@@ -153,7 +166,7 @@ def run_cot_with_grammar_validation_strategy(client, model, problem, problem_ide
             model,
             cot_prompt.format(
                 problem_description=problem_data['description'],
-                input_data=problem_data['data_nomenclature']
+                input_data=effective_input_data
             )
         )
 
@@ -177,7 +190,7 @@ def run_cot_with_grammar_validation_strategy(client, model, problem, problem_ide
                 model,
                 grammar_prompt.format(
                     problem_description=problem_data['description'],
-                    input_data=problem_data['data_nomenclature'],
+                    input_data=effective_input_data,
                     current_code=current_code,
                     syntax_error_message=syntax_error_message,
                     minizinc_grammar=minizinc_grammar
@@ -204,6 +217,7 @@ def run_cot_with_code_and_grammar_validation_strategy(client, model, problem, pr
     try:
         # Prepare data
         problem_data = utils.prepare_problem_data(problem)
+        effective_input_data = utils.get_effective_input_data(problem_data)
 
         # Stage 1: Generate initial code with chain of thought
         cot_prompt = utils.load_file('prompts/cot_prompt.txt')
@@ -212,7 +226,7 @@ def run_cot_with_code_and_grammar_validation_strategy(client, model, problem, pr
             model,
             cot_prompt.format(
                 problem_description=problem_data['description'],
-                input_data=problem_data['data_nomenclature']
+                input_data=effective_input_data
             )
         )
 
@@ -223,8 +237,9 @@ def run_cot_with_code_and_grammar_validation_strategy(client, model, problem, pr
 
         current_code = initial_code
 
-        # Check syntax of initial code
-        syntax_error_message = utils.check_syntax(initial_code, problem['data.dzn'])
+        # Check if the code compiles (handle empty dzn)
+        dzn_data = problem.get('data.dzn') or ""
+        syntax_error_message = utils.check_syntax(initial_code, dzn_data)
 
         # Stage 2: Validation if syntax error exists
         if syntax_error_message:
@@ -234,7 +249,7 @@ def run_cot_with_code_and_grammar_validation_strategy(client, model, problem, pr
                 model,
                 validation_prompt.format(
                     problem_description=problem_data['description'],
-                    input_data=problem_data['data_nomenclature'],
+                    input_data=effective_input_data,
                     objective_type=problem_data['objective_type'],
                     final_code=initial_code,
                     syntax_error_message=syntax_error_message
@@ -258,7 +273,7 @@ def run_cot_with_code_and_grammar_validation_strategy(client, model, problem, pr
                 model,
                 grammar_prompt.format(
                     problem_description=problem_data['description'],
-                    input_data=problem_data['data_nomenclature'],
+                    input_data=effective_input_data,
                     current_code=current_code,
                     syntax_error_message=syntax_error_message,
                     minizinc_grammar=minizinc_grammar
@@ -283,7 +298,9 @@ def run_cot_with_code_and_grammar_validation_strategy(client, model, problem, pr
 def run_agents_strategy(client, model, problem, problem_identifier, output_dir, validate=True):
     """Run the agents strategy"""
     try:
+        # Prepare data
         problem_data = utils.prepare_problem_data(problem)
+        effective_input_data = utils.get_effective_input_data(problem_data)
 
         # Step 1: Generate parameters and variables
         param_prompt = utils.load_file('prompts/parameter_and_variable_generation_prompt.txt')
@@ -292,7 +309,7 @@ def run_agents_strategy(client, model, problem, problem_identifier, output_dir, 
             model,
             param_prompt.format(
                 problem_description=problem_data['description'],
-                input_data=problem_data['data_nomenclature']
+                input_data=effective_input_data
             )
         )
         if not params_vars:
@@ -306,7 +323,7 @@ def run_agents_strategy(client, model, problem, problem_identifier, output_dir, 
             model,
             constraint_prompt.format(
                 problem_description=problem_data['description'],
-                input_data=problem_data['data_nomenclature'],
+                input_data=effective_input_data,
                 parameters_and_variables=params_vars
             )
         )
@@ -321,7 +338,7 @@ def run_agents_strategy(client, model, problem, problem_identifier, output_dir, 
             model,
             objective_prompt.format(
                 problem_description=problem_data['description'],
-                input_data=problem_data['data_nomenclature'],
+                input_data=effective_input_data,
                 parameters_and_variables=params_vars,
                 constraints=constraints
             )
@@ -337,7 +354,7 @@ def run_agents_strategy(client, model, problem, problem_identifier, output_dir, 
             model,
             code_prompt.format(
                 problem_description=problem_data['description'],
-                input_data=problem_data['data_nomenclature'],
+                input_data=effective_input_data,
                 parameters_and_variables=params_vars,
                 constraints=constraints,
                 objective=objective
@@ -346,7 +363,11 @@ def run_agents_strategy(client, model, problem, problem_identifier, output_dir, 
         if not final_code:
             return False
 
-        if validate:
+        # Check if the code compiles (handle empty dzn)
+        dzn_data = problem.get('data.dzn') or ""
+        syntax_error_message = utils.check_syntax(final_code, dzn_data)
+
+        if syntax_error_message and validate:
             time.sleep(2)
             # Step 5: Validate
             validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
@@ -355,9 +376,10 @@ def run_agents_strategy(client, model, problem, problem_identifier, output_dir, 
                 model,
                 validation_prompt.format(
                     problem_description=problem_data['description'],
-                    input_data=problem_data['data_nomenclature'],
+                    input_data=effective_input_data,
                     objective_type=problem_data['objective_type'],
-                    final_code=final_code
+                    final_code=final_code,
+                    syntax_error_message=syntax_error_message
                 )
             )
 
@@ -383,6 +405,7 @@ def run_gala_strategy(client, model, problem, problem_identifier, output_dir):
     try:
         # Prepare data
         problem_data = utils.prepare_problem_data(problem)
+        effective_input_data = utils.get_effective_input_data(problem_data)
 
         # Store the code snippets from individual agents
         hints = ""
@@ -396,7 +419,7 @@ def run_gala_strategy(client, model, problem, problem_identifier, output_dir):
                 {problem_data['description']}
 
                 **Input data**:
-                {problem_data['data_nomenclature']}
+                {effective_input_data}
                 """
 
             code = utils.call_api(client, model, ind_prompt)
@@ -413,7 +436,7 @@ def run_gala_strategy(client, model, problem, problem_identifier, output_dir):
                 {problem_data['description']}
 
                 **Input data**:
-                {problem_data['data_nomenclature']}
+                {effective_input_data}
 
                 **Hints**:
                 {hints}
@@ -433,18 +456,31 @@ def run_gala_strategy(client, model, problem, problem_identifier, output_dir):
         return False
 
 
+def check_already_processed(output_dir, problem_identifier):
+    """Check if a problem has already been successfully processed"""
+    solution_path = os.path.join(output_dir, f"{problem_identifier}.mzn")
+    return os.path.exists(solution_path) and os.path.getsize(solution_path) > 0
+
+
 def main():
     parser = argparse.ArgumentParser(description='Generate MiniZinc code using different prompting strategies')
-    parser.add_argument('--model', default='gpt-4', choices=['gpt-4', 'gpt-4o', 'phi4'],
+    parser.add_argument('--model', default='gpt-4', choices=['gpt-4', 'gpt-4o', 'gpt-5.2', 'phi4'],
                         help='LLM model to use')
     parser.add_argument('--strategies', nargs='+',
                         default=['baseline'],
                         choices=['baseline', 'cot', 'knowledge_graph', 'cot_with_code_validation', 'cot_with_grammar_validation',
-                                 'cot_with_code_and_grammar_validation', 'agents', 'agents_with_code_validation',
-                                 'gala', 'all'],
+                                 'cot_with_code_and_grammar_validation', 'agents', 'agents_with_code_validation', 'gala', 'all'],
                         help='Strategies to run')
     parser.add_argument('--problem-ids', nargs='+', type=int,
                         help='Specific problem IDs to process')
+    parser.add_argument('--source', type=str, nargs='*', default=None,
+                        help='Filter problems by source (from metadata). Supports partial matching. Can specify multiple sources.')
+    parser.add_argument('--list-sources', action='store_true',
+                        help='List all available sources in the dataset and exit')
+    parser.add_argument('--include-unverified', action='store_true',
+                        help='Include unverified problems (by default only verified problems are used)')
+    parser.add_argument('--all-sources', action='store_true',
+                        help='Run on all sources')
     parser.add_argument('--output-dir', default='output',
                         help='Base output directory')
     parser.add_argument('--api-key', default=os.getenv('OPENAI_API_KEY'),
@@ -458,7 +494,55 @@ def main():
 
     args = parser.parse_args()
 
-    if args.model == "gpt-4" or args.model == "gpt-4o":
+    # Load dataset
+    print("Loading dataset...")
+    dataset = load_dataset("skadio/text2zinc")
+
+    # Filter by verified status (default: only verified, unless --include-unverified is set)
+    if args.include_unverified:
+        print(f"Including ALL problems (verified and unverified)")
+        filtered_train = dataset["train"]
+    else:
+        print(f"Including only VERIFIED problems (use --include-unverified to include all)")
+        filtered_train = dataset["train"].filter(lambda x: x["is_verified"])
+    
+    dataset = DatasetDict({
+        "train": filtered_train
+    })
+    print(f"Loaded dataset with {len(dataset['train'])} examples")
+
+    # List sources if requested
+    if args.list_sources:
+        print("\nAvailable sources in the dataset:")
+        sources = utils.get_available_sources(dataset['train'])
+        for source in sources:
+            # Count instances per source
+            count = sum(1 for p in dataset['train'] if utils.get_problem_source(p) == source)
+            print(f"  - {source}: {count} instances")
+        return
+
+    # Filter by source if specified
+    if args.source:
+        print(f"\nFiltering dataset by sources: {args.source}")
+        # Combine filters for multiple sources
+        def matches_any_source(problem):
+            source = utils.get_problem_source(problem)
+            if source is None:
+                return False
+            return any(s.lower() in source.lower() for s in args.source)
+        
+        filtered_train = dataset['train'].filter(matches_any_source)
+        dataset = DatasetDict({
+            "train": filtered_train
+        })
+        print(f"Filtered dataset contains {len(dataset['train'])} instances matching sources")
+        
+        if len(dataset['train']) == 0:
+            print("\nNo instances found matching the specified source.")
+            print("Use --list-sources to see available sources.")
+            return
+
+    if args.model in ["gpt-4", "gpt-4o", "gpt-5.2"]:
         if not args.api_key:
             raise ValueError("OpenAI API key not provided. Set OPENAI_API_KEY environment variable or use --api-key")
 
@@ -477,22 +561,10 @@ def main():
                 temperature=args.temperature,
                 num_predict=args.max_tokens)
 
-    # Load dataset
-    print("Loading dataset...")
-    dataset = load_dataset("skadio/text2zinc")
-
-    # Only select verified problems
-    verified_train = dataset["train"].filter(lambda x: x["is_verified"])
-    dataset = DatasetDict({
-        "train": verified_train
-    })
-    print(f"Loaded dataset with {len(dataset['train'])} examples")
-
     # Determine which strategies to run
     if 'all' in args.strategies:
         strategies = ['baseline', 'cot', 'knowledge_graph', 'cot_with_code_validation', 'cot_with_grammar_validation',
-                      'cot_with_code_and_grammar_validation', 'agents', 'agents_with_code_validation',
-                      'gala']
+                      'cot_with_code_and_grammar_validation', 'agents', 'agents_with_code_validation', 'gala']
     else:
         strategies = args.strategies
 
@@ -503,6 +575,18 @@ def main():
                                if idx < len(dataset['train'])]
     else:
         problems_to_process = list(enumerate(dataset['train']))
+
+    # Print summary before running
+    print(f"\n{'='*50}")
+    print(f"RUN CONFIGURATION SUMMARY")
+    print(f"{'='*50}")
+    print(f"Model: {args.model}")
+    print(f"Strategies: {', '.join(strategies)}")
+    print(f"Source filter: {args.source if args.source else 'None (all sources)'}")
+    print(f"Include unverified: {args.include_unverified}")
+    print(f"Number of instances to process: {len(problems_to_process)}")
+    print(f"Output directory: {args.output_dir}")
+    print(f"{'='*50}\n")
 
     # Strategy mapping
     strategy_functions = {
@@ -534,31 +618,96 @@ def main():
     results = {}
     for strategy in strategies:
         print(f"\nRunning {strategy} strategy with {args.model}...")
-        output_dir = os.path.join(args.output_dir, args.model, strategy)
-        os.makedirs(output_dir, exist_ok=True)
-
-        results[strategy] = {'success': 0, 'failed': 0}
+        
+        results[strategy] = {'success': 0, 'failed': 0, 'errors': []}
 
         for idx, problem in tqdm(problems_to_process, desc=f"{strategy} progress"):
-            problem_identifier = ast.literal_eval(problem['input.json'])['metadata']['identifier']
-            success = strategy_functions[strategy](client, args.model, problem, problem_identifier, output_dir)
+            try:
+                problem_identifier = utils.get_problem_identifier(problem, idx)
+                
+                # Determine output directory based on source
+                cardinal_subfolder = utils.get_cardinal_ops_subfolder(problem)
+                if cardinal_subfolder:
+                    # For cardinal_operations datasets: strategy_subfolder structure
+                    output_dir = os.path.join(args.output_dir, args.model, f"{strategy}_{cardinal_subfolder}")
+                else:
+                    # For other datasets: keep original structure
+                    output_dir = os.path.join(args.output_dir, args.model, strategy)
 
-            if success:
-                results[strategy]['success'] += 1
-            else:
+                if check_already_processed(output_dir, problem_identifier):
+                    continue
+                
+                os.makedirs(output_dir, exist_ok=True)
+                
+                success = strategy_functions[strategy](client, args.model, problem, problem_identifier, output_dir)
+
+                if success:
+                    results[strategy]['success'] += 1
+                else:
+                    results[strategy]['failed'] += 1
+                    results[strategy]['errors'].append({
+                        'idx': idx,
+                        'identifier': problem_identifier,
+                        'error': 'Strategy returned False'
+                    })
+
+            except Exception as e:
+                # Catch any unexpected errors to prevent breaking the loop
+                print(f"\nUnexpected error processing problem at index {idx}: {e}")
                 results[strategy]['failed'] += 1
+                problem_identifier = utils.get_problem_identifier(problem, idx)
+                results[strategy]['errors'].append({
+                    'idx': idx,
+                    'identifier': problem_identifier,
+                    'error': str(e)
+                })
+                # Continue to next problem instead of breaking
+                continue
 
             time.sleep(args.sleep_time)
 
     # Print summary
-    print("\n=== Summary ===")
+    print("\n" + "="*50)
+    print("SUMMARY")
+    print("="*50)
     for strategy, result in results.items():
-        print(f"{strategy}: {result['success']} successful, {result['failed']} failed")
+        total = result['success'] + result['failed']
+        success_rate = (result['success'] / total * 100) if total > 0 else 0
+        print(f"{strategy}: {result['success']}/{total} successful ({success_rate:.1f}%)")
+        if result['errors']:
+            print(f"  Failed instances:")
+            for err in result['errors'][:5]:  # Show first 5 errors
+                print(f"    - {err['identifier']}: {err['error'][:50]}...")
+            if len(result['errors']) > 5:
+                print(f"    ... and {len(result['errors']) - 5} more errors")
+
+    # Prepare results for JSON (remove detailed errors for cleaner output)
+    results_for_json = {
+        strategy: {
+            'success': result['success'],
+            'failed': result['failed'],
+            'total': result['success'] + result['failed'],
+            'success_rate': (result['success'] / (result['success'] + result['failed']) * 100) 
+                           if (result['success'] + result['failed']) > 0 else 0,
+            'failed_identifiers': [err['identifier'] for err in result['errors']]
+        }
+        for strategy, result in results.items()
+    }
+
+    # Add metadata to results
+    results_for_json['_metadata'] = {
+        'model': args.model,
+        'source_filter': args.source,
+        'include_unverified': args.include_unverified,
+        'num_instances': len(problems_to_process),
+        'strategies': strategies
+    }
 
     # Save results summary
     summary_path = os.path.join(args.output_dir, args.model, 'summary.json')
+    os.makedirs(os.path.dirname(summary_path), exist_ok=True)
     with open(summary_path, 'w') as f:
-        json.dump(results, f, indent=2)
+        json.dump(results_for_json, f, indent=2)
     print(f"\nResults saved to {summary_path}")
 
 

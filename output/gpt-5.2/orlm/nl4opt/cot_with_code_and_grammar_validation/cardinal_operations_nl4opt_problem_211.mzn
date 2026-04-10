@@ -1,0 +1,25 @@
+% Parameters
+int: plastic_available = 1000;
+int: solder_available = 250;
+
+int: plastic_mech = 5;
+int: solder_mech = 2;
+
+int: plastic_std = 2;
+int: solder_std = 1;
+
+int: min_std = 30;
+int: mech_to_std_ratio = 5;
+
+% Variables
+var 0..plastic_available div plastic_mech: mech;
+var min_std..plastic_available div plastic_std: std;
+
+% Constraints
+constraint mech = mech_to_std_ratio * std;
+
+constraint plastic_mech * mech + plastic_std * std <= plastic_available;
+constraint solder_mech * mech + solder_std * std <= solder_available;
+
+% Objective
+solve maximize mech + std;

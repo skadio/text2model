@@ -1,0 +1,29 @@
+% Parameters
+int: total_budget = 5000;
+
+int: min_X = 2000;
+int: max_Y = 1000;
+int: min_Z = 500;
+
+int: cost_X = 50;
+int: cost_Y = 100;
+int: cost_Z = 150;
+
+% Variables
+var 0..total_budget: X;
+var 0..total_budget: Y;
+var 0..total_budget: Z;
+
+var 0..(total_budget * max([cost_X, cost_Y, cost_Z])): total_cost;
+
+% Constraints
+constraint X + Y + Z <= total_budget;
+
+constraint X >= min_X;
+constraint Y <= max_Y;
+constraint Z >= min_Z;
+
+constraint total_cost = cost_X * X + cost_Y * Y + cost_Z * Z;
+
+% Objective
+solve minimize total_cost;
