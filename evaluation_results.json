@@ -1,0 +1,1097 @@
+{
+  "verified_results": {
+    "gpt-4": {
+      "agents": {
+        "overall": {
+          "attempted": 110,
+          "execution": 49,
+          "solution": 22,
+          "exec_acc": 44.55,
+          "sol_acc": 20.0
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 40.91,
+            "sol_acc": 18.18
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 85.71,
+            "sol_acc": 42.86
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 45.45,
+            "sol_acc": 18.18
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 80.0,
+            "sol_acc": 80.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 38.46,
+            "sol_acc": 13.85
+          }
+        }
+      },
+      "agents+code_val": {
+        "overall": {
+          "attempted": 110,
+          "execution": 48,
+          "solution": 23,
+          "exec_acc": 43.64,
+          "sol_acc": 20.91
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 40.91,
+            "sol_acc": 27.27
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 28.57,
+            "sol_acc": 28.57
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 54.55,
+            "sol_acc": 18.18
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 80.0,
+            "sol_acc": 80.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 41.54,
+            "sol_acc": 13.85
+          }
+        }
+      },
+      "baseline": {
+        "overall": {
+          "attempted": 110,
+          "execution": 36,
+          "solution": 19,
+          "exec_acc": 32.73,
+          "sol_acc": 17.27
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 27.27,
+            "sol_acc": 18.18
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 42.86,
+            "sol_acc": 42.86
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 45.45,
+            "sol_acc": 27.27
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 20.0,
+            "sol_acc": 20.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 32.31,
+            "sol_acc": 12.31
+          }
+        }
+      },
+      "cot": {
+        "overall": {
+          "attempted": 110,
+          "execution": 63,
+          "solution": 31,
+          "exec_acc": 57.27,
+          "sol_acc": 28.18
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 54.55,
+            "sol_acc": 22.73
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 85.71,
+            "sol_acc": 57.14
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 63.64,
+            "sol_acc": 36.36
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 50.77,
+            "sol_acc": 20.0
+          }
+        }
+      },
+      "cot+code+gram": {
+        "overall": {
+          "attempted": 110,
+          "execution": 77,
+          "solution": 27,
+          "exec_acc": 70.0,
+          "sol_acc": 24.55
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 68.18,
+            "sol_acc": 18.18
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 42.86,
+            "sol_acc": 14.29
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 81.82,
+            "sol_acc": 36.36
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 69.23,
+            "sol_acc": 20.0
+          }
+        }
+      },
+      "cot+code_val": {
+        "overall": {
+          "attempted": 110,
+          "execution": 63,
+          "solution": 31,
+          "exec_acc": 57.27,
+          "sol_acc": 28.18
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 54.55,
+            "sol_acc": 22.73
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 85.71,
+            "sol_acc": 57.14
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 63.64,
+            "sol_acc": 36.36
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 50.77,
+            "sol_acc": 20.0
+          }
+        }
+      },
+      "cot+gram_val": {
+        "overall": {
+          "attempted": 110,
+          "execution": 69,
+          "solution": 25,
+          "exec_acc": 62.73,
+          "sol_acc": 22.73
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 63.64,
+            "sol_acc": 27.27
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 42.86,
+            "sol_acc": 14.29
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 81.82,
+            "sol_acc": 36.36
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 80.0,
+            "sol_acc": 80.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 60.0,
+            "sol_acc": 15.38
+          }
+        }
+      },
+      "knowledge_graph": {
+        "overall": {
+          "attempted": 110,
+          "execution": 53,
+          "solution": 28,
+          "exec_acc": 48.18,
+          "sol_acc": 25.45
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 40.91,
+            "sol_acc": 18.18
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 71.43,
+            "sol_acc": 42.86
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 54.55,
+            "sol_acc": 36.36
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 80.0,
+            "sol_acc": 80.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 44.62,
+            "sol_acc": 20.0
+          }
+        }
+      }
+    },
+    "gpt-4o": {
+      "cot": {
+        "overall": {
+          "attempted": 110,
+          "execution": 66,
+          "solution": 38,
+          "exec_acc": 60.0,
+          "sol_acc": 34.55
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 59.09,
+            "sol_acc": 36.36
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 71.43,
+            "sol_acc": 57.14
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 36.36,
+            "sol_acc": 18.18
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 60.0,
+            "sol_acc": 29.23
+          }
+        }
+      },
+      "cot+code+gram": {
+        "overall": {
+          "attempted": 110,
+          "execution": 81,
+          "solution": 44,
+          "exec_acc": 73.64,
+          "sol_acc": 40.0
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 72.73,
+            "sol_acc": 40.91
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 42.86,
+            "sol_acc": 14.29
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 90.91,
+            "sol_acc": 45.45
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 72.31,
+            "sol_acc": 36.92
+          }
+        }
+      },
+      "cot+code_val": {
+        "overall": {
+          "attempted": 110,
+          "execution": 89,
+          "solution": 46,
+          "exec_acc": 80.91,
+          "sol_acc": 41.82
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 86.36,
+            "sol_acc": 54.55
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 85.71,
+            "sol_acc": 42.86
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 81.82,
+            "sol_acc": 36.36
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 80.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 76.92,
+            "sol_acc": 35.38
+          }
+        }
+      }
+    },
+    "gpt-4o-mini": {
+      "gala": {
+        "overall": {
+          "attempted": 110,
+          "execution": 37,
+          "solution": 19,
+          "exec_acc": 33.64,
+          "sol_acc": 17.27
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 27.27,
+            "sol_acc": 13.64
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 57.14,
+            "sol_acc": 42.86
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 36.36,
+            "sol_acc": 18.18
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 40.0,
+            "sol_acc": 40.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 32.31,
+            "sol_acc": 13.85
+          }
+        }
+      }
+    },
+    "gpt-5.2": {
+      "agents": {
+        "overall": {
+          "attempted": 110,
+          "execution": 61,
+          "solution": 37,
+          "exec_acc": 55.45,
+          "sol_acc": 33.64
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 54.55,
+            "sol_acc": 31.82
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 85.71,
+            "sol_acc": 57.14
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 63.64,
+            "sol_acc": 18.18
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 60.0,
+            "sol_acc": 60.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 50.77,
+            "sol_acc": 32.31
+          }
+        }
+      },
+      "agents+code_val": {
+        "overall": {
+          "attempted": 110,
+          "execution": 85,
+          "solution": 40,
+          "exec_acc": 77.27,
+          "sol_acc": 36.36
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 68.18,
+            "sol_acc": 36.36
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 85.71,
+            "sol_acc": 57.14
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 81.82,
+            "sol_acc": 36.36
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 76.92,
+            "sol_acc": 29.23
+          }
+        }
+      },
+      "baseline": {
+        "overall": {
+          "attempted": 110,
+          "execution": 71,
+          "solution": 41,
+          "exec_acc": 64.55,
+          "sol_acc": 37.27
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 50.0,
+            "sol_acc": 31.82
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 100.0,
+            "sol_acc": 57.14
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 63.64,
+            "sol_acc": 36.36
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 63.08,
+            "sol_acc": 32.31
+          }
+        }
+      },
+      "cot": {
+        "overall": {
+          "attempted": 110,
+          "execution": 77,
+          "solution": 42,
+          "exec_acc": 70.0,
+          "sol_acc": 38.18
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 59.09,
+            "sol_acc": 36.36
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 100.0,
+            "sol_acc": 42.86
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 54.55,
+            "sol_acc": 27.27
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 70.77,
+            "sol_acc": 35.38
+          }
+        }
+      },
+      "cot+code+gram": {
+        "overall": {
+          "attempted": 110,
+          "execution": 82,
+          "solution": 44,
+          "exec_acc": 74.55,
+          "sol_acc": 40.0
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 72.73,
+            "sol_acc": 45.45
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 85.71,
+            "sol_acc": 57.14
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 90.91,
+            "sol_acc": 45.45
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 80.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 69.23,
+            "sol_acc": 32.31
+          }
+        }
+      },
+      "cot+code_val": {
+        "overall": {
+          "attempted": 110,
+          "execution": 74,
+          "solution": 40,
+          "exec_acc": 67.27,
+          "sol_acc": 36.36
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 63.64,
+            "sol_acc": 36.36
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 71.43,
+            "sol_acc": 42.86
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 72.73,
+            "sol_acc": 36.36
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 64.62,
+            "sol_acc": 30.77
+          }
+        }
+      },
+      "cot+gram_val": {
+        "overall": {
+          "attempted": 110,
+          "execution": 87,
+          "solution": 47,
+          "exec_acc": 79.09,
+          "sol_acc": 42.73
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 72.73,
+            "sol_acc": 36.36
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 85.71,
+            "sol_acc": 57.14
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 90.91,
+            "sol_acc": 45.45
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 76.92,
+            "sol_acc": 38.46
+          }
+        }
+      },
+      "gala": {
+        "overall": {
+          "attempted": 110,
+          "execution": 74,
+          "solution": 43,
+          "exec_acc": 67.27,
+          "sol_acc": 39.09
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 59.09,
+            "sol_acc": 36.36
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 85.71,
+            "sol_acc": 57.14
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 63.64,
+            "sol_acc": 45.45
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 66.15,
+            "sol_acc": 32.31
+          }
+        }
+      },
+      "knowledge_graph": {
+        "overall": {
+          "attempted": 110,
+          "execution": 63,
+          "solution": 40,
+          "exec_acc": 57.27,
+          "sol_acc": 36.36
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 68.18,
+            "sol_acc": 31.82
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 71.43,
+            "sol_acc": 57.14
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 36.36,
+            "sol_acc": 27.27
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 52.31,
+            "sol_acc": 32.31
+          }
+        }
+      }
+    },
+    "gpt-oss:20b": {
+      "baseline": {
+        "overall": {
+          "attempted": 98,
+          "execution": 13,
+          "solution": 8,
+          "exec_acc": 13.27,
+          "sol_acc": 8.16
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 18.18,
+            "sol_acc": 13.64
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 0.0,
+            "sol_acc": 0.0
+          },
+          "csplib": {
+            "attempted": 9,
+            "exec_acc": 11.11,
+            "sol_acc": 0.0
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 40.0,
+            "sol_acc": 40.0
+          },
+          "nlp4lp": {
+            "attempted": 55,
+            "exec_acc": 10.91,
+            "sol_acc": 5.45
+          }
+        }
+      },
+      "cot": {
+        "overall": {
+          "attempted": 98,
+          "execution": 18,
+          "solution": 11,
+          "exec_acc": 18.37,
+          "sol_acc": 11.22
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 21,
+            "exec_acc": 19.05,
+            "sol_acc": 9.52
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 14.29,
+            "sol_acc": 14.29
+          },
+          "csplib": {
+            "attempted": 9,
+            "exec_acc": 0.0,
+            "sol_acc": 0.0
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 100.0,
+            "sol_acc": 100.0
+          },
+          "nlp4lp": {
+            "attempted": 56,
+            "exec_acc": 14.29,
+            "sol_acc": 5.36
+          }
+        }
+      },
+      "gala": {
+        "overall": {
+          "attempted": 110,
+          "execution": 19,
+          "solution": 9,
+          "exec_acc": 17.27,
+          "sol_acc": 8.18
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 18.18,
+            "sol_acc": 9.09
+          },
+          "complexor": {
+            "attempted": 7,
+            "exec_acc": 0.0,
+            "sol_acc": 0.0
+          },
+          "csplib": {
+            "attempted": 11,
+            "exec_acc": 27.27,
+            "sol_acc": 18.18
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 40.0,
+            "sol_acc": 40.0
+          },
+          "nlp4lp": {
+            "attempted": 65,
+            "exec_acc": 15.38,
+            "sol_acc": 4.62
+          }
+        }
+      }
+    },
+    "o3-mini": {
+      "gala": {
+        "overall": {
+          "attempted": 95,
+          "execution": 55,
+          "solution": 32,
+          "exec_acc": 57.89,
+          "sol_acc": 33.68
+        },
+        "by_source": {
+          "hakank": {
+            "attempted": 22,
+            "exec_acc": 54.55,
+            "sol_acc": 31.82
+          },
+          "complexor": {
+            "attempted": 6,
+            "exec_acc": 83.33,
+            "sol_acc": 50.0
+          },
+          "csplib": {
+            "attempted": 8,
+            "exec_acc": 37.5,
+            "sol_acc": 37.5
+          },
+          "lpwp": {
+            "attempted": 5,
+            "exec_acc": 80.0,
+            "sol_acc": 80.0
+          },
+          "nlp4lp": {
+            "attempted": 54,
+            "exec_acc": 57.41,
+            "sol_acc": 27.78
+          }
+        }
+      }
+    }
+  },
+  "orlm_results": {
+    "gpt-5.2": {
+      "agents": {
+        "complexlp": {
+          "attempted": 211,
+          "exec_acc": 62.56,
+          "sol_acc": 38.86
+        },
+        "easylp": {
+          "attempted": 652,
+          "exec_acc": 98.01,
+          "sol_acc": 83.9
+        },
+        "industryor": {
+          "attempted": 100,
+          "exec_acc": 74.0,
+          "sol_acc": 48.0
+        },
+        "nl4opt": {
+          "attempted": 245,
+          "exec_acc": 95.92,
+          "sol_acc": 77.55
+        }
+      },
+      "agents+code_val": {
+        "complexlp": {
+          "attempted": 211,
+          "exec_acc": 92.89,
+          "sol_acc": 54.03
+        },
+        "easylp": {
+          "attempted": 652,
+          "exec_acc": 99.23,
+          "sol_acc": 84.97
+        },
+        "industryor": {
+          "attempted": 100,
+          "exec_acc": 86.0,
+          "sol_acc": 57.0
+        },
+        "nl4opt": {
+          "attempted": 245,
+          "exec_acc": 97.55,
+          "sol_acc": 77.96
+        }
+      },
+      "baseline": {
+        "complexlp": {
+          "attempted": 211,
+          "exec_acc": 48.82,
+          "sol_acc": 27.96
+        },
+        "easylp": {
+          "attempted": 652,
+          "exec_acc": 95.71,
+          "sol_acc": 79.75
+        },
+        "industryor": {
+          "attempted": 100,
+          "exec_acc": 66.0,
+          "sol_acc": 46.0
+        },
+        "nl4opt": {
+          "attempted": 245,
+          "exec_acc": 93.88,
+          "sol_acc": 74.29
+        }
+      },
+      "cot": {
+        "complexlp": {
+          "attempted": 211,
+          "exec_acc": 57.35,
+          "sol_acc": 39.34
+        },
+        "easylp": {
+          "attempted": 652,
+          "exec_acc": 98.62,
+          "sol_acc": 83.9
+        },
+        "industryor": {
+          "attempted": 100,
+          "exec_acc": 80.0,
+          "sol_acc": 49.0
+        },
+        "nl4opt": {
+          "attempted": 245,
+          "exec_acc": 98.78,
+          "sol_acc": 78.37
+        }
+      },
+      "cot+code+gram": {
+        "complexlp": {
+          "attempted": 211,
+          "exec_acc": 96.68,
+          "sol_acc": 55.92
+        },
+        "easylp": {
+          "attempted": 652,
+          "exec_acc": 99.85,
+          "sol_acc": 83.13
+        },
+        "industryor": {
+          "attempted": 100,
+          "exec_acc": 92.0,
+          "sol_acc": 55.0
+        },
+        "nl4opt": {
+          "attempted": 245,
+          "exec_acc": 98.78,
+          "sol_acc": 77.55
+        }
+      },
+      "cot+code_val": {
+        "complexlp": {
+          "attempted": 211,
+          "exec_acc": 94.31,
+          "sol_acc": 54.98
+        },
+        "easylp": {
+          "attempted": 652,
+          "exec_acc": 99.54,
+          "sol_acc": 82.98
+        },
+        "industryor": {
+          "attempted": 100,
+          "exec_acc": 86.0,
+          "sol_acc": 49.0
+        },
+        "nl4opt": {
+          "attempted": 245,
+          "exec_acc": 97.14,
+          "sol_acc": 73.88
+        }
+      },
+      "cot+gram_val": {
+        "complexlp": {
+          "attempted": 211,
+          "exec_acc": 95.26,
+          "sol_acc": 54.03
+        },
+        "easylp": {
+          "attempted": 652,
+          "exec_acc": 99.85,
+          "sol_acc": 83.74
+        },
+        "industryor": {
+          "attempted": 100,
+          "exec_acc": 92.0,
+          "sol_acc": 56.0
+        },
+        "nl4opt": {
+          "attempted": 245,
+          "exec_acc": 97.96,
+          "sol_acc": 77.96
+        }
+      },
+      "gala": {
+        "complexlp": {
+          "attempted": 211,
+          "exec_acc": 72.04,
+          "sol_acc": 41.71
+        },
+        "easylp": {
+          "attempted": 652,
+          "exec_acc": 96.63,
+          "sol_acc": 80.21
+        },
+        "industryor": {
+          "attempted": 100,
+          "exec_acc": 77.0,
+          "sol_acc": 52.0
+        },
+        "nl4opt": {
+          "attempted": 245,
+          "exec_acc": 90.61,
+          "sol_acc": 71.02
+        }
+      }
+    }
+  },
+  "evaluation_date": "2026-04-12 22:32:04"
+}

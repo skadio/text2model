@@ -1,0 +1,65 @@
+include "globals.mzn";
+
+%-------------------------------
+% Data (embedded)
+%-------------------------------
+int: nCenters = 9;
+int: nStores  = 6;
+
+set of int: CENTERS = 1..nCenters;
+set of int: STORES  = 1..nStores;
+
+array[CENTERS] of int: openCost =
+  [151000, 192000, 114000, 171000, 160000, 120000, 182000, 186000, 174000];
+
+array[CENTERS, STORES] of int: transCost =
+  [| 3, 5, 4, 3, 5, 2
+   | 4, 2, 4, 5, 1, 4
+   | 2, 5, 4, 1, 1, 3
+   | 3, 2, 4, 4, 3, 4
+   | 4, 1, 3, 5, 3, 5
+   | 1, 2, 4, 1, 4, 2
+   | 2, 1, 2, 5, 2, 4
+   | 4, 4, 4, 5, 3, 1
+   | 4, 2, 4, 2, 2, 4
+  |];
+
+array[STORES] of int: demand = [876, 801, 955, 561, 601, 669];
+array[CENTERS] of int: capacity = [1615, 1255, 1816, 1095, 1519, 1137, 1678, 1876, 1591];
+
+%-------------------------------
+% Model (use a faster formulation)
+% Each store is assigned to exactly one opened center.
+% This avoids large integer flow variables and typically prevents timeouts.
+%-------------------------------
+array[CENTERS, STORES] of var bool: assign; % assign[c,s]=1 if store s served by center c
+array[CENTERS] of var bool: open;
+
+% Link open to assignments
+constraint forall(c in CENTERS, s in STORES)(assign[c,s] -> open[c]);
+
+% Each store served by exactly one center
+constraint forall(s in STORES)(
+  sum(c in CENTERS)(bool2int(assign[c,s])) = 1
+);
+
+% Capacity of each center (sum of demands assigned to it)
+constraint forall(c in CENTERS)(
+  sum(s in STORES)(demand[s] * bool2int(assign[c,s])) <= capacity[c] * bool2int(open[c])
+);
+
+% At least one center open (redundant but harmless)
+constraint sum(c in CENTERS)(bool2int(open[c])) >= 1;
+
+% Objective: opening + transport (transport cost per unit * demand if assigned)
+solve minimize
+  sum(c in CENTERS)(openCost[c] * bool2int(open[c]))
++ sum(c in CENTERS, s in STORES)(transCost[c,s] * demand[s] * bool2int(assign[c,s]));
+
+% Optional output
+output [
+  "TotalCost=", show(
+    sum(c in CENTERS)(openCost[c] * bool2int(open[c]))
+  + sum(c in CENTERS, s in STORES)(transCost[c,s] * demand[s] * bool2int(assign[c,s]))
+  ), "\n"
+];

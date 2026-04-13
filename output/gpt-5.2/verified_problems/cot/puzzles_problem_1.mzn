@@ -1,0 +1,20 @@
+% Parameters
+int: n;
+int: m;
+array[1..n, 1..m] of int: grid;
+
+% Variables
+array[1..n] of var 1..m: col;              % chosen column in each row
+var int: total;                            % total sum along the path
+
+% Constraints
+constraint forall(r in 1..n)(col[r] >= 1 /\ col[r] <= m);
+
+constraint forall(r in 2..n)(
+  abs(col[r] - col[r-1]) <= 1
+);
+
+constraint total = sum(r in 1..n)(grid[r, col[r]]);
+
+% Objective
+solve maximize total;

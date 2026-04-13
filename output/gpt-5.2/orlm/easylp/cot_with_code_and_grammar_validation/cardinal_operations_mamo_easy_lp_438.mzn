@@ -1,0 +1,16 @@
+% Parameters
+int: total_budget = 200;
+int: min_x = 50;
+int: min_y = 30;
+int: cost_x = 5000;
+int: cost_y = 8000;
+
+% Variables
+var min_x..total_budget: x;
+var min_y..total_budget: y;
+
+% Constraints
+constraint x + y <= total_budget;
+
+% Objective
+solve minimize cost_x * x + cost_y * y;

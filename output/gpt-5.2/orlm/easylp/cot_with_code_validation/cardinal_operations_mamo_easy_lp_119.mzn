@@ -1,0 +1,18 @@
+% Parameters
+int: max_trips = 50;
+int: min_weighted = 30;
+int: cost_x = 100;
+int: cost_y = 200;
+
+% Variables
+var 0..max_trips: x;
+var 0..max_trips: y;
+var 0..(max_trips * max(cost_x, cost_y)): total_cost;
+
+% Constraints
+constraint x + y <= max_trips;
+constraint 2 * x + 3 * y >= min_weighted;
+constraint total_cost = cost_x * x + cost_y * y;
+
+% Objective
+solve minimize total_cost;

@@ -1,0 +1,36 @@
+% Parameters
+int: nFoods = 5;
+set of int: FOODS = 1..nFoods;
+
+array[FOODS] of int: cost = [6, 1, 1, 3, 1];
+array[FOODS] of int: protein = [1, 7, 6, 20, 8];
+array[FOODS] of int: carbs = [3, 22, 18, 6, 4];
+array[FOODS] of int: calories = [210, 96, 189, 132, 75];
+
+int: minProtein = 87;
+int: minCarbs = 135;
+int: minCalories = 1926;
+
+int: maxProteinPerFood = max(protein);
+int: maxCarbsPerFood = max(carbs);
+int: maxCaloriesPerFood = max(calories);
+
+int: ubByProtein = if maxProteinPerFood > 0 then (minProtein + maxProteinPerFood - 1) div maxProteinPerFood else 0 endif;
+int: ubByCarbs = if maxCarbsPerFood > 0 then (minCarbs + maxCarbsPerFood - 1) div maxCarbsPerFood else 0 endif;
+int: ubByCalories = if maxCaloriesPerFood > 0 then (minCalories + maxCaloriesPerFood - 1) div maxCaloriesPerFood else 0 endif;
+
+int: ub = max([ubByProtein, ubByCarbs, ubByCalories]);
+
+% Variables
+array[FOODS] of var 0..ub: x; % servings of each food item
+var 0..(ub * sum(cost)): totalCost;
+
+% Constraints
+constraint totalCost = sum(i in FOODS)(cost[i] * x[i]);
+
+constraint sum(i in FOODS)(protein[i] * x[i]) >= minProtein;
+constraint sum(i in FOODS)(carbs[i] * x[i]) >= minCarbs;
+constraint sum(i in FOODS)(calories[i] * x[i]) >= minCalories;
+
+% Objective
+solve minimize totalCost;

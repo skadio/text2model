@@ -1,0 +1,6 @@
+source,num_problems,execution_accuracy,solution_accuracy,execution_count,solution_count
+nlp4lp,65,70.77,35.38,46,23
+hakank,22,59.09,36.36,13,8
+csplib,11,54.55,27.27,6,3
+complexor,7,100.0,42.86,7,3
+lpwp,5,100.0,100.0,5,5
