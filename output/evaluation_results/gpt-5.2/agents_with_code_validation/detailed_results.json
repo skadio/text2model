@@ -2,8 +2,6 @@
   {
     "problem_id": "combinatorial_problem_1",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -13,8 +11,6 @@
   {
     "problem_id": "combinatorial_problem_7",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -24,30 +20,24 @@
   {
     "problem_id": "combinatorial_problem_31",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: cannot determine coercion from type array[int,int] of int to type array[int,int] of bool\n/tmp/tmp985yw42y.dzn:4.14-13.2\n"
+    "output": "Multiple type errors:\nError: type error: multiple assignment to the same variable\n/tmp/tmp_193m0wy.dzn:4.1-13.2\n\nError: type error:   symbol error: variable `compatible_int' must be defined (did you forget to specify a data file?)\n/tmp/tmpgvlu1p8s.mzn:6.1-44\n"
   },
   {
     "problem_id": "combinatorial_problem_32",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "168.0"
+    "output": "1.166666666666667"
   },
   {
     "problem_id": "complexor_AircraftAssignment",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "complexor",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -57,8 +47,6 @@
   {
     "problem_id": "complexor_AircraftLanding",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "complexor",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -68,8 +56,6 @@
   {
     "problem_id": "complexor_CapacitatedWarehouseLocation",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "complexor",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -79,8 +65,6 @@
   {
     "problem_id": "complexor_CarSelection",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "complexor",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -90,8 +74,6 @@
   {
     "problem_id": "complexor_CFLP",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "complexor",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -101,8 +83,6 @@
   {
     "problem_id": "complexor_TSP",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "complexor",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -112,19 +92,15 @@
   {
     "problem_id": "complexor_VRPTW",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "complexor",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: evaluation error: Index set mismatch. Declared index set of `ServiceTime' is [0..10], but is assigned to array with index set [1..11]. You may need to coerce the index sets using the array1d function.\n/tmp/tmpb5ne3tgh.mzn:40.1-32\n  in variable declaration for 'ServiceTime'\n"
+    "output": "Error: type error: no function or predicate with this signature found: `circuit(array[int,int] of var int)'\nCannot use the following functions or predicates with the same identifier:\npredicate circuit(array [$$E] of var $$E: x);\n    (argument 1 expects type array[int] of var int, but type array[int,int] of var int given)\npredicate circuit(array [$$E] of var opt $$E: x);\n    (argument 1 expects type array[int] of var opt int, but type array[int,int] of var int given)\n\n/tmp/tmpy7975meu.mzn:59.3-90\n"
   },
   {
     "problem_id": "CSPLib_2",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "csplib",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -134,19 +110,15 @@
   {
     "problem_id": "CSPLib_6",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "csplib",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: no function or predicate with name `increasing' found\n/tmp/tmpdy5944zv.mzn:16.12-24\n"
+    "output": "Execution timed out after 120 seconds"
   },
   {
     "problem_id": "CSPLib_8",
     "problem_type": "satisfaction",
-    "has_dzn": true,
-    "source": "csplib",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -156,8 +128,6 @@
   {
     "problem_id": "CSPLib_12",
     "problem_type": "satisfaction",
-    "has_dzn": true,
-    "source": "csplib",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -167,41 +137,33 @@
   {
     "problem_id": "CSPLib_14",
     "problem_type": "satisfaction",
-    "has_dzn": true,
-    "source": "csplib",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Execution timed out after 120 seconds"
+    "output": ""
   },
   {
     "problem_id": "CSPLib_22",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "csplib",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: result of evaluation is undefined: parameter value out of range: declared domain of `shifts[77]' is 1..24, but assigned value is {0,21}\n/tmp/tmpdfia5_n9.mzn:9.1-37\n  in variable declaration for 'shifts'\n"
+    "output": "No objective value found in output"
   },
   {
     "problem_id": "CSPLib_28",
     "problem_type": "satisfaction",
-    "has_dzn": true,
-    "source": "csplib",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: no function or predicate with name `all_different' found\n/tmp/tmp1le54gfg.mzn:36.5-51\n"
+    "output": ""
   },
   {
     "problem_id": "CSPLib_30",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "csplib",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -211,8 +173,6 @@
   {
     "problem_id": "CSPLib_34",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "csplib",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -222,30 +182,24 @@
   {
     "problem_id": "CSPLib_39",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "csplib",
-    "execution_success": false,
-    "solution_success": false,
+    "execution_success": true,
+    "solution_success": true,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: cannot determine coercion from type array[int,int] of int to type array[int,int] of bool\n/tmp/tmpd73vfoor.dzn:8.14-13.4\n"
+    "output": "0.0"
   },
   {
     "problem_id": "CSPLib_54",
     "problem_type": "satisfaction",
-    "has_dzn": true,
-    "source": "csplib",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: no function or predicate with name `all_different' found\n/tmp/tmps6o7mzls.mzn:9.12-32\n"
+    "output": "Error: type error:   symbol error: variable `queens' must be defined (did you forget to specify a data file?)\n/tmp/tmps_ditk4b.mzn:8.1-26\n"
   },
   {
     "problem_id": "LPWP_53",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "lpwp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -255,8 +209,6 @@
   {
     "problem_id": "LPWP_66",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "lpwp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -266,8 +218,6 @@
   {
     "problem_id": "LPWP_85",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "lpwp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -277,8 +227,6 @@
   {
     "problem_id": "LPWP_128",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "lpwp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -288,8 +236,6 @@
   {
     "problem_id": "LPWP_232",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "lpwp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -299,41 +245,33 @@
   {
     "problem_id": "nlp4lp_1",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `int_max'\n/tmp/tmp51watuc6.mzn:10.23-29\n"
+    "output": "Multiple type errors:\nError: type error: multiple assignment to the same variable\n/tmp/tmprryhnqwo.dzn:4.1-96\n\nError: type error:   symbol error: variable `Requirements_in' must be defined (did you forget to specify a data file?)\n/tmp/tmpgquy4syp.mzn:12.1-47\n"
   },
   {
     "problem_id": "nlp4lp_2",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `False'\n/tmp/tmpsv2tifae.dzn:2.18-22\n"
+    "output": "Error: type error: undefined identifier `False'\n/tmp/tmpspqkwuk_.dzn:2.18-22\n"
   },
   {
     "problem_id": "nlp4lp_3",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `int_max'\n/tmp/tmpcs044_n4.mzn:17.24-30\n"
+    "output": "205.0"
   },
   {
     "problem_id": "nlp4lp_4",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -343,74 +281,60 @@
   {
     "problem_id": "nlp4lp_5",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "/tmp/tmpdklrd_ss.mzn:19.21-23:\nset of int: NODES = set(StartNode ++ EndNode ++ SourceNode ++ DestinationNode);\n                    ^^^\nError: syntax error, unexpected set\n"
+    "output": "210.0"
   },
   {
     "problem_id": "nlp4lp_6",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Multiple syntax errors:\n/tmp/tmptwfhmgt4.mzn:12.13-15:\narray[TIME] var int: position;\n            ^^^\nError: syntax error, unexpected var, expecting of\n\n/tmp/tmptwfhmgt4.mzn:13.13-15:\narray[TIME] var int: velocity;\n            ^^^\nError: syntax error, unexpected var, expecting of\n\n/tmp/tmptwfhmgt4.mzn:14.21-23:\narray[CONTROL_TIME] var int: accel;\n                    ^^^\nError: syntax error, unexpected var, expecting of\n\n/tmp/tmptwfhmgt4.mzn:15.21-23:\narray[CONTROL_TIME] var int: abs_accel;\n                    ^^^\nError: syntax error, unexpected var, expecting of\n"
+    "output": "Error: assertion failed: Variable X_INTRODUCED_139_ needs finite upper bound for a big-M constraint, current domain -infinity..infinity\n/tmp/tmp0kcpt9tc.mzn:40.12-42.1\n  in call 'forall'\n  in array comprehension expression\n    with t = 0\n/tmp/tmp0kcpt9tc.mzn:41.3-37\n  in binary '=' operator expression\n  in call 'abs'\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:579.3-588.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:584.5-587.10\n  in let expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:586.18-30\n  in call 'int_abs'\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:66.3-83.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:71.5-80.26\n  in let expression\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:73.10-80.26\n  in binary '/\\' operator expression\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:78.7-30\n  in call 'aux_int_le_if"
   },
   {
     "problem_id": "nlp4lp_7",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `int_max'\n/tmp/tmpr2t2lanc.mzn:13.8-14\n"
+    "output": "Error: type error: undefined identifier `int_max'\n/tmp/tmp4avce2ub.mzn:17.8-14\n"
   },
   {
     "problem_id": "nlp4lp_8",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
-    "solution_success": false,
+    "execution_success": true,
+    "solution_success": true,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `int_max'\n/tmp/tmp9na5r_4j.mzn:13.24-30\n"
+    "output": "12000.0"
   },
   {
     "problem_id": "nlp4lp_9",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `P', did you mean `K'?\n/tmp/tmpyyw032dn.dzn:2.1-34\n"
+    "output": "166.0000000000001"
   },
   {
     "problem_id": "nlp4lp_10",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmpps5numvt.mzn:23.12-25.1\n  in call 'forall'\n  in array comprehension expression\n    with i = 1\n/tmp/tmpps5numvt.mzn:24.3-69\n  in binary '=' operator expression\n  in call 'abs'\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:600.3-617.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:601.5-610.9\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:606.7-609.12\n  in let expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:608.20-34\n  in call 'float_abs'\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:90.3-108.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:95.5-103.35\n  in let expression\n/snap/minizinc/1222/share/minizinc/linea"
+    "output": "7.370370370370372"
   },
   {
     "problem_id": "nlp4lp_11",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -420,19 +344,15 @@
   {
     "problem_id": "nlp4lp_12",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "1100.0"
+    "output": "1310.0"
   },
   {
     "problem_id": "nlp4lp_13",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -442,8 +362,6 @@
   {
     "problem_id": "nlp4lp_14",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -453,30 +371,24 @@
   {
     "problem_id": "nlp4lp_15",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `intmax'\n/tmp/tmpt5sc662s.mzn:16.27-32\n"
+    "output": "5600.0"
   },
   {
     "problem_id": "nlp4lp_16",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: evaluation error: Abort: Unable to create linear formulation for the `float_times(TotalMaterialBill, X_INTRODUCED_35_, X_INTRODUCED_36_)`\n\tconstraint. To flatten this instance a quadratic constraint is required, but the\n\tusage of these constraints is currently disabled for the selected solver. Define\n\t`QuadrFloat=true` if your solver supports quadratic constraints, or use\n\tinteger variables.\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:331.3-345.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:338.5-344.5\n  in call 'abort'\n"
+    "output": "Error: include error: Cannot open file 'float.mzn'.\n/tmp/tmpzx9nkbic.mzn:3.1-19\n"
   },
   {
     "problem_id": "nlp4lp_17",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -486,96 +398,78 @@
   {
     "problem_id": "nlp4lp_18",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmp528p8mf_.mzn:53.3-55.3\n  in call 'forall'\n  in array comprehension expression\n    with s = 1\n/tmp/tmp528p8mf_.mzn:54.5-61\n  in binary '=' operator expression\n  in binary '*' operator expression\n  in call 'max'\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:445.3-455.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:446.5-449.10\n  in let expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:448.18-35\n  in call 'float_max'\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:112.65-94\n  in call 'array_float_maximum'\n/snap/minizinc/1222/share/minizinc/linear/redefinitions-2.0.mzn:17.3-56\n  in call 'array_float_minimum_I'\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:151.3-211.7\n  in let expression\n"
+    "output": "10305.11226252159"
   },
   {
     "problem_id": "nlp4lp_19",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `True'\n/tmp/tmpklnpql4e.dzn:5.16-19\n"
+    "output": "Error: type error: undefined identifier `True'\n/tmp/tmpmb3vg575.dzn:5.16-19\n"
   },
   {
     "problem_id": "nlp4lp_20",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `BuyPrice' are [1..5,1..6], but is assigned to array with index sets [1..6, 1..5]. You may need to coerce the index sets using the array2d function.\n/tmp/tmp1tmqqi2w.mzn:5.1-34\n  in variable declaration for 'BuyPrice'\n"
+    "output": "No objective value found in output"
   },
   {
     "problem_id": "nlp4lp_21",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: initialisation value for `KeepQuantity' has invalid type-inst: expected `array[int] of int', actual `int'\n/tmp/tmprrxuei6h.mzn:18.1-36\n"
+    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `Time' are [1..7,1..5], but is assigned to array with index sets [1..6, 1..5]. You may need to coerce the index sets using the array2d function.\n/tmp/tmpo0jf5fsx.mzn:12.1-40\n  in variable declaration for 'Time'\n"
   },
   {
     "problem_id": "nlp4lp_22",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Multiple type errors:\nError: type error: initialisation value for `Downtime' has invalid type-inst: expected `array[int] of int', actual `array[int,int] of int'\n/tmp/tmpmhz6mv7d.dzn:6.12-47\n\nError: type error:   symbol error: variable `I' must be defined (did you forget to specify a data file?)\n/tmp/tmp5b3kk5m2.mzn:4.1-6\n"
+    "output": "Multiple type errors:\nError: type error: multiple assignment to the same variable\n/tmp/tmpvjwzzbvp.dzn:6.1-47\n\nError: type error:   symbol error: variable `I' must be defined (did you forget to specify a data file?)\n/tmp/tmpwluyf1gv.mzn:4.1-6\n\nError: type error:   symbol error: variable `DowntimeData' must be defined (did you forget to specify a data file?)\n/tmp/tmpwluyf1gv.mzn:15.1-42\n"
   },
   {
     "problem_id": "nlp4lp_23",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: no function or predicate with this signature found: `survivors(var int,float)'\nCannot use the following functions or predicates with the same identifier:\nfunction int : survivors(int: n,float: w);\n    (argument 1 expects type int, but type var int given)\n\n/tmp/tmpeetf21pe.mzn:78.39-80\n"
+    "output": "No objective value found in output"
   },
   {
     "problem_id": "nlp4lp_24",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Multiple type errors:\nError: type error: return type of function does not match body, declared type is `int', body type is `var int'\n/tmp/tmpgcs997td.mzn:44.3-33\n\nError: type error:   symbol error: variable `K' must be defined (did you forget to specify a data file?)\n/tmp/tmpgcs997td.mzn:6.1-6\n\nError: type error:   symbol error: variable `I' must be defined (did you forget to specify a data file?)\n/tmp/tmpgcs997td.mzn:7.1-6\n"
+    "output": "No objective value found in output"
   },
   {
     "problem_id": "nlp4lp_25",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error:   symbol error: variable `I' must be defined (did you forget to specify a data file?)\n/tmp/tmpeq15jj0b.mzn:9.1-6\n"
+    "output": "Highs ERROR: unable to solve model\n"
   },
   {
     "problem_id": "nlp4lp_27",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -585,41 +479,33 @@
   {
     "problem_id": "nlp4lp_28",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": true,
+    "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "1491.428571428571"
+    "output": "Error: type error: Only one solve item allowed\n/tmp/tmp2pnuj03t.mzn:100.1-63\n"
   },
   {
     "problem_id": "nlp4lp_29",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `Stock', did you mean `Stock0'?\n/tmp/tmp9_xdkejh.dzn:6.1-22\n"
+    "output": "No objective value found in output"
   },
   {
     "problem_id": "nlp4lp_30",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `Benefit' are [1..5,1..3], but is assigned to array with index sets [1..5, 1..2]. You may need to coerce the index sets using the array2d function.\n/tmp/tmply03hxtx.mzn:8.1-34\n  in variable declaration for 'Benefit'\n"
+    "output": "/tmp/tmpnidbjeaf.mzn:38.13-54:\n  if exists(ll in index_set_2of2(Benefit) where ll = l) then Benefit[k,l] else 0 endif;\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nError: syntax error, 'where' expression outside generator call\n"
   },
   {
     "problem_id": "nlp4lp_31",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -629,63 +515,51 @@
   {
     "problem_id": "nlp4lp_32",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmpo6_yius5.mzn:19.3-22.3\n  in call 'forall'\n  in array comprehension expression\n    with k = 1\n/tmp/tmpo6_yius5.mzn:20.5-21.39\n  in binary '/\\' operator expression\n/tmp/tmpo6_yius5.mzn:21.5-39\n  in binary '=' operator expression\n  in call 'abs'\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:600.3-617.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:601.5-610.9\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:606.7-609.12\n  in let expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:608.20-34\n  in call 'float_abs'\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:90.3-108.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:95.5"
+    "output": "Multiple type errors:\nError: type error: initialisation value for `a' has invalid type-inst: expected `var float', actual `set of float'\n/tmp/tmpfzhiuz5y.mzn:17.16-57\n\nError: type error: initialisation value for `b' has invalid type-inst: expected `var float', actual `set of float'\n/tmp/tmpfzhiuz5y.mzn:18.16-60\n\nError: type error: initialisation value for `dev' has invalid type-inst: expected `array[int] of var float', actual `array[int] of set of float'\n/tmp/tmpfzhiuz5y.mzn:21.32-76\n\nError: type error: initialisation value for `max_dev' has invalid type-inst: expected `var float', actual `set of float'\n/tmp/tmpfzhiuz5y.mzn:22.22-41\n"
   },
   {
     "problem_id": "nlp4lp_33",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: flattening error: unbounded coefficient in linear expression. Make sure variables involved in non-linear/logical expressions have finite bounds in their definition or via constraints\n/tmp/tmpeo4nnjan.mzn:28.3-30.3\n  in call 'forall'\n  in array comprehension expression\n    with k = 1\n/tmp/tmpeo4nnjan.mzn:29.5-51\n  in binary '=' operator expression\n  in call 'abs'\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:600.3-617.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:601.5-610.9\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:606.7-609.12\n  in let expression\n/snap/minizinc/1222/share/minizinc/std/stdlib/stdlib_math.mzn:608.20-34\n  in call 'float_abs'\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:90.3-108.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:95.5-103.35\n  in let expression\n/snap/minizinc/1222/share/minizinc/linear"
+    "output": "10.45896470588235"
   },
   {
     "problem_id": "nlp4lp_34",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: evaluation error: Index set mismatch. Declared index set of `Demand' is [1..4], but is assigned to array with index set [1..5]. You may need to coerce the index sets using the array1d function.\n/tmp/tmp98x9_i2o.mzn:8.1-29\n  in variable declaration for 'Demand'\n"
+    "output": "Error: type error: circular definition of `Demand'\n/tmp/tmpiz0o9ebi.mzn:6.44-49\n"
   },
   {
     "problem_id": "nlp4lp_35",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
-    "solution_success": true,
+    "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "1000.0"
+    "output": "0.0"
   },
   {
     "problem_id": "nlp4lp_36",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
-    "solution_success": false,
+    "execution_success": true,
+    "solution_success": true,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error:   symbol error: variable `K' must be defined (did you forget to specify a data file?)\n/tmp/tmpauh65qez.mzn:3.1-6\n"
+    "output": "20.0"
   },
   {
     "problem_id": "nlp4lp_37",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -695,8 +569,6 @@
   {
     "problem_id": "nlp4lp_38",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -706,63 +578,51 @@
   {
     "problem_id": "nlp4lp_39",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": true,
-    "solution_success": true,
-    "timeout": 120,
-    "solver": "highs",
-    "output": "3800.0"
-  },
-  {
-    "problem_id": "nlp4lp_40",
-    "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `int_max'\n/tmp/tmpw4rw0ve8.mzn:10.23-29\n"
+    "output": "Multiple syntax errors:\n/tmp/tmpgo4ox11u.mzn:17.53-57:\nconstraint forall(k in 1..K)(x[k] >= 0.0 /\\ x[k] <= float(AlloyQuantity));\n                                                    ^^^^^\nError: syntax error, unexpected float\n\n/tmp/tmpgo4ox11u.mzn:21.35-39:\nconstraint sum(k in 1..K)(x[k]) = float(AlloyQuantity);\n                                  ^^^^^\nError: syntax error, unexpected float\n"
   },
   {
-    "problem_id": "nlp4lp_41",
-    "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
+    "problem_id": "nlp4lp_40",
+    "problem_type": "maximization",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
     "solver": "highs",
-    "output": "450.0"
+    "output": "12000.0"
+  },
+  {
+    "problem_id": "nlp4lp_41",
+    "problem_type": "minimization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "4500000.0"
   },
   {
     "problem_id": "nlp4lp_42",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "No objective value found in output"
+    "output": "10.0"
   },
   {
     "problem_id": "nlp4lp_43",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "-18117.5"
+    "output": "-181230650.0"
   },
   {
     "problem_id": "nlp4lp_44",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -772,8 +632,6 @@
   {
     "problem_id": "nlp4lp_45",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -783,8 +641,6 @@
   {
     "problem_id": "nlp4lp_46",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -794,8 +650,6 @@
   {
     "problem_id": "nlp4lp_47",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -805,41 +659,33 @@
   {
     "problem_id": "nlp4lp_48",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "915.0"
+    "output": "103.0"
   },
   {
     "problem_id": "nlp4lp_49",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
     "solver": "highs",
-    "output": "37100.0"
+    "output": "37099.99999999999"
   },
   {
     "problem_id": "nlp4lp_50",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
-    "solution_success": true,
+    "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "16620.0"
+    "output": "No objective value found in output"
   },
   {
     "problem_id": "nlp4lp_51",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -849,41 +695,33 @@
   {
     "problem_id": "nlp4lp_52",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
-    "solution_success": false,
+    "execution_success": true,
+    "solution_success": true,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `int_max'\n/tmp/tmp4v511nxy.mzn:15.24-30\n"
+    "output": "10200.0"
   },
   {
     "problem_id": "nlp4lp_53",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
-    "solution_success": false,
-    "timeout": 120,
-    "solver": "highs",
-    "output": "/tmp/tmp75ob3lqa.mzn:40.31-35:\n  sum(p in 1..P) (Prices[p] * float(Batches[p]))\n                              ^^^^^\nError: syntax error, unexpected float\n"
-  },
-  {
-    "problem_id": "nlp4lp_54",
-    "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "720.0"
+    "output": "975000.0"
+  },
+  {
+    "problem_id": "nlp4lp_54",
+    "problem_type": "maximization",
+    "execution_success": true,
+    "solution_success": false,
+    "timeout": 120,
+    "solver": "highs",
+    "output": "734.0"
   },
   {
     "problem_id": "nlp4lp_55",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -893,8 +731,6 @@
   {
     "problem_id": "nlp4lp_56",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -904,41 +740,33 @@
   {
     "problem_id": "nlp4lp_57",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `int_max'\n/tmp/tmp4eodddlo.mzn:19.24-30\n"
+    "output": "103300.0"
   },
   {
     "problem_id": "nlp4lp_58",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `intmax'\n/tmp/tmp49t1_zal.mzn:19.23-28\n"
+    "output": "97600.0"
   },
   {
     "problem_id": "nlp4lp_60",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
-    "solution_success": true,
+    "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "26.5"
+    "output": "No objective value found in output"
   },
   {
     "problem_id": "nlp4lp_61",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -948,30 +776,24 @@
   {
     "problem_id": "nlp4lp_62",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `int_max'\n/tmp/tmpsebwxrgg.mzn:12.23-29\n"
+    "output": "7080.0"
   },
   {
     "problem_id": "nlp4lp_63",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "/tmp/tmp4cg7bqeq.dzn:8.5:\n    |1, 1, 0, 0, 0, 0, 1, 0| % Translator 1\n    ^\nError: syntax error, unexpected '|'\n"
+    "output": "/tmp/tmp69ww87gm.dzn:8.5:\n    |1, 1, 0, 0, 0, 0, 1, 0| % Translator 1\n    ^\nError: syntax error, unexpected '|'\n"
   },
   {
     "problem_id": "nlp4lp_64",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -981,8 +803,6 @@
   {
     "problem_id": "nlp4lp_65",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -992,8 +812,6 @@
   {
     "problem_id": "nlp4lp_66",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -1003,19 +821,15 @@
   {
     "problem_id": "nlp4lp_67",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "nlp4lp",
-    "execution_success": false,
-    "solution_success": false,
+    "execution_success": true,
+    "solution_success": true,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: evaluation error: Index set mismatch. Declared index sets of `patterns' are [1..4,1..49], but is assigned to array with index sets [1..49, 1..4]. You may need to coerce the index sets using the array2d function.\n/tmp/tmpp4xpu_pz.mzn:11.1-34\n  in variable declaration for 'patterns'\n"
+    "output": "45.0"
   },
   {
     "problem_id": "non_linear_problem_9",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -1025,41 +839,33 @@
   {
     "problem_id": "non_linear_problem_10",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: cannot determine coercion from type array[int,int] of float to type array[int,int] of int\n/tmp/tmpnrtohwvf.dzn:17.8-22.30\n"
+    "output": "Error: type error: cannot determine coercion from type array[int,int] of float to type array[int,int] of int\n/tmp/tmpyrfe6p7b.dzn:17.8-22.30\n"
   },
   {
     "problem_id": "non_linear_problem_15",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `x', did you mean `c'?\n/tmp/tmp8ge3g8g6.dzn:5.1-12.4\n"
+    "output": "Error: type error: undefined identifier `x', did you mean `c'?\n/tmp/tmpb2giv6bs.dzn:5.1-12.4\n"
   },
   {
     "problem_id": "non_linear_problem_23",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: no function or predicate with name `all_different' found\n/tmp/tmp099eckfn.mzn:26.12-56\n"
+    "output": "Error: evaluation error: Abort: Unable to create linear formulation for the `float_times(X_INTRODUCED_79_, X_INTRODUCED_291_, X_INTRODUCED_442_)`\n\tconstraint. To flatten this instance a quadratic constraint is required, but the\n\tusage of these constraints is currently disabled for the selected solver. Define\n\t`QuadrFloat=true` if your solver supports quadratic constraints, or use\n\tinteger variables.\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:331.3-345.7\n  in if-then-else expression\n/snap/minizinc/1222/share/minizinc/linear/redefinitions.mzn:338.5-344.5\n  in call 'abort'\n"
   },
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_1",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -1069,8 +875,6 @@
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_2",
     "problem_type": "satisfaction",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -1080,19 +884,15 @@
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_4",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "hakank",
-    "execution_success": true,
-    "solution_success": true,
+    "execution_success": false,
+    "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "178.0"
+    "output": "Execution timed out after 120 seconds"
   },
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_5",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -1102,8 +902,6 @@
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_6",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -1113,8 +911,6 @@
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_8",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -1124,8 +920,6 @@
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_18",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -1135,8 +929,6 @@
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_28",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -1146,19 +938,15 @@
   {
     "problem_id": "OR_LP_IP_Scheduling_problem_31",
     "problem_type": "minimization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `max_time'\n/tmp/tmp3ypkv7id.dzn:24.1-14\n"
+    "output": "Error: type error: circular definition of `max_time'\n/tmp/tmp0k8mjxrh.mzn:13.52-59\n"
   },
   {
     "problem_id": "puzzles_problem_1",
     "problem_type": "maximization",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
@@ -1168,8 +956,6 @@
   {
     "problem_id": "puzzles_problem_11",
     "problem_type": "satisfaction",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": false,
     "timeout": 120,
@@ -1179,34 +965,28 @@
   {
     "problem_id": "puzzles_problem_12",
     "problem_type": "satisfaction",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": true,
     "solution_success": true,
     "timeout": 120,
     "solver": "highs",
-    "output": "area4=48\n----------\n"
+    "output": "x = 1;\nlen = 3;\ny = 13;\nheight = 16;\narea4 = 48;\n----------\n"
   },
   {
     "problem_id": "puzzles_problem_13",
     "problem_type": "satisfaction",
-    "has_dzn": true,
-    "source": "hakank",
-    "execution_success": false,
+    "execution_success": true,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Execution timed out after 120 seconds"
+    "output": ""
   },
   {
     "problem_id": "puzzles_problem_31",
     "problem_type": "satisfaction",
-    "has_dzn": true,
-    "source": "hakank",
     "execution_success": false,
     "solution_success": false,
     "timeout": 120,
     "solver": "highs",
-    "output": "Error: type error: undefined identifier `X', did you mean `n'?\n/tmp/tmpkpw5_24i.dzn:7.5\n"
+    "output": "Error: type error: undefined identifier `X', did you mean `n'?\n/tmp/tmpldke8vwe.dzn:7.5\n"
   }
 ]

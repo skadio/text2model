@@ -1,7 +1,7 @@
 {
   "model_name": "gpt-5.2",
   "strategy_name": "gala",
-  "evaluation_date": "2026-02-09 21:44:21",
+  "evaluation_date": "2026-04-09 22:26:19",
   "execution_accuracy": 67.27,
   "solution_accuracy": 39.09,
   "average_score": 53.18,
@@ -12,42 +12,5 @@
   "problems_attempted": 110,
   "problems_solved": 43,
   "satisfaction_problems": 10,
-  "optimization_problems": 100,
-  "source_metrics": {
-    "hakank": {
-      "num_problems": 22,
-      "execution_accuracy": 59.09,
-      "solution_accuracy": 36.36,
-      "execution_count": 13,
-      "solution_count": 8
-    },
-    "complexor": {
-      "num_problems": 7,
-      "execution_accuracy": 85.71,
-      "solution_accuracy": 57.14,
-      "execution_count": 6,
-      "solution_count": 4
-    },
-    "csplib": {
-      "num_problems": 11,
-      "execution_accuracy": 63.64,
-      "solution_accuracy": 45.45,
-      "execution_count": 7,
-      "solution_count": 5
-    },
-    "lpwp": {
-      "num_problems": 5,
-      "execution_accuracy": 100.0,
-      "solution_accuracy": 100.0,
-      "execution_count": 5,
-      "solution_count": 5
-    },
-    "nlp4lp": {
-      "num_problems": 65,
-      "execution_accuracy": 66.15,
-      "solution_accuracy": 32.31,
-      "execution_count": 43,
-      "solution_count": 21
-    }
-  }
+  "optimization_problems": 100
 }

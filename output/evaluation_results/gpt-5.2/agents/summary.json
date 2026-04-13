@@ -1,16 +1,16 @@
 {
   "model_name": "gpt-5.2",
   "strategy_name": "agents",
-  "evaluation_date": "2026-02-14 17:02:16",
-  "execution_accuracy": 62.56,
-  "solution_accuracy": 38.86,
-  "average_score": 50.71,
-  "satisfaction_execution_accuracy": 83.33,
+  "evaluation_date": "2026-04-09 22:04:04",
+  "execution_accuracy": 55.45,
+  "solution_accuracy": 33.64,
+  "average_score": 44.55,
+  "satisfaction_execution_accuracy": 60.0,
   "satisfaction_solution_accuracy": 0.0,
-  "optimization_execution_accuracy": 61.95,
-  "optimization_solution_accuracy": 40.0,
-  "problems_attempted": 211,
-  "problems_solved": 82,
-  "satisfaction_problems": 6,
-  "optimization_problems": 205
+  "optimization_execution_accuracy": 55.0,
+  "optimization_solution_accuracy": 37.0,
+  "problems_attempted": 110,
+  "problems_solved": 37,
+  "satisfaction_problems": 10,
+  "optimization_problems": 100
 }
