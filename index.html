@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text2Model — Modeling Copilots for Text-to-Model Translation</title>
+  <meta name="description" content="Text2Model: A suite of LLM-based copilots for translating natural language into formal optimization and constraint models using MiniZinc.">
+  <meta name="keywords" content="Text2Model, Text2Zinc, Learn2Zinc, NER4OPT, optimization, constraint programming, MiniZinc, LLM, NLP">
+  <meta name="author" content="Serdar Kadıoğlu, Karthik Uppuluri, Akash Singirikonda">
+
+  <meta property="og:title" content="Text2Model — Modeling Copilots for Text-to-Model Translation">
+  <meta property="og:description" content="LLM-based copilots and datasets for translating natural language into optimization and constraint models.">
+  <meta property="og:type" content="article">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Text2Model — Modeling Copilots for Text-to-Model Translation">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --ink: #1a1a2e;
+      --paper: #faf9f7;
+      --warm: #f5f0ea;
+      --accent: #c0392b;
+      --accent-soft: #e74c3c;
+      --teal: #16a085;
+      --teal-soft: #1abc9c;
+      --blue: #2471a3;
+      --blue-soft: #2e86c1;
+      --gold: #d4a017;
+      --muted: #6b7280;
+      --border: #e2ddd5;
+      --card-bg: #ffffff;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.10);
+      --radius: 10px;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'Source Sans 3', 'Segoe UI', sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.7;
+      font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250,249,247,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .nav-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    nav .nav-brand {
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.03em;
+      text-decoration: none;
+    }
+    nav .nav-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+    }
+    nav .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav .nav-links a:hover { color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      background: linear-gradient(175deg, var(--paper) 0%, var(--warm) 100%);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(192,57,43,0.04), transparent),
+                  radial-gradient(ellipse 60% 50% at 80% 100%, rgba(22,160,133,0.04), transparent);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .hero-label {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(192,57,43,0.07);
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .subtitle {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 1.5rem;
+      font-weight: 300;
+    }
+    .hero .authors {
+      font-size: 1.05rem;
+      margin-bottom: 0.3rem;
+    }
+    .hero .authors a {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dashed var(--border);
+      transition: border-color 0.2s;
+    }
+    .hero .authors a:hover { border-color: var(--accent); }
+    .hero .affiliation {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .hero .affiliation span { display: inline-block; margin: 0 0.5rem; }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.3rem;
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.25s;
+      border: 1.5px solid transparent;
+    }
+    .btn-primary {
+      background: var(--ink);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #2c2c4a;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+    .btn-outline {
+      background: var(--card-bg);
+      color: var(--ink);
+      border-color: var(--border);
+    }
+    .btn-outline:hover {
+      border-color: var(--ink);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .section-header h2 {
+      font-family: var(--serif);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    .section-header h2::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: var(--accent);
+      margin: 0.6rem auto 0;
+      border-radius: 2px;
+    }
+    .section-header p {
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0.75rem auto 0;
+      font-size: 1rem;
+    }
+
+    /* ── OVERVIEW / PIPELINE ── */
+    .pipeline-visual {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .pipe-step {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem 1.25rem;
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .pipe-step:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .pipe-step .step-num {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .pipe-step .step-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.6rem;
+    }
+    .pipe-step h3 {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .pipe-step p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .pipe-step:not(:last-child)::after {
+      display: none;
+    }
+
+    /* ── PROJECT CARDS ── */
+    .projects-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .project-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
+    }
+    .project-card-inner {
+      display: grid;
+      grid-template-columns: 5px 1fr;
+    }
+    .card-accent {
+      border-radius: var(--radius) 0 0 var(--radius);
+    }
+    .card-accent.red { background: var(--accent); }
+    .card-accent.teal { background: var(--teal); }
+    .card-accent.blue { background: var(--blue); }
+    .card-accent.gold { background: var(--gold); }
+
+    .card-body {
+      padding: 2rem 2.25rem;
+    }
+    .card-body .card-tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.7rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .card-tag.red { color: var(--accent); background: rgba(192,57,43,0.07); }
+    .card-tag.teal { color: var(--teal); background: rgba(22,160,133,0.07); }
+    .card-tag.blue { color: var(--blue); background: rgba(36,113,163,0.07); }
+    .card-tag.gold { color: #96740b; background: rgba(212,160,23,0.10); }
+
+    .card-body h3 {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+    .card-body .card-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+      line-height: 1.7;
+    }
+    .card-body .card-venue {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      color: var(--ink);
+      background: var(--paper);
+      transition: all 0.2s;
+    }
+    .card-link:hover {
+      border-color: var(--ink);
+      background: var(--card-bg);
+    }
+    .card-link i {
+      font-size: 0.85rem;
+    }
+    .card-link .hf-emoji {
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+
+    /* ── MODELS TABLE ── */
+    .models-section {
+      background: var(--warm);
+      border-radius: var(--radius);
+      padding: 2.25rem;
+      margin-top: 1.5rem;
+    }
+    .models-section h4 {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+    }
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.75rem;
+    }
+    .model-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.65rem 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .model-chip:hover {
+      border-color: var(--teal);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+    .model-chip .chip-icon {
+      font-size: 1.1rem;
+    }
+    .model-chip .chip-size {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: var(--warm);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* ── ABSTRACT ── */
+    .abstract-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      max-width: 780px;
+      margin: 0 auto;
+      font-size: 0.98rem;
+      line-height: 1.85;
+      color: #374151;
+    }
+
+    /* ── BIBTEX ── */
+    .bibtex-block {
+      background: var(--ink);
+      color: #e2e8f0;
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.8;
+      overflow-x: auto;
+      position: relative;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .bibtex-block .copy-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 0.35rem 0.75rem;
+      border-radius: 5px;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .bibtex-block .copy-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer a {
+      color: var(--muted);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    footer a:hover { color: var(--ink); }
+
+    /* ── DIVIDERS ── */
+    .section-divider {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    .section-divider hr {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-inner > * {
+      animation: fadeUp 0.6s ease-out both;
+    }
+    .hero-inner > *:nth-child(2) { animation-delay: 0.08s; }
+    .hero-inner > *:nth-child(3) { animation-delay: 0.14s; }
+    .hero-inner > *:nth-child(4) { animation-delay: 0.2s; }
+    .hero-inner > *:nth-child(5) { animation-delay: 0.26s; }
+    .hero-inner > *:nth-child(6) { animation-delay: 0.32s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .pipeline-visual {
+        grid-template-columns: 1fr 1fr;
+      }
+      .pipe-step:not(:last-child)::after {
+        display: none;
+      }
+      .nav-links { display: none; }
+      .card-body { padding: 1.5rem; }
+      .models-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 480px) {
+      .pipeline-visual {
+        grid-template-columns: 1fr;
+      }
+      section { padding: 2.5rem 1.25rem; }
+      .hero { padding: 3rem 1.25rem 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">text2model</a>
+    <ul class="nav-links">
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#citation">Citation</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+  <div class="hero-inner">
+    <!-- <div class="hero-label">AAAI'25 Bridge Program</div> -->
+    <h1>Modeling Copilots for<br><span>Text-to-Model</span> Translation</h1>
+    <p class="subtitle">LLM-based copilots and datasets for translating natural language descriptions into formal optimization and constraint programming models.</p>
+    <p class="authors">
+      <a href="https://cs.brown.edu/people/serdark/" target="_blank">Serdar Kadıoğlu</a><sup>1,2</sup> &nbsp;·&nbsp;
+      <a href="#">Karthik Uppuluri</a><sup>1</sup> &nbsp;·&nbsp;
+      <a href="#">Akash Singirikonda</a><sup>2</sup>
+    </p>
+    <p class="affiliation">
+      <span><sup>1</sup> AI Center of Excellence, Fidelity Investments</span>
+      <span><sup>2</sup> Brown University</span>
+    </p>
+    <div class="hero-buttons">
+      <a href="https://arxiv.org/abs/2604.12955" class="btn btn-primary" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
+      <a href="https://github.com/skadio/text2model" class="btn btn-outline" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+      <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="btn btn-outline" target="_blank"><span class="hf-emoji">🤗</span> Leaderboard</a>
+    </div>
+  </div>
+</header>
+
+<!-- ─── ABSTRACT ─── -->
+<section id="abstract">
+  <div class="section-header">
+    <h2>Abstract</h2>
+  </div>
+  <div class="abstract-box">
+    There is growing interest in leveraging large language models (LLMs) for text-to-model translation and optimization tasks. This paper aims to advance this line of research by introducing <strong>Text2Model</strong> and <strong>Text2Zinc</strong>. <strong>Text2Model</strong> is a suite of copilots based on several LLM strategies with varying complexity, along with an online leaderboard. <strong>Text2Zinc</strong> is a cross-domain dataset for capturing optimization and satisfaction problems specified in natural language, along with an interactive editor with built-in AI assistant. While there is an emerging literature on using LLMs for translating combinatorial problems into formal models, our work is the first attempt to integrate <em>both</em> satisfaction and optimization problems within a <em>unified architecture</em> and <em>dataset</em>. Moreover, our approach is <em>solver-agnostic</em> unlike existing work that focuses on translation to a solver-specific model. To achieve this, we leverage <strong>MiniZinc</strong>'s solver-and-paradigm-agnostic modeling capabilities to formulate combinatorial problems.
+  </div>
+</section>
+
+<div class="section-divider"><hr></div>
+
+<!-- ─── PROJECTS ─── -->
+<section id="projects">
+  <div class="section-header">
+    <h2>Projects</h2>
+    <p>Our collective body of work on translating natural language optimization problem descriptions into formal optimization and constraint programming models.</p>
+  </div>
+  <div class="projects-grid">
+
+    <!-- NER4OPT -->
+    <div class="project-card">
+      <div class="project-card-inner">
+        <div class="card-accent gold"></div>
+        <div class="card-body">
+          <div class="card-tag gold">NER / NLP</div>
+          <h3>NER4OPT</h3>
+          <p class="card-desc">Named entity recognition for optimization modeling from natural language. Extracts optimization-related entities — objectives, decision variables, constraints, and parameters — from free-form problem descriptions. Combines classical NLP techniques with fine-tuned transformer architectures and optimization-specific data augmentation.</p>
+          <p class="card-venue">Constraints Journal, 2024 · CPAIOR 2023 · NeurIPS 2022 Workshop</p>
+          <div class="card-links">
+            <a href="https://dl.acm.org/doi/abs/10.1007/s10601-024-09376-5" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
+            <a href="https://huggingface.co/spaces/skadio/Ner4Opt" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Demo</a>
+            <a href="https://github.com/skadio/ner4opt" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEXT2ZINC -->
+    <div class="project-card">
+      <div class="project-card-inner">
+        <div class="card-accent teal"></div>
+        <div class="card-body">
+          <div class="card-tag teal">Dataset</div>
+          <h3>Text2Zinc</h3>
+          <p class="card-desc">A cross-domain dataset capturing optimization and satisfaction problems specified in natural language text. Leverages MiniZinc's solver-agnostic modeling capabilities to formulate a diverse range of combinatorial problems, bridging natural language specifications with formal constraint models. The first dataset to integrate both satisfaction and optimization problems within a unified framework.</p>
+          <p class="card-venue">arXiv:2503.10642 · 2025</p>
+          <div class="card-links">
+            <a href="https://arxiv.org/abs/2503.10642" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
+            <a href="https://huggingface.co/datasets/skadio/text2zinc" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Dataset</a>
+            <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Leaderboard</a>
+            <a href="https://huggingface.co/spaces/skadio/text2zinc-editor" class="card-link" target="_blank"><i class="fa-solid fa-pen-to-square"></i> Editor</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEXT2MODEL -->
+    <div class="project-card">
+      <div class="project-card-inner">
+        <div class="card-accent red"></div>
+        <div class="card-body">
+          <div class="card-tag red">Copilot Suite</div>
+          <h3>Text2Model</h3>
+          <p class="card-desc">A comprehensive suite of LLM-based modeling copilots for text-to-model translation. Includes multiple strategies of varying complexity — from zero-shot and chain-of-thought prompting to compositional and agentic workflows — along with an online leaderboard for benchmarking and an interactive MiniZinc editor with a built-in AI assistant.</p>
+          <p class="card-venue">AAAI'25 Bridge Program on Machine Learning and Operations Research</p>
+          <div class="card-links">
+            <a href="https://arxiv.org/abs/2604.12955" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
+            <a href="https://github.com/skadio/text2model" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+            <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Leaderboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GALA -->
+    <div class="project-card">
+      <div class="project-card-inner">
+        <div class="card-accent teal"></div>
+        <div class="card-body">
+          <div class="card-tag teal">Multi-Agent</div>
+          <h3>GALA</h3>
+          <p class="card-desc">Global LLM Agents for text-to-model translation. Introduces collaborative multi-agent workflows where specialized LLM agents work together to decompose, formulate, and validate optimization models from natural language — achieving stronger performance through agent collaboration.</p>
+          <p class="card-venue">Junyang Cai, Serdar Kadioglu, Bistra Dilkina · arXiv:2509.08970 · 2025</p>
+          <div class="card-links">
+            <a href="https://arxiv.org/abs/2509.08970" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
+            <a href="https://github.com/skadio/text2model" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEARN2ZINC -->
+    <div class="project-card">
+      <div class="project-card-inner">
+        <div class="card-accent blue"></div>
+        <div class="card-body">
+          <div class="card-tag blue">Fine-tuned Models</div>
+          <h3>Learn2Zinc</h3>
+          <p class="card-desc">Fine-tuning state-of-the-art open-source LLMs to generate MiniZinc constraint models directly from natural language problem descriptions. Includes training datasets with plain and chain-of-thought variants, augmented data, and models spanning multiple architectures and sizes — from 0.6B to 20B parameters.</p>
+
+          <div class="models-section">
+            <h4>Fine-tuned Models</h4>
+            <div class="models-grid">
+              <a href="https://huggingface.co/skadio/learn2zinc-Qwen3-0.6B" class="model-chip" target="_blank">
+                <span class="chip-icon">🤗</span> Qwen3 <span class="chip-size">0.6B</span>
+              </a>
+              <a href="https://huggingface.co/skadio/learn2zinc-Llama-3.2-1B" class="model-chip" target="_blank">
+                <span class="chip-icon">🤗</span> Llama 3.2 <span class="chip-size">1B</span>
+              </a>
+              <a href="https://huggingface.co/skadio/learn2zinc-Llama-3.2-3B" class="model-chip" target="_blank">
+                <span class="chip-icon">🤗</span> Llama 3.2 <span class="chip-size">3B</span>
+              </a>
+              <a href="https://huggingface.co/skadio/learn2zinc-Gemma-2-9B" class="model-chip" target="_blank">
+                <span class="chip-icon">🤗</span> Gemma 2 <span class="chip-size">9B</span>
+              </a>
+              <a href="https://huggingface.co/skadio/learn2zinc-GPT-oss-20B" class="model-chip" target="_blank">
+                <span class="chip-icon">🤗</span> GPT-oss <span class="chip-size">20B</span>
+              </a>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.25rem;">
+            <div class="card-links">
+              <a href="https://github.com/skadio/learn2zinc" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+              <a href="https://huggingface.co/datasets/skadio/learn2zinc_p2c" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> P2C Dataset</a>
+              <a href="https://huggingface.co/datasets/skadio/learn2zinc_p2c_cot" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> P2C CoT</a>
+              <a href="https://huggingface.co/datasets/skadio/learn2zinc-p2c-augmented" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Augmented</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"><hr></div>
+
+<!-- ─── CITATION ─── -->
+<section id="citation">
+  <div class="section-header">
+    <h2>Citation</h2>
+    <p>If you use our work, please cite the relevant papers.</p>
+  </div>
+
+  <div class="bibtex-block">
+    <button class="copy-btn" onclick="copyBibtex(this, 'bib1')">Copy</button>
+    <pre id="bib1">@misc{kadioglu2026modelingcopilotstexttomodeltranslation,
+      title={Modeling Copilots for Text-to-Model Translation},
+      author={Serdar Kadioglu and Karthik Uppuluri and Akash Singirikonda},
+      year={2026},
+      eprint={2604.12955},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2604.12955},
+}</pre>
+  </div>
+
+  <div style="height:1.25rem;"></div>
+
+  <div class="bibtex-block">
+    <button class="copy-btn" onclick="copyBibtex(this, 'bib2')">Copy</button>
+    <pre id="bib2">@misc{singirikonda2025text2zinccrossdomaindatasetmodeling,
+      title={Text2Zinc: A Cross-Domain Dataset for Modeling Optimization and Satisfaction Problems in MiniZinc},
+      author={Akash Singirikonda and Serdar Kadioglu and Karthik Uppuluri},
+      year={2025},
+      eprint={2503.10642},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2503.10642},
+}</pre>
+  </div>
+
+  <div style="height:1.25rem;"></div>
+
+  <div class="bibtex-block">
+    <button class="copy-btn" onclick="copyBibtex(this, 'bib3')">Copy</button>
+    <pre id="bib3">@misc{cai2025galagloballlmagents,
+      title={Gala: Global LLM Agents for Text-to-Model Translation},
+      author={Junyang Cai and Serdar Kadioglu and Bistra Dilkina},
+      year={2025},
+      eprint={2509.08970},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2509.08970},
+}</pre>
+  </div>
+
+  <div style="height:1.25rem;"></div>
+
+  <div class="bibtex-block">
+    <button class="copy-btn" onclick="copyBibtex(this, 'bib4')">Copy</button>
+    <pre id="bib4">@article{Kadioglu24,
+  author       = {Serdar Kadioglu, Parag Pravin Dakle, Karthik Uppuluri, Regina Politi, Preethi Raghavan, SaiKrishna Rallabandi, Ravisutha Srinivasamurthy},
+  title        = {Ner4Opt: named entity recognition for optimization modelling from natural language},
+  journal      = {Constraints},
+  volume       = {29},
+  number       = {3-4},
+  pages        = {261--299},
+  year         = {2024},
+  url          = {https://doi.org/10.1007/s10601-024-09376-5},
+  doi          = {10.1007/S10601-024-09376-5}
+}</pre>
+  </div>
+
+  <div style="height:1.25rem;"></div>
+
+  <div class="bibtex-block">
+    <button class="copy-btn" onclick="copyBibtex(this, 'bib5')">Copy</button>
+    <pre id="bib5">@inproceedings{dakle23,
+  title     = {Ner4Opt: Named Entity Recognition for Optimization Modelling from Natural Language},
+  author    = {Parag Pravin Dakle, Serdar Kadıoğlu, Karthik Uppuluri, Regina Politi, Preethi Raghavan, SaiKrishna Rallabandi, Ravisutha Srinivasamurthy},
+  journal   = {The 20th International Conference on the Integration of Constraint Programming, Artificial Intelligence, and Operations Research (CPAIOR 2023)},
+  year      = {2023}
+}</pre>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>
+    Built with the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
+    This website is licensed under a <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a> License.
+  </p>
+</footer>
+
+<script>
+function copyBibtex(btn, id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>
+
+</body>
+</html>
