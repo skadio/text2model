@@ -48,6 +48,11 @@
 
     html { scroll-behavior: smooth; }
 
+    /* Anchor offset for sticky nav */
+    [id] {
+      scroll-margin-top: 80px;
+    }
+
     body {
       font-family: var(--sans);
       color: var(--ink);
@@ -442,6 +447,59 @@
       border-radius: 4px;
     }
 
+    /* ── EVENTS GRID ── */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .event-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1.1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .event-chip:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+    .event-chip.disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+    .event-chip.disabled:hover {
+      border-color: var(--border);
+      box-shadow: none;
+      transform: none;
+    }
+    .event-chip i {
+      font-size: 0.9rem;
+      color: var(--accent);
+      width: 1.1rem;
+      text-align: center;
+    }
+    .event-chip .event-venue {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: #fff;
+      background: var(--accent);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
     /* ── ABSTRACT ── */
     .abstract-box {
       background: var(--card-bg);
@@ -485,6 +543,72 @@
     }
     .bibtex-block .copy-btn:hover {
       background: rgba(255,255,255,0.2);
+    }
+
+    /* ── INLINE BIBTEX (Collapsible) ── */
+    .bibtex-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      color: var(--ink);
+      background: var(--paper);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bibtex-toggle:hover {
+      border-color: var(--ink);
+      background: var(--card-bg);
+    }
+    .bibtex-toggle i {
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+    .bibtex-toggle.active i {
+      transform: rotate(180deg);
+    }
+    .bibtex-inline {
+      display: none;
+      margin-top: 1rem;
+      background: var(--ink);
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      position: relative;
+    }
+    .bibtex-inline.active {
+      display: block;
+    }
+    .bibtex-inline .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .bibtex-inline .copy-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .bibtex-inline pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     /* ── FOOTER ── */
@@ -555,11 +679,11 @@
 <!-- ─── NAV ─── -->
 <nav>
   <div class="nav-inner">
-    <a href="#" class="nav-brand">text2model</a>
+    <a href="#" class="nav-brand">LLM Copilots</a>
     <ul class="nav-links">
       <li><a href="#abstract">Abstract</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#citation">Citation</a></li>
+      <li><a href="#projects">Resources</a></li>
+      <li><a href="#events">Events</a></li>
     </ul>
   </div>
 </nav>
@@ -602,90 +726,49 @@
 <!-- ─── PROJECTS ─── -->
 <section id="projects">
   <div class="section-header">
-    <h2>Projects</h2>
+    <h2>Resources</h2>
     <p>Our collective body of work on translating natural language optimization problem descriptions into formal optimization and constraint programming models.</p>
   </div>
   <div class="projects-grid">
 
-    <!-- NER4OPT -->
-    <div class="project-card">
-      <div class="project-card-inner">
-        <div class="card-accent gold"></div>
-        <div class="card-body">
-          <div class="card-tag gold">NER / NLP</div>
-          <h3>NER4OPT</h3>
-          <p class="card-desc">Named entity recognition for optimization modeling from natural language. Extracts optimization-related entities — objectives, decision variables, constraints, and parameters — from free-form problem descriptions. Combines classical NLP techniques with fine-tuned transformer architectures and optimization-specific data augmentation.</p>
-          <p class="card-venue">Constraints Journal, 2024 · CPAIOR 2023 · NeurIPS 2022 Workshop</p>
-          <div class="card-links">
-            <a href="https://dl.acm.org/doi/abs/10.1007/s10601-024-09376-5" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
-            <a href="https://huggingface.co/spaces/skadio/Ner4Opt" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Demo</a>
-            <a href="https://github.com/skadio/ner4opt" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TEXT2ZINC -->
-    <div class="project-card">
-      <div class="project-card-inner">
-        <div class="card-accent teal"></div>
-        <div class="card-body">
-          <div class="card-tag teal">Dataset</div>
-          <h3>Text2Zinc</h3>
-          <p class="card-desc">A cross-domain dataset capturing optimization and satisfaction problems specified in natural language text. Leverages MiniZinc's solver-agnostic modeling capabilities to formulate a diverse range of combinatorial problems, bridging natural language specifications with formal constraint models. The first dataset to integrate both satisfaction and optimization problems within a unified framework.</p>
-          <p class="card-venue">arXiv:2503.10642 · 2025</p>
-          <div class="card-links">
-            <a href="https://arxiv.org/abs/2503.10642" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
-            <a href="https://huggingface.co/datasets/skadio/text2zinc" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Dataset</a>
-            <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Leaderboard</a>
-            <a href="https://huggingface.co/spaces/skadio/text2zinc-editor" class="card-link" target="_blank"><i class="fa-solid fa-pen-to-square"></i> Editor</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- TEXT2MODEL -->
-    <div class="project-card">
+    <div class="project-card" id="llm-copilots">
       <div class="project-card-inner">
         <div class="card-accent red"></div>
         <div class="card-body">
           <div class="card-tag red">Copilot Suite</div>
-          <h3>Text2Model</h3>
+          <h3>LLM Copilots</h3>
           <p class="card-desc">A comprehensive suite of LLM-based modeling copilots for text-to-model translation. Includes multiple strategies of varying complexity — from zero-shot and chain-of-thought prompting to compositional and agentic workflows — along with an online leaderboard for benchmarking and an interactive MiniZinc editor with a built-in AI assistant.</p>
           <p class="card-venue">AAAI'25 Bridge Program on Machine Learning and Operations Research</p>
           <div class="card-links">
             <a href="https://arxiv.org/abs/2604.12955" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
             <a href="https://github.com/skadio/text2model" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
             <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Leaderboard</a>
+            <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- GALA -->
-    <div class="project-card">
-      <div class="project-card-inner">
-        <div class="card-accent teal"></div>
-        <div class="card-body">
-          <div class="card-tag teal">Multi-Agent</div>
-          <h3>GALA</h3>
-          <p class="card-desc">Global LLM Agents for text-to-model translation. Introduces collaborative multi-agent workflows where specialized LLM agents work together to decompose, formulate, and validate optimization models from natural language — achieving stronger performance through agent collaboration.</p>
-          <p class="card-venue">Junyang Cai, Serdar Kadioglu, Bistra Dilkina · arXiv:2509.08970 · 2025</p>
-          <div class="card-links">
-            <a href="https://arxiv.org/abs/2509.08970" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
-            <a href="https://github.com/skadio/text2model" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+          <div class="bibtex-inline">
+            <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
+            <pre>@misc{kadioglu2026text2model,
+  title         = {Modeling Copilots for Text-to-Model Translation},
+  author        = {Serdar Kadioglu and Karthik Uppuluri and Akash Singirikonda},
+  year          = {2026},
+  eprint        = {2604.12955},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url           = {https://arxiv.org/abs/2604.12955}
+}</pre>
           </div>
         </div>
       </div>
     </div>
 
     <!-- LEARN2ZINC -->
-    <div class="project-card">
+    <div class="project-card" id="learn2zinc">
       <div class="project-card-inner">
         <div class="card-accent blue"></div>
         <div class="card-body">
           <div class="card-tag blue">Fine-tuned Models</div>
-          <h3>Learn2Zinc</h3>
+          <h3>Fine-tuned MiniZinc Models</h3>
           <p class="card-desc">Fine-tuning state-of-the-art open-source LLMs to generate MiniZinc constraint models directly from natural language problem descriptions. Includes training datasets with plain and chain-of-thought variants, augmented data, and models spanning multiple architectures and sizes — from 0.6B to 20B parameters.</p>
 
           <div class="models-section">
@@ -704,7 +787,7 @@
                 <span class="chip-icon">🤗</span> Gemma 2 <span class="chip-size">9B</span>
               </a>
               <a href="https://huggingface.co/skadio/learn2zinc-GPT-oss-20B" class="model-chip" target="_blank">
-                <span class="chip-icon">🤗</span> GPT-oss <span class="chip-size">20B</span>
+                <span class="chip-icon">🤗</span> GPT-OSS <span class="chip-size">20B</span>
               </a>
             </div>
           </div>
@@ -715,7 +798,115 @@
               <a href="https://huggingface.co/datasets/skadio/learn2zinc_p2c" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> P2C Dataset</a>
               <a href="https://huggingface.co/datasets/skadio/learn2zinc_p2c_cot" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> P2C CoT</a>
               <a href="https://huggingface.co/datasets/skadio/learn2zinc-p2c-augmented" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Augmented</a>
+              <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
             </div>
+            <div class="bibtex-inline">
+              <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
+              <pre>@misc{kadioglu2026text2model,
+  title         = {Modeling Copilots for Text-to-Model Translation},
+  author        = {Serdar Kadioglu and Karthik Uppuluri and Akash Singirikonda},
+  year          = {2026},
+  eprint        = {2604.12955},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url           = {https://arxiv.org/abs/2604.12955}
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEXT2ZINC -->
+    <div class="project-card" id="text2zinc">
+      <div class="project-card-inner">
+        <div class="card-accent teal"></div>
+        <div class="card-body">
+          <div class="card-tag teal">Dataset</div>
+          <h3>Text2Zinc</h3>
+          <p class="card-desc">A cross-domain dataset capturing optimization and satisfaction problems specified in natural language text. Leverages MiniZinc's solver-agnostic modeling capabilities to formulate a diverse range of combinatorial problems, bridging natural language specifications with formal constraint models. The first dataset to integrate both satisfaction and optimization problems within a unified framework.</p>
+          <p class="card-venue">arXiv:2503.10642 · 2025</p>
+          <div class="card-links">
+            <a href="https://arxiv.org/abs/2503.10642" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
+            <a href="https://huggingface.co/datasets/skadio/text2zinc" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Dataset</a>
+            <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Leaderboard</a>
+            <a href="https://huggingface.co/spaces/skadio/text2zinc-editor" class="card-link" target="_blank"><i class="fa-solid fa-pen-to-square"></i> Editor</a>
+            <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
+          </div>
+          <div class="bibtex-inline">
+            <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
+            <pre>@misc{singirikonda2025text2zinc,
+  title         = {Text2Zinc: A Cross-Domain Dataset for Modeling Optimization and Satisfaction Problems in MiniZinc},
+  author        = {Akash Singirikonda and Serdar Kadioglu and Karthik Uppuluri},
+  year          = {2025},
+  eprint        = {2503.10642},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2503.10642}
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GALA -->
+    <div class="project-card" id="gala">
+      <div class="project-card-inner">
+        <div class="card-accent teal"></div>
+        <div class="card-body">
+          <div class="card-tag teal">Multi-Agent</div>
+          <h3>Global LLM Agents (Gala)</h3>
+          <p class="card-desc">Global LLM Agents for text-to-model translation. Introduces collaborative multi-agent workflows where specialized LLM agents work together to decompose, formulate, and validate optimization models from natural language — achieving stronger performance through agent collaboration.</p>
+          <p class="card-venue">Junyang Cai, Serdar Kadioglu, Bistra Dilkina · arXiv:2509.08970 · 2025</p>
+          <div class="card-links">
+            <a href="https://arxiv.org/abs/2509.08970" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
+            <a href="https://github.com/skadio/text2model" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+            <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
+          </div>
+          <div class="bibtex-inline">
+            <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
+            <pre>@misc{cai2025gala,
+  title         = {Gala: Global LLM Agents for Text-to-Model Translation},
+  author        = {Junyang Cai and Serdar Kadioglu and Bistra Dilkina},
+  year          = {2025},
+  eprint        = {2509.08970},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url           = {https://arxiv.org/abs/2509.08970}
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NER4OPT -->
+    <div class="project-card" id="ner4opt">
+      <div class="project-card-inner">
+        <div class="card-accent gold"></div>
+        <div class="card-body">
+          <div class="card-tag gold">NER / NLP</div>
+          <h3>Ner4Opt</h3>
+          <p class="card-desc">Named entity recognition for optimization modeling from natural language. Extracts optimization-related entities — objectives, decision variables, constraints, and parameters — from free-form problem descriptions. Combines classical NLP techniques with fine-tuned transformer architectures and optimization-specific data augmentation.</p>
+          <p class="card-venue">Constraints Journal, 2024 · CPAIOR 2023 · NeurIPS 2022 Workshop</p>
+          <div class="card-links">
+            <a href="https://dl.acm.org/doi/abs/10.1007/s10601-024-09376-5" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
+            <a href="https://huggingface.co/spaces/skadio/Ner4Opt" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Demo</a>
+            <a href="https://github.com/skadio/ner4opt" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+            <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
+          </div>
+          <div class="bibtex-inline">
+            <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
+            <pre>@article{Kadioglu24,
+  author    = {Serdar Kadioglu and Parag Pravin Dakle and Karthik Uppuluri and Regina Politi and Preethi Raghavan and SaiKrishna Rallabandi and Ravisutha Srinivasamurthy},
+  title     = {Ner4Opt: named entity recognition for optimization modelling from natural language},
+  journal   = {Constraints},
+  volume    = {29},
+  number    = {3-4},
+  pages     = {261--299},
+  year      = {2024},
+  url       = {https://doi.org/10.1007/s10601-024-09376-5},
+  doi       = {10.1007/S10601-024-09376-5}
+}</pre>
           </div>
         </div>
       </div>
@@ -726,85 +917,37 @@
 
 <div class="section-divider"><hr></div>
 
-<!-- ─── CITATION ─── -->
-<section id="citation">
+<!-- ─── EVENTS ─── -->
+<section id="events">
   <div class="section-header">
-    <h2>Citation</h2>
-    <p>If you use our work, please cite the relevant papers.</p>
+    <h2>Events</h2>
+    <p>Tutorials, workshops, and competitions on LLMs for optimization and constraint programming.</p>
   </div>
-
-  <div class="bibtex-block">
-    <button class="copy-btn" onclick="copyBibtex(this, 'bib1')">Copy</button>
-    <pre id="bib1">@misc{kadioglu2026modelingcopilotstexttomodeltranslation,
-      title={Modeling Copilots for Text-to-Model Translation},
-      author={Serdar Kadioglu and Karthik Uppuluri and Akash Singirikonda},
-      year={2026},
-      eprint={2604.12955},
-      archivePrefix={arXiv},
-      primaryClass={cs.AI},
-      url={https://arxiv.org/abs/2604.12955},
-}</pre>
-  </div>
-
-  <div style="height:1.25rem;"></div>
-
-  <div class="bibtex-block">
-    <button class="copy-btn" onclick="copyBibtex(this, 'bib2')">Copy</button>
-    <pre id="bib2">@misc{singirikonda2025text2zinccrossdomaindatasetmodeling,
-      title={Text2Zinc: A Cross-Domain Dataset for Modeling Optimization and Satisfaction Problems in MiniZinc},
-      author={Akash Singirikonda and Serdar Kadioglu and Karthik Uppuluri},
-      year={2025},
-      eprint={2503.10642},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2503.10642},
-}</pre>
-  </div>
-
-  <div style="height:1.25rem;"></div>
-
-  <div class="bibtex-block">
-    <button class="copy-btn" onclick="copyBibtex(this, 'bib3')">Copy</button>
-    <pre id="bib3">@misc{cai2025galagloballlmagents,
-      title={Gala: Global LLM Agents for Text-to-Model Translation},
-      author={Junyang Cai and Serdar Kadioglu and Bistra Dilkina},
-      year={2025},
-      eprint={2509.08970},
-      archivePrefix={arXiv},
-      primaryClass={cs.AI},
-      url={https://arxiv.org/abs/2509.08970},
-}</pre>
-  </div>
-
-  <div style="height:1.25rem;"></div>
-
-  <div class="bibtex-block">
-    <button class="copy-btn" onclick="copyBibtex(this, 'bib4')">Copy</button>
-    <pre id="bib4">@article{Kadioglu24,
-  author       = {Serdar Kadioglu, Parag Pravin Dakle, Karthik Uppuluri, Regina Politi, Preethi Raghavan, SaiKrishna Rallabandi, Ravisutha Srinivasamurthy},
-  title        = {Ner4Opt: named entity recognition for optimization modelling from natural language},
-  journal      = {Constraints},
-  volume       = {29},
-  number       = {3-4},
-  pages        = {261--299},
-  year         = {2024},
-  url          = {https://doi.org/10.1007/s10601-024-09376-5},
-  doi          = {10.1007/S10601-024-09376-5}
-}</pre>
-  </div>
-
-  <div style="height:1.25rem;"></div>
-
-  <div class="bibtex-block">
-    <button class="copy-btn" onclick="copyBibtex(this, 'bib5')">Copy</button>
-    <pre id="bib5">@inproceedings{dakle23,
-  title     = {Ner4Opt: Named Entity Recognition for Optimization Modelling from Natural Language},
-  author    = {Parag Pravin Dakle, Serdar Kadıoğlu, Karthik Uppuluri, Regina Politi, Preethi Raghavan, SaiKrishna Rallabandi, Ravisutha Srinivasamurthy},
-  journal   = {The 20th International Conference on the Integration of Constraint Programming, Artificial Intelligence, and Operations Research (CPAIOR 2023)},
-  year      = {2023}
-}</pre>
+  <div class="events-grid">
+    <span class="event-chip disabled" id="tutorial-ijcai26">
+      <i class="fa-solid fa-chalkboard-user"></i> LLMs for Modeling Tutorial <span class="event-venue">IJCAI'26</span>
+    </span>
+    <a href="https://sites.google.com/view/llm-solve-2026" class="event-chip" id="llm-solve-cp26" target="_blank">
+      <i class="fa-solid fa-users"></i> LLM-Solve Workshop <span class="event-venue">CP'26</span>
+    </a>
+    <a href="https://sites.google.com/view/llm-solve-2025" class="event-chip" id="llm-solve-cp25" target="_blank">
+      <i class="fa-solid fa-users"></i> LLM-Solve Workshop <span class="event-venue">CP'25</span>
+    </a>
+    <a href="https://sites.google.com/view/cpaior2026/program/master-class" class="event-chip" id="masterclass-cpaior26" target="_blank">
+      <i class="fa-solid fa-graduation-cap"></i> LLMs for CP/OR Master Class <span class="event-venue">CPAIOR'26</span>
+    </a>
+    <a href="https://conlaw.github.io/llm_opt_tutorial/tutorial.html" class="event-chip" id="tutorial-aaai26" target="_blank">
+      <i class="fa-solid fa-chalkboard-user"></i> LLMs for Optimization Tutorial <span class="event-venue">AAAI'26</span>
+    </a>
+    <a href="https://ai-or.github.io/2024/#Keynote%20Spearkers" class="event-chip" id="workshop-aaai24" target="_blank">
+      <i class="fa-solid fa-users"></i> LLMs for OR Workshop <span class="event-venue">AAAI'24</span>
+    </a>
+    <a href="https://nl4opt.github.io/" class="event-chip" id="nl4opt" target="_blank">
+      <i class="fa-solid fa-trophy"></i> NL4Opt Competition <span class="event-venue">NeurIPS'22</span>
+    </a>
   </div>
 </section>
+
 
 <!-- ─── FOOTER ─── -->
 <footer>
@@ -815,6 +958,20 @@
 </footer>
 
 <script>
+function toggleBibtex(btn) {
+  btn.classList.toggle('active');
+  const bibtexDiv = btn.closest('.card-links').nextElementSibling;
+  bibtexDiv.classList.toggle('active');
+}
+
+function copyBibtexInline(btn) {
+  const pre = btn.nextElementSibling;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+
 function copyBibtex(btn, id) {
   const text = document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(() => {
