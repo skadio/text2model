@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Text2Model — Modeling Copilots for Text-to-Model Translation</title>
-  <meta name="description" content="Text2Model: A suite of LLM-based copilots for translating natural language into formal optimization and constraint models using MiniZinc.">
+  <title>Text2Model — LLM Modeling Copilots</title>
+  <meta name="description" content="Text2Model: A suite of LLM-based copilots, datasets, fined-tuned models for translating natural language text into formal combinatorial constraint models.">
   <meta name="keywords" content="Text2Model, Text2Zinc, Learn2Zinc, NER4OPT, optimization, constraint programming, MiniZinc, LLM, NLP">
-  <meta name="author" content="Serdar Kadıoğlu, Karthik Uppuluri, Akash Singirikonda">
+  <meta name="author" content="Serdar Kadıoğlu">
 
-  <meta property="og:title" content="Text2Model — Modeling Copilots for Text-to-Model Translation">
-  <meta property="og:description" content="LLM-based copilots and datasets for translating natural language into optimization and constraint models.">
+  <meta property="og:title" content="Text2Model — LLM Modeling Copilots">
+  <meta property="og:description" content="Text2Model: A suite of LLM-based copilots, datasets, fined-tuned models for translating natural language text into formal combinatorial constraint models.">
   <meta property="og:type" content="article">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Text2Model — Modeling Copilots for Text-to-Model Translation">
+  <meta name="twitter:title" content="Text2Model — LLM Modeling Copilots">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -871,8 +871,8 @@
   <div class="nav-inner">
     <a href="#" class="nav-brand">LLM Copilots</a>
     <ul class="nav-links">
-      <li><a href="#abstract">Abstract</a></li>
-      <li><a href="#publications">Papers</a></li>
+      <li><a href="#abstract">Overview</a></li>
+<!--      <li><a href="#publications">Papers</a></li>-->
       <li><a href="#projects">Resources</a></li>
       <li><a href="#events">Events</a></li>
     </ul>
@@ -882,21 +882,22 @@
 <!-- ─── HERO ─── -->
 <header class="hero">
   <div class="hero-inner">
-    <h1>Modeling Copilots for<br><span>Text-to-Model</span> Translation</h1>
-    <p class="subtitle">LLM-based copilots and datasets for translating natural language descriptions into formal optimization and constraint programming models.</p>
+    <h1>LLM Copilots for<br><span>Text-to-Model</span> Translation</h1>
+    <p class="subtitle">A suite of LLM modeling copilots, datasets, fined-tuned models, demos, interactive editor, and online leaderboard for translating natural language text into formal combinatorial constraint models.</p>
     <p class="authors">
-      <a href="https://cs.brown.edu/people/serdark/" target="_blank">Serdar Kadıoğlu</a><sup>1,2</sup> &nbsp;·&nbsp;
-      <a href="#">Karthik Uppuluri</a><sup>1</sup> &nbsp;·&nbsp;
-      <a href="#">Akash Singirikonda</a><sup>2</sup>
+      <a href="https://cs.brown.edu/people/serdark/" target="_blank">Serdar Kadıoğlu</a><sup>1,2</sup> &nbsp
+      <a href="#">Karthik Uppuluri</a><sup>2</sup>
     </p>
     <p class="affiliation">
-      <span><sup>1</sup> AI Center of Excellence, Fidelity Investments</span>
-      <span><sup>2</sup> Brown University</span>
+      <span><sup>1</sup> Department of Computer Science, Brown University</span>
+      <span><sup>2</sup> AI Center of Excellence, Fidelity Investments</span>
     </p>
     <div class="hero-buttons">
       <a href="https://arxiv.org/abs/2604.12955" class="btn btn-primary" target="_blank"><i class="fa-solid fa-file-lines"></i> Paper</a>
-      <a href="https://github.com/skadio/text2model" class="btn btn-outline" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+      <a href="https://github.com/skadio/text2model" class="btn btn-outline" target="_blank"><i class="fa-brands fa-github"></i> Copilots</a>
       <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="btn btn-outline" target="_blank"><span style="font-size:1rem; line-height:1;">🤗</span> Leaderboard</a>
+      <a href="https://huggingface.co/spaces/skadio/text2zinc-editor" class="card-link" target="_blank"><i class="fa-solid fa-pen-to-square"></i> Interactive Editor</a>
+      <a href="https://huggingface.co/collections/skadio/text2model" class="btn btn-outline" target="_blank"> <i class="fa-solid fa-layer-group"></i> Collections</a>
     </div>
   </div>
 </header>
@@ -904,74 +905,138 @@
 <!-- ─── ABSTRACT ─── -->
 <section id="abstract">
   <div class="section-header">
-    <h2>Abstract</h2>
+    <h2>Overview</h2>
   </div>
   <div class="abstract-box">
-    There is growing interest in leveraging large language models (LLMs) for text-to-model translation and optimization tasks. This paper aims to advance this line of research by introducing <strong>Text2Model</strong> and <strong>Text2Zinc</strong>. <strong>Text2Model</strong> is a suite of copilots based on several LLM strategies with varying complexity, along with an online leaderboard. <strong>Text2Zinc</strong> is a cross-domain dataset for capturing optimization and satisfaction problems specified in natural language, along with an interactive editor with built-in AI assistant. While there is an emerging literature on using LLMs for translating combinatorial problems into formal models, our work is the first attempt to integrate <em>both</em> satisfaction and optimization problems within a <em>unified architecture</em> and <em>dataset</em>. Moreover, our approach is <em>solver-agnostic</em> unlike existing work that focuses on translation to a solver-specific model. To achieve this, we leverage <strong>MiniZinc</strong>'s solver-and-paradigm-agnostic modeling capabilities to formulate combinatorial problems.
-  </div>
-</section>
+    Large-language models (LLMs) are becoming the primary interface for interacting with machines, yet they still struggle with formal reasoning required for text-to-model translation to create constraint models from problem description given in natural language text.
+<!--    To close this gap, we work on complementary efforts: LLM copilots <strong>Text2Model</strong>, fin- <strong>Learn2Zinc</strong>, <strong>Text2Zinc</strong>,  <strong>Gala</strong>,  and <strong>Ner4Opt</strong>.-->
 
-<div class="section-divider"><hr></div>
-
-<!-- ─── PUBLICATIONS INDEX ─── -->
-<section id="publications" style="padding-bottom: 0;">
-  <div class="section-header">
-    <h2>Publications</h2>
-    <p>Papers and their venues. Click a title to jump to its full resource card below.</p>
-  </div>
-  <div class="pub-index">
-    <div class="pub-index-title"><i class="fa-solid fa-bookmark"></i> Paper Index</div>
+    To close this gap, we work on complementary efforts:<br><br>
+<!--    <ul style="margin-left: 1.5rem">-->
+<!--  <li><strong>Text2Model</strong> suite of LLM modeling copilots and the leaderboard</li>-->
+<!--  <li><strong>Learn2Zinc</strong> to fine-tuned models to teach MiniZinc syntax </li>-->
+<!--  <li><strong>Text2Zinc</strong> benchmark and the interactive editor</li>-->
+<!--  <li><strong>Gala</strong> global agentic framework for constraint programming</li>-->
+<!--  <li><strong>Ner4Opt</strong> entity extraction for constraint optimization</li>-->
+<!--  </ul>-->
+    <div class="pub-index">
+    <div class="pub-index-title"><i class="fa-solid fa-bookmark"></i> Publications</div>
     <ol class="pub-list">
       <li>
         <span>
-          <a href="#llm-copilots" class="pub-link">Modeling Copilots for Text-to-Model Translation</a>
+          <a href="#llm-copilots" class="pub-link"><strong>Text2Model:</strong> LLM modeling copilots and leaderboard</a>
           <span class="pub-dot">·</span>
-          <span class="pub-venue">INFORMS'26</span>
-          <span class="pub-dot">·</span>
-          <a href="https://arxiv.org/abs/2604.12955" class="pub-arxiv" target="_blank">arXiv:2604.12955</a>
+<!--          <span class="pub-venue">INFORMS'26</span>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <a href="https://arxiv.org/abs/2604.12955" class="pub-arxiv" target="_blank">arXiv:2604.12955</a>-->
         </span>
       </li>
       <li>
         <span>
-          <a href="#learn2zinc" class="pub-link">Fine-tuned MiniZinc Models (Learn2Zinc)</a>
+          <a href="#learn2zinc" class="pub-link"><strong>Learn2Zinc:</strong> Fine-tuned MiniZinc models</a>
           <span class="pub-dot">·</span>
-          <span class="pub-venue">arXiv'26</span>
+<!--          <span class="pub-venue">arXiv'26</span>-->
         </span>
       </li>
       <li>
         <span>
-          <a href="#text2zinc" class="pub-link">Text2Zinc: A Cross-Domain Dataset for Modeling in MiniZinc</a>
+          <a href="#text2zinc" class="pub-link"><strong>Text2Zinc:</strong> A cross-domain dataset and interactive editor</a>
           <span class="pub-dot">·</span>
-          <span class="pub-venue">arXiv'25</span>
-          <span class="pub-dot">·</span>
-          <a href="https://arxiv.org/abs/2503.10642" class="pub-arxiv" target="_blank">arXiv:2503.10642</a>
+<!--          <span class="pub-venue">arXiv'25</span>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <a href="https://arxiv.org/abs/2503.10642" class="pub-arxiv" target="_blank">arXiv:2503.10642</a>-->
         </span>
       </li>
       <li>
         <span>
-          <a href="#gala" class="pub-link">Gala: Global LLM Agents for Text-to-Model Translation</a>
+          <a href="#gala" class="pub-link"><strong>Gala:</strong> Global LLM agents for constraint programming</a>
           <span class="pub-dot">·</span>
-          <span class="pub-venue">arXiv'25</span>
-          <span class="pub-dot">·</span>
-          <a href="https://arxiv.org/abs/2509.08970" class="pub-arxiv" target="_blank">arXiv:2509.08970</a>
+<!--          <span class="pub-venue">arXiv'25</span>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <a href="https://arxiv.org/abs/2509.08970" class="pub-arxiv" target="_blank">arXiv:2509.08970</a>-->
         </span>
       </li>
       <li>
         <span>
-          <a href="#ner4opt" class="pub-link">Ner4Opt: Named Entity Recognition for Optimization Modelling</a>
+          <a href="#ner4opt" class="pub-link"><strong>Ner4Opt:</strong> named entity recognition for constrained optimization</a>
           <span class="pub-dot">·</span>
-          <span class="pub-venue">Constraints'24 · CPAIOR'23 · NeurIPS'22</span>
+<!--          <span class="pub-venue">Constraints'24 · CPAIOR'23 · NeurIPS'22</span>-->
         </span>
       </li>
     </ol>
   </div>
+  </div>
+
+<!--<br>-->
+<!--<strong>Text2Model</strong> formalizes the text‑to‑model translation task and introduces a suite of publicly available modeling copilots using zero‑shot prompting, chain‑of‑thought reasoning, knowledge‑graph representations, grammar‑guided validation, and agentic decomposition. These strategies form a solver‑agnostic pipeline with an online leaderboard for evaluating execution and solution accuracy.-->
+<!--<br>-->
+<!--    <strong>Learn2Zinc</strong> explores whether language models can learn a domain‑specific modeling language through targeted fine‑tuning. Using cross‑model bootstrapping, it teaches small models to generate syntactically valid MiniZinc despite zero pretraining exposure, achieving high execution accuracy while highlighting a persistent gap in deeper constraint‑modeling reasoning.-->
+<!--<br>-->
+<!--<strong>Text2Zinc</strong> provides the first cross‑domain, paradigm- and solver‑agnostic dataset covering both satisfaction and optimization problems. It unifies instances from major OR and CP sources into a consistent schema with curated MiniZinc models, metadata, and an interactive editor with an AI assistant for ongoing curation.-->
+<!--  </div>-->
 </section>
+
+<div class="section-divider"><hr></div>
+
+<!--&lt;!&ndash; ─── PUBLICATIONS INDEX ─── &ndash;&gt;-->
+<!--<section id="publications" style="padding-bottom: 0;">-->
+<!--  <div class="section-header">-->
+<!--    <h2>Publications</h2>-->
+<!--    <p>Papers and their venues. Click a title to jump to its full resource card below.</p>-->
+<!--  </div>-->
+<!--  <div class="pub-index">-->
+<!--    <div class="pub-index-title"><i class="fa-solid fa-bookmark"></i> Paper Index</div>-->
+<!--    <ol class="pub-list">-->
+<!--      <li>-->
+<!--        <span>-->
+<!--          <a href="#llm-copilots" class="pub-link">Modeling Copilots for Text-to-Model Translation</a>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <span class="pub-venue">INFORMS'26</span>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <a href="https://arxiv.org/abs/2604.12955" class="pub-arxiv" target="_blank">arXiv:2604.12955</a>-->
+<!--        </span>-->
+<!--      </li>-->
+<!--      <li>-->
+<!--        <span>-->
+<!--          <a href="#learn2zinc" class="pub-link">Fine-tuned MiniZinc Models (Learn2Zinc)</a>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <span class="pub-venue">arXiv'26</span>-->
+<!--        </span>-->
+<!--      </li>-->
+<!--      <li>-->
+<!--        <span>-->
+<!--          <a href="#text2zinc" class="pub-link">Text2Zinc: A Cross-Domain Dataset for Modeling in MiniZinc</a>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <span class="pub-venue">arXiv'25</span>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <a href="https://arxiv.org/abs/2503.10642" class="pub-arxiv" target="_blank">arXiv:2503.10642</a>-->
+<!--        </span>-->
+<!--      </li>-->
+<!--      <li>-->
+<!--        <span>-->
+<!--          <a href="#gala" class="pub-link">Gala: Global LLM Agents for Text-to-Model Translation</a>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <span class="pub-venue">arXiv'25</span>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <a href="https://arxiv.org/abs/2509.08970" class="pub-arxiv" target="_blank">arXiv:2509.08970</a>-->
+<!--        </span>-->
+<!--      </li>-->
+<!--      <li>-->
+<!--        <span>-->
+<!--          <a href="#ner4opt" class="pub-link">Ner4Opt: Named Entity Recognition for Optimization Modelling</a>-->
+<!--          <span class="pub-dot">·</span>-->
+<!--          <span class="pub-venue">Constraints'24 · CPAIOR'23 · NeurIPS'22</span>-->
+<!--        </span>-->
+<!--      </li>-->
+<!--    </ol>-->
+<!--  </div>-->
+<!--</section>-->
 
 <!-- ─── PROJECTS ─── -->
 <section id="projects" style="padding-top: 1.5rem;">
   <div class="section-header">
     <h2>Resources</h2>
-    <p>Our collective body of work on translating natural language optimization problem descriptions into formal optimization and constraint programming models.</p>
+    <p>Our collective body of work on text-to-model translation.</p>
   </div>
   <div class="projects-grid">
 
@@ -980,15 +1045,15 @@
       <div class="project-card-inner">
         <div class="card-accent red"></div>
         <div class="card-body">
-          <div class="card-tag red">Copilot Suite</div>
+          <div class="card-tag red">Copilots & Leaderboard</div>
           <div class="card-header-row">
-            <h3>LLM Copilots</h3>
+            <h3>Text2Model: LLM Modeling Copilots</h3>
             <button class="anchor-link" onclick="copyAnchor('llm-copilots')" title="Copy link">
               <i class="fa-solid fa-link"></i>
               <span class="anchor-tooltip">Copy link</span>
             </button>
           </div>
-          <p class="card-desc">A comprehensive suite of LLM-based modeling copilots for text-to-model translation. Includes multiple strategies of varying complexity — from zero-shot and chain-of-thought prompting to compositional and agentic workflows — along with an online leaderboard for benchmarking and an interactive MiniZinc editor with a built-in AI assistant.</p>
+          <p class="card-desc">A comprehensive suite of LLM-based modeling copilots for text-to-model translation. Includes multiple strategies of varying complexity, from zero-shot and chain-of-thought prompting to compositional and agentic workflows, along with an <strong> online leaderboard</strong> for benchmarking and an interactive MiniZinc editor with a built-in AI assistant.</p>
           <p class="card-venue">Serdar Kadıoğlu, Karthik Uppuluri, Akash Singirikonda</p>
           <div class="card-links">
             <a href="https://arxiv.org/abs/2604.12955" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> INFORMS'26</a>
@@ -1017,16 +1082,16 @@
       <div class="project-card-inner">
         <div class="card-accent blue"></div>
         <div class="card-body">
-          <div class="card-tag blue">Fine-tuned Models</div>
+          <div class="card-tag blue">Fine-tuning</div>
           <div class="card-header-row">
-            <h3>Fine-tuned MiniZinc Models</h3>
+            <h3>Learn2Zinc: Teaching SLMs MiniZinc</h3>
             <button class="anchor-link" onclick="copyAnchor('learn2zinc')" title="Copy link">
               <i class="fa-solid fa-link"></i>
               <span class="anchor-tooltip">Copy link</span>
             </button>
           </div>
-          <p class="card-desc">Fine-tuning state-of-the-art open-source LLMs to generate MiniZinc constraint models directly from natural language problem descriptions. Includes training datasets with plain and chain-of-thought variants, augmented data, and models spanning multiple architectures and sizes — from 0.6B to 20B parameters.</p>
-          <p class="card-venue">Serdar Kadıoğlu, Karthik Uppuluri, Akash Singirikonda</p>
+          <p class="card-desc">Fine-tuning open-weight small-language models (SLMs) of various sizes from 0.6B to 20B parameters to generate MiniZinc models from text. We share our fine-tuning pipeline, datasets, models.</p>
+          <p class="card-venue">Serdar Kadıoğlu, Karthik Uppuluri</p>
 
           <div class="models-section">
             <h4>Fine-tuned Models</h4>
@@ -1053,9 +1118,10 @@
             <div class="card-links">
               <a href="https://arxiv.org/abs/2604.12955" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'26</a>
               <a href="https://github.com/skadio/learn2zinc" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
-              <a href="https://huggingface.co/datasets/skadio/learn2zinc_p2c" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Learn2Zinc</a>
-              <a href="https://huggingface.co/datasets/skadio/learn2zinc_p2c_cot" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Learn2Zinc CoT</a>
-              <a href="https://huggingface.co/datasets/skadio/learn2zinc-p2c-augmented" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Learn2Zinc Augmented</a>
+              <a href="https://huggingface.co/datasets/skadio/learn2zinc" class="card-link" target="_blank"><span class="hf-emoji">🤗</span>Fine-tuning Dataset</a>
+              <a href="https://huggingface.co/skadio/learn2zinc" class="card-link" target="_blank"><span class="hf-emoji">🤗</span>Fine-tuned Models</a>
+<!--              <a href="https://huggingface.co/datasets/skadio/learn2zinc_p2c_cot" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Learn2Zinc CoT</a>-->
+<!--              <a href="https://huggingface.co/datasets/skadio/learn2zinc-p2c-augmented" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Learn2Zinc Augmented</a>-->
               <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
             </div>
             <div class="bibtex-inline">
@@ -1080,7 +1146,7 @@
       <div class="project-card-inner">
         <div class="card-accent teal"></div>
         <div class="card-body">
-          <div class="card-tag teal">Dataset</div>
+          <div class="card-tag teal">Dataset & Editor</div>
           <div class="card-header-row">
             <h3>Text2Zinc</h3>
             <button class="anchor-link" onclick="copyAnchor('text2zinc')" title="Copy link">
@@ -1088,7 +1154,7 @@
               <span class="anchor-tooltip">Copy link</span>
             </button>
           </div>
-          <p class="card-desc">A cross-domain dataset capturing optimization and satisfaction problems specified in natural language text. Leverages MiniZinc's solver-agnostic modeling capabilities to formulate a diverse range of combinatorial problems, bridging natural language specifications with formal constraint models. The first dataset to integrate both satisfaction and optimization problems within a unified framework.</p>
+          <p class="card-desc">The first cross-domain dataset to integrate both optimization and satisfaction problems within a unified data schema. Leverages MiniZinc's <strong>paradigm- and solver-agnostic</strong> modeling capabilities. Accompanied by an online <strong>interactive data editor</strong> to enable ongoing data curation.</p>
           <p class="card-venue">Akash Singirikonda, Serdar Kadıoğlu, Karthik Uppuluri</p>
           <div class="card-links">
             <a href="https://arxiv.org/abs/2503.10642" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'25</a>
@@ -1118,15 +1184,15 @@
       <div class="project-card-inner">
         <div class="card-accent teal"></div>
         <div class="card-body">
-          <div class="card-tag teal">Multi-Agent</div>
+          <div class="card-tag teal">Agentic Frameworks</div>
           <div class="card-header-row">
-            <h3>Global LLM Agents (Gala)</h3>
+            <h3>Gala: Global LLM Agents</h3>
             <button class="anchor-link" onclick="copyAnchor('gala')" title="Copy link">
               <i class="fa-solid fa-link"></i>
               <span class="anchor-tooltip">Copy link</span>
             </button>
           </div>
-          <p class="card-desc">Global LLM Agents for text-to-model translation. Introduces collaborative multi-agent workflows where specialized LLM agents work together to decompose, formulate, and validate optimization models from natural language — achieving stronger performance through agent collaboration.</p>
+          <p class="card-desc">Global LLM Agents for text-to-model translation. Introduces collaborative multi-agent workflows where specialized LLM agents work together to decompose, formulate, and validate models. Achieves strong performance through agent collaboration.</p>
           <p class="card-venue">Junyang Cai, Serdar Kadıoğlu, Bistra Dilkina</p>
           <div class="card-links">
             <a href="https://arxiv.org/abs/2509.08970" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'25</a>
@@ -1154,7 +1220,7 @@
       <div class="project-card-inner">
         <div class="card-accent gold"></div>
         <div class="card-body">
-          <div class="card-tag gold">NER / NLP</div>
+          <div class="card-tag gold">Entity Recognition</div>
           <div class="card-header-row">
             <h3>Ner4Opt</h3>
             <button class="anchor-link" onclick="copyAnchor('ner4opt')" title="Copy link">
@@ -1162,11 +1228,11 @@
               <span class="anchor-tooltip">Copy link</span>
             </button>
           </div>
-          <p class="card-desc">Named entity recognition for optimization modeling from natural language. Extracts optimization-related entities — objectives, decision variables, constraints, and parameters — from free-form problem descriptions. Combines classical NLP techniques with fine-tuned transformer architectures and optimization-specific data augmentation.</p>
+          <p class="card-desc">Named entity recognition for optimization modeling from natural language. Extracts optimization-related entities such as objectives, decision variables, constraints, and parameters from free-form problem descriptions. Combines classical NLP techniques with transformers architecture fine-tuned on optimization corpora and domain-specific data augmentation.</p>
           <p class="card-venue">Serdar Kadıoğlu, Parag Pravin Dakle, Karthik Uppuluri, Regina Politi, Preethi Raghavan, SaiKrishna Rallabandi, Ravisutha Srinivasamurthy</p>
 
           <div class="models-section models-section-gold" style="background: rgba(212,160,23,0.06);">
-            <h4>NER Models</h4>
+            <h4>Fine-tuned NER Models</h4>
             <div class="models-grid">
               <a href="https://huggingface.co/skadio/ner4opt-roberta-v2" class="model-chip" target="_blank" style="--chip-hover: var(--gold);">
                 <span class="chip-icon">🤗</span> RoBERTa <span class="chip-size">v2</span>
@@ -1181,6 +1247,8 @@
           <div style="margin-top: 1.25rem;">
             <div class="card-links">
               <a href="https://dl.acm.org/doi/abs/10.1007/s10601-024-09376-5" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Constraints'24</a>
+              <a href="https://link.springer.com/chapter/10.1007/978-3-031-33271-5_20" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> CPAIOR'23</a>
+              <a href="https://nbviewer.org/github/skadio/ner4opt/blob/main/docs/%5BNeurIPS+2022%5D+Ner4Opt+Poster.pdf" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> NeurIPS'22</a>
               <a href="https://huggingface.co/spaces/skadio/Ner4Opt" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Demo</a>
               <a href="https://github.com/skadio/ner4opt" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
               <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
@@ -1201,39 +1269,40 @@
             </div>
           </div>
 
-          <!-- CPAIOR'23 Paper -->
-          <div style="margin-top: 0.75rem;">
-            <div class="card-links">
-              <a href="https://link.springer.com/chapter/10.1007/978-3-031-33271-5_20" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> CPAIOR'23</a>
-              <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
-            </div>
-            <div class="bibtex-inline">
-              <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
-              <pre>@inproceedings{dakle23,
-  title     = {Ner4Opt: Named Entity Recognition for Optimization Modelling from Natural Language},
-  author    = {Parag Pravin Dakle and Serdar Kadıoğlu and Karthik Uppuluri and Regina Politi and Preethi Raghavan and SaiKrishna Rallabandi and Ravisutha Srinivasamurthy},
-  booktitle = {The 20th International Conference on the Integration of Constraint Programming, Artificial Intelligence, and Operations Research (CPAIOR 2023)},
-  year      = {2023}
-}</pre>
-            </div>
-          </div>
+<!--          &lt;!&ndash; CPAIOR'23 Paper &ndash;&gt;-->
+<!--          <div style="margin-top: 0.75rem;">-->
+<!--            <div class="card-links">-->
+<!--              <a href="https://link.springer.com/chapter/10.1007/978-3-031-33271-5_20" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> CPAIOR'23</a>-->
+<!--              <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>-->
+<!--            </div>-->
+<!--            <div class="bibtex-inline">-->
+<!--              <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>-->
+<!--              <pre>@inproceedings{dakle23,-->
+<!--  title     = {Ner4Opt: Named Entity Recognition for Optimization Modelling from Natural Language},-->
+<!--  author    = {Parag Pravin Dakle and Serdar Kadıoğlu and Karthik Uppuluri and Regina Politi and Preethi Raghavan and SaiKrishna Rallabandi and Ravisutha Srinivasamurthy},-->
+<!--  booktitle = {The 20th International Conference on the Integration of Constraint Programming, Artificial Intelligence, and Operations Research (CPAIOR 2023)},-->
+<!--  year      = {2023}-->
+<!--}</pre>-->
+<!--            </div>-->
+<!--          </div>-->
 
-          <!-- NeurIPS'22 Poster -->
-          <div style="margin-top: 0.75rem;">
-            <div class="card-links">
-              <a href="https://nbviewer.org/github/skadio/ner4opt/blob/main/docs/%5BNeurIPS+2022%5D+Ner4Opt+Poster.pdf" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> NeurIPS'22</a>
-              <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
-            </div>
-            <div class="bibtex-inline">
-              <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
-              <pre>@inproceedings{ner4opt2022neurips,
-  title     = {Ner4Opt: Named Entity Recognition for Optimization Modelling from Natural Language},
-  author    = {Parag Pravin Dakle and Serdar Kadıoğlu and Karthik Uppuluri and Regina Politi and Preethi Raghavan and SaiKrishna Rallabandi and Ravisutha Srinivasamurthy},
-  booktitle = {NeurIPS 2022 Workshop on Optimization for Machine Learning (OPT)},
-  year      = {2022}
-}</pre>
-            </div>
-          </div>
+<!--          &lt;!&ndash; NeurIPS'22 Poster &ndash;&gt;-->
+<!--          <div style="margin-top: 0.75rem;">-->
+<!--            <div class="card-links">-->
+<!--              <a href="https://nbviewer.org/github/skadio/ner4opt/blob/main/docs/%5BNeurIPS+2022%5D+Ner4Opt+Poster.pdf" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> NeurIPS'22</a>-->
+<!--              <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>-->
+<!--            </div>-->
+<!--            <div class="bibtex-inline">-->
+<!--              <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>-->
+<!--              <pre>@inproceedings{ner4opt2022neurips,-->
+<!--  title     = {Ner4Opt: Named Entity Recognition for Optimization Modelling from Natural Language},-->
+<!--  author    = {Parag Pravin Dakle and Serdar Kadıoğlu and Karthik Uppuluri and Regina Politi and Preethi Raghavan and SaiKrishna Rallabandi and Ravisutha Srinivasamurthy},-->
+<!--  booktitle = {NeurIPS 2022 Workshop on Optimization for Machine Learning (OPT)},-->
+<!--  year      = {2022}-->
+<!--}</pre>-->
+<!--            </div>-->
+<!--          </div>-->
+
         </div>
       </div>
     </div>
@@ -1247,31 +1316,31 @@
 <section id="events">
   <div class="section-header">
     <h2>Events</h2>
-    <p>Tutorials, workshops, and competitions on LLMs for optimization and constraint programming.</p>
+    <p>We organize and participate in tutorials, workshops, master class, and competitions to advance text-to-model translation.</p>
   </div>
   <div class="events-grid">
     <span class="event-chip disabled" id="tutorial-ijcai26">
-      <i class="fa-solid fa-chalkboard-user"></i> LLMs for Modeling Tutorial <span class="event-venue">IJCAI'26</span>
+      <i class="fa-solid fa-chalkboard-user"></i> Tutorial on LLMs for Constraint <span class="event-venue">IJCAI'26</span>
       <span class="event-anchor" onclick="event.stopPropagation(); copyAnchor('tutorial-ijcai26')" title="Copy link"><i class="fa-solid fa-link"></i></span>
     </span>
     <a href="https://sites.google.com/view/llm-solve-2026" class="event-chip" id="llm-solve-cp26" target="_blank">
-      <i class="fa-solid fa-users"></i> LLM-Solve Workshop <span class="event-venue">CP'26</span>
+      <i class="fa-solid fa-users"></i> Workshop on LLM-Solve  <span class="event-venue">CP'26</span>
       <span class="event-anchor" onclick="event.preventDefault(); event.stopPropagation(); copyAnchor('llm-solve-cp26')" title="Copy link"><i class="fa-solid fa-link"></i></span>
     </a>
-    <a href="https://sites.google.com/view/llm-solve-2025" class="event-chip" id="llm-solve-cp25" target="_blank">
-      <i class="fa-solid fa-users"></i> LLM-Solve Workshop <span class="event-venue">CP'25</span>
-      <span class="event-anchor" onclick="event.preventDefault(); event.stopPropagation(); copyAnchor('llm-solve-cp25')" title="Copy link"><i class="fa-solid fa-link"></i></span>
-    </a>
     <a href="https://sites.google.com/view/cpaior2026/program/master-class" class="event-chip" id="masterclass-cpaior26" target="_blank">
-      <i class="fa-solid fa-graduation-cap"></i> LLMs for CP/OR Master Class <span class="event-venue">CPAIOR'26</span>
+      <i class="fa-solid fa-graduation-cap"></i> Master Class on LLMs for CP/OR <span class="event-venue">CPAIOR'26</span>
       <span class="event-anchor" onclick="event.preventDefault(); event.stopPropagation(); copyAnchor('masterclass-cpaior26')" title="Copy link"><i class="fa-solid fa-link"></i></span>
     </a>
     <a href="https://conlaw.github.io/llm_opt_tutorial/tutorial.html" class="event-chip" id="tutorial-aaai26" target="_blank">
-      <i class="fa-solid fa-chalkboard-user"></i> LLMs for Optimization Tutorial <span class="event-venue">AAAI'26</span>
+      <i class="fa-solid fa-chalkboard-user"></i> Tutorial on LLMs for Optimization <span class="event-venue">AAAI'26</span>
       <span class="event-anchor" onclick="event.preventDefault(); event.stopPropagation(); copyAnchor('tutorial-aaai26')" title="Copy link"><i class="fa-solid fa-link"></i></span>
     </a>
+    <a href="https://sites.google.com/view/llm-solve-2025" class="event-chip" id="llm-solve-cp25" target="_blank">
+      <i class="fa-solid fa-users"></i> Workshop on LLM-Solve <span class="event-venue">CP'25</span>
+      <span class="event-anchor" onclick="event.preventDefault(); event.stopPropagation(); copyAnchor('llm-solve-cp25')" title="Copy link"><i class="fa-solid fa-link"></i></span>
+    </a>
     <a href="https://ai-or.github.io/2024/#Keynote%20Spearkers" class="event-chip" id="workshop-aaai24" target="_blank">
-      <i class="fa-solid fa-users"></i> LLMs for OR Workshop <span class="event-venue">AAAI'24</span>
+      <i class="fa-solid fa-users"></i> Workshop on LLMs for OR <span class="event-venue">AAAI'24</span>
       <span class="event-anchor" onclick="event.preventDefault(); event.stopPropagation(); copyAnchor('workshop-aaai24')" title="Copy link"><i class="fa-solid fa-link"></i></span>
     </a>
     <a href="https://nl4opt.github.io/" class="event-chip" id="nl4opt" target="_blank">

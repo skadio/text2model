@@ -1,13 +1,6 @@
-# Text2Model: Modeling Co-Pilots for Text-to-Model Translation
+# Text2Model: LLM Modeling Copilots for Text-to-Model Translation
 
-The repository provides a pipeline for Text-to-Model translation. The benchmarks are based on the [Text2Zinc dataset](https://huggingface.co/datasets/skadio/text2zinc) using different LLM strategies via OpenAI's GPT models.
-
-* [Text2Model Leaderboard](https://huggingface.co/spaces/skadio/text2model-leaderboard)
-* [Text2Zinc: A Cross-Domain Dataset for Modeling Optimization and Satisfaction Problems in MiniZinc](https://arxiv.org/abs/2503.10642)
-* [Text2Zinc Dataset](https://huggingface.co/datasets/skadio/text2zinc)
-* [Text2Zinc Editor](https://huggingface.co/spaces/skadio/text2zinc-editor)
-* [Gala: Global LLM Agents for Text-to-Model Translation](https://arxiv.org/abs/2509.08970)
-* [Ner4Opt](https://link.springer.com/article/10.1007/s10601-024-09376-5) and [repo](https://github.com/skadio/ner4opt)
+Please visit [Text2Model](https://skadio.github.io/text2model/) for the latest updates, documentation, and resources.
 
 ## Setup
 
@@ -38,7 +31,7 @@ python main.py --strategies baseline cot --model gpt-4o
 python main.py --strategies baseline --problem-ids 0 1 2 10 --model gpt-4
 ```
 
-## Text2Model Co-Pilots
+## Text2Model Copilots
 
 ### Single API/LLM call
 1. **baseline**: This is a naive approach to generate Minizinc code prompting LLMs without any explicit instructions except the problem and data description.
