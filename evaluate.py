@@ -749,7 +749,7 @@ def save_results_json(all_verified, all_orlm, output_file):
 
 def main():
     parser = argparse.ArgumentParser(description='Evaluate Text2Zinc MiniZinc code generation')
-    parser.add_argument('--output-dir', default='output',
+    parser.add_argument('--output-dir', required=True,
                         help='Base output directory containing model folders')
     parser.add_argument('--model',
                         help='Evaluate only this model (folder name)')
