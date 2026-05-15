@@ -77,12 +77,14 @@ export OPENAI_API_KEY="your-api-key-here"
 
 ### 3. Generate Your First Model
 
+> **Note:** The `output/` directory is pre-populated with results from the paper so you can validate them directly. By default, problems that already have output are skipped. To re-run and overwrite them, add `--force`.
+
 ```bash
-# Run chain-of-thought on all problems
-python main.py --strategies cot --model gpt-4
+# Run chain-of-thought on all problems (overwrites pre-populated paper results)
+python main.py --strategies cot --model gpt-4 --force
 
 # Or try a quick test on specific problems
-python main.py --strategies cot --problem-ids 0 1 2 --model gpt-4
+python main.py --strategies cot --problem-ids 0 1 2 --model gpt-4 --force
 ```
 
 ---
