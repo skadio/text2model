@@ -77,14 +77,14 @@ export OPENAI_API_KEY="your-api-key-here"
 
 ### 3. Generate Your First Model
 
-> **Note:** The `output/` directory is pre-populated with results from the paper so you can validate them directly. By default, problems that already have output are skipped. To re-run and overwrite them, add `--force`.
+> **Note:** `--output-dir` is required. If the directory you specify already exists, you will be prompted to choose a different name.
 
 ```bash
-# Run chain-of-thought on all problems (overwrites pre-populated paper results)
-python main.py --strategies cot --model gpt-4 --force
+# Try a quick test on specific problems
+python main.py --strategies cot --problem-ids 0 1 2 --model gpt-4 --output-dir my_results
 
-# Or try a quick test on specific problems
-python main.py --strategies cot --problem-ids 0 1 2 --model gpt-4 --force
+# Or run chain-of-thought on all problems
+python main.py --strategies cot --model gpt-4 --output-dir my_results
 ```
 
 ---
@@ -95,10 +95,10 @@ python main.py --strategies cot --problem-ids 0 1 2 --model gpt-4 --force
 
 ```bash
 # Compare baseline vs chain-of-thought
-python main.py --strategies baseline cot --model gpt-4o
+python main.py --strategies baseline cot --model gpt-4o --output-dir my_results
 
 # Run all 9 strategies
-python main.py --strategies all --model gpt-4
+python main.py --strategies all --model gpt-4 --output-dir my_results
 ```
 
 ### Filter by Problem Source
@@ -108,13 +108,14 @@ python main.py --strategies all --model gpt-4
 python main.py --list-sources
 
 # Run on specific source
-python main.py --strategies cot --model gpt-4 --source nlp4lp
+python main.py --strategies cot --model gpt-4 --source nlp4lp --output-dir my_results
 ```
 
 ### Advanced Options
 
 ```bash
 python main.py --strategies agents --model gpt-4 \
+  --output-dir my_results \
   --temperature 0.7 \
   --max-tokens 8192 \
   --sleep-time 2 \
@@ -133,9 +134,11 @@ Install MiniZinc solver: https://www.minizinc.org/doc-2.5.5/en/installation.html
 
 ### Run Evaluation
 
+> **Note:** `--output-dir` is required — point it at the directory produced by `main.py`.
+
 ```bash
 # Evaluate all generated code
-python evaluate.py
+python evaluate.py --output-dir my_results
 ```
 
 ### Metrics
