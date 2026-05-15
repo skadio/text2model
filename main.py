@@ -481,10 +481,8 @@ def main():
                         help='Include unverified problems (by default only verified problems are used)')
     parser.add_argument('--all-sources', action='store_true',
                         help='Run on all sources')
-    parser.add_argument('--output-dir', default='output',
-                        help='Base output directory')
-    parser.add_argument('--force', action='store_true',
-                        help='Re-run and overwrite problems that already have output (default: skip them)')
+    parser.add_argument('--output-dir', default=None,
+                        help='Base output directory (must not already exist)')
     parser.add_argument('--api-key', default=os.getenv('OPENAI_API_KEY'),
                         help='OpenAI API key')
     parser.add_argument('--temperature', type=float, default=0,
@@ -507,7 +505,7 @@ def main():
     else:
         print(f"Including only VERIFIED problems (use --include-unverified to include all)")
         filtered_train = dataset["train"].filter(lambda x: x["is_verified"])
-    
+
     dataset = DatasetDict({
         "train": filtered_train
     })
@@ -522,6 +520,16 @@ def main():
             count = sum(1 for p in dataset['train'] if utils.get_problem_source(p) == source)
             print(f"  - {source}: {count} instances")
         return
+
+    if not args.output_dir:
+        parser.error("--output-dir is required unless --list-sources is used")
+
+    # Prompt for a different output directory if the specified one already exists
+    while os.path.exists(args.output_dir):
+        print(f"Output directory '{args.output_dir}' already exists. Please choose a different name.")
+        new_dir = input("Enter a new output directory name: ").strip()
+        if new_dir:
+            args.output_dir = new_dir
 
     # Filter by source if specified
     if args.source:
@@ -636,7 +644,7 @@ def main():
                     # For other datasets: keep original structure
                     output_dir = os.path.join(args.output_dir, args.model, strategy)
                 
-                if not args.force and check_already_processed(output_dir, problem_identifier):
+                if check_already_processed(output_dir, problem_identifier):
                     continue
                 
                 os.makedirs(output_dir, exist_ok=True)
