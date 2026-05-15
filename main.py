@@ -483,6 +483,8 @@ def main():
                         help='Run on all sources')
     parser.add_argument('--output-dir', default='output',
                         help='Base output directory')
+    parser.add_argument('--force', action='store_true',
+                        help='Re-run and overwrite problems that already have output (default: skip them)')
     parser.add_argument('--api-key', default=os.getenv('OPENAI_API_KEY'),
                         help='OpenAI API key')
     parser.add_argument('--temperature', type=float, default=0,
@@ -633,8 +635,8 @@ def main():
                 else:
                     # For other datasets: keep original structure
                     output_dir = os.path.join(args.output_dir, args.model, strategy)
-
-                if check_already_processed(output_dir, problem_identifier):
+                
+                if not args.force and check_already_processed(output_dir, problem_identifier):
                     continue
                 
                 os.makedirs(output_dir, exist_ok=True)
