@@ -90,7 +90,7 @@ def get_model_code(file_path):
     return None
 
 
-def run_minizinc_evaluation(model_code, dzn_string, expected_output, problem_type, timeout=60, solver="highs"):
+def run_minizinc_evaluation(model_code, dzn_string, expected_output, problem_type, timeout=60, solver="highs", reference_model=None):
     """Run MiniZinc model with optional dzn string and compare output with expected solution."""
     model_path = None
     data_path = None
@@ -109,15 +109,25 @@ def run_minizinc_evaluation(model_code, dzn_string, expected_output, problem_typ
                 data_path = data_file.name
 
         if problem_type == "satisfaction":
-            # First run: Generate solution as DZN
+            # =================================================================
+            # SATISFACTION VERIFICATION (two-pass approach)
+            #
+            # Pass 1: Solve the LLM-generated model → get variable assignments
+            # Pass 2: Pin those assignments into the GROUND TRUTH model and
+            #         re-solve. If the ground truth model + pinned values is
+            #         satisfiable, the LLM's solution respects the real
+            #         constraints. If UNSATISFIABLE, the LLM's model was wrong.
+            # =================================================================
+
+            # --- Pass 1: Solve LLM model, output assignments as .dzn ---
             with tempfile.NamedTemporaryFile(suffix='.dzn', mode='w', delete=False) as output_file:
                 output_path = output_file.name
 
             cmd = [
                 "minizinc",
                 "--solver", solver,
-                "--output-mode", "dzn",
-                model_path
+                "--output-mode", "dzn",   # critical: outputs raw variable assignments
+                model_path                # LLM-generated model
             ]
             if has_dzn:
                 cmd.append(data_path)
@@ -130,27 +140,37 @@ def run_minizinc_evaluation(model_code, dzn_string, expected_output, problem_typ
                 timeout=timeout
             )
 
+            # Solver crashed or model has syntax errors → execution failure
             if result.returncode != 0:
                 return False, False, result.stderr
 
             with open(output_path, 'r') as f:
                 output_lines = f.readlines()
 
+            # LLM model itself is unsatisfiable → execution OK, solution wrong
             if "UNSATISFIABLE" in " ".join(output_lines).upper():
                 execution_success = True
                 solution_success = False
                 return execution_success, solution_success, result.stdout
 
+            # Strip the "----------" separator line if present
             if output_lines and '---' in output_lines[-1]:
                 output_lines = output_lines[:-1]
 
+            # Parse dzn output lines into constraint expressions
+            # e.g. "x = [1, 1, 3];" becomes a pinning constraint
             verification_constraints = []
             for line in output_lines:
                 line = line.strip()
                 if line and '=' in line:
                     verification_constraints.append(line.replace(" = ", " = "))
 
-            verification_model = model_code + "\nconstraint\n  " + " /\\\n  ".join(
+            # --- Pass 2: Pin assignments into GROUND TRUTH model, re-solve ---
+            # Use the reference (ground truth) model instead of the LLM model.
+            # This way we check: does the LLM's solution satisfy the REAL
+            # constraints, not just the LLM's own (potentially wrong) constraints?
+            base_model = reference_model if reference_model else model_code
+            verification_model = base_model + "\nconstraint\n  " + " /\\\n  ".join(
                 [c.rstrip(';') for c in verification_constraints]
             ) + ";\n"
 
@@ -161,7 +181,7 @@ def run_minizinc_evaluation(model_code, dzn_string, expected_output, problem_typ
             verif_cmd = [
                 "minizinc",
                 "--solver", solver,
-                verif_path
+                verif_path          # ground truth model + pinned assignments
             ]
             if has_dzn:
                 verif_cmd.append(data_path)
@@ -173,7 +193,8 @@ def run_minizinc_evaluation(model_code, dzn_string, expected_output, problem_typ
                 timeout=timeout
             )
 
-            execution_success = True  # First run was successful
+            execution_success = True  # Pass 1 succeeded, so execution is OK
+            # Pass 2 verdict: SAT = solution is valid, UNSAT = solution is wrong
             solution_success = (
                     verif_result.returncode == 0 and
                     'UNSATISFIABLE' not in verif_result.stdout.upper() and
@@ -286,7 +307,8 @@ def evaluate_directory(strategy_dir, problems, timeout, solver, desc=""):
                 problem_data['expected_output'],
                 problem_data['problem_type'],
                 timeout=timeout,
-                solver=solver
+                solver=solver,
+                reference_model=problem_data.get('reference_model')
             )
 
             metrics["attempted"] += 1
@@ -340,7 +362,8 @@ def load_verified_problems():
                 'problem_type': metadata.get('objective', 'optimization'),
                 'source': source,
                 'identifier': identifier,
-                'hf_index': idx
+                'hf_index': idx,
+                'reference_model': example.get('model.mzn', ''),
             }
 
     print(f"  Loaded {len(problems)} verified problems")
