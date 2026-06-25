@@ -882,6 +882,7 @@
 <!-- ─── HERO ─── -->
 <header class="hero">
   <div class="hero-inner">
+    <div class="hero-label">Agents & Automated Assistants</div>
     <h1>LLM Copilots for<br><span>Text-to-Model</span> Translation</h1>
     <p class="subtitle">A suite of LLM modeling copilots, datasets, fined-tuned models, demos, interactive editor, and online leaderboard for translating natural language text into formal combinatorial constraint models.</p>
     <p class="authors">
@@ -898,7 +899,7 @@
       <a href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/skadio/skadio.github.io/master/files/2025_Amazon_Global_LLM_Agents_Kadioglu.pdf" class="btn btn-outline" target="_blank"><i class="fa-solid fa-file-powerpoint"></i> Slides</a>
       <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="btn btn-outline" target="_blank"><span style="font-size:1rem; line-height:1;">🤗</span> Leaderboard</a>
       <a href="https://huggingface.co/spaces/skadio/text2zinc-editor" class="card-link" target="_blank"><i class="fa-solid fa-pen-to-square"></i> Interactive Editor</a>
-      <a href="https://huggingface.co/collections/skadio/text2model" class="btn btn-outline" target="_blank"> <i class="fa-solid fa-layer-group"></i> Collections</a>
+<!--      <a href="https://huggingface.co/collections/skadio/text2model-llm-copilots" class="btn btn-outline" target="_blank"> <i class="fa-solid fa-layer-group"></i> Collections</a>-->
     </div>
   </div>
 </header>
@@ -921,7 +922,7 @@
 <!--  <li><strong>Ner4Opt</strong> entity extraction for constraint optimization</li>-->
 <!--  </ul>-->
     <div class="pub-index">
-    <div class="pub-index-title"><i class="fa-solid fa-bookmark"></i> Publications</div>
+    <div class="pub-index-title"><i class="fa-solid fa-bookmark"></i> Core Components</div>
     <ol class="pub-list">
       <li>
         <span>
@@ -969,6 +970,12 @@
           <a href="#holygrail" class="pub-link"><strong>Holy Grail 2.0:</strong> a blueprint for text-to-model translation copilots</a>
           <span class="pub-dot">·</span>
 <!--          <span class="pub-venue">Constraints'24 · CPAIOR'23 · NeurIPS'22</span>-->
+        </span>
+      </li>
+      <li>
+        <span>
+          <a href="#icbs" class="pub-link"><strong>iCBS:</strong> iterative combinatorial brain surgeon to prune large-language and vision models</a>
+          <span class="pub-dot">·</span>
         </span>
       </li>
     </ol>
@@ -1345,6 +1352,31 @@
       primaryClass={cs.AI},
       url={https://arxiv.org/abs/2308.01589},
 }</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- iCBS -->
+    <div class="project-card" id="icbs">
+      <div class="project-card-inner">
+        <div class="card-accent red"></div>
+        <div class="card-body">
+          <div class="card-tag red">Pruning &amp; Distillation</div>
+          <div class="card-header-row">
+            <h3>iCBS: iterative Combinatorial Brain Surgeon</h3>
+            <button class="anchor-link" onclick="copyAnchor('icbs')" title="Copy link">
+              <i class="fa-solid fa-link"></i>
+              <span class="anchor-tooltip">Copy link</span>
+            </button>
+          </div>
+          <p class="card-desc">Pruning large-language and vision models to reduce inference and storage cost while supporting interactivity workload for dialogue agents.</p>
+          <p class="card-venue">Gili Rosenberg, Kyle Brubaker, Martin Schuetz, Elton Zhu, Serdar Kadıoğlu</p>
+          <div class="card-links">
+            <a href="https://github.com/amazon-science/icbs" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+            <a href="https://arxiv.org/abs/2411.17796" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'24</a>
+            <a href="https://aws.amazon.com/blogs/quantum-computing/quantum-amenable-pruning-of-large-language-models-and-large-vision-models-using-block-coordinate-descent/" class="card-link" target="_blank"><i class="fa-brands fa-aws"></i> Amazon Blog Post</a>
+            <a href="https://www.fcatalyst.com/trends-and-signals/blog/nov2024/icbs-scalable-pruning-of-llvms" class="card-link" target="_blank"><i class="fa-solid fa-newspaper"></i> Fidelity Blog Post</a>
           </div>
         </div>
       </div>
