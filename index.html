@@ -541,6 +541,41 @@
       border-top-color: var(--ink);
     }
 
+    .downloads-badge {
+      display: inline-flex;
+    }
+    .downloads-badge img {
+      height: 22px;
+      width: auto;
+      display: block;
+      border-radius: 4px;
+    }
+    .downloads-row {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .card-install {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink);
+      background: var(--warm);
+      border: 1px dashed var(--border);
+      border-radius: 999px;
+      padding: 0.3rem 0.65rem;
+      margin-top: 1rem;
+      /*margin-bottom: 1.1rem;*/
+    }
+    .card-install i {
+      color: var(--accent);
+      font-size: 0.76rem;
+    }
+
+
     /* ── HASH HIGHLIGHT (when arriving via anchor) ── */
     @keyframes anchorHighlight {
       0% { box-shadow: 0 0 0 0 rgba(192,57,43,0.3); }
@@ -899,8 +934,22 @@
       <a href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/skadio/skadio.github.io/master/files/2025_Amazon_Global_LLM_Agents_Kadioglu.pdf" class="btn btn-outline" target="_blank"><i class="fa-solid fa-file-powerpoint" style="color: #c0392b;"></i> Slides</a>
       <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="btn btn-outline" target="_blank"><span style="font-size:1rem; line-height:1;">🤗</span> Leaderboard</a>
       <a href="https://huggingface.co/spaces/skadio/text2zinc-editor" class="card-link" target="_blank"><i class="fa-solid fa-pen-to-square" style="color: #16a085;"></i> Interactive Editor</a>
+      <button class="btn btn-outline" onclick="toggleBibtexById('bibtex-hero')"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
 <!--      <a href="https://huggingface.co/collections/skadio/text2model-llm-copilots" class="btn btn-outline" target="_blank"> <i class="fa-solid fa-layer-group"></i> Collections</a>-->
     </div>
+        <div class="bibtex-inline" id="bibtex-hero" style="max-width: 640px; margin: 1.5rem auto 0; text-align: left;">
+      <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
+      <pre>@misc{text2model,
+  title         = {Text2Model: Modeling Copilots for Text-to-Model Translation},
+  author        = {Serdar Kadıoğlu and Karthik Uppuluri and Akash Singirikonda},
+  year          = {2026},
+  eprint        = {2604.12955},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url           = {https://arxiv.org/abs/2604.12955}
+}</pre>
+    </div>
+  </div>
   </div>
 </header>
 
@@ -1071,16 +1120,16 @@
           <p class="card-desc">A comprehensive suite of LLM-based modeling copilots for text-to-model translation. Includes multiple strategies of varying complexity, from zero-shot and chain-of-thought prompting to compositional and agentic workflows, along with an <strong> online leaderboard</strong> for benchmarking and an interactive MiniZinc editor with a built-in AI assistant.</p>
           <p class="card-venue">Serdar Kadıoğlu, Karthik Uppuluri, Akash Singirikonda</p>
           <div class="card-links">
-            <a href="https://arxiv.org/abs/2604.12955" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> INFORMS'26</a>
             <a href="https://github.com/skadio/text2model" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
             <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Leaderboard</a>
+            <a href="https://arxiv.org/abs/2604.12955" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> INFORMS'26</a>
             <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
           </div>
           <div class="bibtex-inline">
             <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
-            <pre>@misc{kadioglu2026text2model,
-  title         = {Modeling Copilots for Text-to-Model Translation},
-  author        = {Serdar Kadioglu and Karthik Uppuluri and Akash Singirikonda},
+            <pre>@misc{text2model,
+  title         = {Text2Model: Modeling Copilots for Text-to-Model Translation},
+  author        = {Serdar Kadıoğlu and Karthik Uppuluri and Akash Singirikonda},
   year          = {2026},
   eprint        = {2604.12955},
   archivePrefix = {arXiv},
@@ -1131,19 +1180,18 @@
 
           <div style="margin-top: 1.25rem;">
             <div class="card-links">
-              <a href="https://arxiv.org/abs/2604.12955" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'26</a>
               <a href="https://github.com/skadio/learn2zinc" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+
               <a href="https://huggingface.co/datasets/skadio/learn2zinc" class="card-link" target="_blank"><i class="fa-solid fa-database" style="color: #2471a3;"></i>Fine-tuning Dataset</a>
               <a href="https://huggingface.co/skadio/learn2zinc" class="card-link" target="_blank"><span class="hf-emoji">🤗</span>Fine-tuned Models</a>
-<!--              <a href="https://huggingface.co/datasets/skadio/learn2zinc_p2c_cot" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Learn2Zinc CoT</a>-->
-<!--              <a href="https://huggingface.co/datasets/skadio/learn2zinc-p2c-augmented" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Learn2Zinc Augmented</a>-->
+              <a href="https://arxiv.org/abs/2604.12955" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'26</a>
               <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
             </div>
             <div class="bibtex-inline">
               <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
-              <pre>@misc{kadioglu2026text2model,
-  title         = {Modeling Copilots for Text-to-Model Translation},
-  author        = {Serdar Kadioglu and Karthik Uppuluri and Akash Singirikonda},
+              <pre>@misc{text2model,
+  title         = {Text2Model: Modeling Copilots for Text-to-Model Translation},
+  author        = {Serdar Kadıoğlu and Karthik Uppuluri and Akash Singirikonda},
   year          = {2026},
   eprint        = {2604.12955},
   archivePrefix = {arXiv},
@@ -1172,20 +1220,17 @@
           <p class="card-desc">The first cross-domain dataset to integrate both optimization and satisfaction problems within a unified data schema. Leverages MiniZinc's <strong>paradigm- and solver-agnostic</strong> modeling capabilities. Accompanied by an online <strong>interactive data editor</strong> to enable ongoing data curation.</p>
           <p class="card-venue">Akash Singirikonda, Serdar Kadıoğlu, Karthik Uppuluri</p>
           <div class="card-links">
-            <a href="https://arxiv.org/abs/2503.10642" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'25</a>
-<!--            <a href="https://huggingface.co/datasets/skadio/forge" class="btn btn-outline" target="_blank"><i class="fa-solid fa-database" style="color: #2471a3;"></i> Dataset</a>-->
-<!--      <a href="https://huggingface.co/spaces/skadio/forge" class="btn btn-outline" target="_blank"><i class="fa-solid fa-rocket" style="color: #16a085;"></i> Demo</a>-->
-
             <a href="https://huggingface.co/datasets/skadio/text2zinc" class="card-link" target="_blank"><i class="fa-solid fa-database" style="color: #2471a3;"></i> Dataset</a>
             <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Leaderboard</a>
             <a href="https://huggingface.co/spaces/skadio/text2zinc-editor" class="card-link" target="_blank"><i class="fa-solid fa-pen-to-square" style="color: #16a085;"></i> Interactive Editor</a>
+            <a href="https://arxiv.org/abs/2503.10642" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'25</a>
             <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
           </div>
           <div class="bibtex-inline">
             <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
-            <pre>@misc{singirikonda2025text2zinc,
+            <pre>@misc{text2zinc,
   title         = {Text2Zinc: A Cross-Domain Dataset for Modeling Optimization and Satisfaction Problems in MiniZinc},
-  author        = {Akash Singirikonda and Serdar Kadioglu and Karthik Uppuluri},
+  author        = {Akash Singirikonda and Serdar Kadıoğlu and Karthik Uppuluri},
   year          = {2025},
   eprint        = {2503.10642},
   archivePrefix = {arXiv},
@@ -1213,15 +1258,15 @@
           <p class="card-desc">Global LLM Agents for text-to-model translation. Introduces collaborative multi-agent workflows where specialized LLM agents work together to decompose, formulate, and validate models. Achieves strong performance through agent collaboration.</p>
           <p class="card-venue">Junyang Cai, Serdar Kadıoğlu, Bistra Dilkina</p>
           <div class="card-links">
-            <a href="https://arxiv.org/abs/2509.08970" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'25</a>
             <a href="https://github.com/skadio/text2model" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
+            <a href="https://arxiv.org/abs/2509.08970" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'25</a>
             <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
           </div>
           <div class="bibtex-inline">
             <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
-            <pre>@misc{cai2025gala,
+            <pre>@misc{gala,
   title         = {Gala: Global LLM Agents for Text-to-Model Translation},
-  author        = {Junyang Cai and Serdar Kadioglu and Bistra Dilkina},
+  author        = {Junyang Cai and Serdar Kadıoğlu and Bistra Dilkina},
   year          = {2025},
   eprint        = {2509.08970},
   archivePrefix = {arXiv},
@@ -1260,21 +1305,21 @@
               </a>
             </div>
           </div>
-
+          <div class="card-install"><i class="fa-solid fa-terminal"></i> pip install ner4opt</div>
           <!-- Constraints'24 Paper -->
           <div style="margin-top: 1.25rem;">
             <div class="card-links">
+              <a href="https://github.com/skadio/ner4opt" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
               <a href="https://link.springer.com/article/10.1007/s10601-024-09376-5" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> Constraints'24</a>
               <a href="https://link.springer.com/chapter/10.1007/978-3-031-33271-5_20" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> CPAIOR'23</a>
               <a href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/skadio/ner4opt/main/docs/%5BNeurIPS+2022%5D+Ner4Opt+Poster.pdf" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> NeurIPS'22</a>
               <a href="https://huggingface.co/spaces/skadio/Ner4Opt" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Demo</a>
-              <a href="https://github.com/skadio/ner4opt" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
               <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
             </div>
             <div class="bibtex-inline">
               <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
-              <pre>@article{Kadioglu24,
-  author    = {Serdar Kadioglu and Parag Pravin Dakle and Karthik Uppuluri and Regina Politi and Preethi Raghavan and SaiKrishna Rallabandi and Ravisutha Srinivasamurthy},
+              <pre>@article{ner4opt,
+  author    = {Serdar Kadıoğlu and Parag Pravin Dakle and Karthik Uppuluri and Regina Politi and Preethi Raghavan and SaiKrishna Rallabandi and Ravisutha Srinivasamurthy},
   title     = {Ner4Opt: named entity recognition for optimization modelling from natural language},
   journal   = {Constraints},
   volume    = {29},
@@ -1446,6 +1491,18 @@ function toggleBibtex(btn) {
   btn.classList.toggle('active');
   const bibtexDiv = btn.closest('.card-links').nextElementSibling;
   bibtexDiv.classList.toggle('active');
+}
+
+function toggleBibtexById(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('active');
+  // Find the button that triggered this
+  document.querySelectorAll('.bibtex-toggle').forEach(btn => {
+    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(id)) {
+      btn.classList.toggle('active');
+    }
+  });
 }
 
 function copyBibtexInline(btn) {
