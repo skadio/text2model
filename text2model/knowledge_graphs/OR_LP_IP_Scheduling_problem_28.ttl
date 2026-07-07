@@ -1,0 +1,42 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:num_parts a rdf:Property ;
+    rdfs:label "num_parts" ;
+    rdfs:comment "Number of different parts to buy" ;
+    rdfs:range xsd:integer .
+
+opt:num_stores a rdf:Property ;
+    rdfs:label "num_stores" ;
+    rdfs:comment "Number of stores to choose from" ;
+    rdfs:range xsd:integer .
+
+opt:product_stores a rdf:Property ;
+    rdfs:label "product_stores" ;
+    rdfs:comment "Prices of each part in each store" ;
+    rdfs:range xsd:float .
+
+opt:store_delivery_costs a rdf:Property ;
+    rdfs:label "store_delivery_costs" ;
+    rdfs:comment "Delivery cost of each store" ;
+    rdfs:range xsd:float .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:comment "The problem involves selecting the optimal store for each part to minimize the total cost of buying all parts including delivery costs." .
+
+opt:OptimizationProblem rdfs:subClassOf opt:num_parts, opt:num_stores, opt:product_stores, opt:store_delivery_costs .
+
+opt:objective a rdf:Property ;
+    rdfs:label "objective" ;
+    rdfs:comment "The objective is to find the optimal assignment of parts to stores to minimize the total cost." ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range xsd:string .
+
+opt:constraint a rdf:Property ;
+    rdfs:label "constraint" ;
+    rdfs:comment "If multiple products are purchased from a store then the delivery cost remains the same." ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range xsd:string .

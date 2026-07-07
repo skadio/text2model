@@ -1,0 +1,75 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:NumProducts a rdf:Property ;
+    rdfs:label "Number of different products" ;
+    rdfs:range xsd:integer .
+
+opt:NumMachines a rdf:Property ;
+    rdfs:label "Number of different machines or stations" ;
+    rdfs:range xsd:integer .
+
+opt:ProduceTime a rdf:Property ;
+    rdfs:label "Time to produce one unit of product k on station s" ;
+    rdfs:range xsd:integer .
+
+opt:AvailableTime a rdf:Property ;
+    rdfs:label "Total available time on station s" ;
+    rdfs:range xsd:integer .
+
+opt:Profit a rdf:Property ;
+    rdfs:label "Profit from producing one unit of product k" ;
+    rdfs:range xsd:integer .
+
+opt:Product a rdfs:Class ;
+    rdfs:label "Product" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:Machine a rdfs:Class ;
+    rdfs:label "Machine" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:hasNumProducts a rdf:Property ;
+    rdfs:label "has number of products" ;
+    rdfs:domain opt:Product ;
+    rdfs:range opt:NumProducts .
+
+opt:hasNumMachines a rdf:Property ;
+    rdfs:label "has number of machines" ;
+    rdfs:domain opt:Machine ;
+    rdfs:range opt:NumMachines .
+
+opt:hasProduceTime a rdf:Property ;
+    rdfs:label "has produce time" ;
+    rdfs:domain opt:Product ;
+    rdfs:range opt:ProduceTime .
+
+opt:hasAvailableTime a rdf:Property ;
+    rdfs:label "has available time" ;
+    rdfs:domain opt:Machine ;
+    rdfs:range opt:AvailableTime .
+
+opt:hasProfit a rdf:Property ;
+    rdfs:label "has profit" ;
+    rdfs:domain opt:Product ;
+    rdfs:range opt:Profit .
+
+opt:hasConstraint a rdf:Property ;
+    rdfs:label "has constraint" ;
+    rdfs:domain opt:Constraint ;
+    rdfs:range rdfs:Resource .
+
+opt:hasObjective a rdf:Property ;
+    rdfs:label "has objective" ;
+    rdfs:domain opt:Objective ;
+    rdfs:range rdfs:Resource .

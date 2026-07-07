@@ -1,0 +1,95 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:CircularTables a rdf:Property ;
+    rdfs:label "Number of circular tables to set up" ;
+    rdfs:range xsd:integer .
+
+opt:RectangularTables a rdf:Property ;
+    rdfs:label "Number of rectangular tables to set up" ;
+    rdfs:range xsd:integer .
+
+opt:ParticipantsPerCircular a rdf:Property ;
+    rdfs:label "Participants per circular table" ;
+    rdfs:range xsd:integer .
+
+opt:ParticipantsPerRectangular a rdf:Property ;
+    rdfs:label "Participants per rectangular table" ;
+    rdfs:range xsd:integer .
+
+opt:BoardsPerCircular a rdf:Property ;
+    rdfs:label "Poster boards per circular table" ;
+    rdfs:range xsd:integer .
+
+opt:BoardsPerRectangular a rdf:Property ;
+    rdfs:label "Poster boards per rectangular table" ;
+    rdfs:range xsd:integer .
+
+opt:GuestsPerCircular a rdf:Property ;
+    rdfs:label "Guests per circular table" ;
+    rdfs:range xsd:integer .
+
+opt:GuestsPerRectangular a rdf:Property ;
+    rdfs:label "Guests per rectangular table" ;
+    rdfs:range xsd:integer .
+
+opt:SpacePerCircular a rdf:Property ;
+    rdfs:label "Space required per circular table" ;
+    rdfs:range xsd:integer .
+
+opt:SpacePerRectangular a rdf:Property ;
+    rdfs:label "Space required per rectangular table" ;
+    rdfs:range xsd:integer .
+
+opt:TotalSpace a rdf:Property ;
+    rdfs:label "Total available space" ;
+    rdfs:range xsd:integer .
+
+opt:MinParticipants a rdf:Property ;
+    rdfs:label "Minimum number of participants required" ;
+    rdfs:range xsd:integer .
+
+opt:MinBoards a rdf:Property ;
+    rdfs:label "Minimum number of poster boards required" ;
+    rdfs:range xsd:integer .
+
+opt:ScienceFair a rdfs:Class ;
+    rdfs:label "Science Fair" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:ScienceFair rdfs:subClassOf [
+    a rdf:Property ;
+    rdfs:label "has constraints" ;
+    rdf:subject opt:ScienceFair ;
+    rdf:object [
+        a rdf:Bag ;
+        rdf:_1 [
+            a opt:Constraint ;
+            rdfs:label "Space constraint" ;
+            opt:formula "CircularTables*SpacePerCircular + RectangularTables*SpacePerRectangular <= TotalSpace"
+        ] ;
+        rdf:_2 [
+            a opt:Constraint ;
+            rdfs:label "Participants constraint" ;
+            opt:formula "CircularTables*ParticipantsPerCircular + RectangularTables*ParticipantsPerRectangular >= MinParticipants"
+        ] ;
+        rdf:_3 [
+            a opt:Constraint ;
+            rdfs:label "Poster boards constraint" ;
+            opt:formula "CircularTables*BoardsPerCircular + RectangularTables*BoardsPerRectangular >= MinBoards"
+        ]
+    ]
+] .
+
+opt:ScienceFair rdfs:subClassOf [
+    a rdf:Property ;
+    rdfs:label "has objective" ;
+    rdf:subject opt:ScienceFair ;
+    rdf:object [
+        a opt:Objective ;
+        rdfs:label "Maximize guests" ;
+        opt:formula "Maximize CircularTables*GuestsPerCircular + RectangularTables*GuestsPerRectangular"
+    ]
+] .

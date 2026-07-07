@@ -1,0 +1,55 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:WarehouseOperation a rdfs:Class ;
+    rdfs:label "Warehouse Operation" ;
+    rdfs:comment "The operation of a warehouse by buying and selling stock to maximize profit over a certain length of time." .
+
+opt:TimePeriod a rdfs:Class ;
+    rdfs:label "Time Period" ;
+    rdfs:comment "A specific period of time in which the warehouse operation takes place." .
+
+opt:TimePeriod rdfs:subClassOf opt:WarehouseOperation .
+
+opt:hasNumber a rdf:Property ;
+    rdfs:label "has number" ;
+    rdfs:domain opt:TimePeriod ;
+    rdfs:range xsd:integer .
+
+opt:hasCapacity a rdf:Property ;
+    rdfs:label "has capacity" ;
+    rdfs:domain opt:WarehouseOperation ;
+    rdfs:range xsd:integer .
+
+opt:hasHoldingCost a rdf:Property ;
+    rdfs:label "has holding cost" ;
+    rdfs:domain opt:WarehouseOperation ;
+    rdfs:range xsd:integer .
+
+opt:hasPrice a rdf:Property ;
+    rdfs:label "has price" ;
+    rdfs:domain opt:TimePeriod ;
+    rdfs:range xsd:integer .
+
+opt:hasCost a rdf:Property ;
+    rdfs:label "has cost" ;
+    rdfs:domain opt:TimePeriod ;
+    rdfs:range xsd:integer .
+
+opt:MaximizeProfit a rdfs:Class ;
+    rdfs:label "Maximize Profit" ;
+    rdfs:comment "The objective of the warehouse operation is to maximize profit." .
+
+opt:MaximizeProfit rdfs:subClassOf opt:WarehouseOperation .
+
+opt:hasConstraint a rdf:Property ;
+    rdfs:label "has constraint" ;
+    rdfs:domain opt:WarehouseOperation ;
+    rdfs:range rdfs:Literal .
+
+opt:hasObjective a rdf:Property ;
+    rdfs:label "has objective" ;
+    rdfs:domain opt:WarehouseOperation ;
+    rdfs:range opt:MaximizeProfit .

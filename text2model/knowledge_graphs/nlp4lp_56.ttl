@@ -1,0 +1,67 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimization#> .
+
+:Problem1 a opt:OptimizationProblem ;
+    opt:hasObjective :Objective1 ;
+    opt:hasConstraint :Constraint1, :Constraint2 ;
+    opt:hasParameter :NumPorts, :NumTerminals, :Cost, :Demand, :Supply ;
+    opt:hasVariable :Quantity .
+
+:NumPorts a opt:Parameter ;
+    rdfs:label "Number of Ports" ;
+    rdfs:comment "Number of Ports" ;
+    opt:hasDataType xsd:integer ;
+    opt:hasExample "NumPorts = 4" ;
+    opt:hasShape "scalar" .
+
+:NumTerminals a opt:Parameter ;
+    rdfs:label "Number of Terminals" ;
+    rdfs:comment "Number of Terminals" ;
+    opt:hasDataType xsd:integer ;
+    opt:hasExample "NumTerminals = 3" ;
+    opt:hasShape "scalar" .
+
+:Cost a opt:Parameter ;
+    rdfs:label "Cost of transportation for route from k to l" ;
+    rdfs:comment "Cost of transportation for route from k to l" ;
+    opt:hasDataType xsd:array ;
+    opt:hasExample "Cost = array2d(1..3, 1..4, [34, 49, 17, 26, 52, 64, 23, 14, 20, 28, 12, 17])" ;
+    opt:hasShape "[K, L]" .
+
+:Demand a opt:Parameter ;
+    rdfs:label "Demand at destination l" ;
+    rdfs:comment "Demand at destination l" ;
+    opt:hasDataType xsd:array ;
+    opt:hasExample "Demand = [65, 70, 50, 45]" ;
+    opt:hasShape "[L]" .
+
+:Supply a opt:Parameter ;
+    rdfs:label "Supply at terminal k" ;
+    rdfs:comment "Supply at terminal k" ;
+    opt:hasDataType xsd:array ;
+    opt:hasExample "Supply = [150, 100, 100]" ;
+    opt:hasShape "[K]" .
+
+:Quantity a opt:Variable ;
+    rdfs:label "Quantity of soybeans to transport along each route from source to destination" ;
+    rdfs:comment "Quantity of soybeans to transport along each route from source to destination" ;
+    opt:hasDataType xsd:array ;
+    opt:hasShape "[K, L]" .
+
+:Constraint1 a opt:Constraint ;
+    rdfs:label "Supply constraint" ;
+    rdfs:comment "The total quantity of soybeans transported from each terminal should not exceed its supply" ;
+    opt:hasMathematicalExpression "sum(Quantity[k, l] for all l) <= Supply[k] for all k" .
+
+:Constraint2 a opt:Constraint ;
+    rdfs:label "Demand constraint" ;
+    rdfs:comment "The total quantity of soybeans transported to each destination should meet its demand" ;
+    opt:hasMathematicalExpression "sum(Quantity[k, l] for all k) >= Demand[l] for all l" .
+
+:Objective1 a opt:Objective ;
+    rdfs:label "Minimize transportation costs" ;
+    rdfs:comment "Minimize the total cost of transporting soybeans from terminals to destinations" ;
+    opt:hasMathematicalExpression "minimize sum(Cost[k, l] * Quantity[k, l] for all k, l)" ;
+    opt:hasOptimizationDirection opt:Minimize .

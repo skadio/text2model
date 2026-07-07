@@ -1,0 +1,41 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:ProjectCount a rdf:Property ;
+    rdfs:label "Number of projects" ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Total number of projects to be assigned to consultants." .
+
+opt:ConsultantCount a rdf:Property ;
+    rdfs:label "Number of Consultants" ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Total number of consultants available for project assignment." .
+
+opt:FixedCosts a rdf:Property ;
+    rdfs:label "Fixed cost for project" ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Fixed cost incurred for each project." .
+
+opt:AdditionalCosts a rdf:Property ;
+    rdfs:label "Additional cost for assigning consultant to project" ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Additional cost incurred for assigning a specific consultant to a specific project." .
+
+opt:MaxProjectsPerConsultant a rdf:Property ;
+    rdfs:label "Maximum number of projects per consultant" ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Maximum number of projects that can be assigned to a single consultant." .
+
+opt:Assignment a rdf:Class ;
+    rdfs:label "Assignment of consultants to projects" ;
+    rdfs:comment "The assignment of consultants to projects that minimizes the total cost." .
+
+opt:Assignment rdfs:subClassOf opt:ProjectCount, opt:ConsultantCount, opt:FixedCosts, opt:AdditionalCosts, opt:MaxProjectsPerConsultant .
+
+opt:MinimizeTotalCost a rdf:Class ;
+    rdfs:label "Minimize total cost" ;
+    rdfs:comment "The objective is to minimize the total cost, which includes fixed costs and additional costs." .
+
+opt:MinimizeTotalCost rdfs:subClassOf opt:Assignment .

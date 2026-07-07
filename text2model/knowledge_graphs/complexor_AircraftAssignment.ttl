@@ -1,0 +1,73 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <http://www.example.com/> .
+
+:TotalAircraft a rdf:Property ;
+    rdfs:label "TotalAircraft" ;
+    rdfs:domain :AircraftAssignmentProblem ;
+    rdfs:range xsd:integer .
+
+:TotalRoutes a rdf:Property ;
+    rdfs:label "TotalRoutes" ;
+    rdfs:domain :AircraftAssignmentProblem ;
+    rdfs:range xsd:integer .
+
+:Availability a rdf:Property ;
+    rdfs:label "Availability" ;
+    rdfs:domain :Aircraft ;
+    rdfs:range xsd:integer .
+
+:Demand a rdf:Property ;
+    rdfs:label "Demand" ;
+    rdfs:domain :Route ;
+    rdfs:range xsd:integer .
+
+:Capacity a rdf:Property ;
+    rdfs:label "Capacity" ;
+    rdfs:domain :AircraftRouteCombination ;
+    rdfs:range xsd:integer .
+
+:Costs a rdf:Property ;
+    rdfs:label "Costs" ;
+    rdfs:domain :AircraftRouteCombination ;
+    rdfs:range xsd:integer .
+
+:AircraftAssignmentProblem a rdfs:Class ;
+    rdfs:label "Aircraft Assignment Problem" ;
+    rdfs:subClassOf :OptimizationProblem .
+
+:Aircraft a rdfs:Class ;
+    rdfs:label "Aircraft" ;
+    rdfs:subClassOf :AircraftAssignmentProblem .
+
+:Route a rdfs:Class ;
+    rdfs:label "Route" ;
+    rdfs:subClassOf :AircraftAssignmentProblem .
+
+:AircraftRouteCombination a rdfs:Class ;
+    rdfs:label "Aircraft Route Combination" ;
+    rdfs:subClassOf :AircraftAssignmentProblem .
+
+:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" .
+
+:MinimizeTotalCost a :Objective ;
+    rdfs:label "Minimize Total Cost" ;
+    rdfs:subClassOf :AircraftAssignmentProblem .
+
+:Objective a rdfs:Class ;
+    rdfs:label "Objective" ;
+    rdfs:subClassOf :OptimizationProblem .
+
+:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" ;
+    rdfs:subClassOf :OptimizationProblem .
+
+:AvailabilityConstraint a :Constraint ;
+    rdfs:label "Availability Constraint" ;
+    rdfs:subClassOf :AircraftAssignmentProblem .
+
+:DemandConstraint a :Constraint ;
+    rdfs:label "Demand Constraint" ;
+    rdfs:subClassOf :AircraftAssignmentProblem .

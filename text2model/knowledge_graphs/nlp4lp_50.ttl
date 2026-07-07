@@ -1,0 +1,51 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:NumShifts a rdf:Property ;
+    rdfs:domain opt:PoliceShiftOptimization ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of shifts for which officers are needed" .
+
+opt:OfficersNeeded a rdf:Property ;
+    rdfs:domain opt:PoliceShiftOptimization ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of officers needed for shift s" .
+
+opt:ShiftCosts a rdf:Property ;
+    rdfs:domain opt:PoliceShiftOptimization ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Cost of assigning an officer to shift s" .
+
+opt:PoliceShiftOptimization a rdfs:Class ;
+    rdfs:subClassOf opt:OptimizationProblem ;
+    rdfs:comment "Optimization problem to minimize the total cost of assigning police officers to shifts" .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:comment "A general class for optimization problems" .
+
+opt:hasObjective a rdf:Property ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range opt:Objective ;
+    rdfs:comment "The objective of the optimization problem" .
+
+opt:Objective a rdfs:Class ;
+    rdfs:comment "The objective of an optimization problem" .
+
+opt:MinimizeTotalCost a opt:Objective ;
+    rdfs:comment "Minimize the total cost of assigning police officers to shifts" .
+
+opt:hasConstraint a rdf:Property ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range opt:Constraint ;
+    rdfs:comment "A constraint of the optimization problem" .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:comment "A constraint of an optimization problem" .
+
+opt:OfficersWorkTwoShifts a opt:Constraint ;
+    rdfs:comment "Each police officer works for two consecutive shifts" .
+
+opt:RequiredOfficersPerShift a opt:Constraint ;
+    rdfs:comment "The town has a requirement for the number of police officers on duty during each shift" .

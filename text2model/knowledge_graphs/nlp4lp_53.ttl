@@ -1,0 +1,55 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:M rdf:type rdfs:Class ;
+    rdfs:label "Number of machines" ;
+    rdfs:comment "The total number of machines available for production" ;
+    rdfs:range xsd:integer .
+
+opt:P rdf:type rdfs:Class ;
+    rdfs:label "Number of parts" ;
+    rdfs:comment "The total number of different parts produced" ;
+    rdfs:range xsd:integer .
+
+opt:TimeRequired rdf:type rdfs:Class ;
+    rdfs:label "Time required to produce a batch of part" ;
+    rdfs:comment "The time required to produce a batch of part p on machine m" ;
+    rdfs:range xsd:float .
+
+opt:MachineCosts rdf:type rdfs:Class ;
+    rdfs:label "Cost associated with running machine" ;
+    rdfs:comment "The cost associated with running machine m per hour" ;
+    rdfs:range xsd:float .
+
+opt:Availability rdf:type rdfs:Class ;
+    rdfs:label "Availability of machine for production each month" ;
+    rdfs:comment "The total hours machine m is available for production each month" ;
+    rdfs:range xsd:integer .
+
+opt:Prices rdf:type rdfs:Class ;
+    rdfs:label "Price obtained from selling a batch of part" ;
+    rdfs:comment "The price obtained from selling a batch of part p" ;
+    rdfs:range xsd:float .
+
+opt:MinBatches rdf:type rdfs:Class ;
+    rdfs:label "Minimum number of batches of part that should be produced" ;
+    rdfs:comment "The minimum number of batches of part p that should be produced to fulfill a contract" ;
+    rdfs:range xsd:integer .
+
+opt:ExtraCosts rdf:type rdfs:Class ;
+    rdfs:label "Extra cost incurred when running machine beyond regular operation" ;
+    rdfs:comment "The extra cost incurred when running machine m beyond regular operation" ;
+    rdfs:range xsd:float .
+
+opt:MaxExtra rdf:type rdfs:Class ;
+    rdfs:label "Maximum extra hours machine can be run" ;
+    rdfs:comment "The maximum extra hours machine m can be run in a month" ;
+    rdfs:range xsd:integer .
+
+opt:OptimizationProblem rdf:type rdfs:Class ;
+    rdfs:label "Optimization problem" ;
+    rdfs:comment "The optimization problem to maximize profit by determining the number of batches of each part to produce each month" .
+
+opt:OptimizationProblem rdfs:subClassOf opt:M, opt:P, opt:TimeRequired, opt:MachineCosts, opt:Availability, opt:Prices, opt:MinBatches, opt:ExtraCosts, opt:MaxExtra .

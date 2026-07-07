@@ -1,0 +1,50 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:PowerPlant a rdfs:Class ;
+    rdfs:label "Power Plant" ;
+    rdfs:comment "A power plant that supplies electricity." .
+
+opt:City a rdfs:Class ;
+    rdfs:label "City" ;
+    rdfs:comment "A city that demands electricity." .
+
+opt:Supply a rdf:Property ;
+    rdfs:label "Supply" ;
+    rdfs:comment "Electricity supply capacity of a power plant." ;
+    rdfs:domain opt:PowerPlant ;
+    rdfs:range xsd:integer .
+
+opt:Demand a rdf:Property ;
+    rdfs:label "Demand" ;
+    rdfs:comment "Electricity demand of a city." ;
+    rdfs:domain opt:City ;
+    rdfs:range xsd:integer .
+
+opt:TransmissionCost a rdf:Property ;
+    rdfs:label "Transmission Cost" ;
+    rdfs:comment "Transmission cost from a power plant to a city." ;
+    rdfs:domain opt:PowerPlant ;
+    rdfs:range opt:City .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:comment "An optimization problem to minimize the total transmission cost." .
+
+opt:hasObjective a rdf:Property ;
+    rdfs:label "has Objective" ;
+    rdfs:comment "The objective of the optimization problem." ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range xsd:string .
+
+opt:hasConstraint a rdf:Property ;
+    rdfs:label "has Constraint" ;
+    rdfs:comment "A constraint of the optimization problem." ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range xsd:string .
+
+opt:OptimizationProblem opt:hasObjective "Minimize total transmission cost." ;
+    opt:hasConstraint "Each city's peak demand must be met." ;
+    opt:hasConstraint "Each power plant's supply capacity must not be exceeded." .

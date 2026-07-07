@@ -1,0 +1,39 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimization#> .
+
+:carpoolFairnessProblem a opt:OptimizationProblem ;
+    opt:hasParameter :num_days, :num_people, :participation ;
+    opt:hasVariable :driving_days ;
+    opt:hasConstraint :participationConstraint ;
+    opt:hasObjective :minimizeDifferenceObjective .
+
+:num_days a opt:Parameter ;
+    rdfs:label "num_days" ;
+    rdfs:comment "Number of days in the carpooling schedule" ;
+    rdfs:range xsd:integer .
+
+:num_people a opt:Parameter ;
+    rdfs:label "num_people" ;
+    rdfs:comment "Number of people participating in the carpool" ;
+    rdfs:range xsd:integer .
+
+:participation a opt:Parameter ;
+    rdfs:label "participation" ;
+    rdfs:comment "Array representing the participation of each person on each day of the carpool. Value 1 indicates participation, and value 0 indicates non-participation." ;
+    rdfs:range xsd:array .
+
+:driving_days a opt:Variable ;
+    rdfs:label "driving_days" ;
+    rdfs:comment "Array representing the driving responsibilities of each person on each day of the carpool." ;
+    rdfs:range xsd:array .
+
+:participationConstraint a opt:Constraint ;
+    rdfs:label "participationConstraint" ;
+    rdfs:comment "The driving responsibilities should be allocated based on the number of participants each day." .
+
+:minimizeDifferenceObjective a opt:Objective ;
+    rdfs:label "minimizeDifferenceObjective" ;
+    rdfs:comment "Minimize the differences between the actual driving days and the obligations to achieve a fair schedule." ;
+    opt:isMinimizationObjective true .

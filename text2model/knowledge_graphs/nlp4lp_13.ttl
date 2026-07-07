@@ -1,0 +1,48 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:CurrencyOptimizationProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:N, opt:Start, opt:Limit, opt:Rate ;
+    opt:hasVariable opt:CurrencyTransactions ;
+    opt:hasConstraint opt:TransactionLimitConstraint, opt:WealthMultiplicationConstraint ;
+    opt:hasObjective opt:MaximizeCurrency .
+
+opt:N a opt:Parameter ;
+    rdfs:label "N" ;
+    rdfs:comment "Number of different currencies" ;
+    rdfs:range xsd:integer .
+
+opt:Start a opt:Parameter ;
+    rdfs:label "Start" ;
+    rdfs:comment "Initial amount of currency i" ;
+    rdfs:range xsd:float .
+
+opt:Limit a opt:Parameter ;
+    rdfs:label "Limit" ;
+    rdfs:comment "Limit for the number of transactions for currency i" ;
+    rdfs:range xsd:float .
+
+opt:Rate a opt:Parameter ;
+    rdfs:label "Rate" ;
+    rdfs:comment "Exchange rate from currency i to currency j" ;
+    rdfs:range xsd:float .
+
+opt:CurrencyTransactions a opt:Variable ;
+    rdfs:label "CurrencyTransactions" ;
+    rdfs:comment "Number of transactions for each currency" ;
+    rdfs:range xsd:float .
+
+opt:TransactionLimitConstraint a opt:Constraint ;
+    rdfs:label "TransactionLimitConstraint" ;
+    rdfs:comment "The total amount of each currency that can be exchanged should not exceed the limit" .
+
+opt:WealthMultiplicationConstraint a opt:Constraint ;
+    rdfs:label "WealthMultiplicationConstraint" ;
+    rdfs:comment "Wealth cannot be multiplied by going through a cycle of currencies" .
+
+opt:MaximizeCurrency a opt:Objective ;
+    rdfs:label "MaximizeCurrency" ;
+    rdfs:comment "Maximize the number of units of currency that we end up with at the end of the day" ;
+    opt:optimizationType opt:Maximization .

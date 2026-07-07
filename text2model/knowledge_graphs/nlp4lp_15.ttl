@@ -1,0 +1,60 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:Product a rdfs:Class ;
+    rdfs:label "Product" ;
+    rdfs:comment "A type of product produced and sold by the company" .
+
+opt:Machine a rdfs:Class ;
+    rdfs:label "Machine" ;
+    rdfs:comment "Machinery used for production" .
+
+opt:Cash a rdfs:Class ;
+    rdfs:label "Cash" ;
+    rdfs:comment "Initial cash available for investment" .
+
+opt:Hour a rdfs:Class ;
+    rdfs:label "Hour" ;
+    rdfs:comment "Hours required to produce one unit of product" .
+
+opt:Cost a rdfs:Class ;
+    rdfs:label "Cost" ;
+    rdfs:comment "Cost to produce one unit of product" .
+
+opt:Price a rdfs:Class ;
+    rdfs:label "Price" ;
+    rdfs:comment "Selling price for one unit of product" .
+
+opt:InvestPercentage a rdfs:Class ;
+    rdfs:label "InvestPercentage" ;
+    rdfs:comment "Percentage of income to reinvest for product" .
+
+opt:UpgradeHours a rdfs:Class ;
+    rdfs:label "UpgradeHours" ;
+    rdfs:comment "Hours required for upgrading the machinery" .
+
+opt:UpgradeCost a rdfs:Class ;
+    rdfs:label "UpgradeCost" ;
+    rdfs:comment "Cost associated with upgrading the machinery" .
+
+opt:AvailableHours a rdfs:Class ;
+    rdfs:label "AvailableHours" ;
+    rdfs:comment "Total available machine hours" .
+
+opt:NetIncome a rdfs:Class ;
+    rdfs:label "NetIncome" ;
+    rdfs:comment "Net income from each product" .
+
+opt:MaximizeNetIncome a rdfs:Class ;
+    rdfs:label "MaximizeNetIncome" ;
+    rdfs:comment "Objective to maximize total net income" .
+
+opt:CashConstraint a rdfs:Class ;
+    rdfs:label "CashConstraint" ;
+    rdfs:comment "Constraint on cash availability" .
+
+opt:MachineCapacityConstraint a rdfs:Class ;
+    rdfs:label "MachineCapacityConstraint" ;
+    rdfs:comment "Constraint on machine capacity" .

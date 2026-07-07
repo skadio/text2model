@@ -1,0 +1,77 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:MiningProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:K, opt:MaxWork, opt:Royalty, opt:Limit, opt:Quality, opt:RequiredQuality, opt:Price, opt:Discount ;
+    opt:hasVariable opt:MineOperation, opt:Production ;
+    opt:hasConstraint opt:MaxMineOperationConstraint, opt:ProductionLimitConstraint, opt:QualityConstraint ;
+    opt:hasObjective opt:MaximizeProfit .
+
+opt:K a opt:Parameter ;
+    rdfs:label "Number of mines" ;
+    rdfs:comment "The total number of mines owned by the company." ;
+    rdfs:range xsd:integer .
+
+opt:MaxWork a opt:Parameter ;
+    rdfs:label "Maximum number of mines that can be operated in a year" ;
+    rdfs:comment "The maximum number of mines the company can operate in any one year." ;
+    rdfs:range xsd:integer .
+
+opt:Royalty a opt:Parameter ;
+    rdfs:label "Royalty cost for operating mine k" ;
+    rdfs:comment "The specific yearly royalties payable for each mine." ;
+    rdfs:range xsd:float .
+
+opt:Limit a opt:Parameter ;
+    rdfs:label "Production limit for mine k" ;
+    rdfs:comment "The upper limit to the amount of ore, which can be extracted from each mine in a year." ;
+    rdfs:range xsd:float .
+
+opt:Quality a opt:Parameter ;
+    rdfs:label "Quality of the material from mine k" ;
+    rdfs:comment "The quality of ore extracted from each mine." ;
+    rdfs:range xsd:float .
+
+opt:RequiredQuality a opt:Parameter ;
+    rdfs:label "Required quality of the material for client i" ;
+    rdfs:comment "The quality of the blended ore required by the client each year." ;
+    rdfs:range xsd:float .
+
+opt:Price a opt:Parameter ;
+    rdfs:label "Price per unit of material sold" ;
+    rdfs:comment "The fixed price per ton each year for the final blended ore." ;
+    rdfs:range xsd:float .
+
+opt:Discount a opt:Parameter ;
+    rdfs:label "Discount on the royalty cost per unit of material sold" ;
+    rdfs:comment "The discount rate for revenue and expenditure for future years." ;
+    rdfs:range xsd:float .
+
+opt:MineOperation a opt:Variable ;
+    rdfs:label "Mine operation decision" ;
+    rdfs:comment "Decision on which mines should be operated each year." ;
+    rdfs:range xsd:boolean .
+
+opt:Production a opt:Variable ;
+    rdfs:label "Production quantity" ;
+    rdfs:comment "The amount of ore to be produced from each mine each year." ;
+    rdfs:range xsd:float .
+
+opt:MaxMineOperationConstraint a opt:Constraint ;
+    rdfs:label "Maximum mine operation constraint" ;
+    rdfs:comment "The number of mines operated in a year cannot exceed the maximum work capacity." .
+
+opt:ProductionLimitConstraint a opt:Constraint ;
+    rdfs:label "Production limit constraint" ;
+    rdfs:comment "The amount of ore produced from a mine cannot exceed its production limit." .
+
+opt:QualityConstraint a opt:Constraint ;
+    rdfs:label "Quality constraint" ;
+    rdfs:comment "The quality of the blended ore must meet the required quality." .
+
+opt:MaximizeProfit a opt:Objective ;
+    rdfs:label "Maximize profit" ;
+    rdfs:comment "The objective is to maximize the profit by deciding which mines to operate and how much to produce from each." ;
+    opt:optimizationType opt:Maximization .

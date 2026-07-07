@@ -1,0 +1,34 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ski: <http://www.example.org/ski#> .
+
+ski:num_skis rdf:type rdfs:Class ;
+    rdfs:label "Number of available skis" ;
+    rdfs:comment "A scalar value representing the total number of skis available." .
+
+ski:num_skiers rdf:type rdfs:Class ;
+    rdfs:label "Number of skiers" ;
+    rdfs:comment "A scalar value representing the total number of skiers." .
+
+ski:ski_heights rdf:type rdfs:Class ;
+    rdfs:label "Array of ski heights" ;
+    rdfs:comment "An array representing the heights of each ski available." .
+
+ski:skier_heights rdf:type rdfs:Class ;
+    rdfs:label "Array of skier heights" ;
+    rdfs:comment "An array representing the heights of each skier." .
+
+ski:disparity rdf:type rdfs:Class ;
+    rdfs:label "Disparity" ;
+    rdfs:comment "The absolute difference between the skier heights and ski heights." .
+
+ski:OptimizationProblem rdf:type rdfs:Class ;
+    rdfs:label "Ski Optimization Problem" ;
+    rdfs:comment "The problem aims to minimize the disparity between skier heights and assigned ski heights." .
+
+ski:OptimizationProblem rdfs:subClassOf ski:num_skis, ski:num_skiers, ski:ski_heights, ski:skier_heights, ski:disparity .
+
+ski:OptimizationProblem rdf:type rdfs:Class ;
+    rdfs:label "Objective" ;
+    rdfs:comment "The objective is to find an assignment of skis to skiers such that the sum of disparities is minimized." .

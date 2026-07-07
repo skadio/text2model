@@ -1,0 +1,43 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:courses rdf:type rdfs:Class ;
+    rdfs:label "courses" ;
+    rdfs:comment "Number of courses" ;
+    rdfs:range xsd:integer .
+
+opt:periods rdf:type rdfs:Class ;
+    rdfs:label "periods" ;
+    rdfs:comment "Number of periods" ;
+    rdfs:range xsd:integer .
+
+opt:rooms rdf:type rdfs:Class ;
+    rdfs:label "rooms" ;
+    rdfs:comment "Number of rooms available" ;
+    rdfs:range xsd:integer .
+
+opt:available rdf:type rdfs:Class ;
+    rdfs:label "available" ;
+    rdfs:comment "Binary matrix where A[i,j]=1 indicates lectures of course i can be scheduled at period j" ;
+    rdfs:range xsd:array .
+
+opt:conflict rdf:type rdfs:Class ;
+    rdfs:label "conflict" ;
+    rdfs:comment "Conflict matrix where M[i,j]=1 if courses i and j have common students" ;
+    rdfs:range xsd:array .
+
+opt:requirement rdf:type rdfs:Class ;
+    rdfs:label "requirement" ;
+    rdfs:comment "Array containing the number of lectures required per course" ;
+    rdfs:range xsd:array .
+
+opt:TimetableProblem rdf:type rdfs:Class ;
+    rdfs:label "Timetable Problem" ;
+    rdfs:comment "The Timetable problem involves scheduling lectures for a given number of courses, each comprising a given number of lectures, across a given number of periods. Some courses have conflicts between them and can't be scheduled at the same time. Courses are only available to be scheduled for certain times, and there's a limit on the number of lectures that can be scheduled per period. Each course has a required number of lectures. The objective is to allocate lectures to periods satisfying all constraints." ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:OptimizationProblem rdf:type rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:comment "A problem that requires finding the best solution from all feasible solutions." .

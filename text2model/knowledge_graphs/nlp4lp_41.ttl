@@ -1,0 +1,62 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:Product a rdfs:Class ;
+    rdfs:label "Product" ;
+    rdfs:comment "A type of product produced by the company" .
+
+opt:ProductDemand a rdfs:Property ;
+    rdfs:label "Product Demand" ;
+    rdfs:comment "The demand of a product" ;
+    rdfs:domain opt:Product ;
+    rdfs:range xsd:float .
+
+opt:MaxRegularAmount a rdfs:Property ;
+    rdfs:label "Maximum Regular Production Amount" ;
+    rdfs:comment "Maximum production amount under regular conditions" ;
+    rdfs:range xsd:float .
+
+opt:CostRegular a rdfs:Property ;
+    rdfs:label "Regular Production Cost" ;
+    rdfs:comment "Cost of production under regular conditions per unit" ;
+    rdfs:range xsd:float .
+
+opt:CostOvertime a rdfs:Property ;
+    rdfs:label "Overtime Production Cost" ;
+    rdfs:comment "Cost of production under overtime conditions per unit" ;
+    rdfs:range xsd:float .
+
+opt:StoreCost a rdfs:Property ;
+    rdfs:label "Storage Cost" ;
+    rdfs:comment "Cost to store one unit of product" ;
+    rdfs:range xsd:float .
+
+opt:ProductionSchedule a rdfs:Class ;
+    rdfs:label "Production Schedule" ;
+    rdfs:comment "The production schedule that minimizes the cost" .
+
+opt:hasProduct a rdfs:Property ;
+    rdfs:label "has product" ;
+    rdfs:comment "The production schedule has a product" ;
+    rdfs:domain opt:ProductionSchedule ;
+    rdfs:range opt:Product .
+
+opt:hasCost a rdfs:Property ;
+    rdfs:label "has cost" ;
+    rdfs:comment "The production schedule has a cost" ;
+    rdfs:domain opt:ProductionSchedule ;
+    rdfs:range xsd:float .
+
+opt:hasObjective a rdfs:Property ;
+    rdfs:label "has objective" ;
+    rdfs:comment "The optimization problem has an objective" ;
+    rdfs:domain opt:ProductionSchedule ;
+    rdfs:range rdfs:Literal .
+
+opt:hasConstraint a rdfs:Property ;
+    rdfs:label "has constraint" ;
+    rdfs:comment "The optimization problem has a constraint" ;
+    rdfs:domain opt:ProductionSchedule ;
+    rdfs:range rdfs:Literal .

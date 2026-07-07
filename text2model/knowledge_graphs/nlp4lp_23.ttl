@@ -1,0 +1,63 @@
+@prefix : <http://www.semanticweb.org/ontologies/2021/4/OptimizationProblem#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:Requirement rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Manpower ;
+    rdfs:range xsd:integer .
+
+:K rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Resource ;
+    rdfs:range xsd:integer .
+
+:I rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Resource ;
+    rdfs:range xsd:integer .
+
+:Strength rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Resource ;
+    rdfs:range xsd:integer .
+
+:LessOneWaste rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Resource ;
+    rdfs:range xsd:float .
+
+:MoreOneWaste rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Resource ;
+    rdfs:range xsd:float .
+
+:Recruit rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Resource ;
+    rdfs:range xsd:integer .
+
+:CostRedundancy rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Resource ;
+    rdfs:range xsd:integer .
+
+:NumOverman rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Company ;
+    rdfs:range xsd:integer .
+
+:CostOverman rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Resource ;
+    rdfs:range xsd:integer .
+
+:NumShortwork rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Company ;
+    rdfs:range xsd:integer .
+
+:CostShort rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Resource ;
+    rdfs:range xsd:integer .
+
+:Manpower rdf:type owl:Class .
+
+:Resource rdf:type owl:Class .
+
+:Company rdf:type owl:Class .
+
+:Constraint rdf:type owl:Class .
+
+:Objective rdf:type owl:Class .
+
+:Variable rdf:type owl:Class .

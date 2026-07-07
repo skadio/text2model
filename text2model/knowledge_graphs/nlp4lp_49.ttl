@@ -1,0 +1,66 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:Alloy a rdfs:Class ;
+    rdfs:label "Alloy" ;
+    rdfs:comment "Different types of alloys used in steel production" .
+
+opt:Steel a rdfs:Class ;
+    rdfs:label "Steel" ;
+    rdfs:comment "Different types of steel produced by the company" .
+
+opt:hasAvailableAmount a rdf:Property ;
+    rdfs:label "has available amount" ;
+    rdfs:domain opt:Alloy ;
+    rdfs:range xsd:integer .
+
+opt:hasCarbonContent a rdf:Property ;
+    rdfs:label "has carbon content" ;
+    rdfs:domain opt:Alloy ;
+    rdfs:range xsd:float .
+
+opt:hasNickelContent a rdf:Property ;
+    rdfs:label "has nickel content" ;
+    rdfs:domain opt:Alloy ;
+    rdfs:range xsd:float .
+
+opt:hasAlloyPrice a rdf:Property ;
+    rdfs:label "has alloy price" ;
+    rdfs:domain opt:Alloy ;
+    rdfs:range xsd:integer .
+
+opt:hasSteelPrice a rdf:Property ;
+    rdfs:label "has steel price" ;
+    rdfs:domain opt:Steel ;
+    rdfs:range xsd:integer .
+
+opt:hasCarbonMin a rdf:Property ;
+    rdfs:label "has minimum carbon content" ;
+    rdfs:domain opt:Steel ;
+    rdfs:range xsd:float .
+
+opt:hasNickelMax a rdf:Property ;
+    rdfs:label "has maximum nickel content" ;
+    rdfs:domain opt:Steel ;
+    rdfs:range xsd:float .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:comment "The optimization problem to maximize profit" .
+
+opt:hasObjective a rdf:Property ;
+    rdfs:label "has objective" ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range xsd:string .
+
+opt:hasConstraint a rdf:Property ;
+    rdfs:label "has constraint" ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range xsd:string .
+
+opt:hasVariable a rdf:Property ;
+    rdfs:label "has variable" ;
+    rdfs:domain opt:OptimizationProblem ;
+    rdfs:range xsd:string .

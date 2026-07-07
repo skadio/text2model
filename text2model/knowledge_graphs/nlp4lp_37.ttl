@@ -1,0 +1,52 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:K a rdf:Property ;
+    rdfs:label "Number of different types of food" ;
+    rdfs:range xsd:integer .
+
+opt:M a rdf:Property ;
+    rdfs:label "Number of nutrients to consider" ;
+    rdfs:range xsd:integer .
+
+opt:Price a rdf:Property ;
+    rdfs:label "Price of food k" ;
+    rdfs:range xsd:float .
+
+opt:Demand a rdf:Property ;
+    rdfs:label "Demand for nutrient m" ;
+    rdfs:range xsd:float .
+
+opt:Nutrition a rdf:Property ;
+    rdfs:label "Amount of nutrient m in food k" ;
+    rdfs:range xsd:float .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" .
+
+opt:OptimizationProblem1 a opt:OptimizationProblem ;
+    opt:K "3"^^xsd:integer ;
+    opt:M "2"^^xsd:integer ;
+    opt:Price "1"^^xsd:float, "2"^^xsd:float, "3"^^xsd:float ;
+    opt:Demand "10"^^xsd:float, "20"^^xsd:float ;
+    opt:Nutrition "3"^^xsd:float, "5"^^xsd:float, "1"^^xsd:float, "3"^^xsd:float, "4"^^xsd:float, "4"^^xsd:float .
+
+opt:Variable a rdfs:Class ;
+    rdfs:label "Variable" .
+
+opt:Variable1 a opt:Variable ;
+    rdfs:label "Amount of each type of food to buy" .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" .
+
+opt:Constraint1 a opt:Constraint ;
+    rdfs:label "Nutritional demand must be met" .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective" .
+
+opt:Objective1 a opt:Objective ;
+    rdfs:label "Minimize the cost of meeting all nutritional demands" .

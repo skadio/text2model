@@ -1,0 +1,43 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimization#> .
+
+:KidneyExchangeProgram rdf:type opt:OptimizationProblem ;
+    rdfs:label "Kidney Exchange Program" ;
+    opt:hasObjective :MaximizeExchanges ;
+    opt:hasConstraint :DonorReceiverBalance ;
+    opt:hasParameter :num_people, :compatible .
+
+:num_people rdf:type opt:Parameter ;
+    rdfs:label "Number of people in the kidney exchange program" ;
+    rdfs:comment "Scalar value representing the total number of people in the kidney exchange program" ;
+    rdfs:range xsd:integer .
+
+:compatible rdf:type opt:Parameter ;
+    rdfs:label "Compatibility matrix" ;
+    rdfs:comment "2D array representing the compatibility of donors for each person in the kidney exchange program" ;
+    rdfs:range xsd:array .
+
+:MaximizeExchanges rdf:type opt:Objective ;
+    rdfs:label "Maximize the number of kidney exchanges" ;
+    opt:isTypeOf opt:Maximization ;
+    opt:hasVariable :num_exchanges .
+
+:num_exchanges rdf:type opt:Variable ;
+    rdfs:label "Number of kidney exchanges" ;
+    rdfs:range xsd:integer .
+
+:DonorReceiverBalance rdf:type opt:Constraint ;
+    rdfs:label "Donor-Receiver Balance" ;
+    rdfs:comment "Every person who donates a kidney also receives one" ;
+    opt:isTypeOf opt:Equality ;
+    opt:hasVariable :num_donations, :num_receivers .
+
+:num_donations rdf:type opt:Variable ;
+    rdfs:label "Number of kidney donations" ;
+    rdfs:range xsd:integer .
+
+:num_receivers rdf:type opt:Variable ;
+    rdfs:label "Number of kidney receivers" ;
+    rdfs:range xsd:integer .

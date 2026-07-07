@@ -1,0 +1,64 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:Period rdf:type rdfs:Class ;
+    rdfs:label "Period" ;
+    rdfs:comment "The planning period for nurse staffing" ;
+    rdfs:range xsd:integer .
+
+opt:Demand rdf:type rdfs:Class ;
+    rdfs:label "Demand" ;
+    rdfs:comment "Array of demands for nurses for 7 days" ;
+    rdfs:range xsd:integer .
+
+opt:Nurse rdf:type rdfs:Class ;
+    rdfs:label "Nurse" ;
+    rdfs:comment "Nurse to be scheduled for night shift" .
+
+opt:WorkDays rdf:type rdf:Property ;
+    rdfs:label "WorkDays" ;
+    rdfs:comment "Number of days a nurse works in a row on the night shift" ;
+    rdfs:domain opt:Nurse ;
+    rdfs:range xsd:integer .
+
+opt:OffDays rdf:type rdf:Property ;
+    rdfs:label "OffDays" ;
+    rdfs:comment "Number of days a nurse has off after working" ;
+    rdfs:domain opt:Nurse ;
+    rdfs:range xsd:integer .
+
+opt:hasDemand rdf:type rdf:Property ;
+    rdfs:label "hasDemand" ;
+    rdfs:comment "The demand for nurses on a particular day" ;
+    rdfs:domain opt:Period ;
+    rdfs:range opt:Demand .
+
+opt:hasNurse rdf:type rdf:Property ;
+    rdfs:label "hasNurse" ;
+    rdfs:comment "The nurse assigned to a particular period" ;
+    rdfs:domain opt:Period ;
+    rdfs:range opt:Nurse .
+
+opt:MinimizeNurses rdf:type opt:OptimizationProblem ;
+    rdfs:label "MinimizeNurses" ;
+    rdfs:comment "Minimize the number of nurses needed to meet demand" ;
+    opt:hasObjectiveFunction opt:MinimizeNursesObjectiveFunction ;
+    opt:hasConstraint opt:WorkDaysConstraint, opt:OffDaysConstraint .
+
+opt:MinimizeNursesObjectiveFunction rdf:type opt:ObjectiveFunction ;
+    rdfs:label "MinimizeNursesObjectiveFunction" ;
+    rdfs:comment "Objective function to minimize the number of nurses" ;
+    opt:hasVariable opt:Nurse ;
+    opt:isMinimization true .
+
+opt:WorkDaysConstraint rdf:type opt:Constraint ;
+    rdfs:label "WorkDaysConstraint" ;
+    rdfs:comment "Constraint that a nurse works x number of days in a row" ;
+    opt:hasVariable opt:WorkDays .
+
+opt:OffDaysConstraint rdf:type opt:Constraint ;
+    rdfs:label "OffDaysConstraint" ;
+    rdfs:comment "Constraint that a nurse has 7 - x days off after working" ;
+    opt:hasVariable opt:OffDays .

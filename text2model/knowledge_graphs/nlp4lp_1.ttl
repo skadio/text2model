@@ -1,0 +1,56 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:GoodsProductionProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:M, opt:N, opt:Available, opt:Requirements, opt:Prices ;
+    opt:hasVariable opt:GoodsProduced ;
+    opt:hasConstraint opt:RawMaterialAvailability ;
+    opt:hasObjective opt:MaximizeRevenue .
+
+opt:M a opt:Parameter ;
+    rdfs:label "Number of different goods produced by the firm" ;
+    rdfs:comment "M is a scalar representing the number of different goods produced by the firm." ;
+    opt:hasExample "M = 4" ;
+    opt:hasShape "scalar" .
+
+opt:N a opt:Parameter ;
+    rdfs:label "Number of different raw materials used by the firm" ;
+    rdfs:comment "N is a scalar representing the number of different raw materials used by the firm." ;
+    opt:hasExample "N = 5" ;
+    opt:hasShape "scalar" .
+
+opt:Available a opt:Parameter ;
+    rdfs:label "Available amount of raw material i" ;
+    rdfs:comment "Available is a vector of length N representing the available amount of each raw material." ;
+    opt:hasExample "Available = [10, 20, 15, 35, 25]" ;
+    opt:hasShape "[N]" .
+
+opt:Requirements a opt:Parameter ;
+    rdfs:label "Requirement of raw material i to produce one unit of good j" ;
+    rdfs:comment "Requirements is a 2D array of size N x M representing the requirement of each raw material to produce each good." ;
+    opt:hasExample "Requirements = array2d(1..4, 1..5, [3, 2, 0, 0, 0, 0, 5, 2, 1, 0, 1, 0, 0, 5, 3, 0, 3, 1, 1, 5])" ;
+    opt:hasShape "[N, M]" .
+
+opt:Prices a opt:Parameter ;
+    rdfs:label "Revenue earned from selling one unit of good j" ;
+    rdfs:comment "Prices is a vector of length M representing the revenue earned from selling each good." ;
+    opt:hasExample "Prices = [7, 10, 5, 9]" ;
+    opt:hasShape "[M]" .
+
+opt:GoodsProduced a opt:Variable ;
+    rdfs:label "Amount of each good produced" ;
+    rdfs:comment "GoodsProduced is a vector of length M representing the amount of each good to be produced." ;
+    opt:hasShape "[M]" .
+
+opt:RawMaterialAvailability a opt:Constraint ;
+    rdfs:label "Raw material availability constraint" ;
+    rdfs:comment "The total amount of each raw material used in producing the goods must not exceed the available amount of that raw material." ;
+    opt:hasFormula "sum(GoodsProduced * Requirements) <= Available" .
+
+opt:MaximizeRevenue a opt:Objective ;
+    rdfs:label "Maximize total revenue" ;
+    rdfs:comment "The objective is to maximize the total revenue, which is the sum of the revenue from selling each good, given by the product of the amount of each good produced and its price." ;
+    opt:hasFormula "maximize sum(GoodsProduced * Prices)" ;
+    opt:hasOptimizationType "maximization" .

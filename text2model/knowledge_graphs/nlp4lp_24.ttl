@@ -1,0 +1,99 @@
+@prefix : <http://www.semanticweb.org/ontologies/2021/4/untitled-ontology-4#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:Requirement a owl:Class ;
+    rdfs:label "Requirement" ;
+    rdfs:comment "The estimated manpower requirements of unskilled workers, semi-skilled workers, and skilled workers" .
+
+:K a owl:Class ;
+    rdfs:label "Number of requirements categories" .
+
+:I a owl:Class ;
+    rdfs:label "Number of different requirements" .
+
+:Strength a owl:Class ;
+    rdfs:label "Strength of each requirement category" .
+
+:LessOneWaste a owl:Class ;
+    rdfs:label "Cost reduction per unit less waste in each category" .
+
+:MoreOneWaste a owl:Class ;
+    rdfs:label "Additional cost per unit more waste in each category" .
+
+:Recruit a owl:Class ;
+    rdfs:label "Number of recruits in each category" .
+
+:CostRedundancy a owl:Class ;
+    rdfs:label "Cost of redundancy per recruit in each category" .
+
+:NumOverman a owl:Class ;
+    rdfs:label "Number of over-managed categories allowed" .
+
+:CostOverman a owl:Class ;
+    rdfs:label "Cost of over-managing in each category" .
+
+:NumShortwork a owl:Class ;
+    rdfs:label "Number of short-work categories allowed" .
+
+:CostShort a owl:Class ;
+    rdfs:label "Cost of short-work in each category" .
+
+:OptimizationProblem a owl:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :Requirement
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :K
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :I
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :Strength
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :LessOneWaste
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :MoreOneWaste
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :Recruit
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :CostRedundancy
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :NumOverman
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :CostOverman
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :NumShortwork
+                    ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :hasParameter ;
+                      owl:someValuesFrom :CostShort
+                    ] .
+
+:hasParameter a owl:ObjectProperty ;
+    rdfs:label "has parameter" ;
+    rdfs:domain :OptimizationProblem ;
+    rdfs:range [ a owl:Class ;
+                 owl:unionOf ( :Requirement :K :I :Strength :LessOneWaste :MoreOneWaste :Recruit :CostRedundancy :NumOverman :CostOverman :NumShortwork :CostShort )
+               ] .

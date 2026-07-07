@@ -1,0 +1,129 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:OilProductionProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:I, opt:M, opt:BuyPrice, opt:SellPrice, opt:IsVegetable, opt:MaxVegRefiningPerMonth, opt:MaxNonVegRefiningPerMonth, opt:StorageSize, opt:StorageCost, opt:MaxHardness, opt:MinHardness, opt:Hardness, opt:InitialAmount, opt:MinUsage, opt:Dependencies ;
+    opt:hasVariable opt:BuyingPolicy, opt:StoringPolicy, opt:ManufacturingPolicy ;
+    opt:hasConstraint opt:RefiningCapacityConstraint, opt:StorageCapacityConstraint, opt:HardnessConstraint, opt:InitialAmountConstraint, opt:MinUsageConstraint, opt:DependencyConstraint ;
+    opt:hasObjective opt:MaximizeProfit .
+
+opt:I a opt:Parameter ;
+    rdfs:label "Number of types of oil" ;
+    rdfs:comment "The number of different types of oil available for purchase and refining." ;
+    rdfs:range xsd:integer .
+
+opt:M a opt:Parameter ;
+    rdfs:label "Number of months" ;
+    rdfs:comment "The number of months over which the optimization problem is considered." ;
+    rdfs:range xsd:integer .
+
+opt:BuyPrice a opt:Parameter ;
+    rdfs:label "Buying price of oil" ;
+    rdfs:comment "The price of each type of oil in each month." ;
+    rdfs:range xsd:float .
+
+opt:SellPrice a opt:Parameter ;
+    rdfs:label "Selling price of final product" ;
+    rdfs:comment "The price at which the final product is sold." ;
+    rdfs:range xsd:float .
+
+opt:IsVegetable a opt:Parameter ;
+    rdfs:label "Indicator whether good is a vegetable oil or not" ;
+    rdfs:comment "An indicator of whether each type of oil is a vegetable oil." ;
+    rdfs:range xsd:boolean .
+
+opt:MaxVegRefiningPerMonth a opt:Parameter ;
+    rdfs:label "Maximum refining capacity for vegetable oil per month" ;
+    rdfs:comment "The maximum amount of vegetable oil that can be refined in a month." ;
+    rdfs:range xsd:integer .
+
+opt:MaxNonVegRefiningPerMonth a opt:Parameter ;
+    rdfs:label "Maximum refining capacity for non-vegetable oil per month" ;
+    rdfs:comment "The maximum amount of non-vegetable oil that can be refined in a month." ;
+    rdfs:range xsd:integer .
+
+opt:StorageSize a opt:Parameter ;
+    rdfs:label "Storage capacity for raw oil" ;
+    rdfs:comment "The maximum amount of raw oil that can be stored." ;
+    rdfs:range xsd:integer .
+
+opt:StorageCost a opt:Parameter ;
+    rdfs:label "Storage cost per unit per month" ;
+    rdfs:comment "The cost of storing a unit of raw oil for a month." ;
+    rdfs:range xsd:float .
+
+opt:MaxHardness a opt:Parameter ;
+    rdfs:label "Maximum hardness of final product" ;
+    rdfs:comment "The maximum hardness that the final product can have." ;
+    rdfs:range xsd:float .
+
+opt:MinHardness a opt:Parameter ;
+    rdfs:label "Minimum hardness of final product" ;
+    rdfs:comment "The minimum hardness that the final product can have." ;
+    rdfs:range xsd:float .
+
+opt:Hardness a opt:Parameter ;
+    rdfs:label "Hardness of good" ;
+    rdfs:comment "The hardness of each type of oil." ;
+    rdfs:range xsd:float .
+
+opt:InitialAmount a opt:Parameter ;
+    rdfs:label "Initial amount of oil of each type that's available for processing" ;
+    rdfs:comment "The amount of each type of oil that is initially available for processing." ;
+    rdfs:range xsd:integer .
+
+opt:MinUsage a opt:Parameter ;
+    rdfs:label "Minimum usage of oil" ;
+    rdfs:comment "The minimum amount of an oil that must be used if it is used in a month." ;
+    rdfs:range xsd:integer .
+
+opt:Dependencies a opt:Parameter ;
+    rdfs:label "Dependencies of goods" ;
+    rdfs:comment "A binary table indicating dependencies between different types of oil." ;
+    rdfs:range xsd:boolean .
+
+opt:BuyingPolicy a opt:Variable ;
+    rdfs:label "Buying policy" ;
+    rdfs:comment "The policy for buying raw oil." ;
+    rdfs:range xsd:float .
+
+opt:StoringPolicy a opt:Variable ;
+    rdfs:label "Storing policy" ;
+    rdfs:comment "The policy for storing raw oil." ;
+    rdfs:range xsd:float .
+
+opt:ManufacturingPolicy a opt:Variable ;
+    rdfs:label "Manufacturing policy" ;
+    rdfs:comment "The policy for manufacturing the final product." ;
+    rdfs:range xsd:float .
+
+opt:RefiningCapacityConstraint a opt:Constraint ;
+    rdfs:label "Refining capacity constraint" ;
+    rdfs:comment "A constraint on the refining capacity for vegetable and non-vegetable oil." .
+
+opt:StorageCapacityConstraint a opt:Constraint ;
+    rdfs:label "Storage capacity constraint" ;
+    rdfs:comment "A constraint on the storage capacity for raw oil." .
+
+opt:HardnessConstraint a opt:Constraint ;
+    rdfs:label "Hardness constraint" ;
+    rdfs:comment "A constraint on the hardness of the final product." .
+
+opt:InitialAmountConstraint a opt:Constraint ;
+    rdfs:label "Initial amount constraint" ;
+    rdfs:comment "A constraint on the initial amount of each type of oil." .
+
+opt:MinUsageConstraint a opt:Constraint ;
+    rdfs:label "Minimum usage constraint" ;
+    rdfs:comment "A constraint on the minimum usage of each type of oil." .
+
+opt:DependencyConstraint a opt:Constraint ;
+    rdfs:label "Dependency constraint" ;
+    rdfs:comment "A constraint on the dependencies between different types of oil." .
+
+opt:MaximizeProfit a opt:Objective ;
+    rdfs:label "Maximize profit" ;
+    rdfs:comment "The objective is to maximize the profit from selling the final product." ;
+    opt:isTypeOf opt:Maximization .

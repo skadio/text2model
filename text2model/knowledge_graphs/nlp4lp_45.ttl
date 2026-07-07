@@ -1,0 +1,56 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimizationProblem#> .
+
+:TransportationProblem a opt:OptimizationProblem ;
+    opt:hasObjective :Objective ;
+    opt:hasConstraint :Constraint1, :Constraint2 ;
+    opt:hasVariable :Variable1 ;
+    opt:hasParameter :Parameter1, :Parameter2, :Parameter3, :Parameter4, :Parameter5, :Parameter6 .
+
+:Parameter1 a opt:Parameter ;
+    opt:hasName "D" ;
+    opt:hasType xsd:integer ;
+    opt:hasShape "scalar" .
+
+:Parameter2 a opt:Parameter ;
+    opt:hasName "P" ;
+    opt:hasType xsd:integer ;
+    opt:hasShape "scalar" .
+
+:Parameter3 a opt:Parameter ;
+    opt:hasName "Numdepot" ;
+    opt:hasType xsd:integer ;
+    opt:hasShape "[N]" .
+
+:Parameter4 a opt:Parameter ;
+    opt:hasName "Numport" ;
+    opt:hasType xsd:integer ;
+    opt:hasShape "[N]" .
+
+:Parameter5 a opt:Parameter ;
+    opt:hasName "Price" ;
+    opt:hasType xsd:float ;
+    opt:hasShape "scalar" .
+
+:Parameter6 a opt:Parameter ;
+    opt:hasName "Distance" ;
+    opt:hasType xsd:float ;
+    opt:hasShape "[D, P]" .
+
+:Variable1 a opt:Variable ;
+    opt:hasName "x" ;
+    opt:hasType xsd:integer ;
+    opt:hasShape "[D, P]" .
+
+:Constraint1 a opt:Constraint ;
+    opt:hasName "Supply" ;
+    opt:hasExpression "sum_{p in P} x[d,p] <= Numdepot[d] for all d in D" .
+
+:Constraint2 a opt:Constraint ;
+    opt:hasName "Demand" ;
+    opt:hasExpression "sum_{d in D} x[d,p] >= Numport[p] for all p in P" .
+
+:Objective a opt:Objective ;
+    opt:hasName "MinimizeCost" ;
+    opt:hasType "minimize" ;
+    opt:hasExpression "sum_{d in D, p in P} Price * Distance[d,p] * x[d,p]" .

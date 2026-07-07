@@ -1,0 +1,44 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:Machines rdf:type rdfs:Class ;
+    rdfs:label "Machines" ;
+    rdfs:comment "The number of machines available" ;
+    rdfs:range xsd:integer .
+
+opt:Parts rdf:type rdfs:Class ;
+    rdfs:label "Parts" ;
+    rdfs:comment "The number of types of parts to produce" ;
+    rdfs:range xsd:integer .
+
+opt:TimeRequired rdf:type rdfs:Class ;
+    rdfs:label "Time Required" ;
+    rdfs:comment "The time required to produce a batch on machine m for part p" ;
+    rdfs:range xsd:integer .
+
+opt:MachineCosts rdf:type rdfs:Class ;
+    rdfs:label "Machine Costs" ;
+    rdfs:comment "The cost of operating machine m for a month" ;
+    rdfs:range xsd:integer .
+
+opt:Availability rdf:type rdfs:Class ;
+    rdfs:label "Availability" ;
+    rdfs:comment "The time each machine m is available for production each month" ;
+    rdfs:range xsd:integer .
+
+opt:Prices rdf:type rdfs:Class ;
+    rdfs:label "Prices" ;
+    rdfs:comment "The price at which part p can be sold" ;
+    rdfs:range xsd:integer .
+
+opt:SetupTime rdf:type rdfs:Class ;
+    rdfs:label "Setup Time" ;
+    rdfs:comment "The setup time required before producing a batch of part p" ;
+    rdfs:range xsd:integer .
+
+opt:MaximizeProfit rdf:type rdfs:Class ;
+    rdfs:label "Maximize Profit" ;
+    rdfs:comment "The objective is to maximize profit by determining the number of batches of each part to produce each month" ;
+    rdfs:range xsd:integer .

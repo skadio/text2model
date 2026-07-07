@@ -1,0 +1,68 @@
+@prefix : <http://www.semanticweb.org/ontologies/2021/4/untitled-ontology-4#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:OptimizationProblem a owl:Class ;
+    rdfs:subClassOf :Problem .
+
+:Parameter a owl:Class ;
+    rdfs:subClassOf :OptimizationProblem .
+
+:Variable a owl:Class ;
+    rdfs:subClassOf :OptimizationProblem .
+
+:Constraint a owl:Class ;
+    rdfs:subClassOf :OptimizationProblem .
+
+:Objective a owl:Class ;
+    rdfs:subClassOf :OptimizationProblem .
+
+:P a :Parameter ;
+    rdfs:label "Number of parts" ;
+    rdfs:comment "P = 4" ;
+    rdfs:range xsd:integer .
+
+:M a :Parameter ;
+    rdfs:label "Number of machines" ;
+    rdfs:comment "M = 3" ;
+    rdfs:range xsd:integer .
+
+:TimeRequired a :Parameter ;
+    rdfs:label "Time required to produce one batch of part p on machine m" ;
+    rdfs:comment "TimeRequired = array2d(1..3, 1..4, [2, 1, 3, 2, 4, 2, 1, 2, 6, 2, 1, 2])" ;
+    rdfs:range xsd:array .
+
+:MachineCosts a :Parameter ;
+    rdfs:label "Cost associated with using machine m" ;
+    rdfs:comment "MachineCosts = [160, 10, 15]" ;
+    rdfs:range xsd:array .
+
+:Availability a :Parameter ;
+    rdfs:label "Availability of machine m per month" ;
+    rdfs:comment "Availability = [200, 300, 500]" ;
+    rdfs:range xsd:array .
+
+:Prices a :Parameter ;
+    rdfs:label "Selling price of one batch of part p" ;
+    rdfs:comment "Prices = [570, 250, 585, 430]" ;
+    rdfs:range xsd:array .
+
+:MinBatches a :Parameter ;
+    rdfs:label "Minimum number of batches of part p to be produced" ;
+    rdfs:comment "MinBatches = [10, 10, 10, 10]" ;
+    rdfs:range xsd:array .
+
+:Batches a :Variable ;
+    rdfs:label "Number of batches of each part to be produced" ;
+    rdfs:range xsd:integer .
+
+:MachineTimeConstraint a :Constraint ;
+    rdfs:label "Time required to produce batches should not exceed machine availability" .
+
+:MinBatchConstraint a :Constraint ;
+    rdfs:label "Number of batches produced should be greater than or equal to the minimum required" .
+
+:ProfitMaximization a :Objective ;
+    rdfs:label "Maximize profit" ;
+    rdfs:comment "Profit is calculated as the difference between the selling price of the batches and the cost of using the machines" .

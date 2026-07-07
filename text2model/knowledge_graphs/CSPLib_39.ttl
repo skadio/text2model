@@ -1,0 +1,51 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:ConcertProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:num_pieces, opt:num_players, opt:duration, opt:rehearsal ;
+    opt:hasVariable opt:order ;
+    opt:hasConstraint opt:arrivalConstraint, opt:departureConstraint ;
+    opt:hasObjective opt:minimizeWaitingTime .
+
+opt:num_pieces a opt:Parameter ;
+    rdfs:label "num_pieces" ;
+    rdfs:comment "Number of pieces of music for the concert" ;
+    rdfs:range xsd:integer .
+
+opt:num_players a opt:Parameter ;
+    rdfs:label "num_players" ;
+    rdfs:comment "Number of players in the orchestra" ;
+    rdfs:range xsd:integer .
+
+opt:duration a opt:Parameter ;
+    rdfs:label "duration" ;
+    rdfs:comment "Array containing the duration of each piece" ;
+    rdfs:range xsd:array .
+
+opt:rehearsal a opt:Parameter ;
+    rdfs:label "rehearsal" ;
+    rdfs:comment "Array representing players' availability for each piece" ;
+    rdfs:range xsd:array .
+
+opt:order a opt:Variable ;
+    rdfs:label "order" ;
+    rdfs:comment "Order in which the pieces can be rehearsed" ;
+    rdfs:range xsd:array .
+
+opt:arrivalConstraint a opt:Constraint ;
+    rdfs:label "arrivalConstraint" ;
+    rdfs:comment "Players can arrive at rehearsals immediately before the first piece in which they are involved" .
+
+opt:departureConstraint a opt:Constraint ;
+    rdfs:label "departureConstraint" ;
+    rdfs:comment "Players can depart immediately after the last piece in which they are involved" .
+
+opt:minimizeWaitingTime a opt:Objective ;
+    rdfs:label "minimizeWaitingTime" ;
+    rdfs:comment "Minimize the total time that players are waiting to play" ;
+    opt:optimizationType opt:Minimization .
+
+opt:Minimization a opt:OptimizationType ;
+    rdfs:label "Minimization" .

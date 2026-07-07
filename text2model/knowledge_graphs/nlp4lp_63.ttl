@@ -1,0 +1,49 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:TranslatorSelectionProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:N, opt:Cost, opt:TranslatorLanguagesMatrix, opt:M, opt:RequiredLanguages ;
+    opt:hasVariable opt:TranslatorSelection ;
+    opt:hasConstraint opt:LanguageCoverageConstraint ;
+    opt:hasObjective opt:MinimizeCostObjective .
+
+opt:N a opt:Parameter ;
+    rdfs:label "Number of translators" ;
+    rdfs:comment "Total number of translators available for selection." ;
+    rdfs:range xsd:integer .
+
+opt:Cost a opt:Parameter ;
+    rdfs:label "Cost of translator" ;
+    rdfs:comment "The cost associated with each translator." ;
+    rdfs:range xsd:float .
+
+opt:TranslatorLanguagesMatrix a opt:Parameter ;
+    rdfs:label "Translator languages matrix" ;
+    rdfs:comment "Binary decision matrix representing the languages each translator can translate." ;
+    rdfs:range xsd:boolean .
+
+opt:M a opt:Parameter ;
+    rdfs:label "Number of required languages" ;
+    rdfs:comment "Total number of languages that need to be translated." ;
+    rdfs:range xsd:integer .
+
+opt:RequiredLanguages a opt:Parameter ;
+    rdfs:label "List of required languages" ;
+    rdfs:comment "List of languages that need to be translated." ;
+    rdfs:range xsd:string .
+
+opt:TranslatorSelection a opt:Variable ;
+    rdfs:label "Translator selection" ;
+    rdfs:comment "Binary decision variable representing whether a translator is selected or not." ;
+    rdfs:range xsd:boolean .
+
+opt:LanguageCoverageConstraint a opt:Constraint ;
+    rdfs:label "Language coverage constraint" ;
+    rdfs:comment "Constraint ensuring all required languages are covered by the selected translators." .
+
+opt:MinimizeCostObjective a opt:Objective ;
+    rdfs:label "Minimize cost objective" ;
+    rdfs:comment "Objective to minimize the total cost of selected translators." ;
+    opt:optimizationType opt:Minimization .

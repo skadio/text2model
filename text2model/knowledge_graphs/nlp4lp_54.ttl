@@ -1,0 +1,74 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:AdvertisementCampaign a rdfs:Class ;
+    rdfs:label "Advertisement Campaign" ;
+    rdfs:comment "An online advertising campaign with different ad types across two web companies." .
+
+opt:AdType a rdfs:Class ;
+    rdfs:label "Advertisement Type" ;
+    rdfs:comment "Different types of advertisements used in the campaign." .
+
+opt:AdType rdfs:subClassOf opt:AdvertisementCampaign .
+
+opt:Budget a rdf:Property ;
+    rdfs:label "Budget" ;
+    rdfs:comment "Total budget for purchasing clicks." ;
+    rdfs:domain opt:AdvertisementCampaign ;
+    rdfs:range xsd:integer .
+
+opt:Costs a rdf:Property ;
+    rdfs:label "Costs" ;
+    rdfs:comment "Cost of purchasing a click from advertisement type a." ;
+    rdfs:domain opt:AdType ;
+    rdfs:range xsd:integer .
+
+opt:MaxClicks a rdf:Property ;
+    rdfs:label "MaxClicks" ;
+    rdfs:comment "Number of maximum clicks that can be purchased from advertisement type a." ;
+    rdfs:domain opt:AdType ;
+    rdfs:range xsd:integer .
+
+opt:YoungClicks a rdf:Property ;
+    rdfs:label "YoungClicks" ;
+    rdfs:comment "Number of young audience clicks from advertisement type a." ;
+    rdfs:domain opt:AdType ;
+    rdfs:range xsd:integer .
+
+opt:OldClicks a rdf:Property ;
+    rdfs:label "OldClicks" ;
+    rdfs:comment "Number of old audience clicks from advertisement type a." ;
+    rdfs:domain opt:AdType ;
+    rdfs:range xsd:integer .
+
+opt:UniqueClicks a rdf:Property ;
+    rdfs:label "UniqueClicks" ;
+    rdfs:comment "Number of unique clicks from advertisement type a." ;
+    rdfs:domain opt:AdType ;
+    rdfs:range xsd:integer .
+
+opt:GoalYoung a rdf:Property ;
+    rdfs:label "GoalYoung" ;
+    rdfs:comment "Goal for number of clicks from young audience." ;
+    rdfs:domain opt:AdvertisementCampaign ;
+    rdfs:range xsd:integer .
+
+opt:GoalOld a rdf:Property ;
+    rdfs:label "GoalOld" ;
+    rdfs:comment "Goal for number of clicks from old audience." ;
+    rdfs:domain opt:AdvertisementCampaign ;
+    rdfs:range xsd:integer .
+
+opt:GoalUniqueYoung a rdf:Property ;
+    rdfs:label "GoalUniqueYoung" ;
+    rdfs:comment "Goal for number of unique clicks from young audience." ;
+    rdfs:domain opt:AdvertisementCampaign ;
+    rdfs:range xsd:integer .
+
+opt:GoalUniqueOld a rdf:Property ;
+    rdfs:label "GoalUniqueOld" ;
+    rdfs:comment "Goal for number of unique clicks from old audience." ;
+    rdfs:domain opt:AdvertisementCampaign ;
+    rdfs:range xsd:integer .

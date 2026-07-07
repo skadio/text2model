@@ -1,0 +1,65 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:Machines rdf:type rdfs:Class ;
+    rdfs:label "Machines" ;
+    rdfs:comment "Number of machines" ;
+    rdfs:range xsd:integer .
+
+opt:Parts rdf:type rdfs:Class ;
+    rdfs:label "Parts" ;
+    rdfs:comment "Number of parts to be produced" ;
+    rdfs:range xsd:integer .
+
+opt:TimeRequired rdf:type rdfs:Class ;
+    rdfs:label "Time Required" ;
+    rdfs:comment "Time required to produce each part 'p' on machine 'm'" ;
+    rdfs:range xsd:integer .
+
+opt:MachineCosts rdf:type rdfs:Class ;
+    rdfs:label "Machine Costs" ;
+    rdfs:comment "Cost associated with each machine 'm'" ;
+    rdfs:range xsd:integer .
+
+opt:Availability rdf:type rdfs:Class ;
+    rdfs:label "Availability" ;
+    rdfs:comment "Availability in hours of each machine 'm' per month" ;
+    rdfs:range xsd:integer .
+
+opt:Prices rdf:type rdfs:Class ;
+    rdfs:label "Prices" ;
+    rdfs:comment "Price obtained from selling each part 'p'" ;
+    rdfs:range xsd:integer .
+
+opt:MinBatches rdf:type rdfs:Class ;
+    rdfs:label "Minimum Batches" ;
+    rdfs:comment "Minimum number of batches of part 'p' that must be produced" ;
+    rdfs:range xsd:integer .
+
+opt:StandardCost rdf:type rdfs:Class ;
+    rdfs:label "Standard Cost" ;
+    rdfs:comment "Standard cost for a machine to run for one hour" ;
+    rdfs:range xsd:integer .
+
+opt:OvertimeCost rdf:type rdfs:Class ;
+    rdfs:label "Overtime Cost" ;
+    rdfs:comment "Overtime cost for a machine to run for one hour beyond the standard availability" ;
+    rdfs:range xsd:integer .
+
+opt:OvertimeHour rdf:type rdfs:Class ;
+    rdfs:label "Overtime Hour" ;
+    rdfs:comment "Numbers of overtime hours available for a machine to run beyond standard availability" ;
+    rdfs:range xsd:integer .
+
+opt:MinProfit rdf:type rdfs:Class ;
+    rdfs:label "Minimum Profit" ;
+    rdfs:comment "The minimum profit the manufacturer wants to achieve" ;
+    rdfs:range xsd:integer .
+
+opt:OptimizationProblem rdf:type rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:comment "The optimization problem to determine the quantity of batches for each part the manufacturer should produce every month, ensuring all constraints are met" .
+
+opt:OptimizationProblem rdfs:subClassOf opt:Machines, opt:Parts, opt:TimeRequired, opt:MachineCosts, opt:Availability, opt:Prices, opt:MinBatches, opt:StandardCost, opt:OvertimeCost, opt:OvertimeHour, opt:MinProfit .

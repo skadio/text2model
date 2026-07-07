@@ -1,0 +1,69 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:NumLinks a rdf:Property ;
+    rdfs:domain opt:Network ;
+    rdfs:range xsd:integer .
+
+opt:StartNode a rdf:Property ;
+    rdfs:domain opt:Link ;
+    rdfs:range opt:Node .
+
+opt:EndNode a rdf:Property ;
+    rdfs:domain opt:Link ;
+    rdfs:range opt:Node .
+
+opt:Capacity a rdf:Property ;
+    rdfs:domain opt:Link ;
+    rdfs:range xsd:integer .
+
+opt:Cost a rdf:Property ;
+    rdfs:domain opt:Link ;
+    rdfs:range xsd:integer .
+
+opt:NumFlowReqs a rdf:Property ;
+    rdfs:domain opt:Network ;
+    rdfs:range xsd:integer .
+
+opt:SourceNode a rdf:Property ;
+    rdfs:domain opt:FlowReq ;
+    rdfs:range opt:Node .
+
+opt:DestinationNode a rdf:Property ;
+    rdfs:domain opt:FlowReq ;
+    rdfs:range opt:Node .
+
+opt:DataRate a rdf:Property ;
+    rdfs:domain opt:FlowReq ;
+    rdfs:range xsd:integer .
+
+opt:Network a rdfs:Class .
+
+opt:Link a rdfs:Class ;
+    rdfs:subClassOf opt:Network .
+
+opt:Node a rdfs:Class ;
+    rdfs:subClassOf opt:Network .
+
+opt:FlowReq a rdfs:Class ;
+    rdfs:subClassOf opt:Network .
+
+opt:MinimizeTotalCost a opt:Objective ;
+    rdfs:comment "Minimize the total cost of data transmission" ;
+    rdfs:subClassOf opt:Network .
+
+opt:Objective a rdfs:Class ;
+    rdfs:subClassOf opt:Network .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:subClassOf opt:Network .
+
+opt:CapacityConstraint a opt:Constraint ;
+    rdfs:comment "Data transmitted along a link should not exceed its capacity" ;
+    rdfs:subClassOf opt:Network .
+
+opt:FlowReqConstraint a opt:Constraint ;
+    rdfs:comment "Data generated at the source node must reach the destination node" ;
+    rdfs:subClassOf opt:Network .

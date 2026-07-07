@@ -1,0 +1,62 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:BusDriverScheduling
+    rdf:type opt:OptimizationProblem ;
+    opt:hasParameter opt:num_work, opt:num_shifts, opt:min_num_shifts, opt:shifts ;
+    opt:hasVariable opt:shift_selection ;
+    opt:hasConstraint opt:work_coverage, opt:min_shift_requirement ;
+    opt:hasObjective opt:minimize_shifts .
+
+opt:num_work
+    rdf:type opt:Parameter ;
+    rdfs:label "num_work" ;
+    rdfs:comment "Number of pieces of work to cover" ;
+    rdfs:range xsd:integer .
+
+opt:num_shifts
+    rdf:type opt:Parameter ;
+    rdfs:label "num_shifts" ;
+    rdfs:comment "Number of possible shifts available" ;
+    rdfs:range xsd:integer .
+
+opt:min_num_shifts
+    rdf:type opt:Parameter ;
+    rdfs:label "min_num_shifts" ;
+    rdfs:comment "Minimum number of shifts required for a partition" ;
+    rdfs:range xsd:integer .
+
+opt:shifts
+    rdf:type opt:Parameter ;
+    rdfs:label "shifts" ;
+    rdfs:comment "Details of shifts each shift covers" ;
+    rdfs:range rdf:Seq .
+
+opt:shift_selection
+    rdf:type opt:Variable ;
+    rdfs:label "shift_selection" ;
+    rdfs:comment "Selection of shifts to cover the work" ;
+    rdfs:range rdf:Seq .
+
+opt:work_coverage
+    rdf:type opt:Constraint ;
+    rdfs:label "work_coverage" ;
+    rdfs:comment "Each piece of work must be covered exactly once" .
+
+opt:min_shift_requirement
+    rdf:type opt:Constraint ;
+    rdfs:label "min_shift_requirement" ;
+    rdfs:comment "The number of shifts used must be at least the minimum number of shifts required" .
+
+opt:minimize_shifts
+    rdf:type opt:Objective ;
+    rdfs:label "minimize_shifts" ;
+    rdfs:comment "Minimize the number of shifts used" ;
+    opt:optimizationType opt:Minimization . 
+
+opt:Minimization
+    rdf:type opt:OptimizationType ;
+    rdfs:label "Minimization" ;
+    rdfs:comment "The goal is to minimize the objective function" .

@@ -1,0 +1,63 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <http://www.semanticweb.org/ontologies/2021/5/untitled-ontology-13#> .
+
+:K a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:integer .
+
+:ManpowerOne a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:float .
+
+:ManpowerTwo a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:float .
+
+:Stock a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:integer .
+
+:Capacity a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:integer .
+
+:Demand a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:float .
+
+:InputOne a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:float .
+
+:InputTwo a owl:DatatypeProperty ;
+    rdfs:domain :Problem ;
+    rdfs:range xsd:float .
+
+:Problem a owl:Class ;
+    rdfs:subClassOf [ a owl:Restriction ;
+                      owl:onProperty :K ;
+                      owl:allValuesFrom xsd:integer ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :ManpowerOne ;
+                      owl:allValuesFrom xsd:float ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :ManpowerTwo ;
+                      owl:allValuesFrom xsd:float ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :Stock ;
+                      owl:allValuesFrom xsd:integer ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :Capacity ;
+                      owl:allValuesFrom xsd:integer ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :Demand ;
+                      owl:allValuesFrom xsd:float ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :InputOne ;
+                      owl:allValuesFrom xsd:float ] ,
+                    [ a owl:Restriction ;
+                      owl:onProperty :InputTwo ;
+                      owl:allValuesFrom xsd:float ] .

@@ -1,0 +1,41 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <http://example.org/> .
+
+:rows a rdf:Property ;
+    rdfs:domain :Nonogram ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of rows in the grid" .
+
+:row_rule_len a rdf:Property ;
+    rdfs:domain :Nonogram ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Length of row_rules for each row (number of constraints)" .
+
+:row_rules a rdf:Property ;
+    rdfs:domain :Nonogram ;
+    rdfs:range :Array2D ;
+    rdfs:comment "Constraints for each row in the grid indicating the sequence of shaded blocks" .
+
+:cols a rdf:Property ;
+    rdfs:domain :Nonogram ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of columns in the grid" .
+
+:col_rule_len a rdf:Property ;
+    rdfs:domain :Nonogram ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Length of col_rules for each column (number of constraints)" .
+
+:col_rules a rdf:Property ;
+    rdfs:domain :Nonogram ;
+    rdfs:range :Array2D ;
+    rdfs:comment "Constraints for each column in the grid indicating the sequence of shaded blocks" .
+
+:Array2D a rdfs:Class ;
+    rdfs:comment "2D array of integers" .
+
+:Nonogram a rdfs:Class ;
+    rdfs:comment "Nonogram puzzle" .

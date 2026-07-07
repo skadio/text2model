@@ -1,0 +1,49 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:PlanningPeriod rdf:type rdfs:Class ;
+    rdfs:label "Planning Period" ;
+    rdfs:comment "The number of years for which planning is to be conducted" ;
+    rdfs:subClassOf xsd:integer .
+
+opt:Demand rdf:type rdfs:Class ;
+    rdfs:label "Demand" ;
+    rdfs:comment "The demand in period t" ;
+    rdfs:subClassOf xsd:integer .
+
+opt:OilCapacity rdf:type rdfs:Class ;
+    rdfs:label "Oil Capacity" ;
+    rdfs:comment "The maximum oil capacity in period t" ;
+    rdfs:subClassOf xsd:integer .
+
+opt:CoalCost rdf:type rdfs:Class ;
+    rdfs:label "Coal Cost" ;
+    rdfs:comment "The cost of coal per unit" ;
+    rdfs:subClassOf xsd:integer .
+
+opt:NuclearCost rdf:type rdfs:Class ;
+    rdfs:label "Nuclear Cost" ;
+    rdfs:comment "The cost of nuclear energy per unit" ;
+    rdfs:subClassOf xsd:integer .
+
+opt:MaxNuclearCapacity rdf:type rdfs:Class ;
+    rdfs:label "Max Nuclear Capacity" ;
+    rdfs:comment "The maximum nuclear capacity" ;
+    rdfs:subClassOf xsd:integer .
+
+opt:CoalPlantLife rdf:type rdfs:Class ;
+    rdfs:label "Coal Plant Life" ;
+    rdfs:comment "The lifetime of a coal plant" ;
+    rdfs:subClassOf xsd:integer .
+
+opt:NuclearPlantLife rdf:type rdfs:Class ;
+    rdfs:label "Nuclear Plant Life" ;
+    rdfs:comment "The lifetime of a nuclear plant" ;
+    rdfs:subClassOf xsd:integer .
+
+opt:ElectricityCapacityPlanning rdf:type rdfs:Class ;
+    rdfs:label "Electricity Capacity Planning" ;
+    rdfs:comment "A state wants to plan its electricity capacity for the next few years" ;
+    rdfs:subClassOf opt:PlanningPeriod, opt:Demand, opt:OilCapacity, opt:CoalCost, opt:NuclearCost, opt:MaxNuclearCapacity, opt:CoalPlantLife, opt:NuclearPlantLife .

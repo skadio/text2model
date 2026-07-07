@@ -1,0 +1,58 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimization#> .
+
+:Problem1 a opt:OptimizationProblem ;
+    opt:hasParameter :K, :M, :AlloyQuantity, :Target, :Ratio, :Price ;
+    opt:hasVariable :AlloyCombination ;
+    opt:hasConstraint :AlloyCompositionConstraint, :AlloyQuantityConstraint ;
+    opt:hasObjective :MinimizeCost .
+
+:K a opt:Parameter ;
+    rdfs:label "Number of Alloys" ;
+    rdfs:comment "The total number of available alloys." ;
+    rdfs:range xsd:integer .
+
+:M a opt:Parameter ;
+    rdfs:label "Number of Metals" ;
+    rdfs:comment "The total number of different types of metals." ;
+    rdfs:range xsd:integer .
+
+:AlloyQuantity a opt:Parameter ;
+    rdfs:label "Quantity of alloy to produce" ;
+    rdfs:comment "The total quantity of alloy that needs to be produced." ;
+    rdfs:range xsd:float .
+
+:Target a opt:Parameter ;
+    rdfs:label "Quantity of target components in the alloy" ;
+    rdfs:comment "The target quantity of each type of metal in the alloy." ;
+    rdfs:range xsd:float .
+
+:Ratio a opt:Parameter ;
+    rdfs:label "Ratio of each component k in the alloy m" ;
+    rdfs:comment "The ratio of each metal in the available alloys." ;
+    rdfs:range xsd:float .
+
+:Price a opt:Parameter ;
+    rdfs:label "Price of each alloy k" ;
+    rdfs:comment "The price at which each alloy is sold per unit." ;
+    rdfs:range xsd:float .
+
+:AlloyCombination a opt:Variable ;
+    rdfs:label "Combination of alloys" ;
+    rdfs:comment "The combination of quantities of alloys that reaches the target quantity of each type of metal." ;
+    rdfs:range xsd:float .
+
+:AlloyCompositionConstraint a opt:Constraint ;
+    rdfs:label "Alloy composition constraint" ;
+    rdfs:comment "The combination of alloys must meet the target quantity of each type of metal." .
+
+:AlloyQuantityConstraint a opt:Constraint ;
+    rdfs:label "Alloy quantity constraint" ;
+    rdfs:comment "The total quantity of alloy produced must meet the required quantity." .
+
+:MinimizeCost a opt:Objective ;
+    rdfs:label "Minimize cost" ;
+    rdfs:comment "The objective is to find the cheapest combination of quantities of alloys." ;
+    opt:isTypeOf opt:Minimization .

@@ -1,0 +1,57 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:ndepts a rdf:Property ;
+    rdfs:label "Number of departments" ;
+    rdfs:range xsd:integer .
+
+opt:ncities a rdf:Property ;
+    rdfs:label "Number of cities" ;
+    rdfs:range xsd:integer .
+
+opt:ncitiesm1 a rdf:Property ;
+    rdfs:label "Number of cities without the host city" ;
+    rdfs:range xsd:integer .
+
+opt:benefit a rdf:Property ;
+    rdfs:label "Benefits in £k for each department in each city" ;
+    rdfs:range xsd:float .
+
+opt:dist a rdf:Property ;
+    rdfs:label "Communication costs per unit (£) between cities" ;
+    rdfs:range xsd:float .
+
+opt:comm a rdf:Property ;
+    rdfs:label "Quantities of communication (k units) between departments" ;
+    rdfs:range xsd:float .
+
+opt:Department a rdfs:Class ;
+    rdfs:label "Department" ;
+    rdfs:subClassOf opt:Entity .
+
+opt:City a rdfs:Class ;
+    rdfs:label "City" ;
+    rdfs:subClassOf opt:Entity .
+
+opt:Entity a rdfs:Class ;
+    rdfs:label "Entity" .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" ;
+    rdfs:subClassOf opt:Entity .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective" ;
+    rdfs:subClassOf opt:Entity .
+
+opt:MaximizeSavings a opt:Objective ;
+    rdfs:label "Maximize the total savings" ;
+    rdfs:comment "The sum of the benefits of each department in each city minus the communication costs between each pair of departments in each pair of cities." .
+
+opt:DepartmentLocationConstraint a opt:Constraint ;
+    rdfs:label "Each department must be located in one city" .
+
+opt:CityCapacityConstraint a opt:Constraint ;
+    rdfs:label "There can be at most 3 departments in each city" .

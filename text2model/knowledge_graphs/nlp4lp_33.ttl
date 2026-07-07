@@ -1,0 +1,49 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:K a rdf:Property ;
+    rdfs:label "Number of data points" ;
+    rdfs:range xsd:integer .
+
+opt:ObservedValues a rdf:Property ;
+    rdfs:label "Observed y values at each data point k" ;
+    rdfs:range xsd:float .
+
+opt:ObservedXValues a rdf:Property ;
+    rdfs:label "Observed x values at each data point k" ;
+    rdfs:range xsd:float .
+
+opt:a a rdf:Property ;
+    rdfs:label "Constant term in quadratic equation" ;
+    rdfs:range xsd:float .
+
+opt:b a rdf:Property ;
+    rdfs:label "Linear coefficient in quadratic equation" ;
+    rdfs:range xsd:float .
+
+opt:c a rdf:Property ;
+    rdfs:label "Quadratic coefficient in quadratic equation" ;
+    rdfs:range xsd:float .
+
+opt:QuadraticCurve a rdfs:Class ;
+    rdfs:label "Quadratic curve" ;
+    rdfs:subClassOf opt:Curve ;
+    rdfs:comment "Curve defined by the equation y = c * x^2 + b * x + a" .
+
+opt:Curve a rdfs:Class ;
+    rdfs:label "Curve" ;
+    rdfs:comment "A curve in a two-dimensional space" .
+
+opt:DataPoint a rdfs:Class ;
+    rdfs:label "Data point" ;
+    rdfs:comment "A point in a two-dimensional space representing observed values of x and y" .
+
+opt:MinimizeAbsoluteDeviations a opt:Objective ;
+    rdfs:label "Minimize the sum of absolute deviations" ;
+    rdfs:comment "Objective is to minimize the sum of absolute deviations of each observed value of y from the value predicted by the quadratic relationship" .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective" ;
+    rdfs:comment "The goal of the optimization problem" .

@@ -1,0 +1,78 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:NetworkIntrusionProblem a opt:OptimizationProblem ;
+    opt:hasParameter opt:N, opt:IsolateCentral, opt:ScanCentral, opt:IsolateDistributed, opt:ScanDistributed, opt:CentralCost, opt:DistributedCost, opt:CentralMaxHours, opt:DistributedMaxHours ;
+    opt:hasVariable opt:InterventionType, opt:ProcessingType ;
+    opt:hasConstraint opt:CentralProcessingConstraint, opt:DistributedProcessingConstraint ;
+    opt:hasObjective opt:CostObjective .
+
+opt:N a opt:Parameter ;
+    rdfs:label "Number of interventions" ;
+    rdfs:comment "The total number of interventions that can be performed." ;
+    rdfs:range xsd:integer .
+
+opt:IsolateCentral a opt:Parameter ;
+    rdfs:label "Processing time for isolating at the central system for each intervention" ;
+    rdfs:comment "The time required to isolate each intervention at the central system." ;
+    rdfs:range xsd:integer .
+
+opt:ScanCentral a opt:Parameter ;
+    rdfs:label "Processing time for scanning at the central system for each intervention" ;
+    rdfs:comment "The time required to scan each intervention at the central system." ;
+    rdfs:range xsd:integer .
+
+opt:IsolateDistributed a opt:Parameter ;
+    rdfs:label "Processing time for isolating at the distributed system for each intervention" ;
+    rdfs:comment "The time required to isolate each intervention at the distributed system." ;
+    rdfs:range xsd:integer .
+
+opt:ScanDistributed a opt:Parameter ;
+    rdfs:label "Processing time for scanning at the distributed system for each intervention" ;
+    rdfs:comment "The time required to scan each intervention at the distributed system." ;
+    rdfs:range xsd:integer .
+
+opt:CentralCost a opt:Parameter ;
+    rdfs:label "Cost for central system intervention" ;
+    rdfs:comment "The cost of performing an intervention at the central system." ;
+    rdfs:range xsd:integer .
+
+opt:DistributedCost a opt:Parameter ;
+    rdfs:label "Cost for distributed system intervention" ;
+    rdfs:comment "The cost of performing an intervention at the distributed system." ;
+    rdfs:range xsd:integer .
+
+opt:CentralMaxHours a opt:Parameter ;
+    rdfs:label "Maximum hours of operation for the central system" ;
+    rdfs:comment "The maximum number of hours the central system can operate." ;
+    rdfs:range xsd:integer .
+
+opt:DistributedMaxHours a opt:Parameter ;
+    rdfs:label "Maximum hours of operation for the distributed system" ;
+    rdfs:comment "The maximum number of hours the distributed system can operate." ;
+    rdfs:range xsd:integer .
+
+opt:InterventionType a opt:Variable ;
+    rdfs:label "Type of intervention" ;
+    rdfs:comment "The type of intervention to be performed (isolate or scan)." ;
+    rdfs:range xsd:string .
+
+opt:ProcessingType a opt:Variable ;
+    rdfs:label "Type of processing" ;
+    rdfs:comment "The type of processing to be used (central or distributed)." ;
+    rdfs:range xsd:string .
+
+opt:CentralProcessingConstraint a opt:Constraint ;
+    rdfs:label "Central processing constraint" ;
+    rdfs:comment "The constraint on the total processing time at the central system." .
+
+opt:DistributedProcessingConstraint a opt:Constraint ;
+    rdfs:label "Distributed processing constraint" ;
+    rdfs:comment "The constraint on the total processing time at the distributed system." .
+
+opt:CostObjective a opt:Objective ;
+    rdfs:label "Cost objective" ;
+    rdfs:comment "The objective to minimize the total cost of interventions." ;
+    opt:isMinimizationObjective true .

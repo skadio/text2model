@@ -1,0 +1,52 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:OriginNum a rdf:Property ;
+    rdfs:label "OriginNum" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:integer .
+
+opt:DestinationNum a rdf:Property ;
+    rdfs:label "DestinationNum" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:integer .
+
+opt:Supply a rdf:Property ;
+    rdfs:label "Supply" ;
+    rdfs:domain opt:Origin ;
+    rdfs:range xsd:integer .
+
+opt:Demand a rdf:Property ;
+    rdfs:label "Demand" ;
+    rdfs:domain opt:Destination ;
+    rdfs:range xsd:integer .
+
+opt:Cost a rdf:Property ;
+    rdfs:label "Cost" ;
+    rdfs:domain opt:Transport ;
+    rdfs:range xsd:float .
+
+opt:Problem a rdfs:Class ;
+    rdfs:label "Problem" ;
+    rdfs:subClassOf opt:Optimization .
+
+opt:Origin a rdfs:Class ;
+    rdfs:label "Origin" ;
+    rdfs:subClassOf opt:Problem .
+
+opt:Destination a rdfs:Class ;
+    rdfs:label "Destination" ;
+    rdfs:subClassOf opt:Problem .
+
+opt:Transport a rdfs:Class ;
+    rdfs:label "Transport" ;
+    rdfs:subClassOf opt:Problem .
+
+opt:Optimization a rdfs:Class ;
+    rdfs:label "Optimization" .
+
+opt:Problem rdfs:comment "This problem is focused on efficiently allocating goods from a set of origins to a set of destinations. Each origin has a certain supply of goods, and each destination has a specific demand. There is a cost associated with transporting goods from an origin to a destination per unit of good. The objective is to minimize the total transportation cost while meeting the demands at the destinations without exceeding the supplies at the origins." .
+
+opt:Optimization rdfs:comment "The objective is to minimize the total transportation cost while meeting the demands at the destinations without exceeding the supplies at the origins." .

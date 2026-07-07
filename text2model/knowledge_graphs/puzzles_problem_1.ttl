@@ -1,0 +1,64 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:GridOptimizationProblem
+    rdf:type rdfs:Class ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:hasNumberOfRows
+    rdf:type rdf:Property ;
+    rdfs:domain opt:GridOptimizationProblem ;
+    rdfs:range xsd:integer .
+
+opt:hasNumberOfColumns
+    rdf:type rdf:Property ;
+    rdfs:domain opt:GridOptimizationProblem ;
+    rdfs:range xsd:integer .
+
+opt:hasGrid
+    rdf:type rdf:Property ;
+    rdfs:domain opt:GridOptimizationProblem ;
+    rdfs:range opt:Grid .
+
+opt:Grid
+    rdf:type rdfs:Class .
+
+opt:hasCombination
+    rdf:type rdf:Property ;
+    rdfs:domain opt:GridOptimizationProblem ;
+    rdfs:range opt:Combination .
+
+opt:Combination
+    rdf:type rdfs:Class .
+
+opt:hasMaximumSum
+    rdf:type rdf:Property ;
+    rdfs:domain opt:GridOptimizationProblem ;
+    rdfs:range xsd:integer .
+
+opt:hasPath
+    rdf:type rdf:Property ;
+    rdfs:domain opt:GridOptimizationProblem ;
+    rdfs:range opt:Path .
+
+opt:Path
+    rdf:type rdfs:Class .
+
+opt:hasConstraint
+    rdf:type rdf:Property ;
+    rdfs:domain opt:GridOptimizationProblem ;
+    rdfs:range opt:Constraint .
+
+opt:Constraint
+    rdf:type rdfs:Class .
+
+opt:hasObjective
+    rdf:type rdf:Property ;
+    rdfs:domain opt:GridOptimizationProblem ;
+    rdfs:range opt:Objective .
+
+opt:Objective
+    rdf:type rdfs:Class ;
+    rdfs:subClassOf opt:MaximizationObjective .

@@ -1,0 +1,82 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:M a rdf:Property ;
+    rdfs:label "Number of inequalities" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:integer .
+
+opt:N a rdf:Property ;
+    rdfs:label "Ambient space dimension" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:integer .
+
+opt:A a rdf:Property ;
+    rdfs:label "Coefficients of linear inequalities" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range opt:Matrix .
+
+opt:B a rdf:Property ;
+    rdfs:label "Right-hand side of inequalities" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range opt:Vector .
+
+opt:Matrix a rdfs:Class ;
+    rdfs:label "Matrix" .
+
+opt:Vector a rdfs:Class ;
+    rdfs:label "Vector" .
+
+opt:Problem a owl:Class ;
+    rdfs:label "Optimization problem" ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty opt:M ;
+        owl:allValuesFrom xsd:integer
+    ] , [
+        a owl:Restriction ;
+        owl:onProperty opt:N ;
+        owl:allValuesFrom xsd:integer
+    ] , [
+        a owl:Restriction ;
+        owl:onProperty opt:A ;
+        owl:allValuesFrom opt:Matrix
+    ] , [
+        a owl:Restriction ;
+        owl:onProperty opt:B ;
+        owl:allValuesFrom opt:Vector
+    ] .
+
+opt:ChebychevCenter a owl:Class ;
+    rdfs:label "Chebychev center" ;
+    rdfs:subClassOf opt:Problem ;
+    rdfs:comment "Find a ball with the largest possible radius, which is entirely contained within the set P" .
+
+opt:ChebychevCenter rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty opt:objective ;
+    owl:hasValue "Maximize radius"
+] .
+
+opt:ChebychevCenter rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty opt:constraint ;
+    owl:someValuesFrom opt:LinearInequality
+] .
+
+opt:LinearInequality a owl:Class ;
+    rdfs:label "Linear inequality" ;
+    rdfs:comment "{a_i}^T x <= b_i , i = 1, ..., m" .
+
+opt:objective a rdf:Property ;
+    rdfs:label "Objective" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range xsd:string .
+
+opt:constraint a rdf:Property ;
+    rdfs:label "Constraint" ;
+    rdfs:domain opt:Problem ;
+    rdfs:range opt:LinearInequality .

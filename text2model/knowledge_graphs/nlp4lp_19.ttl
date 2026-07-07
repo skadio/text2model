@@ -1,0 +1,98 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:Problem a rdfs:Class ;
+    rdfs:label "Optimization Problem" .
+
+opt:Parameter a rdfs:Class ;
+    rdfs:label "Parameter" ;
+    rdfs:subClassOf opt:Problem .
+
+opt:Variable a rdfs:Class ;
+    rdfs:label "Variable" ;
+    rdfs:subClassOf opt:Problem .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:label "Constraint" ;
+    rdfs:subClassOf opt:Problem .
+
+opt:Objective a rdfs:Class ;
+    rdfs:label "Objective" ;
+    rdfs:subClassOf opt:Problem .
+
+opt:M a opt:Parameter ;
+    rdfs:label "Number of months" ;
+    rdfs:comment "M = 6" ;
+    rdfs:range xsd:integer .
+
+opt:I a opt:Parameter ;
+    rdfs:label "Number of different oils" ;
+    rdfs:comment "I = 5" ;
+    rdfs:range xsd:integer .
+
+opt:BuyPrice a opt:Parameter ;
+    rdfs:label "Buy price of oil i in month m" ;
+    rdfs:range xsd:float .
+
+opt:SellPrice a opt:Parameter ;
+    rdfs:label "Sell price of the products after refining" ;
+    rdfs:range xsd:float .
+
+opt:IsVegetable a opt:Parameter ;
+    rdfs:label "Indicator whether item i is a vegetable oil" ;
+    rdfs:range xsd:boolean .
+
+opt:MaxVegetableRefiningPerMonth a opt:Parameter ;
+    rdfs:label "Total refining capability for vegetable oils per month" ;
+    rdfs:range xsd:integer .
+
+opt:MaxNonVegetableRefiningPerMonth a opt:Parameter ;
+    rdfs:label "Total refining capability for non-vegetable oils per month" ;
+    rdfs:range xsd:integer .
+
+opt:StorageSize a opt:Parameter ;
+    rdfs:label "Storage capacity for raw oil" ;
+    rdfs:range xsd:integer .
+
+opt:StorageCost a opt:Parameter ;
+    rdfs:label "Cost for storing oil per month per ton" ;
+    rdfs:range xsd:float .
+
+opt:MaxHardness a opt:Parameter ;
+    rdfs:label "The maximum hardness allowed for the products after refining" ;
+    rdfs:range xsd:float .
+
+opt:MinHardness a opt:Parameter ;
+    rdfs:label "The minimum hardness required for the products after refining" ;
+    rdfs:range xsd:float .
+
+opt:Hardness a opt:Parameter ;
+    rdfs:label "Hardness of item i" ;
+    rdfs:range xsd:float .
+
+opt:InitialAmount a opt:Parameter ;
+    rdfs:label "Initial amount of items in storage at the beginning of the planning horizon" ;
+    rdfs:range xsd:integer .
+
+opt:BuyingPolicy a opt:Variable ;
+    rdfs:label "Buying policy" .
+
+opt:StoringPolicy a opt:Variable ;
+    rdfs:label "Storing policy" .
+
+opt:ManufacturingPolicy a opt:Variable ;
+    rdfs:label "Manufacturing policy" .
+
+opt:HardnessConstraint a opt:Constraint ;
+    rdfs:label "Hardness constraint" .
+
+opt:StorageConstraint a opt:Constraint ;
+    rdfs:label "Storage constraint" .
+
+opt:RefiningConstraint a opt:Constraint ;
+    rdfs:label "Refining constraint" .
+
+opt:ProfitMaximization a opt:Objective ;
+    rdfs:label "Profit maximization" .

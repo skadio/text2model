@@ -1,0 +1,79 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:area1 a rdf:Property ;
+    rdfs:label "Area of the first rectangle" ;
+    rdfs:range xsd:decimal ;
+    rdfs:domain opt:Rectangle .
+
+opt:area2 a rdf:Property ;
+    rdfs:label "Area of the second rectangle" ;
+    rdfs:range xsd:decimal ;
+    rdfs:domain opt:Rectangle .
+
+opt:area3 a rdf:Property ;
+    rdfs:label "Area of the third rectangle" ;
+    rdfs:range xsd:decimal ;
+    rdfs:domain opt:Rectangle .
+
+opt:Rectangle a rdfs:Class ;
+    rdfs:label "Rectangle" ;
+    rdfs:subClassOf opt:Shape .
+
+opt:Shape a rdfs:Class ;
+    rdfs:label "Shape" .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:subClassOf opt:Problem .
+
+opt:Problem a rdfs:Class ;
+    rdfs:label "Problem" .
+
+opt:problem1 a opt:OptimizationProblem ;
+    opt:hasParameter opt:area1, opt:area2, opt:area3 ;
+    opt:hasVariable opt:x, opt:y, opt:len, opt:height ;
+    opt:hasConstraint opt:constraint1, opt:constraint2, opt:constraint3 ;
+    opt:hasObjective opt:objective1 .
+
+opt:x a rdf:Property ;
+    rdfs:label "Length of the large rectangle" ;
+    rdfs:range xsd:decimal ;
+    rdfs:domain opt:Rectangle .
+
+opt:y a rdf:Property ;
+    rdfs:label "Width of the large rectangle" ;
+    rdfs:range xsd:decimal ;
+    rdfs:domain opt:Rectangle .
+
+opt:len a rdf:Property ;
+    rdfs:label "Length of the smaller rectangles" ;
+    rdfs:range xsd:decimal ;
+    rdfs:domain opt:Rectangle .
+
+opt:height a rdf:Property ;
+    rdfs:label "Height of the smaller rectangles" ;
+    rdfs:range xsd:decimal ;
+    rdfs:domain opt:Rectangle .
+
+opt:constraint1 a opt:Constraint ;
+    rdfs:label "Area of rectangle 1 is 13" ;
+    opt:hasVariable opt:area1 ;
+    opt:hasValue "13"^^xsd:decimal .
+
+opt:constraint2 a opt:Constraint ;
+    rdfs:label "Area of rectangle 2 is 39" ;
+    opt:hasVariable opt:area2 ;
+    opt:hasValue "39"^^xsd:decimal .
+
+opt:constraint3 a opt:Constraint ;
+    rdfs:label "Area of rectangle 3 is 16" ;
+    opt:hasVariable opt:area3 ;
+    opt:hasValue "16"^^xsd:decimal .
+
+opt:objective1 a opt:Objective ;
+    rdfs:label "Find the area of the fourth rectangle" ;
+    opt:hasVariable opt:area4 ;
+    opt:isTypeOf opt:Maximization .

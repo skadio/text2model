@@ -1,5 +1,7 @@
 # Text2Model: LLM Modeling Copilots for Text-to-Model Translation
 
+[![Tests](https://github.com/skadio/text2model/actions/workflows/tests.yml/badge.svg)](https://github.com/skadio/text2model/actions/workflows/tests.yml)
+
 Text-to-model translation is the task of converting natural language descriptions of combinatorial problems into formal constraint models. 
 
 [Text2Model](https://skadio.github.io/text2model/) is a suite of LLM modeling copilots, datasets, fined-tuned models, demos, interactive editor, and online leaderboard for translating natural language text into formal combinatorial constraint models.
@@ -31,10 +33,18 @@ Text2Model offers different strategies, ranging from simple single-call approach
 
 ## Quick Start
 
-### 1. Install Dependencies
+### 1. Install
 
 ```bash
-pip install openai datasets tqdm langchain_ollama
+pip install text2model
+```
+
+Or install from source for development:
+
+```bash
+git clone https://github.com/skadio/text2model.git
+cd text2model
+pip install -e .
 ```
 
 ### 2. Set Your API Key
@@ -43,7 +53,23 @@ pip install openai datasets tqdm langchain_ollama
 export OPENAI_API_KEY="your-api-key-here"
 ```
 
-### 3. Create Your First LLM Generated Model
+### 3. Generate MiniZinc from a Problem Description
+
+```bash
+# From a string
+text2model --problem "A country produces fighter jets each year. Some of these jets must be set aside for pilot training instead of combat use. Year 1 production is 10 jets, and Year 2 production is 15 jets. Each training jet can train 5 pilots per year. Training runs for 2 years, starting in Year 1. Determine how many pilots will be trained in total by the end of Year 2."
+
+# From a text file
+text2model --problem my_problem.txt
+
+# Choose a strategy (default: cot)
+text2model --problem my_problem.txt --strategies agents_with_code_validation --model gpt-4o
+
+# Redirect output to a file
+text2model --problem my_problem.txt > model.mzn
+```
+
+### 4. Batch Mode on the Dataset
 
 ```bash
 # Try a quick test on specific problems
@@ -56,6 +82,19 @@ python main.py --strategies cot --model gpt-4 --output-dir my_results
 ---
 
 ## Usage
+
+### Generate from a Problem Description
+
+```bash
+# Inline description (prints MiniZinc to stdout)
+text2model --problem "A country produces fighter jets each year. Some of these jets must be set aside for pilot training instead of combat use. Year 1 production is 10 jets, and Year 2 production is 15 jets. Each training jet can train 5 pilots per year. Training runs for 2 years, starting in Year 1. Determine how many pilots will be trained in total by the end of Year 2."
+
+# From a file
+text2model --problem problem.txt --strategies cot_with_code_validation
+```
+
+> The `knowledge_graph` strategy is not available in this mode (it requires pre-built TTL files).  
+> The default strategy is `cot`.
 
 ### Run Multiple Strategies
 
@@ -118,22 +157,47 @@ Results are broken down by problem type (satisfaction vs optimization).
 
 ---
 
+## Testing
+
+Install test dependencies with `pip install -e ".[test]"`.
+
+**Offline tests** (`tests/test_main.py`, `tests/test_utils.py`) don't need an API key, network, or MiniZinc — they're pure logic tests with mocked API calls. This is what CI runs:
+
+```bash
+pytest -m "not integration"
+```
+
+**Integration tests** (`tests/test_integration.py`) hit real external dependencies and are opt-in only — never run in CI:
+- MiniZinc tests run the real `minizinc` binary and are skipped unless it's on `PATH`.
+- The OpenAI test makes exactly one real, cheap, token-capped call (`gpt-4o-mini`, `max_tokens=20`) and is skipped unless `OPENAI_API_KEY` is set. It's intentionally not exhaustive to avoid API costs.
+
+To run everything locally (with `OPENAI_API_KEY` set and MiniZinc installed):
+
+```bash
+pytest -m ""
+```
+
+---
+
 ## Repository Structure
 
 ```
 text2model/
-├── knowledge_graphs/            # Generated KG files (.ttl)
+├── text2model/                  # Installable Python package
+│   ├── prompts/                 # Prompt templates for each strategy
+│   │   ├── cot_prompt.txt
+│   │   ├── code_validation_prompt.txt
+│   │   ├── global_constraint_prompts/
+│   │   └── ...
+│   ├── knowledge_graphs/        # KG files (.ttl) for knowledge_graph strategy
+│   ├── grammar.mzn              # MiniZinc grammar for validation
+│   ├── main.py                  # Copilot strategies and CLI entry point
+│   └── utils.py                 # Shared utilities (API calls, validation)
 ├── output/                      # Generated models (created automatically)
 │   ├── [model]/[strategy]/      # e.g., gpt-4/cot/problem_1.mzn
 │   └── evaluation_results/      # Accuracy metrics and leaderboard
-├── prompts/                     # Prompt templates for each strategy
-│   ├── cot_prompt.txt
-│   ├── code_validation_prompt.txt
-│   ├── global_constraint_prompts/
-│   └── ...
 ├── evaluate.py                  # Evaluates generated MiniZinc models
 ├── generate_knowledge_graph.py  # Generates KGs for knowledge_graph strategy
-├── grammar.mzn                  # MiniZinc grammar for validation
-├── main.py                      # Copilot strategies
-└── utils.py                     # Shared utilities (API calls, validation)
+├── main.py                      # Backward-compatible entry point
+└── pyproject.toml               # Package metadata and install config
 ```

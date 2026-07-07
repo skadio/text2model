@@ -1,0 +1,74 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:AdCampaign a rdfs:Class ;
+    rdfs:label "Ad Campaign" .
+
+opt:AdType a rdfs:Class ;
+    rdfs:label "Ad Type" .
+
+opt:GoalYoung a rdf:Property ;
+    rdfs:label "Goal for young clicks" ;
+    rdfs:domain opt:AdCampaign ;
+    rdfs:range xsd:integer .
+
+opt:GoalOld a rdf:Property ;
+    rdfs:label "Goal for old clicks" ;
+    rdfs:domain opt:AdCampaign ;
+    rdfs:range xsd:integer .
+
+opt:GoalUniqueYoung a rdf:Property ;
+    rdfs:label "Goal for unique young clicks" ;
+    rdfs:domain opt:AdCampaign ;
+    rdfs:range xsd:integer .
+
+opt:GoalUniqueOld a rdf:Property ;
+    rdfs:label "Goal for unique old clicks" ;
+    rdfs:domain opt:AdCampaign ;
+    rdfs:range xsd:integer .
+
+opt:YoungClicks a rdf:Property ;
+    rdfs:label "Young clicks per ad type" ;
+    rdfs:domain opt:AdType ;
+    rdfs:range xsd:integer .
+
+opt:OldClicks a rdf:Property ;
+    rdfs:label "Old clicks per ad type" ;
+    rdfs:domain opt:AdType ;
+    rdfs:range xsd:integer .
+
+opt:Costs a rdf:Property ;
+    rdfs:label "Cost per ad type" ;
+    rdfs:domain opt:AdType ;
+    rdfs:range xsd:integer .
+
+opt:MaxClicks a rdf:Property ;
+    rdfs:label "Maximum clicks per ad type" ;
+    rdfs:domain opt:AdType ;
+    rdfs:range xsd:integer .
+
+opt:UniqueClicks a rdf:Property ;
+    rdfs:label "Unique clicks per ad type" ;
+    rdfs:domain opt:AdType ;
+    rdfs:range xsd:integer .
+
+opt:hasAdType a rdf:Property ;
+    rdfs:label "Has ad type" ;
+    rdfs:domain opt:AdCampaign ;
+    rdfs:range opt:AdType .
+
+opt:MinimizeCost a rdfs:Class ;
+    rdfs:label "Minimize cost" ;
+    rdfs:subClassOf opt:AdCampaign .
+
+opt:hasConstraint a rdf:Property ;
+    rdfs:label "Has constraint" ;
+    rdfs:domain opt:AdCampaign ;
+    rdfs:range rdfs:Literal .
+
+opt:hasObjective a rdf:Property ;
+    rdfs:label "Has objective" ;
+    rdfs:domain opt:AdCampaign ;
+    rdfs:range rdfs:Literal .

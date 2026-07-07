@@ -1,0 +1,44 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:JobShopProblem a rdfs:Class ;
+    rdfs:label "Job Shop Problem" ;
+    rdfs:comment "An optimization problem that involves scheduling a set of jobs on a set of machines with the objective to minimize the earliest end time." .
+
+opt:num_jobs a rdf:Property ;
+    rdfs:label "Number of jobs" ;
+    rdfs:domain opt:JobShopProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of jobs to be scheduled." .
+
+opt:num_machines a rdf:Property ;
+    rdfs:label "Number of machines" ;
+    rdfs:domain opt:JobShopProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Number of machines available for job scheduling." .
+
+opt:job_times a rdf:Property ;
+    rdfs:label "Job times" ;
+    rdfs:domain opt:JobShopProblem ;
+    rdfs:range rdfs:Literal ;
+    rdfs:comment "Matrix representing the time each job takes on each machine." .
+
+opt:job_order a rdf:Property ;
+    rdfs:label "Job order" ;
+    rdfs:domain opt:JobShopProblem ;
+    rdfs:range rdfs:Literal ;
+    rdfs:comment "Matrix representing the order of jobs on each machine." .
+
+opt:objective a rdf:Property ;
+    rdfs:label "Objective" ;
+    rdfs:domain opt:JobShopProblem ;
+    rdfs:range rdfs:Literal ;
+    rdfs:comment "Minimize the earliest end time." .
+
+opt:constraint a rdf:Property ;
+    rdfs:label "Constraint" ;
+    rdfs:domain opt:JobShopProblem ;
+    rdfs:range rdfs:Literal ;
+    rdfs:comment "Jobs do not overlap on a machine and are processed in the correct order across machines." .

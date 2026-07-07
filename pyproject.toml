@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "text2model"
+version = "0.1.0"
+description = "LLM Modeling Copilots for Text-to-Model Translation"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+keywords = ["minizinc", "constraint-programming", "LLM", "text-to-model"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "openai",
+    "datasets",
+    "tqdm",
+    "langchain-ollama",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: hits a real external dependency (OpenAI API, MiniZinc binary). Skipped automatically when the credential/binary is missing, and always excluded in CI.",
+]
+
+[project.scripts]
+text2model = "text2model.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["text2model*"]
+
+[tool.setuptools.package-data]
+"text2model" = [
+    "prompts/*.txt",
+    "prompts/global_constraint_prompts/*.txt",
+    "grammar.mzn",
+    "knowledge_graphs/*.ttl",
+]

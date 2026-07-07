@@ -1,0 +1,58 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix coin: <http://www.example.com/coin_plating#> .
+
+coin:ProcessA a rdf:Property ;
+    rdfs:range xsd:integer ;
+    rdfs:domain coin:CoinPlating .
+
+coin:ProcessB a rdf:Property ;
+    rdfs:range xsd:integer ;
+    rdfs:domain coin:CoinPlating .
+
+coin:GoldPerA a rdf:Property ;
+    rdfs:range xsd:integer ;
+    rdfs:domain coin:CoinPlating .
+
+coin:WiresPerA a rdf:Property ;
+    rdfs:range xsd:integer ;
+    rdfs:domain coin:CoinPlating .
+
+coin:CoinsPerA a rdf:Property ;
+    rdfs:range xsd:integer ;
+    rdfs:domain coin:CoinPlating .
+
+coin:GoldPerB a rdf:Property ;
+    rdfs:range xsd:integer ;
+    rdfs:domain coin:CoinPlating .
+
+coin:WiresPerB a rdf:Property ;
+    rdfs:range xsd:integer ;
+    rdfs:domain coin:CoinPlating .
+
+coin:CoinsPerB a rdf:Property ;
+    rdfs:range xsd:integer ;
+    rdfs:domain coin:CoinPlating .
+
+coin:TotalGold a rdf:Property ;
+    rdfs:range xsd:integer ;
+    rdfs:domain coin:CoinPlating .
+
+coin:TotalWires a rdf:Property ;
+    rdfs:range xsd:integer ;
+    rdfs:domain coin:CoinPlating .
+
+coin:CoinPlating a rdfs:Class ;
+    rdfs:label "Coin Plating Operation" ;
+    rdfs:comment "An operation that involves two processes (A and B) to plate coins using gold and wires." .
+
+coin:Constraint a rdfs:Class ;
+    rdfs:subClassOf coin:CoinPlating ;
+    rdfs:label "Constraints" ;
+    rdfs:comment "Constraints for the coin plating operation, including the total available gold and wires." .
+
+coin:Objective a rdfs:Class ;
+    rdfs:subClassOf coin:CoinPlating ;
+    rdfs:label "Objective" ;
+    rdfs:comment "Objective of the coin plating operation, which is to maximize the total number of coins plated." .

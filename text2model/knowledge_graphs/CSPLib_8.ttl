@@ -1,0 +1,53 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:deck_width a rdf:Property ;
+    rdfs:domain opt:Deck ;
+    rdfs:range xsd:integer .
+
+opt:deck_length a rdf:Property ;
+    rdfs:domain opt:Deck ;
+    rdfs:range xsd:integer .
+
+opt:n_containers a rdf:Property ;
+    rdfs:domain opt:Container ;
+    rdfs:range xsd:integer .
+
+opt:n_classes a rdf:Property ;
+    rdfs:domain opt:Container ;
+    rdfs:range xsd:integer .
+
+opt:width a rdf:Property ;
+    rdfs:domain opt:Container ;
+    rdfs:range xsd:integer .
+
+opt:length a rdf:Property ;
+    rdfs:domain opt:Container ;
+    rdfs:range xsd:integer .
+
+opt:class a rdf:Property ;
+    rdfs:domain opt:Container ;
+    rdfs:range xsd:integer .
+
+opt:separation a rdf:Property ;
+    rdfs:domain opt:Container ;
+    rdfs:range xsd:integer .
+
+opt:Deck a rdfs:Class ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:Container a rdfs:Class ;
+    rdfs:subClassOf opt:OptimizationProblem .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:comment "An optimization problem involves determining the best solution from a set of feasible solutions." .
+
+opt:Constraint a rdfs:Class ;
+    rdfs:subClassOf opt:OptimizationProblem ;
+    rdfs:comment "Constraints are the conditions that must be met in an optimization problem." .
+
+opt:Objective a rdfs:Class ;
+    rdfs:subClassOf opt:OptimizationProblem ;
+    rdfs:comment "The objective is the goal of the optimization problem, which is to determine whether a given set of containers can be positioned on a given deck, without overlapping, and without violating any of the separation constraints." .

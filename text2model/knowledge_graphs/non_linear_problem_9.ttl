@@ -1,0 +1,61 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:P_Median_Problem rdf:type rdfs:Class ;
+    rdfs:subClassOf opt:Optimization_Problem ;
+    rdfs:comment "The P-Median problem involves selecting P warehouses from a set of candidate locations to minimize the demand-weighted distance of serving all customers." .
+
+opt:hasParameter rdf:type rdf:Property ;
+    rdfs:domain opt:Optimization_Problem ;
+    rdfs:range opt:Parameter .
+
+opt:hasVariable rdf:type rdf:Property ;
+    rdfs:domain opt:Optimization_Problem ;
+    rdfs:range opt:Variable .
+
+opt:hasConstraint rdf:type rdf:Property ;
+    rdfs:domain opt:Optimization_Problem ;
+    rdfs:range opt:Constraint .
+
+opt:hasObjective rdf:type rdf:Property ;
+    rdfs:domain opt:Optimization_Problem ;
+    rdfs:range opt:Objective .
+
+opt:P rdf:type opt:Parameter ;
+    rdfs:label "Number of warehouses to open" ;
+    rdfs:comment "P is the number of warehouses to be opened." ;
+    opt:hasValue "2"^^xsd:integer .
+
+opt:num_customers rdf:type opt:Parameter ;
+    rdfs:label "Number of customers" ;
+    rdfs:comment "num_customers is the total number of customers." ;
+    opt:hasValue "4"^^xsd:integer .
+
+opt:num_warehouses rdf:type opt:Parameter ;
+    rdfs:label "Number of warehouses" ;
+    rdfs:comment "num_warehouses is the total number of warehouses." ;
+    opt:hasValue "3"^^xsd:integer .
+
+opt:Demand rdf:type opt:Parameter ;
+    rdfs:label "Demand of each customer" ;
+    rdfs:comment "Demand is the demand of each customer." ;
+    opt:hasValue "100.0,80.0,80.0,70.0"^^xsd:string .
+
+opt:Distance rdf:type opt:Parameter ;
+    rdfs:label "Distance between each customer and warehouse" ;
+    rdfs:comment "Distance is the distance between each customer and warehouse." ;
+    opt:hasValue "array2d(Customers, Warehouses)"^^xsd:string .
+
+opt:Allocation rdf:type opt:Variable ;
+    rdfs:label "Allocation of warehouses to customers" ;
+    rdfs:comment "Allocation is the assignment of warehouses to customers." .
+
+opt:Distance_Constraint rdf:type opt:Constraint ;
+    rdfs:label "Distance constraint" ;
+    rdfs:comment "Each customer is served by exactly one warehouse." .
+
+opt:Minimize_Demand_Weighted_Distance rdf:type opt:Objective ;
+    rdfs:label "Minimize demand-weighted distance" ;
+    rdfs:comment "The goal is to minimize the sum of demand weighted distances of the customers to the warehouse that serves them." .

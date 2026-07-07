@@ -1,0 +1,40 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.semanticweb.org/ontologies/optimization#> .
+
+:AssignmentProblem a opt:OptimizationProblem ;
+    rdfs:label "Assignment Problem" ;
+    opt:hasObjective :Objective ;
+    opt:hasConstraint :Constraint ;
+    opt:hasParameter :rows, :cols, :cost ;
+    opt:hasVariable :x .
+
+:rows a opt:Parameter ;
+    rdfs:label "Number of programmers" ;
+    rdfs:comment "The number of programmers available for assignment" ;
+    rdfs:range xsd:integer .
+
+:cols a opt:Parameter ;
+    rdfs:label "Number of jobs" ;
+    rdfs:comment "The number of jobs available for assignment" ;
+    rdfs:range xsd:integer .
+
+:cost a opt:Parameter ;
+    rdfs:label "Cost matrix" ;
+    rdfs:comment "Matrix representing the preference value of each programmer for each job" ;
+    rdfs:range xsd:array .
+
+:x a opt:Variable ;
+    rdfs:label "Assignment matrix" ;
+    rdfs:comment "Binary matrix representing the assignment of programmers to jobs" ;
+    rdfs:range xsd:array .
+
+:Constraint a opt:Constraint ;
+    rdfs:label "Assignment constraint" ;
+    rdfs:comment "Each programmer is assigned to one job and each job is assigned to one programmer" .
+
+:Objective a opt:Objective ;
+    rdfs:label "Minimize total preference" ;
+    rdfs:comment "The goal is to minimize the sum of the preference values of the programmers for the jobs they are assigned" ;
+    opt:isTypeOf opt:Minimization .

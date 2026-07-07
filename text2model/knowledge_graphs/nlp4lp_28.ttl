@@ -1,0 +1,50 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:K a rdf:Property ;
+    rdfs:label "Total number of years in the planning horizon" ;
+    rdfs:range xsd:integer .
+
+opt:InputOne a rdf:Property ;
+    rdfs:label "The production inputs from resource type one to product k in year j" ;
+    rdfs:range xsd:float .
+
+opt:ManpowerOne a rdf:Property ;
+    rdfs:label "The manpower allocated to resource type one for product k" ;
+    rdfs:range xsd:float .
+
+opt:InputTwo a rdf:Property ;
+    rdfs:label "The production inputs from resource type two to product k in year j" ;
+    rdfs:range xsd:float .
+
+opt:ManpowerTwo a rdf:Property ;
+    rdfs:label "The manpower allocated to resource type two for product k" ;
+    rdfs:range xsd:float .
+
+opt:Stock a rdf:Property ;
+    rdfs:label "Stock levels of product k at the start of the planning horizon" ;
+    rdfs:range xsd:integer .
+
+opt:Capacity a rdf:Property ;
+    rdfs:label "Production capacity for product k" ;
+    rdfs:range xsd:integer .
+
+opt:ManpowerLimit a rdf:Property ;
+    rdfs:label "The upper limit of manpower" ;
+    rdfs:range xsd:float .
+
+opt:OptimizationProblem a rdfs:Class ;
+    rdfs:label "Optimization Problem" ;
+    rdfs:subClassOf rdfs:Resource .
+
+opt:Problem1 a opt:OptimizationProblem ;
+    opt:K "3"^^xsd:integer ;
+    opt:InputOne "0.1"^^xsd:float ;
+    opt:ManpowerOne "0.6"^^xsd:float ;
+    opt:InputTwo "0.0"^^xsd:float ;
+    opt:ManpowerTwo "0.4"^^xsd:float ;
+    opt:Stock "150"^^xsd:integer ;
+    opt:Capacity "300"^^xsd:integer ;
+    opt:ManpowerLimit "470000000.0"^^xsd:float .

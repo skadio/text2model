@@ -1,0 +1,48 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:3GroupSplitProblem
+    rdf:type opt:OptimizationProblem ;
+    opt:hasParameter opt:n, opt:a, opt:k ;
+    opt:hasVariable opt:groupAssignment ;
+    opt:hasConstraint opt:groupSumConstraint ;
+    opt:hasObjective opt:minimizeMaxGroupSum .
+
+opt:n
+    rdf:type opt:Parameter ;
+    rdfs:label "n" ;
+    rdfs:comment "Number of items in the group" ;
+    rdfs:range xsd:integer .
+
+opt:a
+    rdf:type opt:Parameter ;
+    rdfs:label "a" ;
+    rdfs:comment "Values of the items in the group" ;
+    rdfs:range xsd:integer .
+
+opt:k
+    rdf:type opt:Parameter ;
+    rdfs:label "k" ;
+    rdfs:comment "Number of groups to split into" ;
+    rdfs:range xsd:integer .
+
+opt:groupAssignment
+    rdf:type opt:Variable ;
+    rdfs:label "groupAssignment" ;
+    rdfs:comment "Assignment of items to groups" ;
+    rdfs:range xsd:integer .
+
+opt:groupSumConstraint
+    rdf:type opt:Constraint ;
+    rdfs:label "groupSumConstraint" ;
+    rdfs:comment "The sum of the values in each group must be less than or equal to the maximum sum" ;
+    opt:relatesTo opt:groupAssignment, opt:a .
+
+opt:minimizeMaxGroupSum
+    rdf:type opt:Objective ;
+    rdfs:label "minimizeMaxGroupSum" ;
+    rdfs:comment "Minimize the maximum sum amongst all groups" ;
+    opt:relatesTo opt:groupAssignment, opt:a ;
+    opt:optimizationType opt:Minimization .

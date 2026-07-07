@@ -1,0 +1,43 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix opt: <http://www.example.org/optimization#> .
+
+opt:FacilityLocationProblem a rdfs:Class ;
+    rdfs:subClassOf opt:OptimizationProblem ;
+    rdfs:comment "The capacitated facility location problem involves locating facilities which are to service customers at minimum total cost."@en .
+
+opt:numberOfFacilities a rdf:Property ;
+    rdfs:domain opt:FacilityLocationProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "The number of potential facilities that can be established."@en .
+
+opt:numberOfCustomers a rdf:Property ;
+    rdfs:domain opt:FacilityLocationProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "The number of customer zones to be served."@en .
+
+opt:facilityFixedCost a rdf:Property ;
+    rdfs:domain opt:FacilityLocationProblem ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "The fixed cost associated with establishing each facility."@en .
+
+opt:facilityToCustomerTransportCost a rdf:Property ;
+    rdfs:domain opt:FacilityLocationProblem ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "The cost of transporting goods from each facility to each customer zone."@en .
+
+opt:facilityCapacity a rdf:Property ;
+    rdfs:domain opt:FacilityLocationProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "The capacity of each facility, which limits the amount of goods the facility can handle or produce."@en .
+
+opt:customerDemand a rdf:Property ;
+    rdfs:domain opt:FacilityLocationProblem ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "The demand of each customer zone that must be met by the facilities."@en .
+
+opt:objective a rdf:Property ;
+    rdfs:domain opt:FacilityLocationProblem ;
+    rdfs:range xsd:string ;
+    rdfs:comment "The objective is to minimize total cost by choosing which facilities to establish and determining how much each facility should supply to each customer zone."@en .

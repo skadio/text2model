@@ -1,0 +1,50 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <http://example.org/> .
+
+:puzzle a rdfs:Class ;
+  rdfs:label "Hidato puzzle" ;
+  rdfs:comment "A logic puzzle game where a grid of cells is given, some of which are filled with numbers." .
+
+:rows a rdf:Property ;
+  rdfs:label "rows" ;
+  rdfs:comment "Number of rows in the grid" ;
+  rdfs:domain :puzzle ;
+  rdfs:range xsd:integer .
+
+:columns a rdf:Property ;
+  rdfs:label "columns" ;
+  rdfs:comment "Number of columns in the grid" ;
+  rdfs:domain :puzzle ;
+  rdfs:range xsd:integer .
+
+:grid a rdf:Property ;
+  rdfs:label "grid" ;
+  rdfs:comment "Hidato puzzle grid where 0 represents an empty cell and a positive integer represents a filled cell" ;
+  rdfs:domain :puzzle ;
+  rdfs:range xsd:array .
+
+:startNumber a rdf:Property ;
+  rdfs:label "start number" ;
+  rdfs:comment "The number from which the path starts" ;
+  rdfs:domain :puzzle ;
+  rdfs:range xsd:integer .
+
+:endNumber a rdf:Property ;
+  rdfs:label "end number" ;
+  rdfs:comment "The number at which the path ends" ;
+  rdfs:domain :puzzle ;
+  rdfs:range xsd:integer .
+
+:path a rdf:Property ;
+  rdfs:label "path" ;
+  rdfs:comment "The path from the start number to the end number, where the path is a sequence of horizontally, vertically, or diagonally adjacent cells" ;
+  rdfs:domain :puzzle ;
+  rdfs:range xsd:array .
+
+:objective a rdf:Property ;
+  rdfs:label "objective" ;
+  rdfs:comment "The goal is to fill the remaining cells with consecutive numbers that will form a path from the start number to the end number" ;
+  rdfs:domain :puzzle ;
+  rdfs:range xsd:string .

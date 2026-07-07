@@ -1,0 +1,59 @@
+@prefix : <http://www.semanticweb.org/ontologies/2021/4/untitled-ontology-4#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:WarehouseLocationProblem a owl:Class ;
+    rdfs:subClassOf :OptimizationProblem .
+
+:hasNumberOfLocations a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range xsd:integer .
+
+:hasNumberOfCustomers a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range xsd:integer .
+
+:hasCustomerDemand a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range xsd:integer .
+
+:hasServiceAllocationCost a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range xsd:integer .
+
+:hasWarehouseCapacity a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range xsd:integer .
+
+:hasMinimumDemandFromWarehouse a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range xsd:integer .
+
+:hasMinimumOpenWarehouses a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range xsd:integer .
+
+:hasMaximumOpenWarehouses a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range xsd:integer .
+
+:hasWarehouseFixedCost a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range xsd:integer .
+
+:hasObjective a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range :Objective .
+
+:Objective a owl:Class ;
+    rdfs:subClassOf :OptimizationProblem ;
+    rdfs:comment "The objective is to allocate customers to warehouses and which warehouses to open in order to minimize the total cost." .
+
+:hasConstraint a owl:ObjectProperty ;
+    rdfs:domain :WarehouseLocationProblem ;
+    rdfs:range :Constraint .
+
+:Constraint a owl:Class ;
+    rdfs:subClassOf :OptimizationProblem ;
+    rdfs:comment "Constraints on the total demand that can be met from each warehouse, the lower limit on the demand that a warehouse must meet if it is opened, and constraints on the minimum and maximum number of warehouses that can be operational." .
