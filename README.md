@@ -1,6 +1,7 @@
 # Text2Model: LLM Modeling Copilots for Text-to-Model Translation
 
 [![Tests](https://github.com/skadio/text2model/actions/workflows/tests.yml/badge.svg)](https://github.com/skadio/text2model/actions/workflows/tests.yml)
+[![PyPI version](https://img.shields.io/pypi/v/text2model.svg)](https://pypi.org/project/text2model/)
 
 Text-to-model translation is the task of converting natural language descriptions of combinatorial problems into formal constraint models. 
 
