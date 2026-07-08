@@ -511,7 +511,32 @@ def _run_problem_mode(args, client):
 ###########################################################
 def main():
     parser = argparse.ArgumentParser(
-        description='Generate MiniZinc code using different prompting strategies'
+        prog='text2model',
+        description=(
+            'text2model: turn a natural-language optimization problem description '
+            'into a MiniZinc constraint model using an LLM.\n\n'
+            'Two modes:\n'
+            '  1) Single problem  - pass --problem to translate one description and\n'
+            '     print the generated .mzn code to stdout.\n'
+            '  2) Batch           - omit --problem to run one or more prompting\n'
+            '     strategies over the skadio/text2zinc benchmark dataset.'
+        ),
+        epilog=(
+            'Examples:\n'
+            '  # Translate a problem description given directly on the command line\n'
+            '  text2model --problem "Pack items of given weights into the fewest bins "\\\n'
+            '                        "of capacity 10." --model gpt-4o --api-key sk-...\n\n'
+            '  # Translate a problem description stored in a file\n'
+            '  text2model --problem problem.txt --model gpt-4o\n\n'
+            '  # List the sources available in the benchmark dataset\n'
+            '  text2model --list-sources\n\n'
+            '  # Batch-run the chain-of-thought strategy over one source\n'
+            '  text2model --strategies cot --source "csplib" --output-dir results/\n\n'
+            'The OpenAI API key can also be set via the OPENAI_API_KEY environment '
+            'variable. Local models (e.g. phi4) are served through Ollama and need '
+            'no API key.'
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
     # ── Simple single-problem mode ──────────────────────────────────────────
