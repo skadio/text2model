@@ -70,7 +70,7 @@ text2model --problem my_problem.txt --strategies agents_with_code_validation --m
 text2model --problem my_problem.txt > model.mzn
 ```
 
-### 4. Batch Mode on the Dataset
+### 4. Batch Mode on the Text2Zinc Dataset
 
 ```bash
 # Try a quick test on specific problems
