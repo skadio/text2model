@@ -29,7 +29,7 @@ Please visit [Text2Model](https://skadio.github.io/text2model/) for latest publi
 
 ## Quick Start
 
-Text2Model supports translating given problem descriptions, **Text mode**, or specific problems from our dataset, **Text2Zinc mode**.
+Text2Model supports translating given problem descriptions (**Text mode**), or specific problems from our dataset (**Text2Zinc mode**).
 
 ### Text Mode
 
