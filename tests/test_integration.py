@@ -13,6 +13,7 @@ Run everything (offline + integration) locally with:
 Run only the integration subset with:
     pytest -m integration
 """
+import json
 import os
 import shutil
 import sys
@@ -105,3 +106,55 @@ def test_main_batch_mode_single_problem_single_strategy(tmp_path, monkeypatch):
 
     summary_path = Path(output_dir) / "gpt-4o" / "summary.json"
     assert summary_path.exists()
+
+
+@requires_openai_key
+def test_main_batch_mode_multiple_problem_ids_writes_one_file_each(tmp_path, monkeypatch):
+    output_dir = str(tmp_path / "output")
+
+    monkeypatch.setattr(sys, "argv", [
+        "text2model",
+        "--model", "gpt-4o",
+        "--strategies", "baseline",
+        "--problem-ids", "0", "1",
+        "--output-dir", output_dir,
+    ])
+
+    main.main()
+
+    strategy_dir = Path(output_dir) / "gpt-4o" / "baseline"
+    generated = list(strategy_dir.glob("*.mzn"))
+    assert len(generated) == 2
+    assert all(f.stat().st_size > 0 for f in generated)
+
+    summary = json.loads((Path(output_dir) / "gpt-4o" / "summary.json").read_text())
+    assert summary["_metadata"]["num_instances"] == 2
+    assert summary["baseline"]["success"] + summary["baseline"]["failed"] == 2
+
+
+@requires_openai_key
+def test_main_batch_mode_skips_already_processed_problem(tmp_path, monkeypatch):
+    # --output-dir must not already exist (main.py prompts interactively
+    # otherwise), so we can't pre-seed a solution file there. Instead, list
+    # the same problem id twice: the second occurrence hits
+    # check_already_processed against the file the first occurrence just
+    # wrote, so it's skipped without a second API call.
+    output_dir = str(tmp_path / "output")
+
+    monkeypatch.setattr(sys, "argv", [
+        "text2model",
+        "--model", "gpt-4o",
+        "--strategies", "baseline",
+        "--problem-ids", "0", "0",
+        "--output-dir", output_dir,
+    ])
+
+    main.main()
+
+    strategy_dir = Path(output_dir) / "gpt-4o" / "baseline"
+    generated = list(strategy_dir.glob("*.mzn"))
+    assert len(generated) == 1  # duplicate id produced one file, not two
+
+    summary = json.loads((Path(output_dir) / "gpt-4o" / "summary.json").read_text())
+    assert summary["baseline"]["success"] == 1
+    assert summary["baseline"]["failed"] == 0

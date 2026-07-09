@@ -6,7 +6,7 @@ import openai
 from datasets import DatasetDict, load_dataset
 from tqdm import tqdm
 
-from utils import API_CONFIG, call_openai_api, load_file, prepare_problem_data
+from text2model.utils import API_CONFIG, call_openai_api, load_file, prepare_problem_data
 
 
 def create_kg_prompt(problem):
