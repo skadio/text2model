@@ -1,6 +1,6 @@
 [![Tests](https://github.com/skadio/text2model/actions/workflows/tests.yml/badge.svg)](https://github.com/skadio/text2model/actions/workflows/tests.yml)
-[![PyPI version](https://img.shields.io/pypi/v/text2model.svg)](https://pypi.org/project/text2model/)
-[![PyPI license](https://img.shields.io/pypi/l/text2model.svg)](https://pypi.python.org/pypi/text2model/)
+[![PyPI version](https://img.shields.io/pypi/v/text2model.svg?cacheSeconds=1)](https://pypi.org/project/text2model/)
+[![PyPI license](https://img.shields.io/pypi/l/text2model.svg?cacheSeconds=1)](https://pypi.python.org/pypi/text2model/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![Downloads](https://static.pepy.tech/personalized-badge/text2model?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads)](https://pepy.tech/project/text2model)
 
