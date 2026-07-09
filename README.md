@@ -183,7 +183,7 @@ text2model/
 │   ├── main.py                  # Copilot strategies and CLI entry point
 │   └── utils.py                 # Shared utilities (API calls, validation)
 ├── tests/                       # Unit and integration tests (pytest)
-├── output/                      # Generated models (created automatically)
+├── output/                      # Original outputs per strategy, kept for reproducing paper results
 │   ├── [model]/[strategy]/      # e.g., gpt-4/cot/problem_1.mzn
 │   └── evaluation_results/      # Accuracy metrics and leaderboard
 ├── evaluate.py                  # Evaluates generated MiniZinc models
