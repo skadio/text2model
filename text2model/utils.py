@@ -1,7 +1,11 @@
 import ast
+import csv
 import os
 import re
+import shutil
 import subprocess
+import tempfile
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import openai
@@ -14,6 +18,28 @@ API_CONFIG = {
     'max_tokens': 4096,
     'sleep_time': 3
 }
+
+# HuggingFace repo backing the Text2Zinc benchmark dataset. This is the
+# default dataset source everywhere except the `--editor` GUI, which
+# defaults to a local CSV instead (see text2model/editor/app.py).
+TEXT2ZINC_DATASET = "skadio/text2zinc"
+
+# Columns of a local Text2Zinc CSV dataset, e.g. one saved by `text2model --editor`.
+TEXT2ZINC_CSV_COLUMNS = ['input.json', 'data.dzn', 'model.mzn', 'output.json', 'is_verified']
+
+# Package installation directory — used to locate bundled data files
+_PACKAGE_DIR = Path(__file__).parent
+
+
+def _resolve_path(rel_path: str) -> Path:
+    """Resolve a data-file path: try CWD first, then the installed package directory."""
+    p = Path(rel_path)
+    if p.exists():
+        return p
+    pkg_p = _PACKAGE_DIR / rel_path
+    if pkg_p.exists():
+        return pkg_p
+    return p  # Return original; callers handle the missing-file case
 
 
 def extract_code_blocks(text: str) -> str:
@@ -64,7 +90,7 @@ def call_openai_api(client: openai.OpenAI, prompt: str) -> Optional[str]:
     except Exception as e:
         print(f"Error calling OpenAI API: {e}")
         return None
-        
+
 
 def call_ollama_api(client: ChatOllama, prompt: str) -> Optional[str]:
     """Call ChatOllama with the given prompt"""
@@ -81,50 +107,32 @@ def call_ollama_api(client: ChatOllama, prompt: str) -> Optional[str]:
 
 def check_syntax(mzn_code: str, dzn_data: str, timeout: int = 60) -> Optional[str]:
     """Check MiniZinc syntax and return error message if any"""
-    temp_file_path = "temp_model.mzn"
-    temp_dzn_path = "temp_data.dzn"
+    with tempfile.NamedTemporaryFile(suffix='.mzn', mode='w', delete=False) as mzn_f:
+        mzn_f.write(mzn_code)
+        temp_mzn = mzn_f.name
+
+    temp_dzn = None
     try:
-        # Save temporary MiniZinc file
-        with open(temp_file_path, 'w') as f:
-            f.write(mzn_code)
-        
-        # Build command - only include dzn if it has content
+        cmd = [shutil.which("minizinc") or "minizinc", temp_mzn]
         if dzn_data and dzn_data.strip():
-            with open(temp_dzn_path, 'w') as f:
-                f.write(dzn_data)
-            cmd = ["/snap/bin/minizinc", temp_file_path, temp_dzn_path]
-        else:
-            cmd = ["/snap/bin/minizinc", temp_file_path]
-        
-        # Run MiniZinc to check for syntax errors
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=timeout
-        )
-        # Clean up temporary files
-        if os.path.exists(temp_file_path):
-            os.remove(temp_file_path)
-        if os.path.exists(temp_dzn_path):
-            os.remove(temp_dzn_path)
+            with tempfile.NamedTemporaryFile(suffix='.dzn', mode='w', delete=False) as dzn_f:
+                dzn_f.write(dzn_data)
+                temp_dzn = dzn_f.name
+            cmd.append(temp_dzn)
+
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
         if result.returncode != 0:
             return result.stderr
         return None
     except subprocess.TimeoutExpired:
-        # Clean up on timeout
-        if os.path.exists(temp_file_path):
-            os.remove(temp_file_path)
-        if os.path.exists(temp_dzn_path):
-            os.remove(temp_dzn_path)
         return f"MiniZinc execution timed out after {timeout} seconds"
     except Exception as e:
-        # Clean up on any other error
-        if os.path.exists(temp_file_path):
-            os.remove(temp_file_path)
-        if os.path.exists(temp_dzn_path):
-            os.remove(temp_dzn_path)
         return f"Error checking syntax: {str(e)}"
+    finally:
+        if os.path.exists(temp_mzn):
+            os.remove(temp_mzn)
+        if temp_dzn and os.path.exists(temp_dzn):
+            os.remove(temp_dzn)
 
 
 def parse_dzn_string(dzn_str: str) -> List[Tuple[str, str]]:
@@ -138,19 +146,17 @@ def parse_dzn_string(dzn_str: str) -> List[Tuple[str, str]]:
 
 def create_data_nomenclature(input_data: Dict[str, Any], dzn_data: List[Tuple[str, str]]) -> str:
     """Create data nomenclature section for prompts.
-    
+
     Returns empty string if no parameters or no dzn_data.
     """
-    # Handle empty dzn_data
     if not dzn_data:
         return ""
-    
+
     parameters = input_data.get('parameters', [])
-    
-    # Handle empty parameters
+
     if not parameters:
         return ""
-    
+
     data_nomenclature = []
 
     for idx, param in enumerate(parameters):
@@ -158,13 +164,11 @@ def create_data_nomenclature(input_data: Dict[str, Any], dzn_data: List[Tuple[st
         definition = param['definition']
         shape = param['shape']
 
-        # Find the corresponding dzn line for this parameter
         example_line = next(
             (line for param_name, line in dzn_data if param_name == symbol),
             f"{symbol} = N/A;"
         )
 
-        # Format shape display
         shape_display = f"[{', '.join(map(str, shape))}]" if shape else "scalar"
 
         data_nomenclature.append(
@@ -179,13 +183,12 @@ def create_data_nomenclature(input_data: Dict[str, Any], dzn_data: List[Tuple[st
 def prepare_problem_data(problem: Dict[str, Any]) -> Dict[str, Any]:
     """Prepare problem data for use in prompts"""
     input_data = ast.literal_eval(problem['input.json'])
-    
-    # Handle missing or empty dzn data
+
     if problem.get('data.dzn') and problem['data.dzn'].strip():
         dzn_data = parse_dzn_string(problem['data.dzn'])
     else:
         dzn_data = []
-    
+
     data_nomenclature = create_data_nomenclature(input_data, dzn_data)
 
     return {
@@ -199,23 +202,12 @@ def prepare_problem_data(problem: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def get_effective_input_data(problem_data: Dict[str, Any]) -> str:
-    """Get the input data, with instructions if no dzn data exists.
-    
-    When there's no separate dzn data, returns instructions clarifying that:
-    1. All data is in the problem description
-    2. Only MiniZinc code should be generated (not CPOPT or other formats)
-    
-    Args:
-        problem_data: The dict returned by prepare_problem_data()
-    
-    Returns:
-        The original data_nomenclature, or instruction text if empty
-    """
+    """Get the input data, with instructions if no dzn data exists."""
     if not problem_data['data_nomenclature'].strip():
-        return """IMPORTANT: All data and parameters are already included in the problem description above. 
+        return """IMPORTANT: All data and parameters are already included in the problem description above.
 You must embed all data directly in the MiniZinc model - do not expect external .dzn files or assume data will be provided separately.
 Generate MiniZinc code ONLY. Do NOT generate CPOPT, COPT, or any other format even if the problem description mentions it."""
-    
+
     return problem_data['data_nomenclature']
 
 
@@ -223,10 +215,8 @@ def create_baseline_prompt(problem: Dict[str, Any]) -> str:
     """Create a baseline prompt for single-stage generation"""
     problem_data = prepare_problem_data(problem)
     effective_input_data = get_effective_input_data(problem_data)
-    
-    # Check if we have dzn data or not
+
     if problem_data['data_nomenclature'].strip():
-        # Original prompt for problems with dzn data
         return f"""You are an expert MiniZinc developer.
 
 Generate Minizinc code from a given problem description with additional information about the parameters provided.
@@ -242,7 +232,6 @@ Input Data Nomenclature:
 {effective_input_data}
 """
     else:
-        # Modified prompt for problems without dzn data (like cardinal_operations)
         return f"""You are an expert MiniZinc developer.
 
 Generate MiniZinc code from the given problem description. All data and parameters are included in the problem description, so embed them directly in your MiniZinc model.
@@ -256,6 +245,23 @@ Problem Description:
 """
 
 
+def create_problem_from_text(text: str) -> Dict[str, Any]:
+    """Create a dataset-compatible problem dict from a plain text description."""
+    input_data = {
+        'description': text,
+        'parameters': [],
+        'metadata': {
+            'objective': 'unknown',
+            'identifier': 'user_problem',
+            'source': 'user',
+        }
+    }
+    return {
+        'input.json': repr(input_data),
+        'data.dzn': '',
+    }
+
+
 def save_solution(output_dir: str, problem_id: str, solution: str) -> None:
     """Save the generated solution to a file"""
     os.makedirs(output_dir, exist_ok=True)
@@ -265,12 +271,12 @@ def save_solution(output_dir: str, problem_id: str, solution: str) -> None:
 
 
 def load_file(file_path: str) -> str:
-    """Load a prompt template from file"""
+    """Load a file, resolving the path relative to the package directory if not found locally."""
+    p = _resolve_path(file_path)
     try:
-        with open(file_path, 'r') as file:
-            return file.read()
+        return p.read_text()
     except FileNotFoundError:
-        print(f"Prompt file not found: {file_path}")
+        print(f"File not found: {file_path}")
         return ""
 
 
@@ -284,63 +290,50 @@ def get_problem_source(problem):
 
 
 def get_problem_identifier(problem, idx):
-    """
-    Extract the identifier from problem's input.json metadata.
-    If identifier is empty or missing, generate one based on source and index.
-    """
+    """Extract the identifier from problem's input.json metadata."""
     try:
         input_data = ast.literal_eval(problem['input.json'])
         metadata = input_data.get('metadata', {})
         identifier = metadata.get('identifier', '')
-        
-        # Check if identifier is empty or just whitespace
+
         if not identifier or not identifier.strip():
-            # Generate identifier from source and index
             source = metadata.get('source', 'unknown')
-            # Clean up source to make it filename-safe
             safe_source = re.sub(r'[^\w\-]', '_', source.lower())
             identifier = f"{safe_source}_problem_{idx}"
         elif identifier in ['easy_lp', 'complex_lp']:
-            # Append index to these non-unique identifiers
             identifier = f"{identifier}_{idx}"
-        
+
         return identifier
     except Exception:
         return f"unknown_problem_{idx}"
 
 
 def get_cardinal_ops_subfolder(problem):
-    """
-    Determine the subfolder name for cardinal_operations datasets.
-    Returns: 'easylp', 'complexlp', 'nl4opt', 'industryor', or None if not a cardinal_operations source.
-    """
+    """Determine the subfolder name for cardinal_operations datasets."""
     try:
         input_data = ast.literal_eval(problem['input.json'])
         metadata = input_data.get('metadata', {})
         source = metadata.get('source', '')
         identifier = metadata.get('identifier', '')
-        
+
         if not source.startswith('cardinal_operations'):
             return None
-        
-        # Determine subfolder based on source
+
         if source == 'cardinal_operations_mamo':
-            # For mamo, use the identifier (easy_lp or complex_lp)
             if identifier == 'easy_lp':
                 return 'easylp'
             elif identifier == 'complex_lp':
                 return 'complexlp'
             else:
-                return 'mamo'  # fallback
+                return 'mamo'
         elif source == 'cardinal_operations_nl4opt':
             return 'nl4opt'
         elif source == 'cardinal_operations_industryor':
             return 'industryor'
         else:
-            # Extract suffix from source name
             suffix = source.replace('cardinal_operations_', '')
             return suffix if suffix else None
-            
+
     except Exception:
         return None
 
@@ -351,9 +344,8 @@ def filter_dataset_by_source(dataset, source_filter):
         source = get_problem_source(problem)
         if source is None:
             return False
-        # Support partial matching (case-insensitive)
         return source_filter.lower() in source.lower()
-    
+
     return dataset.filter(matches_source)
 
 
@@ -365,3 +357,35 @@ def get_available_sources(dataset):
         if source:
             sources.add(source)
     return sorted(sources)
+
+
+def load_text2zinc_dataset(dataset_path: Optional[str] = None):
+    """Load the Text2Zinc benchmark dataset as a `datasets.Dataset`.
+
+    dataset_path=None (default): pulls TEXT2ZINC_DATASET from the HuggingFace Hub.
+    dataset_path=<path>: loads a local Text2Zinc CSV instead (e.g. one saved by
+    `text2model --editor`), with the same 5 columns HF exposes: input.json,
+    data.dzn, model.mzn, output.json, is_verified.
+
+    Either way the result supports `.filter()`, indexing, `len()`, and
+    iteration identically, so callers don't need to branch on the source.
+    """
+    # `datasets` is imported lazily here (not at module scope) so callers that
+    # never touch the benchmark dataset don't pay for/depend on the HF stack.
+    from datasets import Dataset, load_dataset
+
+    if dataset_path is None:
+        return load_dataset(TEXT2ZINC_DATASET)['train']
+
+    rows = []
+    with open(dataset_path, 'r', encoding='utf-8', newline='') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            rows.append({
+                'input.json': row.get('input.json') or '',
+                'data.dzn': row.get('data.dzn') or '',
+                'model.mzn': row.get('model.mzn') or '',
+                'output.json': row.get('output.json') or '',
+                'is_verified': str(row.get('is_verified', '')).strip().lower() in ('true', '1', 'yes'),
+            })
+    return Dataset.from_list(rows)

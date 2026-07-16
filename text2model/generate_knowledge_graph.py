@@ -1,3 +1,16 @@
+"""Generate MiniZinc knowledge-graph (.ttl) files used by the `knowledge_graph` copilot strategy.
+
+By default this processes the verified problems in the skadio/text2zinc HF dataset and
+writes one .ttl file per problem, in the RDF/Turtle format shown in
+text2model/knowledge_graphs/*.ttl. To build a knowledge graph for your own problem, either
+adapt this script (see `create_kg_prompt`, which just needs a dict shaped like
+`text2model.utils.create_problem_from_text(...)` produces) or hand-write a .ttl file
+following the structure of one of the existing examples in text2model/knowledge_graphs/.
+
+Usage:
+    python -m text2model.generate_knowledge_graph --output-dir my_knowledge_graphs
+"""
+import argparse
 import ast
 import os
 import time
@@ -6,7 +19,7 @@ import openai
 from datasets import DatasetDict, load_dataset
 from tqdm import tqdm
 
-from utils import API_CONFIG, call_openai_api, load_file, prepare_problem_data
+from text2model.utils import API_CONFIG, call_openai_api, load_file, prepare_problem_data
 
 
 def create_kg_prompt(problem):
@@ -33,7 +46,7 @@ def save_kg_solution(output_dir, problem_id, solution):
         f.write(solution)
 
 
-def process_dataset(api_key, output_dir="knowledge_graphs"):
+def process_dataset(api_key, output_dir="generated_knowledge_graphs"):
     """Process the entire dataset and generate knowledge graphs"""
     # Initialize OpenAI client
     client = openai.OpenAI(api_key=api_key)
@@ -74,13 +87,23 @@ def process_dataset(api_key, output_dir="knowledge_graphs"):
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Generate MiniZinc knowledge-graph (.ttl) files for the text2zinc benchmark."
+    )
+    parser.add_argument(
+        '--output-dir', default="generated_knowledge_graphs",
+        help="Directory to write generated .ttl files to (default: generated_knowledge_graphs). "
+             "Does not touch the bundled text2model/knowledge_graphs/ files."
+    )
+    args = parser.parse_args()
+
     # Get API key from environment variable
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError("Please set OPENAI_API_KEY environment variable")
 
     # Process the dataset
-    process_dataset(api_key)
+    process_dataset(api_key, output_dir=args.output_dir)
 
 
 if __name__ == "__main__":

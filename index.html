@@ -575,6 +575,35 @@
       font-size: 0.76rem;
     }
 
+    /* ── HERO INSTALL ROW ── */
+    .install-top-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.25rem;
+    }
+    .install-command {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.45rem 1.1rem;
+    }
+    .install-label {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .install-command code {
+      color: var(--accent);
+    }
+
 
     /* ── HASH HIGHLIGHT (when arriving via anchor) ── */
     @keyframes anchorHighlight {
@@ -937,6 +966,9 @@
       <button class="btn btn-outline" onclick="toggleBibtexById('bibtex-hero')"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
 <!--      <a href="https://huggingface.co/collections/skadio/text2model-llm-copilots" class="btn btn-outline" target="_blank"> <i class="fa-solid fa-layer-group"></i> Collections</a>-->
     </div>
+    <div class="install-top-row">
+      <div class="install-command"><span class="install-label">Install</span><code>pip install text2model</code></div>
+    </div>
         <div class="bibtex-inline" id="bibtex-hero" style="max-width: 640px; margin: 1.5rem auto 0; text-align: left;">
       <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
       <pre>@misc{text2model,
@@ -1119,6 +1151,7 @@
           </div>
           <p class="card-desc">A comprehensive suite of LLM-based modeling copilots for text-to-model translation. Includes multiple strategies of varying complexity, from zero-shot and chain-of-thought prompting to compositional and agentic workflows, along with an <strong> online leaderboard</strong> for benchmarking and an interactive MiniZinc editor with a built-in AI assistant.</p>
           <p class="card-venue">Serdar Kadıoğlu, Karthik Uppuluri, Akash Singirikonda</p>
+          <div class="card-install"><i class="fa-solid fa-terminal"></i> pip install text2model</div>
           <div class="card-links">
             <a href="https://github.com/skadio/text2model" class="card-link" target="_blank"><i class="fa-brands fa-github"></i> Code</a>
             <a href="https://huggingface.co/spaces/skadio/text2model-leaderboard" class="card-link" target="_blank"><span class="hf-emoji">🤗</span> Leaderboard</a>
