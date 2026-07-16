@@ -8,11 +8,25 @@ import time
 from pathlib import Path
 
 import openai
-from datasets import DatasetDict, load_dataset
 from langchain_ollama import ChatOllama
 from tqdm import tqdm
 
 from text2model import utils
+
+# NOTE: `datasets` (HuggingFace) is intentionally imported lazily, inside the
+# Text2Zinc-mode code path in main(), rather than at module scope. Text mode
+# (--problem) never touches the HF dataset, so importing it eagerly here
+# would mean every text2model invocation pays for/depends on the HF stack
+# even when it's never used.
+
+# Models available via --model. OpenAI models require OPENAI_API_KEY; local
+# models (served through Ollama) need no API key.
+AVAILABLE_MODELS = {
+    'gpt-4': 'OpenAI, requires OPENAI_API_KEY',
+    'gpt-4o': 'OpenAI, requires OPENAI_API_KEY',
+    'gpt-5.2': 'OpenAI, requires OPENAI_API_KEY',
+    'phi4': 'Local, served through Ollama, no API key needed',
+}
 
 
 ###########################################################
@@ -516,10 +530,11 @@ def main():
             'text2model: turn a natural-language optimization problem description '
             'into a MiniZinc constraint model using an LLM.\n\n'
             'Two modes:\n'
-            '  1) Single problem  - pass --problem to translate one description and\n'
+            '  1) Text mode        - pass --problem to translate one description and\n'
             '     print the generated .mzn code to stdout.\n'
-            '  2) Batch           - omit --problem to run one or more prompting\n'
-            '     strategies over the skadio/text2zinc benchmark dataset.'
+            '  2) Text2Zinc mode   - omit --problem to run one or more prompting\n'
+            '     strategies over the skadio/text2zinc benchmark dataset.\n\n'
+            'Pass --editor to launch the Text2Zinc dataset editor (GUI) instead.'
         ),
         epilog=(
             'Examples:\n'
@@ -530,8 +545,14 @@ def main():
             '  text2model --problem problem.txt --model gpt-4o\n\n'
             '  # List the sources available in the benchmark dataset\n'
             '  text2model --list-sources\n\n'
-            '  # Batch-run the chain-of-thought strategy over one source\n'
+            '  # List the available --model options\n'
+            '  text2model --list-models\n\n'
+            '  # Text2Zinc mode: run the chain-of-thought strategy over one source\n'
             '  text2model --strategies cot --source "csplib" --output-dir results/\n\n'
+            '  # Text2Zinc mode against a locally-edited dataset instead of HuggingFace\n'
+            '  text2model --strategies cot --dataset-path text2zinc_edited.csv --output-dir results/\n\n'
+            '  # Launch the dataset editor to create/edit a local Text2Zinc dataset\n'
+            '  text2model --editor\n\n'
             'The OpenAI API key can also be set via the OPENAI_API_KEY environment '
             'variable. Local models (e.g. phi4) are served through Ollama and need '
             'no API key.'
@@ -544,6 +565,14 @@ def main():
         '--problem', type=str, default=None,
         help='Problem description string, or path to a .txt file containing the description. '
              'When provided, generates MiniZinc code and prints it to stdout.'
+    )
+
+    # ── Dataset editor ──────────────────────────────────────────────────────
+    parser.add_argument(
+        '--editor', action='store_true',
+        help="Launch the Text2Zinc dataset editor (GUI) and exit. Requires "
+             "'pip install text2model[editor]'. Combine with --dataset-path to "
+             "open a specific local CSV instead of the bundled default dataset."
     )
 
     # ── Model / API ─────────────────────────────────────────────────────────
@@ -569,25 +598,53 @@ def main():
             'cot_with_code_and_grammar_validation',
             'agents', 'agents_with_code_validation', 'gala', 'all',
         ],
-        help='Strategy (or strategies for batch mode). '
+        help='Strategy (or strategies for Text2Zinc mode). '
              'In --problem mode only the first strategy is used; default is cot.'
     )
 
-    # ── Batch-mode dataset arguments ────────────────────────────────────────
+    # ── Text2Zinc-mode dataset arguments ────────────────────────────────────
     parser.add_argument('--problem-ids', nargs='+', type=int,
-                        help='Specific problem IDs to process (batch mode)')
+                        help='Specific problem IDs to process (Text2Zinc mode)')
     parser.add_argument('--source', type=str, nargs='*', default=None,
-                        help='Filter problems by source (batch mode). Supports partial matching.')
+                        help='Filter problems by source (Text2Zinc mode). Supports partial matching.')
     parser.add_argument('--list-sources', action='store_true',
                         help='List all available sources in the dataset and exit')
+    parser.add_argument('--list-models', action='store_true',
+                        help='List all available --model options and exit')
     parser.add_argument('--include-unverified', action='store_true',
-                        help='Include unverified problems (batch mode)')
+                        help='Include unverified problems (Text2Zinc mode)')
     parser.add_argument('--all-sources', action='store_true',
-                        help='Run on all sources (batch mode)')
+                        help='Run on all sources (Text2Zinc mode)')
     parser.add_argument('--output-dir', default=None,
-                        help='Base output directory for batch mode (must not already exist)')
+                        help='Base output directory for Text2Zinc mode (must not already exist)')
+    parser.add_argument(
+        '--dataset-path', default=None,
+        help='Path to a local Text2Zinc CSV dataset (e.g. one saved by `text2model --editor`), '
+             'used instead of the default skadio/text2zinc HuggingFace dataset (Text2Zinc mode).'
+    )
 
     args = parser.parse_args()
+
+    # ── --editor: launch the GUI dataset editor, no API key needed ─────────
+    if args.editor:
+        try:
+            from text2model.editor import launch as launch_editor
+        except ImportError:
+            print(
+                "The dataset editor requires the 'flet' package. Install it with:\n"
+                "  pip install text2model[editor]",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        launch_editor(dataset_path=args.dataset_path)
+        return
+
+    # ── --list-models: no dataset, no API key needed ────────────────────────
+    if args.list_models:
+        print("\nAvailable --model options:")
+        for model, note in AVAILABLE_MODELS.items():
+            print(f"  - {model}: {note}")
+        return
 
     # ── --problem mode: skip dataset loading ────────────────────────────────
     if args.problem:
@@ -595,30 +652,34 @@ def main():
         _run_problem_mode(args, client)
         return
 
-    # ── Batch mode ───────────────────────────────────────────────────────────
-    print("Loading dataset...")
-    dataset = load_dataset("skadio/text2zinc")
+    # ── Text2Zinc mode ───────────────────────────────────────────────────────
+    # Validate before touching the network: a mistyped/incomplete command
+    # (e.g. forgetting --problem or --output-dir) should fail fast instead of
+    # first downloading the full HF dataset.
+    if not args.list_sources and not args.output_dir:
+        parser.error("--output-dir is required in Text2Zinc mode (not needed with --problem or --list-sources)")
+
+    if args.dataset_path:
+        print(f"Loading local dataset from {args.dataset_path}...")
+    else:
+        print("Loading dataset from HuggingFace (skadio/text2zinc)...")
+    dataset_train = utils.load_text2zinc_dataset(args.dataset_path)
 
     if args.include_unverified:
         print("Including ALL problems (verified and unverified)")
-        filtered_train = dataset["train"]
     else:
         print("Including only VERIFIED problems (use --include-unverified to include all)")
-        filtered_train = dataset["train"].filter(lambda x: x["is_verified"])
+        dataset_train = dataset_train.filter(lambda x: x["is_verified"])
 
-    dataset = DatasetDict({"train": filtered_train})
-    print(f"Loaded dataset with {len(dataset['train'])} examples")
+    print(f"Loaded dataset with {len(dataset_train)} examples")
 
     if args.list_sources:
         print("\nAvailable sources in the dataset:")
-        sources = utils.get_available_sources(dataset['train'])
+        sources = utils.get_available_sources(dataset_train)
         for source in sources:
-            count = sum(1 for p in dataset['train'] if utils.get_problem_source(p) == source)
+            count = sum(1 for p in dataset_train if utils.get_problem_source(p) == source)
             print(f"  - {source}: {count} instances")
         return
-
-    if not args.output_dir:
-        parser.error("--output-dir is required in batch mode (not needed with --problem)")
 
     while os.path.exists(args.output_dir):
         print(f"Output directory '{args.output_dir}' already exists. Please choose a different name.")
@@ -635,11 +696,10 @@ def main():
                 return False
             return any(s.lower() in source.lower() for s in args.source)
 
-        filtered_train = dataset['train'].filter(matches_any_source)
-        dataset = DatasetDict({"train": filtered_train})
-        print(f"Filtered dataset contains {len(dataset['train'])} instances matching sources")
+        dataset_train = dataset_train.filter(matches_any_source)
+        print(f"Filtered dataset contains {len(dataset_train)} instances matching sources")
 
-        if len(dataset['train']) == 0:
+        if len(dataset_train) == 0:
             print("\nNo instances found matching the specified source.")
             print("Use --list-sources to see available sources.")
             return
@@ -658,17 +718,18 @@ def main():
 
     if args.problem_ids:
         problems_to_process = [
-            (idx, dataset['train'][idx])
+            (idx, dataset_train[idx])
             for idx in args.problem_ids
-            if idx < len(dataset['train'])
+            if idx < len(dataset_train)
         ]
     else:
-        problems_to_process = list(enumerate(dataset['train']))
+        problems_to_process = list(enumerate(dataset_train))
 
     print(f"\n{'='*50}")
     print("RUN CONFIGURATION SUMMARY")
     print(f"{'='*50}")
     print(f"Model: {args.model}")
+    print(f"Dataset: {args.dataset_path if args.dataset_path else 'skadio/text2zinc (HuggingFace)'}")
     print(f"Strategies: {', '.join(strategies)}")
     print(f"Source filter: {args.source if args.source else 'None (all sources)'}")
     print(f"Include unverified: {args.include_unverified}")

@@ -3,6 +3,16 @@ Changelog
 
 All notable changes to this project are documented in this file.
 
+[1.1.0] - 2026-07-15
+---------------------
+- Added `text2model --editor`, a GUI dataset editor (Flet) for browsing,
+  editing, and running Text2Zinc problems, with an AI chat assistant.
+  Optional install via `pip install text2model[editor]`.
+- Added `--dataset-path` to `text2model` and `evals/evaluate.py` to
+  generate/benchmark against a local Text2Zinc CSV (e.g. one saved from the
+  editor) instead of the default skadio/text2zinc HuggingFace dataset.
+- Added `utils.load_text2zinc_dataset()`, a shared HF-or-local dataset loader.
+
 [1.0.0] - 2026-07-09
 ---------------------
 - First stable release.

@@ -12,6 +12,7 @@
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#text2zinc-mode">Text2Zinc Mode</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#copilots">Copilots</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#installation">Installation</a> •
+    <a href="https://github.com/skadio/text2model?tab=readme-ov-file#dataset-editor">Dataset Editor</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#evaluation">Evaluation</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#leaderboard">Leaderboard</a>
   </h3>
@@ -66,8 +67,8 @@ text2model --source nlp4lp --strategies cot --model gpt-4 --output-dir my_result
 # List all available data sources
 text2model --list-sources
 
-# List all available model options
-# --model accepts gpt-4, gpt-4o, gpt-5.2 (OpenAI, requires OPENAI_API_KEY), or phi4 (served locally through Ollama, no API key needed)
+# List all available --model options (which need OPENAI_API_KEY vs. run locally through Ollama)
+text2model --list-models
 
 # Advanced options
 text2model --strategies agents --model gpt-4 \
@@ -76,6 +77,11 @@ text2model --strategies agents --model gpt-4 \
   --max-tokens 8192 \
   --sleep-time 2 \
   --include-unverified
+
+# Use a local dataset (e.g. one saved by `text2model --editor`) instead of the
+# default skadio/text2zinc HuggingFace dataset
+text2model --strategies cot --model gpt-4 --output-dir my_results \
+  --dataset-path text2zinc_edited.csv
 ```
 
 ## Copilots
@@ -93,6 +99,18 @@ Text2Model offers different copilot strategies, ranging from simple single-call 
 | `agents` | Decomposes the task into specialized agents: (1) parameters & variables, (2) constraints, (3) objective, (4) assembler that stitches everything together.     |
 | `agents_with_code_validation` | Agents approach plus a final validation/fix step.                                                                                                            |
 | `gala` | Global Agents for different constraint types (all_different, cumulative, etc.) plus an assembler. See the [GALA paper](https://arxiv.org/abs/2509.08970).|
+
+> **Want to use `knowledge_graph` on your own problems?** It requires a pre-built `.ttl` knowledge-graph file per problem. See [`text2model/generate_knowledge_graph.py`](text2model/generate_knowledge_graph.py) and any example file under [`text2model/knowledge_graphs/`](text2model/knowledge_graphs/) (e.g. `nlp4lp_1.ttl`) and do similar — either adapt the script to your problem or hand-write a `.ttl` following the same structure.
+
+### Adding a Custom Copilot
+
+Every strategy in the table above follows the same shape, so plugging in a new one is mechanical:
+
+1. **Add prompt(s)** under [`text2model/prompts/`](text2model/prompts/) (`.txt` files with `{problem_description}`, `{input_data}`, etc. placeholders — see any existing prompt for the pattern).
+2. **Write a `run_<name>_strategy(client, model, problem, problem_identifier, output_dir)` function** in [`text2model/main.py`](text2model/main.py). Use `utils.prepare_problem_data`, `utils.get_effective_input_data`, and `utils.load_file` to build your prompt(s), call `utils.call_api(client, model, prompt)` to get code back, and stitch/combine calls the way `run_agents_strategy` does if your copilot needs multiple LLM calls. Finish with `utils.save_solution(output_dir, problem_identifier, code)`.
+3. **Register it** by adding `'<name>': run_<name>_strategy` to `_STRATEGY_MAP` in `main.py`, and add `'<name>'` to the `--strategies` argparse `choices` list (and to the `'all'` expansion list if it should run as part of `--strategies all`).
+
+That's it — your strategy is now available via `--strategies <name>` in both `--problem` and batch modes.
 
 ## Installation
 
@@ -116,9 +134,43 @@ cd text2model
 pip install -e .
 ```
 
+## Dataset Editor
+
+Text2Model ships a GUI editor for browsing and editing Text2Zinc problems (input.json, data.dzn, model.mzn, output.json), running them through MiniZinc, and chatting with an AI assistant for help rephrasing descriptions or fixing model code.
+
+### Install
+
+The editor uses [Flet](https://flet.dev) and is an optional extra, so the base `text2model` install stays lightweight:
+
+```bash
+pip install "text2model[editor]"
+```
+
+### Launch
+
+```bash
+text2model --editor
+```
+
+By default the editor opens, in order: a previous editing session (`text2zinc_edited.csv` in the current directory), otherwise the dataset bundled with the package. Use the **"Load from HuggingFace"** button inside the editor to instead start from a fresh copy of `skadio/text2zinc`, or open any other local dataset with **"Open CSV..."** — or non-interactively:
+
+```bash
+text2model --editor --dataset-path my_dataset.csv
+```
+
+### Save and Benchmark
+
+- **Save** (or Ctrl+S) quick-saves your edits to `text2zinc_edited.csv` in the current directory.
+- **Save As New Dataset...** exports to any path you choose. That path is a complete Text2Zinc dataset you can pass to `--dataset-path` to generate or benchmark against your edits instead of the default HuggingFace dataset:
+
+```bash
+text2model --strategies cot --model gpt-4 --output-dir my_results --dataset-path my_dataset.csv
+python evals/evaluate.py --output-dir my_results --dataset-path my_dataset.csv
+```
+
 ## Evaluation
 
-After generating models, evaluate their correctness via `evaluate.py`. This script compiles and runs each generated MiniZinc model against test instances, checking for both execution success and solution correctness.
+After generating models, evaluate their correctness via [`evals/evaluate.py`](evals/evaluate.py). This script compiles and runs each generated MiniZinc model against test instances, checking for both execution success and solution correctness.
 
 #### Prerequisite
 
@@ -128,8 +180,14 @@ Install MiniZinc solver: https://www.minizinc.org/doc-2.5.5/en/installation.html
 ```bash
 # Evaluate all generated code
 # `--output-dir` is required. Point it at the directory produced by the batch-mode `text2model` run.
-python evaluate.py --output-dir my_results
+python evals/evaluate.py --output-dir my_results
+
+# Evaluate against a local dataset (e.g. one saved by `text2model --editor`) instead
+# of the default skadio/text2zinc HuggingFace dataset
+python evals/evaluate.py --output-dir my_results --dataset-path text2zinc_edited.csv
 ```
+
+Running the eval generates a JSON file (`evaluation_results.json` by default, via `--output-json`) with your accuracy metrics. You can PR that file to the [Text2Model Leaderboard](https://huggingface.co/spaces/skadio/text2model-leaderboard) on Hugging Face to get your results added to the online leaderboard.
 
 #### Metrics
 
@@ -179,15 +237,20 @@ text2model/
 │   │   ├── global_constraint_prompts/
 │   │   └── ...
 │   ├── knowledge_graphs/        # KG files (.ttl) for knowledge_graph strategy
+│   ├── editor/                  # Dataset editor GUI (`text2model --editor`, optional `[editor]` extra)
+│   │   ├── app.py               # Flet app: browse/edit/execute Text2Zinc problems, AI chat assistant
+│   │   └── data/text2zinc.csv   # Bundled default dataset the editor opens on first run
 │   ├── grammar.mzn              # MiniZinc grammar for validation
 │   ├── main.py                  # Copilot strategies and CLI entry point
-│   └── utils.py                 # Shared utilities (API calls, validation)
+│   ├── generate_knowledge_graph.py  # Generates KGs for the knowledge_graph strategy
+│   └── utils.py                 # Shared utilities (API calls, validation, dataset loading)
 ├── tests/                       # Unit and integration tests (pytest)
+├── evals/                       # Evaluation tooling
+│   ├── evaluate.py              # Evaluates generated MiniZinc models
+│   └── evaluation_results.json  # Latest evaluation results (PR-able to the HF leaderboard)
 ├── output/                      # Original outputs per strategy, kept for reproducing paper results
 │   ├── [model]/[strategy]/      # e.g., gpt-4/cot/problem_1.mzn
 │   └── evaluation_results/      # Accuracy metrics and leaderboard
-├── evaluate.py                  # Evaluates generated MiniZinc models
-├── generate_knowledge_graph.py  # Generates KGs for knowledge_graph strategy
 ├── pyproject.toml               # Package metadata and install config
 ├── CHANGELOG.txt                # Release history
 └── LICENSE                      # Apache License 2.0

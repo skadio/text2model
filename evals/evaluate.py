@@ -10,8 +10,9 @@ from datetime import datetime
 from collections import defaultdict
 
 import pandas as pd
-from datasets import load_dataset
 from tqdm import tqdm
+
+from text2model import utils as t2m_utils
 
 
 # =============================================================================
@@ -336,13 +337,17 @@ def evaluate_directory(strategy_dir, problems, timeout, solver, desc=""):
     return metrics
 
 
-def load_verified_problems():
+def load_verified_problems(dataset_path=None):
     """
-    Load verified problems from HuggingFace dataset.
+    Load verified problems from the Text2Zinc dataset (HuggingFace by default,
+    or a local CSV, e.g. one saved by `text2model --editor`, if dataset_path is set).
     Returns dict keyed by identifier (which matches filename).
     """
-    print("Loading VERIFIED problems from HuggingFace dataset...")
-    dataset = load_dataset("skadio/text2zinc")['train']
+    if dataset_path:
+        print(f"Loading VERIFIED problems from local dataset: {dataset_path}...")
+    else:
+        print("Loading VERIFIED problems from HuggingFace dataset...")
+    dataset = t2m_utils.load_text2zinc_dataset(dataset_path)
     verified = dataset.filter(lambda x: x["is_verified"])
 
     problems = {}
@@ -378,9 +383,10 @@ def load_verified_problems():
     return problems
 
 
-def load_orlm_problems():
+def load_orlm_problems(dataset_path=None):
     """
-    Load ORLM (unverified) problems from HuggingFace dataset.
+    Load ORLM (unverified) problems from the Text2Zinc dataset (HuggingFace by
+    default, or a local CSV, e.g. one saved by `text2model --editor`, if dataset_path is set).
 
     ORLM sources:
     - cardinal_operations_mamo (identifier: easy_lp or complex_lp)
@@ -389,8 +395,11 @@ def load_orlm_problems():
 
     Returns dict with keys matching expected filenames.
     """
-    print("\nLoading ORLM (unverified) problems from HuggingFace dataset...")
-    dataset = load_dataset("skadio/text2zinc")['train']
+    if dataset_path:
+        print(f"\nLoading ORLM (unverified) problems from local dataset: {dataset_path}...")
+    else:
+        print("\nLoading ORLM (unverified) problems from HuggingFace dataset...")
+    dataset = t2m_utils.load_text2zinc_dataset(dataset_path)
 
     # Filter to only ORLM sources
     orlm_sources = ['cardinal_operations_mamo', 'cardinal_operations_industryor', 'cardinal_operations_nl4opt']
@@ -788,6 +797,10 @@ def main():
                         help='Skip ORLM evaluation')
     parser.add_argument('--output-json', default='evaluation_results.json',
                         help='Output JSON file')
+    parser.add_argument('--dataset-path', default=None,
+                        help='Path to a local Text2Zinc CSV dataset (e.g. one saved by '
+                             '`text2model --editor`), used instead of the default '
+                             'skadio/text2zinc HuggingFace dataset.')
 
     args = parser.parse_args()
 
@@ -808,20 +821,21 @@ def main():
             if os.path.isdir(os.path.join(args.output_dir, d)) and d not in skip_dirs
         ])
 
-    verified_problems = load_verified_problems()
+    verified_problems = load_verified_problems(args.dataset_path)
     if not verified_problems:
         print("Failed to load verified problems")
         return 1
 
     orlm_problems = None
     if args.eval_orlm:
-        orlm_problems = load_orlm_problems()
+        orlm_problems = load_orlm_problems(args.dataset_path)
 
     # --- Print config ---
     print(f"\n{'='*60}")
     print("EVALUATION CONFIGURATION")
     print(f"{'='*60}")
     print(f"Output directory: {args.output_dir}")
+    print(f"Dataset:          {args.dataset_path if args.dataset_path else 'skadio/text2zinc (HuggingFace)'}")
     print(f"Models:           {', '.join(models_to_evaluate)}")
     print(f"Strategy filter:  {args.strategy or 'All'}")
     print(f"Timeout:          {args.timeout}s")

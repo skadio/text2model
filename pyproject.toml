@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "text2model"
-version = "1.0.0"
+version = "1.1.0"
 description = "LLM Modeling Copilots for Text-to-Model Translation"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -24,6 +24,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest"]
+editor = ["flet==0.21.2"]
 
 [tool.pytest.ini_options]
 markers = [
@@ -43,4 +44,5 @@ include = ["text2model*"]
     "prompts/global_constraint_prompts/*.txt",
     "grammar.mzn",
     "knowledge_graphs/*.ttl",
+    "editor/data/*.csv",
 ]

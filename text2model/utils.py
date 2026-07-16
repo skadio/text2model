@@ -1,4 +1,5 @@
 import ast
+import csv
 import os
 import re
 import shutil
@@ -17,6 +18,14 @@ API_CONFIG = {
     'max_tokens': 4096,
     'sleep_time': 3
 }
+
+# HuggingFace repo backing the Text2Zinc benchmark dataset. This is the
+# default dataset source everywhere except the `--editor` GUI, which
+# defaults to a local CSV instead (see text2model/editor/app.py).
+TEXT2ZINC_DATASET = "skadio/text2zinc"
+
+# Columns of a local Text2Zinc CSV dataset, e.g. one saved by `text2model --editor`.
+TEXT2ZINC_CSV_COLUMNS = ['input.json', 'data.dzn', 'model.mzn', 'output.json', 'is_verified']
 
 # Package installation directory — used to locate bundled data files
 _PACKAGE_DIR = Path(__file__).parent
@@ -348,3 +357,35 @@ def get_available_sources(dataset):
         if source:
             sources.add(source)
     return sorted(sources)
+
+
+def load_text2zinc_dataset(dataset_path: Optional[str] = None):
+    """Load the Text2Zinc benchmark dataset as a `datasets.Dataset`.
+
+    dataset_path=None (default): pulls TEXT2ZINC_DATASET from the HuggingFace Hub.
+    dataset_path=<path>: loads a local Text2Zinc CSV instead (e.g. one saved by
+    `text2model --editor`), with the same 5 columns HF exposes: input.json,
+    data.dzn, model.mzn, output.json, is_verified.
+
+    Either way the result supports `.filter()`, indexing, `len()`, and
+    iteration identically, so callers don't need to branch on the source.
+    """
+    # `datasets` is imported lazily here (not at module scope) so callers that
+    # never touch the benchmark dataset don't pay for/depend on the HF stack.
+    from datasets import Dataset, load_dataset
+
+    if dataset_path is None:
+        return load_dataset(TEXT2ZINC_DATASET)['train']
+
+    rows = []
+    with open(dataset_path, 'r', encoding='utf-8', newline='') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            rows.append({
+                'input.json': row.get('input.json') or '',
+                'data.dzn': row.get('data.dzn') or '',
+                'model.mzn': row.get('model.mzn') or '',
+                'output.json': row.get('output.json') or '',
+                'is_verified': str(row.get('is_verified', '')).strip().lower() in ('true', '1', 'yes'),
+            })
+    return Dataset.from_list(rows)

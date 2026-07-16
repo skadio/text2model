@@ -166,3 +166,7 @@ cython_debug/
 .DS_Store
 .DS_Store?
 **/.DS_Store
+
+# Text2Zinc dataset editor (`text2model --editor`) local working files
+text2zinc_edited.csv
+text2zinc_[0-9]*.csv
