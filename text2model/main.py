@@ -570,9 +570,9 @@ def main():
     # ── Dataset editor ──────────────────────────────────────────────────────
     parser.add_argument(
         '--editor', action='store_true',
-        help="Launch the Text2Zinc dataset editor (GUI) and exit. Requires "
-             "'pip install text2model[editor]'. Combine with --dataset-path to "
-             "open a specific local CSV instead of the bundled default dataset."
+        help="Launch the Text2Zinc dataset editor (GUI) and exit. Combine with "
+             "--dataset-path to open a specific local CSV instead of the "
+             "bundled default dataset."
     )
 
     # ── Model / API ─────────────────────────────────────────────────────────
@@ -627,15 +627,7 @@ def main():
 
     # ── --editor: launch the GUI dataset editor, no API key needed ─────────
     if args.editor:
-        try:
-            from text2model.editor import launch as launch_editor
-        except ImportError:
-            print(
-                "The dataset editor requires the 'flet' package. Install it with:\n"
-                "  pip install text2model[editor]",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+        from text2model.editor import launch as launch_editor
         launch_editor(dataset_path=args.dataset_path)
         return
 

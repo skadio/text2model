@@ -10,6 +10,7 @@
   <h3>
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#text-mode">Text Mode</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#text2zinc-mode">Text2Zinc Mode</a> •
+    <a href="https://github.com/skadio/text2model?tab=readme-ov-file#interactive-mode">Interactive Mode</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#copilots">Copilots</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#installation">Installation</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#dataset-editor">Dataset Editor</a> •
@@ -30,7 +31,7 @@ Please visit [Text2Model](https://skadio.github.io/text2model/) for latest publi
 
 ## Quick Start
 
-Text2Model supports translating given problem descriptions (**Text mode**), or specific problems from our dataset (**Text2Zinc mode**).
+Text2Model supports translating given problem descriptions (**Text mode**), specific problems from our dataset (**Text2Zinc mode**), or running interactively using the [editor](https://github.com/skadio/text2model?tab=readme-ov-file#dataset-editor) (**Editor mode**).
 
 ### Text Mode
 
@@ -84,6 +85,15 @@ text2model --strategies cot --model gpt-4 --output-dir my_results \
   --dataset-path text2zinc_edited.csv
 ```
 
+### Interactive Mode
+
+```bash
+text2model --editor
+text2model --editor --dataset-path text2zinc_edited.csv
+```
+
+See [Dataset Editor](https://github.com/skadio/text2model?tab=readme-ov-file#dataset-editor) for details.
+
 ## Copilots
 
 Text2Model offers different copilot strategies, ranging from simple single-call approaches to sophisticated multi-agent systems. Each makes different trade-offs between speed and accuracy.
@@ -136,15 +146,7 @@ pip install -e .
 
 ## Dataset Editor
 
-Text2Model ships a GUI editor for browsing and editing Text2Zinc problems (input.json, data.dzn, model.mzn, output.json), running them through MiniZinc, and chatting with an AI assistant for help rephrasing descriptions or fixing model code.
-
-### Install
-
-The editor uses [Flet](https://flet.dev) and is an optional extra, so the base `text2model` install stays lightweight:
-
-```bash
-pip install "text2model[editor]"
-```
+Text2Model ships a GUI editor (built with [Flet](https://flet.dev)) for browsing and editing Text2Zinc problems (input.json, data.dzn, model.mzn, output.json), running them through MiniZinc, and chatting with an AI assistant for help rephrasing descriptions or fixing model code.
 
 ### Launch
 
@@ -187,7 +189,7 @@ python evals/evaluate.py --output-dir my_results
 python evals/evaluate.py --output-dir my_results --dataset-path text2zinc_edited.csv
 ```
 
-Running the eval generates a JSON file (`evaluation_results.json` by default, via `--output-json`) with your accuracy metrics. You can PR that file to the [Text2Model Leaderboard](https://huggingface.co/spaces/skadio/text2model-leaderboard) on Hugging Face to get your results added to the online leaderboard.
+Running the eval generates a JSON file (`evals/evaluation_results.json` by default, via `--output-json`) with your accuracy metrics. You can PR that file to the [Text2Model Leaderboard](https://huggingface.co/spaces/skadio/text2model-leaderboard) on Hugging Face to get your results added to the online leaderboard.
 
 #### Metrics
 
@@ -206,8 +208,6 @@ Text2Model hosts an online leaderboard tracking execution accuracy, solution acc
 **[Text2Model Leaderboard](https://huggingface.co/spaces/skadio/text2model-leaderboard)** (Hugging Face Spaces)
 
 ## Testing
-
-Install test dependencies with `pip install -e ".[test]"`.
 
 **Default tests** (`tests/test_main.py`, `tests/test_utils.py`) do not need an API key, network, or MiniZinc.
 They are pure logic tests with mocked API calls and is run by the CI:
@@ -237,7 +237,7 @@ text2model/
 │   │   ├── global_constraint_prompts/
 │   │   └── ...
 │   ├── knowledge_graphs/        # KG files (.ttl) for knowledge_graph strategy
-│   ├── editor/                  # Dataset editor GUI (`text2model --editor`, optional `[editor]` extra)
+│   ├── editor/                  # Dataset editor GUI (`text2model --editor`)
 │   │   ├── app.py               # Flet app: browse/edit/execute Text2Zinc problems, AI chat assistant
 │   │   └── data/text2zinc.csv   # Bundled default dataset the editor opens on first run
 │   ├── grammar.mzn              # MiniZinc grammar for validation
@@ -247,10 +247,10 @@ text2model/
 ├── tests/                       # Unit and integration tests (pytest)
 ├── evals/                       # Evaluation tooling
 │   ├── evaluate.py              # Evaluates generated MiniZinc models
-│   └── evaluation_results.json  # Latest evaluation results (PR-able to the HF leaderboard)
+│   ├── evaluation_results.json  # Latest evaluation results (PR-able to the HF leaderboard)
+│   └── results/                 # Accuracy metrics and leaderboard from paper runs
 ├── output/                      # Original outputs per strategy, kept for reproducing paper results
-│   ├── [model]/[strategy]/      # e.g., gpt-4/cot/problem_1.mzn
-│   └── evaluation_results/      # Accuracy metrics and leaderboard
+│   └── [model]/[strategy]/      # e.g., gpt-4/cot/problem_1.mzn
 ├── pyproject.toml               # Package metadata and install config
 ├── CHANGELOG.txt                # Release history
 └── LICENSE                      # Apache License 2.0

@@ -20,11 +20,9 @@ dependencies = [
     "datasets",
     "tqdm",
     "langchain-ollama",
+    "flet==0.21.2",
+    "pytest",
 ]
-
-[project.optional-dependencies]
-test = ["pytest"]
-editor = ["flet==0.21.2"]
 
 [tool.pytest.ini_options]
 markers = [

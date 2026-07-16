@@ -14,6 +14,9 @@ from tqdm import tqdm
 
 from text2model import utils as t2m_utils
 
+EVALS_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_OUTPUT_JSON = os.path.join(EVALS_DIR, "evaluation_results.json")
+
 
 # =============================================================================
 # CONFIGURATION
@@ -795,8 +798,9 @@ def main():
                         help='Also evaluate ORLM problems (default: True)')
     parser.add_argument('--no-eval-orlm', action='store_false', dest='eval_orlm',
                         help='Skip ORLM evaluation')
-    parser.add_argument('--output-json', default='evaluation_results.json',
-                        help='Output JSON file')
+    parser.add_argument('--output-json', default=DEFAULT_OUTPUT_JSON,
+                        help='Output JSON file (default: evals/evaluation_results.json, '
+                             'regardless of the current working directory)')
     parser.add_argument('--dataset-path', default=None,
                         help='Path to a local Text2Zinc CSV dataset (e.g. one saved by '
                              '`text2model --editor`), used instead of the default '
