@@ -1,5 +1,6 @@
 import argparse
 import ast
+from builtins import print as builtin_print
 import json
 import os
 import sys
@@ -27,6 +28,27 @@ AVAILABLE_MODELS = {
     'gpt-5.2': 'OpenAI, requires OPENAI_API_KEY',
     'phi4': 'Local, served through Ollama, no API key needed',
 }
+
+AVAILABLE_STRATEGIES = [
+    'baseline', 'cot', 'knowledge_graph',
+    'cot_with_code_validation', 'cot_with_grammar_validation',
+    'cot_with_code_and_grammar_validation',
+    'agents', 'agents_with_code_validation', 'gala', 'all',
+]
+
+
+def print(*args, **kwargs):
+    """Print comment-prefixed CLI text so redirected stdout stays MiniZinc-safe."""
+    file = kwargs.pop('file', sys.stdout)
+    sep = kwargs.pop('sep', ' ')
+    end = kwargs.pop('end', '\n')
+    flush = kwargs.pop('flush', False)
+    text = sep.join(str(arg) for arg in args)
+    if text:
+        text = '\n'.join(f'% {line}' for line in text.splitlines())
+    else:
+        text = '% '
+    builtin_print(text, file=file, end=end, flush=flush, **kwargs)
 
 
 ###########################################################
@@ -499,14 +521,12 @@ def _run_problem_mode(args, client):
         print(
             "Warning: 'knowledge_graph' strategy requires pre-built TTL files. "
             "Falling back to 'cot'.",
-            file=sys.stderr,
         )
         strategy = 'cot'
 
     strategy_fn = _STRATEGY_MAP[strategy]
 
-    print(f"Generating MiniZinc model using strategy '{strategy}' with model '{args.model}'...",
-          file=sys.stderr)
+    print(f"Generating MiniZinc model using strategy '{strategy}' with model '{args.model}'...")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         success = strategy_fn(client, args.model, problem, 'output', tmpdir)
@@ -514,9 +534,9 @@ def _run_problem_mode(args, client):
             output_path = os.path.join(tmpdir, 'output.mzn')
             with open(output_path) as f:
                 code = f.read()
-            print(code)
+            sys.stdout.write(code if code.endswith("\n") else code + "\n")
         else:
-            print("Failed to generate MiniZinc code.", file=sys.stderr)
+            print("Failed to generate MiniZinc code.")
             sys.exit(1)
 
 
@@ -527,14 +547,12 @@ def main():
     parser = argparse.ArgumentParser(
         prog='text2model',
         description=(
-            'text2model: turn a natural-language optimization problem description '
-            'into a MiniZinc constraint model using an LLM.\n\n'
-            'Two modes:\n'
-            '  1) Text mode        - pass --problem to translate one description and\n'
-            '     print the generated .mzn code to stdout.\n'
-            '  2) Text2Zinc mode   - omit --problem to run one or more prompting\n'
-            '     strategies over the skadio/text2zinc benchmark dataset.\n\n'
-            'Pass --editor to launch the Text2Zinc dataset editor (GUI) instead.'
+            'text2model: translate problem descriptions given in natural language text'
+            ' into MiniZinc constraint models using an LLM Modeling Copilot strategy.\n\n'
+            'Usage modes:\n'
+            '  1) Text mode (--problem): give input text or file\n'
+            '  2) Text2Zinc mode (--problem-ids): give Text2Zinc problem ids\n'
+            '  3) Editor mode (--editor): launch the dataset editor GUI\n'
         ),
         epilog=(
             'Examples:\n'
@@ -559,6 +577,10 @@ def main():
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
+
+    if len(sys.argv) == 1:
+        print(parser.format_help(), end='')
+        return
 
     # ── Simple single-problem mode ──────────────────────────────────────────
     parser.add_argument(
@@ -592,12 +614,7 @@ def main():
     parser.add_argument(
         '--strategies', nargs='+',
         default=['cot'],
-        choices=[
-            'baseline', 'cot', 'knowledge_graph',
-            'cot_with_code_validation', 'cot_with_grammar_validation',
-            'cot_with_code_and_grammar_validation',
-            'agents', 'agents_with_code_validation', 'gala', 'all',
-        ],
+        choices=AVAILABLE_STRATEGIES,
         help='Strategy (or strategies for Text2Zinc mode). '
              'In --problem mode only the first strategy is used; default is cot.'
     )
@@ -611,17 +628,17 @@ def main():
                         help='List all available sources in the dataset and exit')
     parser.add_argument('--list-models', action='store_true',
                         help='List all available --model options and exit')
+    parser.add_argument('--list-strategies', action='store_true',
+                        help='List all available strategy options and exit')
     parser.add_argument('--include-unverified', action='store_true',
                         help='Include unverified problems (Text2Zinc mode)')
     parser.add_argument('--all-sources', action='store_true',
                         help='Run on all sources (Text2Zinc mode)')
     parser.add_argument('--output-dir', default=None,
                         help='Base output directory for Text2Zinc mode (must not already exist)')
-    parser.add_argument(
-        '--dataset-path', default=None,
+    parser.add_argument('--dataset-path', default=None,
         help='Path to a local Text2Zinc CSV dataset (e.g. one saved by `text2model --editor`), '
-             'used instead of the default skadio/text2zinc HuggingFace dataset (Text2Zinc mode).'
-    )
+             'used instead of the default skadio/text2zinc HuggingFace dataset (Text2Zinc mode).')
 
     args = parser.parse_args()
 
@@ -636,6 +653,12 @@ def main():
         print("\nAvailable --model options:")
         for model, note in AVAILABLE_MODELS.items():
             print(f"  - {model}: {note}")
+        return
+
+    if args.list_strategies:
+        print("\nAvailable --strategies options:")
+        for strategy in AVAILABLE_STRATEGIES:
+            print(f"  - {strategy}")
         return
 
     # ── --problem mode: skip dataset loading ────────────────────────────────

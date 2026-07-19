@@ -3,6 +3,17 @@ Changelog
 
 All notable changes to this project are documented in this file.
 
+[1.2.0] - 2026-07-20
+- Several cosmetics and UI updates
+- Fix screen size wxh
+- Fix Left and Right hand side to save space
+
+[1.1.1] - 2026-07-19
+- Added --list-strategies flag
+- Fixed a printout bug when running without arguments
+- Fixed duplicate model printing
+- Print statements now append "%" so that they are treated as comments when redirecting output to a minizinc file
+
 [1.1.0] - 2026-07-15
 ---------------------
 - Added `text2model --editor`, a GUI dataset editor (Flet) for browsing,

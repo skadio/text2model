@@ -1,10 +1,12 @@
 import ast
 import csv
+from builtins import print as builtin_print
 import os
 import re
 import shutil
 import subprocess
 import tempfile
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -29,6 +31,20 @@ TEXT2ZINC_CSV_COLUMNS = ['input.json', 'data.dzn', 'model.mzn', 'output.json', '
 
 # Package installation directory — used to locate bundled data files
 _PACKAGE_DIR = Path(__file__).parent
+
+
+def print(*args, **kwargs):
+    """Print comment-prefixed CLI text so redirected stdout stays MiniZinc-safe."""
+    file = kwargs.pop('file', sys.stdout)
+    sep = kwargs.pop('sep', ' ')
+    end = kwargs.pop('end', '\n')
+    flush = kwargs.pop('flush', False)
+    text = sep.join(str(arg) for arg in args)
+    if text:
+        text = '\n'.join(f'% {line}' for line in text.splitlines())
+    else:
+        text = '% '
+    builtin_print(text, file=file, end=end, flush=flush, **kwargs)
 
 
 def _resolve_path(rel_path: str) -> Path:
@@ -57,7 +73,7 @@ def extract_global_constraint(text):
 def call_api(client, model: str, prompt: str) -> Optional[str]:
     if model in ["gpt-4", "gpt-4o", "gpt-5.2"]:
         solution = call_openai_api(client, prompt)
-        print(solution)
+        # print(solution)
         return solution
     else:
         solution = call_ollama_api(client, prompt)

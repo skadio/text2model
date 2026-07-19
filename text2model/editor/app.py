@@ -439,8 +439,10 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     page.title = "Text2Zinc Dataset Editor"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 10
-    page.window_width = 1600
-    page.window_height = 900
+    page.window_min_width = 800
+    page.window_min_height = 600
+    page.window_resizable = True
+    page.window_maximized = True
 
     editor = Text2ZincEditor()
     chat_assistant = ChatAssistant()
@@ -509,7 +511,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         keyboard_type=ft.KeyboardType.NUMBER, hint_text="Execution timeout",
     )
 
-    chat_history_column = ft.Column(scroll=ft.ScrollMode.AUTO, spacing=10, height=600)
+    chat_history_column = ft.Column(scroll=ft.ScrollMode.AUTO, spacing=10, expand=True)
 
     chat_input = ft.TextField(
         label="Ask AI Assistant...", multiline=True, min_lines=2, max_lines=4,
@@ -517,7 +519,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         expand=True,
     )
 
-    api_key_field = ft.TextField(label="OpenAI API Key", password=True, hint_text="sk-...", width=400)
+    api_key_field = ft.TextField(label="OpenAI API Key", password=True, hint_text="sk-...", expand=True)
 
     # Filter state — source filter driven from dataset metadata
     filter_state = {"source": "All"}
@@ -947,6 +949,11 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         chat_assistant.clear_history()
         page.update()
 
+    def close_chat(e):
+        chat_panel.visible = False
+        open_chat_button.visible = True
+        page.update()
+
     def set_api_key(e):
         if api_key_field.value:
             chat_assistant.set_api_key(api_key_field.value)
@@ -1045,47 +1052,19 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     clear_chat_button = ft.IconButton(icon=ft.icons.DELETE_SWEEP, tooltip="Clear chat", on_click=clear_chat)
     set_key_button = ft.ElevatedButton("Set API Key", icon=ft.icons.KEY, on_click=set_api_key)
 
-    # Layout
-    main_content = ft.Row(
-        [
-            ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Container(content=ft.Column([
-                            ft.Row(
-                                [
-                                    ft.Text("Text2Zinc Editor", size=20, weight=ft.FontWeight.BOLD),
-                                    save_indicator,
-                                ],
-                                alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                            ft.Row([status_text]),
-                            file_loaded_info,
-                            problem_info,
-                        ]), padding=ft.padding.only(bottom=10)),
+    def open_chat(e):
+        chat_panel.visible = True
+        open_chat_button.visible = False
+        page.update()
 
-                        ft.Container(
-                            content=ft.Row(
-                                [
-                                    open_csv_button,
-                                    load_hf_button,
-                                    save_button,
-                                    save_as_button,
-                                    ft.Container(width=10),
-                                    prev_button,
-                                    current_index_text,
-                                    next_button,
-                                    ft.Container(width=10),
-                                    goto_field,
-                                    goto_button,
-                                    ft.Container(width=10),
-                                    source_dropdown,
-                                ],
-                                alignment=ft.MainAxisAlignment.START, wrap=True),
-                            bgcolor=ft.colors.GREY_200, padding=10, border_radius=5,
-                        ),
-                        ft.Container(height=10),
+    open_chat_button = ft.OutlinedButton(
+        "AI Assistant",
+        icon=ft.icons.CHAT,
+        on_click=open_chat,
+    )
 
-                        ft.Tabs(
+    # Primary work area
+    tabs = ft.Tabs(
                             selected_index=0,
                             animation_duration=300,
                             tabs=[
@@ -1154,59 +1133,174 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
                                     ),
                                 ),
                             ],
-                            expand=True,
-                        ),
-                    ],
-                    expand=True),
-                width=900,
-                expand=True,
-            ),
+                    expand=True,
+                )
 
+    problem_navigation = ft.Row(
+        [
+            prev_button,
+            current_index_text,
+            next_button,
+            goto_field,
+            goto_button,
+            open_chat_button,
+        ],
+        spacing=8,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+    )
+
+    dataset_controls = ft.Column(
+        [
+            status_text,
+            file_loaded_info,
+            problem_info,
+            save_indicator,
+            ft.Divider(height=1),
+            open_csv_button,
+            load_hf_button,
+            save_button,
+            save_as_button,
+            source_dropdown,
+        ],
+        spacing=10,
+    )
+
+    def toggle_dataset_sidebar(e):
+        if dataset_sidebar.width == 48:
+            dataset_sidebar.width = 300
+            dataset_sidebar.content = ft.Column(
+                [
+                    ft.Row(
+                        [
+                            ft.Row(
+                                [
+                                    ft.Icon(ft.icons.TUNE, color=ft.colors.BLUE),
+                                    ft.Text("Dataset controls", weight=ft.FontWeight.BOLD),
+                                ],
+                                spacing=8,
+                            ),
+                            ft.IconButton(
+                                icon=ft.icons.CHEVRON_LEFT,
+                                tooltip="Hide dataset controls",
+                                on_click=toggle_dataset_sidebar,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    ),
+                    dataset_controls,
+                ],
+                spacing=10,
+            )
+        else:
+            dataset_sidebar.width = 48
+            dataset_sidebar.content = ft.IconButton(
+                icon=ft.icons.TUNE,
+                tooltip="Show dataset controls",
+                on_click=toggle_dataset_sidebar,
+            )
+        page.update()
+
+    dataset_sidebar = ft.Container(
+        content=ft.IconButton(
+            icon=ft.icons.TUNE,
+            tooltip="Show dataset controls",
+            on_click=toggle_dataset_sidebar,
+        ),
+        width=48,
+        animate_size=ft.animation.Animation(200, ft.AnimationCurve.EASE_IN_OUT),
+        bgcolor=ft.colors.GREY_100,
+        border_radius=8,
+        padding=4,
+    )
+
+    tab_area = ft.Stack(
+        [
+            tabs,
             ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Container(
-                            content=ft.Column([
-                                ft.Row([
-                                    ft.Icon(ft.icons.CHAT, color=ft.colors.BLUE),
-                                    ft.Text("AI Assistant", size=18, weight=ft.FontWeight.BOLD),
-                                ]),
-                                ft.Text("Get help with problem descriptions, code generation, and more",
-                                        size=11, color=ft.colors.GREY_700),
-                            ]),
-                            padding=10,
-                        ),
-                        ft.Divider(height=1),
-
-                        ft.Container(
-                            content=ft.Row([api_key_field, set_key_button], spacing=10),
-                            padding=10, bgcolor=ft.colors.GREY_100,
-                        ),
-
-                        ft.Container(
-                            content=chat_history_column, expand=True, padding=10,
-                            border=ft.border.all(1, ft.colors.GREY_300), border_radius=8,
-                        ),
-
-                        ft.Container(
-                            content=ft.Row([
-                                chat_input,
-                                ft.Column([send_button, clear_chat_button], spacing=5),
-                            ], spacing=10),
-                            padding=10,
-                        ),
-                    ],
-                    expand=True),
-                width=600,
-                border=ft.border.all(2, ft.colors.BLUE_200),
-                border_radius=10,
-                padding=10,
+                content=problem_navigation,
+                top=0,
+                right=0,
+                padding=ft.padding.only(top=4, right=8),
+                bgcolor=ft.colors.WHITE,
             ),
         ],
         expand=True,
-        spacing=20)
+    )
 
-    page.add(main_content)
+    # Layout
+    main_content = ft.Container(
+        content=ft.Column(
+            [
+                ft.Row(
+                    [dataset_sidebar, tab_area],
+                    expand=True,
+                    spacing=12,
+                    vertical_alignment=ft.CrossAxisAlignment.START,
+                ),
+            ],
+            expand=True,
+        ),
+        expand=True,
+    )
+
+    chat_panel = ft.Container(
+        content=ft.Column(
+            [
+                ft.Row(
+                    [
+                        ft.Row(
+                            [
+                                ft.Icon(ft.icons.CHAT, color=ft.colors.BLUE),
+                                ft.Text("AI Assistant", size=18, weight=ft.FontWeight.BOLD),
+                            ],
+                            spacing=8,
+                        ),
+                        ft.IconButton(
+                            icon=ft.icons.CLOSE,
+                            tooltip="Hide AI Assistant",
+                            on_click=close_chat,
+                        ),
+                    ],
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                ),
+                ft.Text(
+                    "Get help with problem descriptions, code generation, and more",
+                    size=11,
+                    color=ft.colors.GREY_700,
+                ),
+                ft.Divider(height=1),
+                ft.Row([api_key_field, set_key_button], spacing=10),
+                ft.Container(
+                    content=chat_history_column,
+                    expand=True,
+                    padding=10,
+                    border=ft.border.all(1, ft.colors.GREY_300),
+                    border_radius=8,
+                ),
+                ft.Row(
+                    [
+                        chat_input,
+                        ft.Column([send_button, clear_chat_button], spacing=5),
+                    ],
+                    spacing=10,
+                ),
+            ],
+            expand=True,
+        ),
+        width=420,
+        visible=False,
+        border=ft.border.all(1, ft.colors.BLUE_200),
+        border_radius=10,
+        padding=10,
+    )
+    page.add(
+        ft.Row(
+            [main_content, chat_panel],
+            expand=True,
+            spacing=16,
+            vertical_alignment=ft.CrossAxisAlignment.START,
+        )
+    )
 
     # Keyboard shortcuts
     def handle_keyboard(e: ft.KeyboardEvent):
