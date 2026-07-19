@@ -577,21 +577,14 @@
 
     /* ── HERO INSTALL ROW ── */
     .install-top-row {
+      margin-top: 1rem;
       display: flex;
-      justify-content: center;
-      margin-top: 1.25rem;
-    }
-    /* .install-command {
-      display: inline-flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0.65rem;
-      font-family: var(--mono);
-      font-size: 0.85rem;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 0.45rem 1.1rem;
-    } */
+      justify-content: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
     .install-command {
       display: inline-flex;
       align-items: center;
@@ -602,15 +595,22 @@
       background: var(--card-bg);
     }
     .install-label {
-      font-family: var(--sans);
-      font-weight: 600;
+      font-family: var(--mono);
       font-size: 0.68rem;
+      font-weight: 500;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--accent);
+      background: rgba(192,57,43,0.08);
+      border-radius: 4px;
+      padding: 0.2rem 0.45rem;
     }
     .install-command code {
-      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.84rem;
+      color: var(--ink);
+      background: none;
+      padding: 0;
     }
 
 
