@@ -1,17 +1,19 @@
-import ast
-import csv
 import datetime
 import json
 import os
-import subprocess
-import tempfile
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import List, Optional
 
 import flet as ft
-import openai
 
-from text2model.utils import TEXT2ZINC_CSV_COLUMNS, TEXT2ZINC_DATASET
+from text2model.editor.chat_assistant import DEFAULT_CHAT_MODEL, ChatAssistant
+from text2model.editor.dataset_editor import Text2ZincEditor, blank_problem, validate_item
+from text2model.editor.json_viewer import create_json_viewer
+from text2model.utils import (
+    OPENAI_MODELS,
+    TEXT2ZINC_DATASET,
+    verify_minizinc_solution,
+)
 
 # Bundled seed dataset, shipped as package data — this is what the editor
 # opens by default the very first time it's run in a fresh directory.
@@ -23,416 +25,6 @@ DEFAULT_DATASET_PATH = _PACKAGE_DIR / "data" / "text2zinc.csv"
 # that destination is the "new text2zinc dataset" to pass to
 # `text2model --dataset-path` / `evals/evaluate.py --dataset-path`.
 WORKING_DATASET_PATH = "text2zinc_edited.csv"
-
-
-def _parse_json_field(value: Any) -> Any:
-    """Parse a dataset field that may already be a dict, a JSON string, or a
-    Python-repr string (the format the skadio/text2zinc HF dataset uses)."""
-    if isinstance(value, dict):
-        return value
-    if not value:
-        return {}
-    try:
-        return json.loads(value)
-    except (TypeError, ValueError):
-        try:
-            return ast.literal_eval(value)
-        except (ValueError, SyntaxError):
-            return value
-
-
-class Text2ZincEditor:
-    """Main dataset editor class that handles Text2Zinc dataset management"""
-
-    def __init__(self):
-        self.data = []
-        self.current_index = 0
-        self.csv_columns = TEXT2ZINC_CSV_COLUMNS
-
-    def load_csv(self, filename: str) -> bool:
-        """Load dataset from a local Text2Zinc CSV file"""
-        try:
-            data = []
-            with open(filename, 'r', encoding='utf-8') as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    if 'input.json' in row:
-                        row['input.json'] = _parse_json_field(row['input.json'])
-                    if 'output.json' in row:
-                        row['output.json'] = _parse_json_field(row['output.json'])
-                    if 'is_verified' in row:
-                        row['is_verified'] = str(row['is_verified']).lower() in ('true', '1', 'yes')
-                    data.append(row)
-            self.data = data
-            self.current_index = 0
-            return True
-        except Exception as e:
-            print(f"Error loading CSV: {e}")
-            return False
-
-    def load_from_huggingface(self) -> bool:
-        """Load dataset fresh from the skadio/text2zinc HuggingFace dataset"""
-        try:
-            from datasets import load_dataset
-            hf_dataset = load_dataset(TEXT2ZINC_DATASET)['train']
-
-            data = []
-            for row in hf_dataset:
-                data.append({
-                    'input.json': _parse_json_field(row.get('input.json')),
-                    'data.dzn': row.get('data.dzn', '') or '',
-                    'model.mzn': row.get('model.mzn', '') or '',
-                    'output.json': _parse_json_field(row.get('output.json')),
-                    'is_verified': bool(row.get('is_verified', False)),
-                })
-            self.data = data
-            self.current_index = 0
-            return True
-        except Exception as e:
-            print(f"Error loading dataset from HuggingFace: {e}")
-            return False
-
-    def save_csv(self, filename: str) -> bool:
-        """Save dataset to a local Text2Zinc CSV file"""
-        try:
-            with open(filename, 'w', encoding='utf-8', newline='') as f:
-                writer = csv.DictWriter(f, fieldnames=self.csv_columns, extrasaction='ignore')
-                writer.writeheader()
-                for row in self.data:
-                    row_copy = {k: v for k, v in row.items() if k in self.csv_columns}
-
-                    if isinstance(row_copy.get('input.json'), dict):
-                        row_copy['input.json'] = json.dumps(row_copy['input.json'])
-                    if isinstance(row_copy.get('output.json'), dict):
-                        row_copy['output.json'] = json.dumps(row_copy['output.json'])
-                    if 'is_verified' in row_copy:
-                        row_copy['is_verified'] = str(row_copy['is_verified'])
-                    writer.writerow(row_copy)
-            return True
-        except Exception as e:
-            print(f"Error saving CSV: {e}")
-            return False
-
-    def get_current_item(self) -> Dict[str, Any]:
-        """Get current item"""
-        if not self.data or self.current_index >= len(self.data):
-            return {}
-        return self.data[self.current_index]
-
-    def update_current_item(self, field: str, value: Any):
-        """Update a field in the current item"""
-        if self.data and self.current_index < len(self.data):
-            self.data[self.current_index][field] = value
-
-    def execute_minizinc(self,
-                         model: str,
-                         data: str,
-                         problem_type: str = "optimization",
-                         solver: str = "highs",
-                         timeout: int = 60) -> Dict[str, Any]:
-        """Execute MiniZinc model with data"""
-        result = {
-            'success': False,
-            'output': '',
-            'error': '',
-            'json_output': None,
-            'problem_type': problem_type
-        }
-
-        try:
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.mzn', delete=False) as model_file:
-                model_file.write(model)
-                model_path = model_file.name
-
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.dzn', delete=False) as data_file:
-                data_file.write(data)
-                data_path = data_file.name
-
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as output_file:
-                output_path = output_file.name
-
-            is_optimization = 'minimize' in model.lower() or 'maximize' in model.lower()
-
-            cmd = ['minizinc', '--solver', solver, '--output-mode', 'json']
-            if is_optimization:
-                cmd.append('--output-objective')
-            cmd.extend([model_path, data_path, '-o', output_path])
-
-            process_result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
-
-            os.unlink(model_path)
-            os.unlink(data_path)
-
-            if process_result.returncode == 0:
-                result['success'] = True
-                try:
-                    with open(output_path, 'r') as f:
-                        output_text = f.read()
-
-                    import re
-                    json_match = re.search(r'{.*}', output_text, re.DOTALL)
-                    if json_match:
-                        json_str = json_match.group(0)
-                        result['json_output'] = json.loads(json_str)
-                        result['output'] = json.dumps(result['json_output'])
-                    else:
-                        result['output'] = output_text
-                except Exception:
-                    result['output'] = output_text if 'output_text' in locals() else process_result.stdout
-
-                os.unlink(output_path)
-            else:
-                result['error'] = process_result.stderr
-                result['output'] = process_result.stderr
-                try:
-                    os.unlink(output_path)
-                except OSError:
-                    pass
-
-        except FileNotFoundError:
-            result['error'] = "MiniZinc not found. Please install MiniZinc."
-        except subprocess.TimeoutExpired:
-            result['error'] = f"Execution timed out after {timeout} seconds."
-        except Exception as e:
-            result['error'] = str(e)
-
-        return result
-
-
-class ChatAssistant:
-    """AI Chat Assistant using OpenAI API"""
-
-    def __init__(self, api_key: str = ""):
-        self.api_key = api_key
-        self.client = None
-        self.conversation_history = []
-        self.current_context = {}
-        if api_key:
-            self.client = openai.OpenAI(api_key=api_key)
-
-    def set_api_key(self, api_key: str):
-        """Set OpenAI API key"""
-        self.api_key = api_key
-        self.client = openai.OpenAI(api_key=api_key)
-
-    def update_context(self, context: Dict[str, Any]):
-        """Update the current context for AI assistance"""
-        self.current_context = context
-
-    def send_message(self, user_message: str) -> str:
-        """Send a message to the AI and get a response"""
-        if not self.client:
-            return "Error: OpenAI API key not set. Please set it in the settings."
-
-        try:
-            system_message = self._build_system_message()
-
-            self.conversation_history.append({"role": "user", "content": user_message})
-
-            # Keep only last 6 messages (6 turns = 3 user + 3 assistant)
-            if len(self.conversation_history) > 6:
-                self.conversation_history = self.conversation_history[-6:]
-
-            messages = [{"role": "system", "content": system_message}] + self.conversation_history
-
-            # gpt-5.2 is a reasoning model, so skip temperature/max_tokens (same pattern as utils.py)
-            completion = self.client.chat.completions.create(model="gpt-5.2", messages=messages)
-
-            assistant_message = completion.choices[0].message.content.strip()
-            self.conversation_history.append({"role": "assistant", "content": assistant_message})
-
-            return assistant_message
-
-        except Exception as e:
-            return f"Error communicating with OpenAI: {str(e)}"
-
-    def _build_system_message(self) -> str:
-        """Build a context-aware system message"""
-        base_msg = """You are an expert assistant helping modeling and solving combinatorial problems using MiniZinc models.
-You can help with:
-- Rephrasing problem descriptions
-- Generating or improving MiniZinc code
-- Creating appropriate data files (.dzn format)
-- Analyzing constraints and optimization objectives
-- Debugging MiniZinc models"""
-
-        if self.current_context:
-            base_msg += "\n\nCurrent problem context:\n"
-
-            if 'input_json' in self.current_context:
-                input_data = self.current_context['input_json']
-                if isinstance(input_data, dict):
-                    if 'description' in input_data:
-                        base_msg += f"\nProblem Description: {input_data['description']}\n"
-                    if 'metadata' in input_data:
-                        meta = input_data['metadata']
-                        base_msg += f"Problem Name: {meta.get('name', 'N/A')}\n"
-                        base_msg += f"Domain: {meta.get('domain', 'N/A')}\n"
-                        base_msg += f"Objective: {meta.get('objective', 'N/A')}\n"
-
-            if self.current_context.get('data_dzn'):
-                base_msg += f"\nCurrent data.dzn:\n{self.current_context['data_dzn'][:300]}...\n"
-
-            if self.current_context.get('model_mzn'):
-                base_msg += f"\nCurrent model.mzn:\n{self.current_context['model_mzn'][:500]}...\n"
-
-        return base_msg
-
-    def clear_history(self):
-        """Clear conversation history"""
-        self.conversation_history = []
-
-
-def create_json_viewer(json_data: dict) -> ft.Column:
-    """Create a formatted view of JSON data"""
-    if not isinstance(json_data, dict):
-        return ft.Column([ft.Text("Invalid JSON data", color=ft.colors.RED, size=14)])
-
-    sections = []
-
-    if 'metadata' in json_data:
-        metadata = json_data['metadata']
-        metadata_items = [
-            ft.Row([
-                ft.Icon(ft.icons.LABEL, size=18, color=ft.colors.BLUE),
-                ft.Text("Name:", weight=ft.FontWeight.BOLD, size=14),
-                ft.Text(str(metadata.get('name', 'N/A')), size=14),
-            ], spacing=8),
-            ft.Row([
-                ft.Icon(ft.icons.DOMAIN, size=18, color=ft.colors.BLUE),
-                ft.Text("Domain:", weight=ft.FontWeight.BOLD, size=14),
-                ft.Text(str(metadata.get('domain', 'N/A')), size=14),
-            ], spacing=8),
-            ft.Row([
-                ft.Icon(ft.icons.FLAG, size=18, color=ft.colors.BLUE),
-                ft.Text("Objective:", weight=ft.FontWeight.BOLD, size=14),
-                ft.Text(str(metadata.get('objective', 'N/A')), size=14),
-            ], spacing=8),
-        ]
-
-        if 'source' in metadata:
-            metadata_items.append(
-                ft.Row([
-                    ft.Icon(ft.icons.SOURCE, size=18, color=ft.colors.BLUE),
-                    ft.Text("Source:", weight=ft.FontWeight.BOLD, size=14),
-                    ft.Text(str(metadata.get('source', 'N/A')), size=14),
-                ], spacing=8))
-
-        if 'identifier' in metadata:
-            metadata_items.append(
-                ft.Row([
-                    ft.Icon(ft.icons.TAG, size=18, color=ft.colors.BLUE),
-                    ft.Text("Identifier:", weight=ft.FontWeight.BOLD, size=14),
-                    ft.Text(str(metadata.get('identifier', 'N/A')), size=14),
-                ], spacing=8))
-
-        if 'constraints' in metadata and isinstance(metadata['constraints'], list):
-            constraints_text = ", ".join(metadata['constraints'])
-            metadata_items.append(
-                ft.Row([
-                    ft.Icon(ft.icons.RULE, size=18, color=ft.colors.BLUE),
-                    ft.Text("Constraints:", weight=ft.FontWeight.BOLD, size=14),
-                    ft.Text(constraints_text, size=14),
-                ], spacing=8))
-
-        sections.append(
-            ft.Container(
-                content=ft.Column([
-                    ft.Text("Metadata", size=16, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_900),
-                    ft.Divider(height=1, color=ft.colors.BLUE_200),
-                    ft.Column(metadata_items, spacing=8),
-                ], spacing=8),
-                padding=12,
-                bgcolor=ft.colors.BLUE_50,
-                border_radius=8,
-                border=ft.border.all(2, ft.colors.BLUE_200),
-            ))
-
-    if 'description' in json_data:
-        sections.append(
-            ft.Container(
-                content=ft.Column([
-                    ft.Text("Problem Description", size=16, weight=ft.FontWeight.BOLD, color=ft.colors.GREEN_900),
-                    ft.Divider(height=1, color=ft.colors.GREEN_200),
-                    ft.Text(str(json_data['description']), size=13),
-                ], spacing=8),
-                padding=12,
-                bgcolor=ft.colors.GREEN_50,
-                border_radius=8,
-                border=ft.border.all(2, ft.colors.GREEN_200),
-            ))
-
-    if 'parameters' in json_data and isinstance(json_data['parameters'], list):
-        param_widgets = []
-        for i, param in enumerate(json_data['parameters'], 1):
-            shape_str = str(param.get('shape', [])) if param.get('shape') else "scalar"
-            param_widgets.append(
-                ft.Container(
-                    content=ft.Column([
-                        ft.Row([
-                            ft.Text(f"{i}.", size=13, color=ft.colors.GREY_600),
-                            ft.Text(f"{param.get('symbol', 'unknown')}", weight=ft.FontWeight.BOLD,
-                                    size=14, color=ft.colors.INDIGO_900),
-                            ft.Text(f"(shape: {shape_str})", size=12, color=ft.colors.GREY_600, italic=True),
-                        ], spacing=6),
-                        ft.Text(f"{param.get('definition', '')}", size=13, color=ft.colors.GREY_800),
-                    ], spacing=4),
-                    padding=8,
-                    bgcolor=ft.colors.WHITE,
-                    border_radius=5,
-                    border=ft.border.all(1, ft.colors.GREY_300),
-                ))
-
-        sections.append(
-            ft.Container(
-                content=ft.Column([
-                    ft.Text(f"Input Parameters ({len(json_data['parameters'])})", size=16,
-                            weight=ft.FontWeight.BOLD, color=ft.colors.INDIGO_900),
-                    ft.Divider(height=1, color=ft.colors.INDIGO_200),
-                    ft.Column(param_widgets, spacing=8),
-                ], spacing=8),
-                padding=12,
-                bgcolor=ft.colors.INDIGO_50,
-                border_radius=8,
-                border=ft.border.all(2, ft.colors.INDIGO_200),
-            ))
-
-    if 'output' in json_data and isinstance(json_data['output'], list):
-        output_widgets = []
-        for i, output in enumerate(json_data['output'], 1):
-            shape_str = str(output.get('shape', [])) if output.get('shape') else "scalar"
-            output_widgets.append(
-                ft.Container(
-                    content=ft.Column([
-                        ft.Row([
-                            ft.Text(f"{i}.", size=13, color=ft.colors.GREY_600),
-                            ft.Text(f"{output.get('symbol', 'unknown')}", weight=ft.FontWeight.BOLD,
-                                    size=14, color=ft.colors.ORANGE_900),
-                            ft.Text(f"(shape: {shape_str})", size=12, color=ft.colors.GREY_600, italic=True),
-                        ], spacing=6),
-                        ft.Text(f"{output.get('definition', '')}", size=13, color=ft.colors.GREY_800),
-                    ], spacing=4),
-                    padding=8,
-                    bgcolor=ft.colors.WHITE,
-                    border_radius=5,
-                    border=ft.border.all(1, ft.colors.GREY_300),
-                ))
-
-        sections.append(
-            ft.Container(
-                content=ft.Column([
-                    ft.Text(f"Output Variables ({len(json_data['output'])})", size=16,
-                            weight=ft.FontWeight.BOLD, color=ft.colors.ORANGE_900),
-                    ft.Divider(height=1, color=ft.colors.ORANGE_200),
-                    ft.Column(output_widgets, spacing=8),
-                ], spacing=8),
-                padding=12,
-                bgcolor=ft.colors.ORANGE_50,
-                border_radius=8,
-                border=ft.border.all(2, ft.colors.ORANGE_200),
-            ))
-
-    return ft.Column(sections, spacing=12, scroll=ft.ScrollMode.AUTO)
 
 
 def main(page: ft.Page, dataset_path: Optional[str] = None):
@@ -520,6 +112,10 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     )
 
     api_key_field = ft.TextField(label="OpenAI API Key", password=True, hint_text="sk-...", expand=True)
+    chat_model_dropdown = ft.Dropdown(
+        label="Model", width=140, value=DEFAULT_CHAT_MODEL,
+        options=[ft.dropdown.Option(m) for m in OPENAI_MODELS],
+    )
 
     # Filter state — source filter driven from dataset metadata
     filter_state = {"source": "All"}
@@ -646,6 +242,49 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         page.update()
         finish_loading(f"HuggingFace ({TEXT2ZINC_DATASET}, not yet saved locally)", editor.load_from_huggingface())
 
+    def generate_unique_identifier() -> str:
+        existing = set()
+        for it in editor.data:
+            ij = it.get('input.json', {})
+            if isinstance(ij, dict):
+                ident = ij.get('metadata', {}).get('identifier')
+                if ident:
+                    existing.add(ident)
+        n = 1
+        while f"new_problem_{n}" in existing:
+            n += 1
+        return f"new_problem_{n}"
+
+    def new_problem(e):
+        """Add a blank problem, matching the same schema as every other row,
+        and jump straight to it in edit mode so it's ready to fill in."""
+        editor.data.append(blank_problem(generate_unique_identifier()))
+
+        # The new item has no source yet, so make sure it's visible regardless
+        # of whatever source filter is currently active.
+        if filter_state["source"] != "All":
+            filter_state["source"] = "All"
+            source_dropdown.value = "All"
+
+        rebuild_filtered_indices()
+        new_global_index = len(editor.data) - 1
+        filtered_pos[0] = filtered_indices.index(new_global_index)
+        editor.current_index = new_global_index
+        load_current_problem()
+
+        # Land on the Input tab, in edit mode, ready to type.
+        tabs.selected_index = 0
+        edit_mode_switch.value = True
+        json_viewer_container.visible = False
+        input_json_field.visible = True
+
+        status_text.value = (
+            "New problem added — fill in description, source, and either "
+            "model.mzn or an objective before saving."
+        )
+        status_text.color = ft.colors.BLUE
+        page.update()
+
     def sync_fields_into_current_item():
         """Copy the current UI field values back into editor.data, without writing any file."""
         if not editor.data:
@@ -706,12 +345,53 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
                 f'Benchmark with it via: text2model --dataset-path "{e.path}" --strategies cot --output-dir results/'
             )
             status_text.color = ft.colors.GREEN
+            if not str(data_dzn_field.value or '').strip():
+                status_text.value += (
+                    "\nNote: current problem has no data.dzn — fine if the model has data built in, "
+                    "otherwise add one."
+                )
         else:
             status_text.value = f"Error saving to {e.path}"
             status_text.color = ft.colors.RED
         page.update()
 
+    def close_validation_dialog(e):
+        validation_dialog.open = False
+        page.update()
+
+    validation_dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Row([
+            ft.Icon(ft.icons.ERROR_OUTLINE, color=ft.colors.RED),
+            ft.Text("Can't save — missing required fields"),
+        ], spacing=8),
+        content=ft.Text(""),
+        actions=[ft.TextButton("OK", on_click=close_validation_dialog)],
+    )
+    page.overlay.append(validation_dialog)
+
+    def show_validation_dialog(missing: List[str]):
+        validation_dialog.content = ft.Column(
+            [ft.Text("This problem is missing:", size=13)]
+            + [ft.Text(f"• {m}", size=13) for m in missing],
+            tight=True, spacing=6,
+        )
+        validation_dialog.open = True
+        page.update()
+
     def save_as(e):
+        if not editor.data:
+            status_text.value = "No data to save"
+            status_text.color = ft.colors.ORANGE
+            page.update()
+            return
+
+        sync_fields_into_current_item()
+        missing = validate_item(editor.get_current_item())
+        if missing:
+            show_validation_dialog(missing)
+            return
+
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         save_as_dialog.save_file(
             dialog_title="Save Text2Zinc Dataset As",
@@ -826,25 +506,34 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
                 execution_json_display.content = ft.Text("No JSON output available", size=13, color=ft.colors.GREY_600)
 
             if output_json_field.value:
+                comparison_text = None
                 try:
-                    expected = json.loads(output_json_field.value)
-                    if '_objective' in expected and '_objective' in result['json_output']:
-                        expected_obj = float(expected['_objective'])
-                        actual_obj = float(result['json_output']['_objective'])
-                        diff = abs(expected_obj - actual_obj)
+                    _, solution_success, verify_output = verify_minizinc_solution(
+                        model_code, data_dzn_field.value, output_json_field.value,
+                        problem_type, timeout=timeout, solver=solver,
+                    )
 
-                        if diff < 1e-6:
-                            comparison_text = f"✓ Matches expected objective: {expected_obj}"
-                            comparison_color = ft.colors.GREEN_700
+                    if is_satisfaction:
+                        if solution_success:
+                            comparison_text = "✓ Solution satisfies the model's constraints"
                         else:
-                            comparison_text = f"✗ Expected: {expected_obj}, Got: {actual_obj} (diff: {diff:.6f})"
-                            comparison_color = ft.colors.RED_700
+                            comparison_text = f"✗ Solution does not satisfy the constraints: {verify_output[:300]}"
+                    else:
+                        expected = json.loads(output_json_field.value)
+                        if '_objective' in expected:
+                            expected_obj = float(expected['_objective'])
+                            if solution_success:
+                                comparison_text = f"✓ Matches expected objective: {expected_obj}"
+                            else:
+                                comparison_text = f"✗ Expected: {expected_obj}, Got: {verify_output}"
 
+                    if comparison_text:
+                        comparison_color = ft.colors.GREEN_700 if solution_success else ft.colors.RED_700
                         execution_json_display.content.controls.append(
                             ft.Container(
                                 content=ft.Text(comparison_text, size=13, weight=ft.FontWeight.BOLD, color=comparison_color),
                                 padding=10,
-                                bgcolor=ft.colors.GREEN_50 if diff < 1e-6 else ft.colors.RED_50,
+                                bgcolor=ft.colors.GREEN_50 if solution_success else ft.colors.RED_50,
                                 border_radius=5,
                             ))
                 except Exception:
@@ -964,6 +653,10 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
             status_text.color = ft.colors.ORANGE
         page.update()
 
+    def set_chat_model(e):
+        if chat_model_dropdown.value:
+            chat_assistant.set_model(chat_model_dropdown.value)
+
     def go_to_problem(e):
         try:
             idx = int(goto_field.value) - 1
@@ -1029,6 +722,12 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         tooltip=f"Reload fresh from the {TEXT2ZINC_DATASET} HuggingFace dataset",
     )
 
+    new_problem_button = ft.ElevatedButton(
+        "New Problem", icon=ft.icons.ADD, on_click=new_problem,
+        bgcolor=ft.colors.PURPLE_700, color=ft.colors.WHITE,
+        tooltip="Add a blank problem with the same schema, ready to edit",
+    )
+
     save_button = ft.ElevatedButton(
         "Save", icon=ft.icons.SAVE, on_click=save_current_edits,
         bgcolor=ft.colors.BLUE_700, color=ft.colors.WHITE,
@@ -1051,6 +750,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     send_button = ft.IconButton(icon=ft.icons.SEND, tooltip="Send message", on_click=send_chat_message)
     clear_chat_button = ft.IconButton(icon=ft.icons.DELETE_SWEEP, tooltip="Clear chat", on_click=clear_chat)
     set_key_button = ft.ElevatedButton("Set API Key", icon=ft.icons.KEY, on_click=set_api_key)
+    chat_model_dropdown.on_change = set_chat_model
 
     def open_chat(e):
         chat_panel.visible = True
@@ -1158,6 +858,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
             ft.Divider(height=1),
             open_csv_button,
             load_hf_button,
+            new_problem_button,
             save_button,
             save_as_button,
             source_dropdown,
@@ -1270,6 +971,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
                 ),
                 ft.Divider(height=1),
                 ft.Row([api_key_field, set_key_button], spacing=10),
+                ft.Row([chat_model_dropdown], spacing=10),
                 ft.Container(
                     content=chat_history_column,
                     expand=True,

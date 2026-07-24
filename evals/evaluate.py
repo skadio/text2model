@@ -388,8 +388,13 @@ def load_verified_problems(dataset_path=None):
 
 def load_orlm_problems(dataset_path=None):
     """
-    Load ORLM (unverified) problems from the Text2Zinc dataset (HuggingFace by
+    Load ORLM problems from the Text2Zinc dataset (HuggingFace by
     default, or a local CSV, e.g. one saved by `text2model --editor`, if dataset_path is set).
+
+    These problems ship with validated ground-truth objective values from their
+    original release, so they're independently verifiable even though they don't
+    have a manually verified MiniZinc model and are reported as a separate
+    benchmark from the verified-MiniZinc-model problems.
 
     ORLM sources:
     - cardinal_operations_mamo (identifier: easy_lp or complex_lp)
@@ -399,9 +404,9 @@ def load_orlm_problems(dataset_path=None):
     Returns dict with keys matching expected filenames.
     """
     if dataset_path:
-        print(f"\nLoading ORLM (unverified) problems from local dataset: {dataset_path}...")
+        print(f"\nLoading ORLM problems from local dataset: {dataset_path}...")
     else:
-        print("\nLoading ORLM (unverified) problems from HuggingFace dataset...")
+        print("\nLoading ORLM problems from HuggingFace dataset...")
     dataset = t2m_utils.load_text2zinc_dataset(dataset_path)
 
     # Filter to only ORLM sources

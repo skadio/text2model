@@ -12,6 +12,7 @@
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#text2zinc-mode">Text2Zinc Mode</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#interactive-mode">Interactive Mode</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#copilots">Copilots</a> •
+    <a href="https://github.com/skadio/text2model?tab=readme-ov-file#fine-tuned-models">Fine-tuned Models</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#installation">Installation</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#dataset-editor">Dataset Editor</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#evaluation">Evaluation</a> •
@@ -43,7 +44,8 @@ text2model --problem "A country produces fighter jets each year. Some of these j
 text2model --problem my_problem.txt
 
 # Choose the copilot strategy and the model
-# Note that `knowledge_graph` is not available for text-mode as it requires pre-built TTL files
+# `knowledge_graph`: uses the pre-built .ttl if one exists for the problem,
+# otherwise generates one on the fly with an extra LLM call.
 text2model --problem my_problem.txt --strategies agents_with_code_validation --model gpt-4o
 
 # Redirect the output to a MiniZinc model
@@ -53,8 +55,13 @@ text2model --problem my_problem.txt > my_model.mzn
 ### Text2Zinc Mode
 
 ```bash
-# Translate specific problems from Text2Zinc
-text2model --problem-ids 0 1 2 --strategies cot --model gpt-4 --output-dir my_results
+# Translate specific problems from Text2Zinc, by index and/or identifier
+# (identifiers match the dataset's "identifier" metadata field and output/.ttl
+# filenames; use `--list-problem-ids` to see what's available)
+text2model --problem-ids 0 1 nlp4lp_58 --strategies cot --model gpt-4 --output-dir my_results
+
+# List problem indices/identifiers available to pass to --problem-ids
+text2model --list-problem-ids --source nlp4lp
 
 # Run multiple strategies on all Text2Zinc problems
 text2model --strategies cot --model gpt-4 --output-dir my_results
@@ -68,7 +75,8 @@ text2model --source nlp4lp --strategies cot --model gpt-4 --output-dir my_result
 # List all available data sources
 text2model --list-sources
 
-# List all available --model options (which need OPENAI_API_KEY vs. run locally through Ollama)
+# List all available --model options (OpenAI via OPENAI_API_KEY, local through
+# Ollama, or local Hugging Face checkpoints loaded in-process via unsloth)
 text2model --list-models
 
 # Advanced options
@@ -77,7 +85,7 @@ text2model --strategies agents --model gpt-4 \
   --temperature 0.7 \
   --max-tokens 8192 \
   --sleep-time 2 \
-  --include-unverified
+  --full-dataset
 
 # Use a local dataset (e.g. one saved by `text2model --editor`) instead of the
 # default skadio/text2zinc HuggingFace dataset
@@ -110,26 +118,58 @@ Text2Model offers different copilot strategies, ranging from simple single-call 
 | `agents_with_code_validation` | Agents approach plus a final validation/fix step.                                                                                                            |
 | `gala` | Global Agents for different constraint types (all_different, cumulative, etc.) plus an assembler. See the [GALA paper](https://arxiv.org/abs/2509.08970).|
 
-> **Want to use `knowledge_graph` on your own problems?** It requires a pre-built `.ttl` knowledge-graph file per problem. See [`text2model/generate_knowledge_graph.py`](text2model/generate_knowledge_graph.py) and any example file under [`text2model/knowledge_graphs/`](text2model/knowledge_graphs/) (e.g. `nlp4lp_1.ttl`) and do similar — either adapt the script to your problem or hand-write a `.ttl` following the same structure.
+> **`knowledge_graph` on your own problems**: if no `.ttl` exists for the problem under [`text2model/knowledge_graphs/`](text2model/knowledge_graphs/), one is generated on the fly with an extra LLM call. To pre-build and curate your own instead, see [`text2model/generate_knowledge_graph.py`](text2model/generate_knowledge_graph.py) or hand-write a `.ttl` following the structure of an existing example (e.g. `nlp4lp_1.ttl`).
 
 ### Adding a Custom Copilot
 
 Every strategy in the table above follows the same shape, so plugging in a new one is mechanical:
 
 1. **Add prompt(s)** under [`text2model/prompts/`](text2model/prompts/) (`.txt` files with `{problem_description}`, `{input_data}`, etc. placeholders — see any existing prompt for the pattern).
-2. **Write a `run_<name>_strategy(client, model, problem, problem_identifier, output_dir)` function** in [`text2model/main.py`](text2model/main.py). Use `utils.prepare_problem_data`, `utils.get_effective_input_data`, and `utils.load_file` to build your prompt(s), call `utils.call_api(client, model, prompt)` to get code back, and stitch/combine calls the way `run_agents_strategy` does if your copilot needs multiple LLM calls. Finish with `utils.save_solution(output_dir, problem_identifier, code)`.
-3. **Register it** by adding `'<name>': run_<name>_strategy` to `_STRATEGY_MAP` in `main.py`, and add `'<name>'` to the `--strategies` argparse `choices` list (and to the `'all'` expansion list if it should run as part of `--strategies all`).
+2. **Write a `run_<name>_strategy(client, model, problem, problem_identifier, output_dir)` function** in its own module under [`text2model/copilots/`](text2model/copilots/). Use `utils.prepare_problem_data`, `utils.get_effective_input_data`, and `utils.load_file` to build your prompt(s), call `utils.call_api(client, model, prompt)` to get code back, and stitch/combine calls the way `copilots/agents.py` does if your copilot needs multiple LLM calls. Finish with `utils.save_solution(output_dir, problem_identifier, code)`.
+3. **Register it** by importing your function and adding `'<name>': run_<name>_strategy` to `STRATEGY_MAP` in [`text2model/copilots/__init__.py`](text2model/copilots/__init__.py), and add `'<name>'` to the `--strategies` argparse `choices` list in `main.py` (and to the `'all'` expansion list if it should run as part of `--strategies all`).
 
 That's it — your strategy is now available via `--strategies <name>` in both `--problem` and batch modes.
+
+## Fine-tuned Models
+
+Alongside API-based copilots, we release our own **fine-tuned models for generating MiniZinc code**, hosted on Hugging Face under the [skadio](https://huggingface.co/skadio) org. They run locally, in-process (loaded via [unsloth](https://github.com/unslothai/unsloth), no daemon), and are available as `--model` options alongside OpenAI/Ollama models — see [`text2model/huggingface.py`](text2model/huggingface.py) for the loading/prompting logic per model. Set `HF_TOKEN` in your environment before using these (see [Set Your API Keys](https://github.com/skadio/text2model?tab=readme-ov-file#set-your-api-keys)).
+
+**Requires an NVIDIA or Intel GPU.** unsloth hard-fails with `NotImplementedError` at import time on CPU-only machines — there's no CPU fallback in `huggingface.py` today (it always loads through `unsloth.FastLanguageModel`, never plain `transformers.AutoModelForCausalLM`). Install the extra GPU dependencies into the same environment as the rest of text2model:
+
+```bash
+pip install "text2model[gpu]" --extra-index-url https://download.pytorch.org/whl/cu126
+```
+
+The `[gpu]` extra pins exact versions (torch, unsloth, transformers, peft, etc.) — this stack breaks easily across releases, so see the comment above `[project.optional-dependencies]` in [`pyproject.toml`](pyproject.toml) if you need to change any of them.
+
+| Model (`--model` alias) | Base Model | Hugging Face Repo |
+|---|---|---|
+| `learn2zinc-gpt-oss-20b` | gpt-oss-20B | [skadio/learn2zinc-GPT-oss-20B](https://huggingface.co/skadio/learn2zinc-GPT-oss-20B) |
+| `learn2zinc-qwen3-0.6b` | Qwen3-0.6B | [skadio/learn2zinc-Qwen3-0.6B](https://huggingface.co/skadio/learn2zinc-Qwen3-0.6B) |
+| `learn2zinc-llama-3.2-1b` | Llama-3.2-1B | [skadio/learn2zinc-Llama-3.2-1B](https://huggingface.co/skadio/learn2zinc-Llama-3.2-1B) |
+| `learn2zinc-llama-3.2-3b` | Llama-3.2-3B | [skadio/learn2zinc-Llama-3.2-3B](https://huggingface.co/skadio/learn2zinc-Llama-3.2-3B) |
+| `learn2zinc-gemma-2-9b` | Gemma-2-9B | [skadio/learn2zinc-Gemma-2-9B](https://huggingface.co/skadio/learn2zinc-Gemma-2-9B) |
+
+```bash
+# Run a copilot strategy against a local fine-tuned Hugging Face model
+text2model --problem my_problem.txt --strategies baseline --model learn2zinc-gpt-oss-20b
+```
+
+`learn2zinc-gpt-oss-20b` is our best-performing open-source model.
 
 ## Installation
 
 Text2Model requires **Python 3.8+** and can be installed from PyPI or by building from source.
 
-### Set Your API Key
+### Set Your API Keys
 
 ```bash
 export OPENAI_API_KEY="your-api-key-here"
+
+# Only needed for the Hugging Face models under Fine-tuned Models below.
+# huggingface_hub/transformers pick this up automatically from the
+# environment, no --api-key-style flag needed.
+export HF_TOKEN="your-hugging-face-token-here"
 ```
 
 ### Install from PyPI
@@ -240,9 +280,19 @@ text2model/
 │   ├── editor/                  # Dataset editor GUI (`text2model --editor`)
 │   │   ├── app.py               # Flet app: browse/edit/execute Text2Zinc problems, AI chat assistant
 │   │   └── data/text2zinc.csv   # Bundled default dataset the editor opens on first run
+│   ├── copilots/                # One module per copilot strategy, registered in STRATEGY_MAP
+│   │   ├── baseline.py
+│   │   ├── cot.py
+│   │   ├── knowledge_graph.py
+│   │   ├── cot_with_code_validation.py
+│   │   ├── cot_with_grammar_validation.py
+│   │   ├── cot_with_code_and_grammar_validation.py
+│   │   ├── agents.py
+│   │   └── gala.py
 │   ├── grammar.mzn              # MiniZinc grammar for validation
-│   ├── main.py                  # Copilot strategies and CLI entry point
+│   ├── main.py                  # CLI entry point: argparse, dataset loading, run orchestration
 │   ├── generate_knowledge_graph.py  # Generates KGs for the knowledge_graph strategy
+│   ├── huggingface.py           # Local Hugging Face models, loaded in-process via unsloth (no daemon, unlike Ollama)
 │   └── utils.py                 # Shared utilities (API calls, validation, dataset loading)
 ├── tests/                       # Unit and integration tests (pytest)
 ├── evals/                       # Evaluation tooling

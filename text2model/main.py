@@ -1,6 +1,5 @@
 import argparse
 import ast
-from builtins import print as builtin_print
 import json
 import os
 import sys
@@ -12,7 +11,8 @@ import openai
 from langchain_ollama import ChatOllama
 from tqdm import tqdm
 
-from text2model import utils
+from text2model import copilots, huggingface, utils
+from text2model.utils import print
 
 # NOTE: `datasets` (HuggingFace) is intentionally imported lazily, inside the
 # Text2Zinc-mode code path in main(), rather than at module scope. Text mode
@@ -20,13 +20,23 @@ from text2model import utils
 # would mean every text2model invocation pays for/depends on the HF stack
 # even when it's never used.
 
-# Models available via --model. OpenAI models require OPENAI_API_KEY; local
-# models (served through Ollama) need no API key.
+# Models available via --model. OpenAI models require OPENAI_API_KEY; Ollama
+# models are served by a local daemon, no API key needed; Hugging Face models
+# are loaded directly into this process via unsloth (no daemon, no API key,
+# but needs a GPU and the first call pays a one-time model-load cost). These
+# are not finetuned to follow every copilot strategy's prompt shape equally
+# well — start with `baseline`/`cot` and treat the rest as best-effort.
 AVAILABLE_MODELS = {
     'gpt-4': 'OpenAI, requires OPENAI_API_KEY',
     'gpt-4o': 'OpenAI, requires OPENAI_API_KEY',
     'gpt-5.2': 'OpenAI, requires OPENAI_API_KEY',
+    'gpt-5.5': 'OpenAI, requires OPENAI_API_KEY',
+    'gpt-5.6': 'OpenAI, requires OPENAI_API_KEY',
     'phi4': 'Local, served through Ollama, no API key needed',
+    **{
+        alias: f"Local, Hugging Face model ({config['repo_id']}) loaded in-process via unsloth, no API key needed"
+        for alias, config in huggingface.HUGGINGFACE_MODELS.items()
+    },
 }
 
 AVAILABLE_STRATEGIES = [
@@ -35,429 +45,6 @@ AVAILABLE_STRATEGIES = [
     'cot_with_code_and_grammar_validation',
     'agents', 'agents_with_code_validation', 'gala', 'all',
 ]
-
-
-def print(*args, **kwargs):
-    """Print comment-prefixed CLI text so redirected stdout stays MiniZinc-safe."""
-    file = kwargs.pop('file', sys.stdout)
-    sep = kwargs.pop('sep', ' ')
-    end = kwargs.pop('end', '\n')
-    flush = kwargs.pop('flush', False)
-    text = sep.join(str(arg) for arg in args)
-    if text:
-        text = '\n'.join(f'% {line}' for line in text.splitlines())
-    else:
-        text = '% '
-    builtin_print(text, file=file, end=end, flush=flush, **kwargs)
-
-
-###########################################################
-# Single-call Strategy
-###########################################################
-def run_baseline_strategy(client, model, problem, problem_identifier, output_dir):
-    """Run the baseline single-prompt strategy"""
-    try:
-        prompt = utils.create_baseline_prompt(problem)
-        solution = utils.call_api(client, model, prompt)
-
-        if solution:
-            utils.save_solution(output_dir, problem_identifier, solution)
-            return True
-        return False
-    except Exception as e:
-        print(f"Error in baseline strategy for problem {problem_identifier}: {e}")
-        return False
-
-
-###########################################################
-# Two-call Strategies
-###########################################################
-def run_knowledge_graph_strategy(client, model, problem, problem_identifier, output_dir):
-    """Run the strategy using knowledge graphs"""
-    try:
-        kg_path = utils._resolve_path(f"knowledge_graphs/{problem_identifier}.ttl")
-        if not kg_path.exists():
-            print(f"Knowledge graph not found for problem {problem_identifier}")
-            return False
-
-        problem_data = utils.prepare_problem_data(problem)
-        effective_input_data = utils.get_effective_input_data(problem_data)
-        knowledge_graph = utils.load_file(str(kg_path))
-
-        kg_prompt = utils.load_file('prompts/kg_code_generation_prompt.txt')
-        prompt = kg_prompt.format(
-            problem_description=problem_data['description'],
-            knowledge_graph=knowledge_graph,
-            input_data=effective_input_data
-        )
-
-        solution = utils.call_api(client, model, prompt)
-
-        if solution:
-            utils.save_solution(output_dir, problem_identifier, solution)
-            return True
-        return False
-
-    except Exception as e:
-        print(f"Error in knowledge graph strategy for problem {problem_identifier}: {e}")
-        return False
-
-
-def run_cot_with_code_validation_strategy(client, model, problem, problem_identifier, output_dir):
-    """Run the cot strategy with conditional code validation (only if compilation fails)"""
-    try:
-        problem_data = utils.prepare_problem_data(problem)
-        effective_input_data = utils.get_effective_input_data(problem_data)
-
-        cot_prompt = utils.load_file('prompts/cot_prompt.txt')
-        initial_code = utils.call_api(
-            client,
-            model,
-            cot_prompt.format(
-                problem_description=problem_data['description'],
-                input_data=effective_input_data
-            )
-        )
-
-        if not initial_code:
-            return False
-
-        current_code = initial_code
-
-        dzn_data = problem.get('data.dzn') or ""
-        syntax_error_message = utils.check_syntax(initial_code, dzn_data)
-
-        if syntax_error_message:
-            time.sleep(2)
-
-            validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
-            validated_code = utils.call_api(
-                client,
-                model,
-                validation_prompt.format(
-                    problem_description=problem_data['description'],
-                    input_data=effective_input_data,
-                    objective_type=problem_data['objective_type'],
-                    final_code=initial_code,
-                    syntax_error_message=syntax_error_message
-                )
-            )
-
-            if validated_code:
-                current_code = validated_code
-
-        utils.save_solution(output_dir, problem_identifier, current_code)
-        return True
-
-    except Exception as e:
-        print(f"Error in two-stage strategy for problem {problem_identifier}: {e}")
-        return False
-
-
-def run_cot_strategy(client, model, problem, problem_identifier, output_dir):
-    """Run the Chain of Thought strategy (single-stage)"""
-    try:
-        problem_data = utils.prepare_problem_data(problem)
-        effective_input_data = utils.get_effective_input_data(problem_data)
-
-        cot_prompt = utils.load_file('prompts/cot_prompt.txt')
-        code = utils.call_api(
-            client,
-            model,
-            cot_prompt.format(
-                problem_description=problem_data['description'],
-                input_data=effective_input_data
-            )
-        )
-
-        if not code:
-            return False
-
-        utils.save_solution(output_dir, problem_identifier, code)
-        return True
-
-    except Exception as e:
-        print(f"Error in CoT strategy for problem {problem_identifier}: {e}")
-        return False
-
-
-def run_cot_with_grammar_validation_strategy(client, model, problem, problem_identifier, output_dir):
-    """Run the CoT + Grammar Validation strategy (2-stage)"""
-    try:
-        problem_data = utils.prepare_problem_data(problem)
-        effective_input_data = utils.get_effective_input_data(problem_data)
-
-        cot_prompt = utils.load_file('prompts/cot_prompt.txt')
-        initial_code = utils.call_api(
-            client,
-            model,
-            cot_prompt.format(
-                problem_description=problem_data['description'],
-                input_data=effective_input_data
-            )
-        )
-
-        if not initial_code:
-            return False
-
-        time.sleep(2)
-
-        current_code = initial_code
-
-        dzn_data = problem.get('data.dzn') or ""
-        syntax_error_message = utils.check_syntax(initial_code, dzn_data)
-
-        if syntax_error_message:
-            grammar_prompt = utils.load_file('prompts/grammar_validation_prompt.txt')
-            minizinc_grammar = utils.load_file('grammar.mzn')
-
-            grammar_corrected_code = utils.call_api(
-                client,
-                model,
-                grammar_prompt.format(
-                    problem_description=problem_data['description'],
-                    input_data=effective_input_data,
-                    current_code=current_code,
-                    syntax_error_message=syntax_error_message,
-                    minizinc_grammar=minizinc_grammar
-                )
-            )
-
-            if grammar_corrected_code:
-                current_code = grammar_corrected_code
-
-        utils.save_solution(output_dir, problem_identifier, current_code)
-        return True
-
-    except Exception as e:
-        print(f"Error in CoT + Grammar Check strategy for problem {problem_identifier}: {e}")
-        return False
-
-
-###########################################################
-# Three-call Strategies
-###########################################################
-def run_cot_with_code_and_grammar_validation_strategy(client, model, problem, problem_identifier, output_dir):
-    """Run the CoT + Code Validation + Grammar Validation strategy (3-stage)"""
-    try:
-        problem_data = utils.prepare_problem_data(problem)
-        effective_input_data = utils.get_effective_input_data(problem_data)
-
-        cot_prompt = utils.load_file('prompts/cot_prompt.txt')
-        initial_code = utils.call_api(
-            client,
-            model,
-            cot_prompt.format(
-                problem_description=problem_data['description'],
-                input_data=effective_input_data
-            )
-        )
-
-        if not initial_code:
-            return False
-
-        time.sleep(2)
-
-        current_code = initial_code
-
-        dzn_data = problem.get('data.dzn') or ""
-        syntax_error_message = utils.check_syntax(initial_code, dzn_data)
-
-        if syntax_error_message:
-            validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
-            validated_code = utils.call_api(
-                client,
-                model,
-                validation_prompt.format(
-                    problem_description=problem_data['description'],
-                    input_data=effective_input_data,
-                    objective_type=problem_data['objective_type'],
-                    final_code=initial_code,
-                    syntax_error_message=syntax_error_message
-                )
-            )
-
-            if validated_code:
-                current_code = validated_code
-                dzn_data2 = problem.get('data.dzn') or ""
-                syntax_error_message = utils.check_syntax(validated_code, dzn_data2)
-
-            time.sleep(2)
-
-        if syntax_error_message:
-            grammar_prompt = utils.load_file('prompts/grammar_validation_prompt.txt')
-            minizinc_grammar = utils.load_file('grammar.mzn')
-
-            grammar_corrected_code = utils.call_api(
-                client,
-                model,
-                grammar_prompt.format(
-                    problem_description=problem_data['description'],
-                    input_data=effective_input_data,
-                    current_code=current_code,
-                    syntax_error_message=syntax_error_message,
-                    minizinc_grammar=minizinc_grammar
-                )
-            )
-
-            if grammar_corrected_code:
-                current_code = grammar_corrected_code
-
-        utils.save_solution(output_dir, problem_identifier, current_code)
-        return True
-
-    except Exception as e:
-        print(f"Error in CoT + Validation + Grammar Check strategy for problem {problem_identifier}: {e}")
-        return False
-
-
-###########################################################
-# Four and Five-call Strategies
-###########################################################
-def run_agents_strategy(client, model, problem, problem_identifier, output_dir, validate=True):
-    """Run the agents strategy"""
-    try:
-        problem_data = utils.prepare_problem_data(problem)
-        effective_input_data = utils.get_effective_input_data(problem_data)
-
-        param_prompt = utils.load_file('prompts/parameter_and_variable_generation_prompt.txt')
-        params_vars = utils.call_api(
-            client,
-            model,
-            param_prompt.format(
-                problem_description=problem_data['description'],
-                input_data=effective_input_data
-            )
-        )
-        if not params_vars:
-            return False
-        time.sleep(2)
-
-        constraint_prompt = utils.load_file('prompts/constraint_generation_prompt.txt')
-        constraints = utils.call_api(
-            client,
-            model,
-            constraint_prompt.format(
-                problem_description=problem_data['description'],
-                input_data=effective_input_data,
-                parameters_and_variables=params_vars
-            )
-        )
-        if not constraints:
-            return False
-        time.sleep(2)
-
-        objective_prompt = utils.load_file('prompts/objective_generation_prompt.txt')
-        objective = utils.call_api(
-            client,
-            model,
-            objective_prompt.format(
-                problem_description=problem_data['description'],
-                input_data=effective_input_data,
-                parameters_and_variables=params_vars,
-                constraints=constraints
-            )
-        )
-        if not objective:
-            return False
-        time.sleep(2)
-
-        code_prompt = utils.load_file('prompts/code_stitching_prompt.txt')
-        final_code = utils.call_api(
-            client,
-            model,
-            code_prompt.format(
-                problem_description=problem_data['description'],
-                input_data=effective_input_data,
-                parameters_and_variables=params_vars,
-                constraints=constraints,
-                objective=objective
-            )
-        )
-        if not final_code:
-            return False
-
-        dzn_data = problem.get('data.dzn') or ""
-        syntax_error_message = utils.check_syntax(final_code, dzn_data)
-
-        if syntax_error_message and validate:
-            time.sleep(2)
-            validation_prompt = utils.load_file('prompts/code_validation_prompt.txt')
-            validated_code = utils.call_api(
-                client,
-                model,
-                validation_prompt.format(
-                    problem_description=problem_data['description'],
-                    input_data=effective_input_data,
-                    objective_type=problem_data['objective_type'],
-                    final_code=final_code,
-                    syntax_error_message=syntax_error_message
-                )
-            )
-
-            if validated_code:
-                utils.save_solution(output_dir, problem_identifier, validated_code)
-                return True
-            return False
-        else:
-            utils.save_solution(output_dir, problem_identifier, final_code)
-            return True
-
-    except Exception as e:
-        print(f"Error in agents strategy for problem {problem_identifier}: {e}")
-        return False
-
-
-###########################################################
-# Global Agentic (GALA) Strategies
-###########################################################
-def run_gala_strategy(client, model, problem, problem_identifier, output_dir):
-    """Run the gala strategy (workers -> assembler)"""
-    try:
-        problem_data = utils.prepare_problem_data(problem)
-        effective_input_data = utils.get_effective_input_data(problem_data)
-
-        hints = ""
-
-        prompt_dir = utils._resolve_path("prompts/global_constraint_prompts")
-        for prompt in prompt_dir.glob("*.txt"):
-            ind_prompt = utils.load_file(str(prompt))
-            ind_prompt = ind_prompt + f"""
-                **Problem description**:
-                {problem_data['description']}
-
-                **Input data**:
-                {effective_input_data}
-                """
-
-            code = utils.call_api(client, model, ind_prompt)
-            code = utils.extract_global_constraint(ind_prompt) + ": \n" + code + "\n"
-            if "FALSE" not in code:
-                hints += code
-
-        assembler_prompt = utils.load_file('prompts/assembler_prompt.txt')
-        assembler_prompt = assembler_prompt + f"""
-                **Problem description**:
-                {problem_data['description']}
-
-                **Input data**:
-                {effective_input_data}
-
-                **Hints**:
-                {hints}
-                """
-
-        code = utils.call_api(client, model, assembler_prompt)
-
-        if not code:
-            return False
-
-        utils.save_solution(output_dir, problem_identifier, code)
-        return True
-
-    except Exception as e:
-        print(f"Error in gala strategy for problem {problem_identifier}: {e}")
-        return False
 
 
 ###########################################################
@@ -469,22 +56,14 @@ def check_already_processed(output_dir, problem_identifier):
     return os.path.exists(solution_path) and os.path.getsize(solution_path) > 0
 
 
-_STRATEGY_MAP = {
-    'baseline': run_baseline_strategy,
-    'cot': run_cot_strategy,
-    'knowledge_graph': run_knowledge_graph_strategy,
-    'cot_with_code_validation': run_cot_with_code_validation_strategy,
-    'cot_with_grammar_validation': run_cot_with_grammar_validation_strategy,
-    'cot_with_code_and_grammar_validation': run_cot_with_code_and_grammar_validation_strategy,
-    'agents': lambda c, m, p, i, o: run_agents_strategy(c, m, p, i, o, validate=False),
-    'agents_with_code_validation': run_agents_strategy,
-    'gala': run_gala_strategy,
-}
+# Strategy implementations live under text2model/copilots/ (one module per
+# strategy); this is just the name -> function registry used to dispatch.
+_STRATEGY_MAP = copilots.STRATEGY_MAP
 
 
 def _init_client(args):
     """Create and configure the LLM client from parsed args."""
-    if args.model in ["gpt-4", "gpt-4o", "gpt-5.2"]:
+    if args.model in utils.OPENAI_MODELS:
         if not args.api_key:
             raise ValueError(
                 "OpenAI API key not provided. "
@@ -495,6 +74,14 @@ def _init_client(args):
         utils.API_CONFIG['max_tokens'] = args.max_tokens
         utils.API_CONFIG['sleep_time'] = args.sleep_time
         utils.API_CONFIG['model'] = args.model
+        utils.API_CONFIG['reasoning_effort'] = args.reasoning_effort
+        if args.reasoning_effort and args.model not in utils.REASONING_EFFORT_MODELS:
+            print(
+                f"Warning: --reasoning-effort is ignored for model '{args.model}' "
+                f"(only supported for {sorted(utils.REASONING_EFFORT_MODELS)})."
+            )
+    elif args.model in huggingface.HUGGINGFACE_MODELS:
+        client = huggingface.load_huggingface_model(args.model)
     else:
         client = ChatOllama(
             model=args.model,
@@ -516,13 +103,6 @@ def _run_problem_mode(args, client):
 
     # Use the first requested strategy; default to 'cot'
     strategy = (args.strategies or ['cot'])[0]
-
-    if strategy == 'knowledge_graph':
-        print(
-            "Warning: 'knowledge_graph' strategy requires pre-built TTL files. "
-            "Falling back to 'cot'.",
-        )
-        strategy = 'cot'
 
     strategy_fn = _STRATEGY_MAP[strategy]
 
@@ -551,7 +131,7 @@ def main():
             ' into MiniZinc constraint models using an LLM Modeling Copilot strategy.\n\n'
             'Usage modes:\n'
             '  1) Text mode (--problem): give input text or file\n'
-            '  2) Text2Zinc mode (--problem-ids): give Text2Zinc problem ids\n'
+            '  2) Text2Zinc mode (--problem-ids): give Text2Zinc problem indices or identifiers\n'
             '  3) Editor mode (--editor): launch the dataset editor GUI\n'
         ),
         epilog=(
@@ -565,8 +145,12 @@ def main():
             '  text2model --list-sources\n\n'
             '  # List the available --model options\n'
             '  text2model --list-models\n\n'
+            '  # List problem indices/identifiers available to pass to --problem-ids\n'
+            '  text2model --list-problem-ids --source "csplib"\n\n'
             '  # Text2Zinc mode: run the chain-of-thought strategy over one source\n'
             '  text2model --strategies cot --source "csplib" --output-dir results/\n\n'
+            '  # Text2Zinc mode: run specific problems by index and/or identifier\n'
+            '  text2model --strategies cot --problem-ids 0 nlp4lp_58 --output-dir results/\n\n'
             '  # Text2Zinc mode against a locally-edited dataset instead of HuggingFace\n'
             '  text2model --strategies cot --dataset-path text2zinc_edited.csv --output-dir results/\n\n'
             '  # Launch the dataset editor to create/edit a local Text2Zinc dataset\n'
@@ -599,7 +183,7 @@ def main():
 
     # ── Model / API ─────────────────────────────────────────────────────────
     parser.add_argument('--model', default='gpt-4',
-                        choices=['gpt-4', 'gpt-4o', 'gpt-5.2', 'phi4'],
+                        choices=list(AVAILABLE_MODELS.keys()),
                         help='LLM model to use')
     parser.add_argument('--api-key', default=os.getenv('OPENAI_API_KEY'),
                         help='OpenAI API key')
@@ -609,6 +193,10 @@ def main():
                         help='Max tokens for API calls')
     parser.add_argument('--sleep-time', type=float, default=3,
                         help='Sleep time between API calls')
+    parser.add_argument('--reasoning-effort', default=None,
+                        choices=['none', 'low', 'medium', 'high', 'xhigh', 'max'],
+                        help='Reasoning-effort hint, only used for gpt-5.5 / gpt-5.6 '
+                             '("max" is gpt-5.6 only). Ignored by other models.')
 
     # ── Strategy ────────────────────────────────────────────────────────────
     parser.add_argument(
@@ -620,18 +208,27 @@ def main():
     )
 
     # ── Text2Zinc-mode dataset arguments ────────────────────────────────────
-    parser.add_argument('--problem-ids', nargs='+', type=int,
-                        help='Specific problem IDs to process (Text2Zinc mode)')
+    parser.add_argument('--problem-ids', nargs='+', type=str,
+                        help='Specific problems to process (Text2Zinc mode). Each value is either '
+                             'a dataset index (e.g. 0) or a problem identifier (e.g. nlp4lp_58, '
+                             'matching the "identifier" dataset metadata field and output/.ttl '
+                             'filenames). Resolved against the dataset after --full-dataset/--source '
+                             'filtering; use --list-problem-ids to see what is available.')
     parser.add_argument('--source', type=str, nargs='*', default=None,
                         help='Filter problems by source (Text2Zinc mode). Supports partial matching.')
     parser.add_argument('--list-sources', action='store_true',
                         help='List all available sources in the dataset and exit')
+    parser.add_argument('--list-problem-ids', action='store_true',
+                        help='List the index, identifier, and source of each problem in the '
+                             '(optionally --source/--full-dataset filtered) dataset, then exit. '
+                             'Use these indices/identifiers with --problem-ids.')
     parser.add_argument('--list-models', action='store_true',
                         help='List all available --model options and exit')
     parser.add_argument('--list-strategies', action='store_true',
                         help='List all available strategy options and exit')
-    parser.add_argument('--include-unverified', action='store_true',
-                        help='Include unverified problems (Text2Zinc mode)')
+    parser.add_argument('--full-dataset', action='store_true',
+                        help='Run on the full dataset instead of only the problems with '
+                             'manually verified MiniZinc models (Text2Zinc mode)')
     parser.add_argument('--all-sources', action='store_true',
                         help='Run on all sources (Text2Zinc mode)')
     parser.add_argument('--output-dir', default=None,
@@ -671,8 +268,11 @@ def main():
     # Validate before touching the network: a mistyped/incomplete command
     # (e.g. forgetting --problem or --output-dir) should fail fast instead of
     # first downloading the full HF dataset.
-    if not args.list_sources and not args.output_dir:
-        parser.error("--output-dir is required in Text2Zinc mode (not needed with --problem or --list-sources)")
+    if not args.list_sources and not args.list_problem_ids and not args.output_dir:
+        parser.error(
+            "--output-dir is required in Text2Zinc mode "
+            "(not needed with --problem, --list-sources, or --list-problem-ids)"
+        )
 
     if args.dataset_path:
         print(f"Loading local dataset from {args.dataset_path}...")
@@ -680,14 +280,8 @@ def main():
         print("Loading dataset from HuggingFace (skadio/text2zinc)...")
     dataset_train = utils.load_text2zinc_dataset(args.dataset_path)
 
-    if args.include_unverified:
-        print("Including ALL problems (verified and unverified)")
-    else:
-        print("Including only VERIFIED problems (use --include-unverified to include all)")
-        dataset_train = dataset_train.filter(lambda x: x["is_verified"])
-
-    print(f"Loaded dataset with {len(dataset_train)} examples")
-
+    # --list-sources is a discovery command: always show sources across the
+    # entire dataset, regardless of --full-dataset.
     if args.list_sources:
         print("\nAvailable sources in the dataset:")
         sources = utils.get_available_sources(dataset_train)
@@ -696,11 +290,13 @@ def main():
             print(f"  - {source}: {count} instances")
         return
 
-    while os.path.exists(args.output_dir):
-        print(f"Output directory '{args.output_dir}' already exists. Please choose a different name.")
-        new_dir = input("Enter a new output directory name: ").strip()
-        if new_dir:
-            args.output_dir = new_dir
+    if args.full_dataset:
+        print("Including the full dataset")
+    else:
+        print("Including only problems with manually verified MiniZinc models (use --full-dataset to include all)")
+        dataset_train = dataset_train.filter(lambda x: x["is_verified"])
+
+    print(f"Loaded dataset with {len(dataset_train)} examples")
 
     if args.source:
         print(f"\nFiltering dataset by sources: {args.source}")
@@ -719,6 +315,24 @@ def main():
             print("Use --list-sources to see available sources.")
             return
 
+    # --list-problem-ids reflects --full-dataset/--source filtering (unlike
+    # --list-sources, which always covers the whole dataset), since its
+    # purpose is to show exactly what --problem-ids can select for this run.
+    if args.list_problem_ids:
+        print(f"\n{len(dataset_train)} problem(s) available:")
+        print(f"{'IDX':>5}  {'IDENTIFIER':<30}  SOURCE")
+        for idx, problem in enumerate(dataset_train):
+            identifier = utils.get_problem_identifier(problem, idx)
+            source = utils.get_problem_source(problem) or "unknown"
+            print(f"{idx:>5}  {identifier:<30}  {source}")
+        return
+
+    while os.path.exists(args.output_dir):
+        print(f"Output directory '{args.output_dir}' already exists. Please choose a different name.")
+        new_dir = input("Enter a new output directory name: ").strip()
+        if new_dir:
+            args.output_dir = new_dir
+
     client = _init_client(args)
 
     if 'all' in args.strategies:
@@ -732,11 +346,7 @@ def main():
         strategies = args.strategies
 
     if args.problem_ids:
-        problems_to_process = [
-            (idx, dataset_train[idx])
-            for idx in args.problem_ids
-            if idx < len(dataset_train)
-        ]
+        problems_to_process = utils.resolve_problem_ids(dataset_train, args.problem_ids)
     else:
         problems_to_process = list(enumerate(dataset_train))
 
@@ -747,7 +357,7 @@ def main():
     print(f"Dataset: {args.dataset_path if args.dataset_path else 'skadio/text2zinc (HuggingFace)'}")
     print(f"Strategies: {', '.join(strategies)}")
     print(f"Source filter: {args.source if args.source else 'None (all sources)'}")
-    print(f"Include unverified: {args.include_unverified}")
+    print(f"Full dataset: {args.full_dataset}")
     print(f"Number of instances to process: {len(problems_to_process)}")
     print(f"Output directory: {args.output_dir}")
     print(f"{'='*50}\n")
@@ -831,7 +441,7 @@ def main():
     results_for_json['_metadata'] = {
         'model': args.model,
         'source_filter': args.source,
-        'include_unverified': args.include_unverified,
+        'full_dataset': args.full_dataset,
         'num_instances': len(problems_to_process),
         'strategies': strategies,
     }

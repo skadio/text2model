@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "text2model"
-version = "1.2.0"
+version = "1.3.0"
 description = "LLM Modeling Copilots for Text-to-Model Translation"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -22,6 +22,31 @@ dependencies = [
     "langchain-ollama",
     "flet==0.21.2",
     "pytest",
+]
+
+# Optional: local Hugging Face / unsloth models (see Fine-tuned Models in the
+# README). Requires an NVIDIA or Intel GPU. Install with:
+#   pip install "text2model[gpu]" --extra-index-url https://download.pytorch.org/whl/cu126
+# Pinned exactly (not just floored) because unsloth/transformers/peft/torch
+# move fast and break each other across releases; this combination is
+# verified working end-to-end (model load + real generation) via a clean
+# `pip` resolve, no --no-deps needed.
+[project.optional-dependencies]
+gpu = [
+    "torch==2.7.1",
+    "torchvision==0.22.1",
+    "xformers==0.0.31",
+    "triton==3.3.1",
+    "bitsandbytes==0.49.2",
+    "transformers==4.56.2",
+    "huggingface_hub==0.36.2",
+    "peft==0.18.0",
+    "accelerate==1.14.0",
+    "trl==0.23.0",
+    "datasets==4.3.0",
+    "diffusers==0.39.0",
+    "unsloth==2025.12.1",
+    "unsloth_zoo==2025.12.3",
 ]
 
 [tool.pytest.ini_options]

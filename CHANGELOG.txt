@@ -3,6 +3,21 @@ Changelog
 
 All notable changes to this project are documented in this file.
 
+[1.3.0] - 2026-07-24 (in progress)
+- Added local Hugging Face / unsloth model support (`text2model/huggingface.py`), including
+  gpt-oss-20B, Qwen3-0.6B, Llama-3.2-1B/3B, and Gemma-2-9B fine-tuned checkpoints; installable
+  via the new `text2model[gpu]` extra
+- Refactored copilot strategies out of main.py into one module per strategy under
+  `text2model/copilots/`
+- `knowledge_graph` strategy now generates a `.ttl` on the fly if none is pre-built for the
+  problem, instead of requiring one
+- Renamed `--include-unverified` to `--full-dataset`
+- `--problem-ids` now accepts problem identifiers (e.g. `nlp4lp_58`) in addition to indices
+- Added `--list-problem-ids` and `--reasoning-effort` flags
+- Added gpt-5.5 / gpt-5.6 model support
+- Added "New Problem" creation and field validation to the dataset editor; editor chat
+  assistant model is now configurable
+
 [1.2.0] - 2026-07-20
 - Several cosmetics and UI updates
 - Fix screen size wxh
