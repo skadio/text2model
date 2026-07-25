@@ -26,6 +26,19 @@ DEFAULT_DATASET_PATH = _PACKAGE_DIR / "data" / "text2zinc.csv"
 # `text2model --dataset-path` / `evals/evaluate.py --dataset-path`.
 WORKING_DATASET_PATH = "text2zinc_edited.csv"
 
+# Showcase mode: for deploying the editor as a read-mostly demo (e.g. an HF
+# Space), set T2M_SHOWCASE=1. There's no HuggingFace Hub token in the
+# container, so it never talks to the HF Hub: it only ever works with a CSV
+# already baked into the image/pushed alongside it. In this mode:
+#   - "Open CSV...", "Load from HuggingFace", and "Save As..." are hidden —
+#     there is exactly one dataset, and no arbitrary filesystem/Hub access.
+#   - Quick-save (Save button / Ctrl+S) still works, but writes in place to
+#     that same pushed file instead of a separate WORKING_DATASET_PATH.
+# T2M_EDITOR_DATASET_PATH points at the pushed CSV to load on startup; falls
+# back to the bundled default dataset if unset.
+SHOWCASE_MODE = os.environ.get("T2M_SHOWCASE", "").strip().lower() in ("1", "true", "yes")
+SHOWCASE_DATASET_PATH = os.environ.get("T2M_EDITOR_DATASET_PATH")
+
 
 def main(page: ft.Page, dataset_path: Optional[str] = None):
     page.title = "Text2Zinc Dataset Editor"
@@ -122,10 +135,28 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     filtered_indices = []   # global indices into editor.data matching the current filter
     filtered_pos = [0]      # position within filtered_indices
 
+    # Tracks an in-progress "New Problem" so it can be discarded via Cancel:
+    # the global index of the not-yet-saved blank item, where to jump back to,
+    # and what edit-mode state to restore.
+    pending_new_problem = {"index": None, "return_index": None, "was_edit_mode": False}
+
+    # Whichever local path is currently loaded — in showcase mode, quick-save
+    # writes back here in place instead of to WORKING_DATASET_PATH.
+    loaded_dataset_path = [WORKING_DATASET_PATH]
+
     def load_current_problem():
         """Load current problem into UI fields"""
         if not editor.data or not filtered_indices:
             return
+
+        # Cancel only makes sense right after "New Problem", while still
+        # looking at that blank item — once the user navigates elsewhere it
+        # becomes just another (unsaved) row.
+        if pending_new_problem["index"] is not None and editor.current_index != pending_new_problem["index"]:
+            pending_new_problem["index"] = None
+            pending_new_problem["return_index"] = None
+            new_problem_button.visible = True
+            cancel_new_problem_button.visible = False
 
         item = editor.get_current_item()
 
@@ -227,6 +258,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         page.update()
 
     def load_local_path(path: str, label: str):
+        loaded_dataset_path[0] = path
         finish_loading(label, editor.load_csv(path))
 
     def open_csv_result(e: ft.FilePickerResultEvent):
@@ -258,6 +290,9 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     def new_problem(e):
         """Add a blank problem, matching the same schema as every other row,
         and jump straight to it in edit mode so it's ready to fill in."""
+        pending_new_problem["return_index"] = editor.current_index if editor.data and filtered_indices else None
+        pending_new_problem["was_edit_mode"] = edit_mode_switch.value
+
         editor.data.append(blank_problem(generate_unique_identifier()))
 
         # The new item has no source yet, so make sure it's visible regardless
@@ -268,6 +303,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
 
         rebuild_filtered_indices()
         new_global_index = len(editor.data) - 1
+        pending_new_problem["index"] = new_global_index
         filtered_pos[0] = filtered_indices.index(new_global_index)
         editor.current_index = new_global_index
         load_current_problem()
@@ -278,11 +314,51 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         json_viewer_container.visible = False
         input_json_field.visible = True
 
+        new_problem_button.visible = False
+        cancel_new_problem_button.visible = True
+
         status_text.value = (
             "New problem added — fill in description, source, and either "
             "model.mzn or an objective before saving."
         )
         status_text.color = ft.colors.BLUE
+        page.update()
+
+    def cancel_new_problem(e):
+        """Changed their mind: discard the not-yet-saved blank problem and
+        jump back to whatever problem they were on before."""
+        new_index = pending_new_problem["index"]
+        if new_index is None or new_index >= len(editor.data):
+            return
+
+        del editor.data[new_index]
+        return_index = pending_new_problem["return_index"]
+        was_edit_mode = pending_new_problem["was_edit_mode"]
+        pending_new_problem["index"] = None
+        pending_new_problem["return_index"] = None
+
+        rebuild_filtered_indices()
+        if filtered_indices:
+            if return_index is not None and return_index in filtered_indices:
+                filtered_pos[0] = filtered_indices.index(return_index)
+            else:
+                filtered_pos[0] = min(filtered_pos[0], len(filtered_indices) - 1)
+            editor.current_index = filtered_indices[filtered_pos[0]]
+            load_current_problem()
+        else:
+            current_index_text.value = "0 / 0"
+            problem_info.value = ""
+            json_viewer_container.content = ft.Text("No data loaded", size=14)
+
+        edit_mode_switch.value = was_edit_mode
+        json_viewer_container.visible = not was_edit_mode
+        input_json_field.visible = was_edit_mode
+
+        cancel_new_problem_button.visible = False
+        new_problem_button.visible = True
+
+        status_text.value = "New problem discarded."
+        status_text.color = ft.colors.GREY_700
         page.update()
 
     def sync_fields_into_current_item():
@@ -307,15 +383,20 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         editor.update_current_item('is_verified', is_verified_checkbox.value)
 
     def save_current_edits(e=None):
-        """Sync edits and quick-save to the working file (text2zinc_edited.csv, Ctrl+S)"""
+        """Sync edits and quick-save (Ctrl+S). Normal mode writes to the
+        working file (text2zinc_edited.csv), kept separate from whatever was
+        opened so the original is never silently overwritten. Showcase mode
+        writes in place to the single pushed dataset file instead, since
+        there's no separate export step in a Space."""
         if not editor.data:
             return
+        save_target = loaded_dataset_path[0] if SHOWCASE_MODE else WORKING_DATASET_PATH
         try:
             sync_fields_into_current_item()
-            if editor.save_csv(WORKING_DATASET_PATH):
+            if editor.save_csv(save_target):
                 save_indicator.value = "✓ Saved"
                 save_indicator.color = ft.colors.GREEN
-                status_text.value = f"Saved to {WORKING_DATASET_PATH}"
+                status_text.value = f"Saved to {save_target}"
                 status_text.color = ft.colors.GREEN
             else:
                 save_indicator.value = "✗ Save failed"
@@ -715,11 +796,13 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         "Open CSV...", icon=ft.icons.FOLDER_OPEN,
         on_click=lambda e: open_csv_dialog.pick_files(allow_multiple=False, allowed_extensions=["csv"]),
         tooltip="Open a local Text2Zinc CSV dataset",
+        visible=not SHOWCASE_MODE,
     )
 
     load_hf_button = ft.OutlinedButton(
         "Load from HuggingFace", icon=ft.icons.CLOUD_DOWNLOAD, on_click=load_from_hf,
         tooltip=f"Reload fresh from the {TEXT2ZINC_DATASET} HuggingFace dataset",
+        visible=not SHOWCASE_MODE,
     )
 
     new_problem_button = ft.ElevatedButton(
@@ -728,16 +811,24 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         tooltip="Add a blank problem with the same schema, ready to edit",
     )
 
+    cancel_new_problem_button = ft.OutlinedButton(
+        "Cancel New Problem", icon=ft.icons.CLOSE, on_click=cancel_new_problem,
+        visible=False,
+        tooltip="Discard this blank problem and go back to the previous one",
+    )
+
     save_button = ft.ElevatedButton(
         "Save", icon=ft.icons.SAVE, on_click=save_current_edits,
         bgcolor=ft.colors.BLUE_700, color=ft.colors.WHITE,
-        tooltip=f"Quick-save to {WORKING_DATASET_PATH} (Ctrl+S)",
+        tooltip=("Quick-save in place (Ctrl+S)" if SHOWCASE_MODE
+                 else f"Quick-save to {WORKING_DATASET_PATH} (Ctrl+S)"),
     )
 
     save_as_button = ft.ElevatedButton(
         "Save As New Dataset...", icon=ft.icons.SAVE_AS, on_click=save_as,
         bgcolor=ft.colors.GREEN_700, color=ft.colors.WHITE,
         tooltip="Save to a chosen path — pass it to text2model --dataset-path to benchmark against it",
+        visible=not SHOWCASE_MODE,
     )
 
     execute_button = ft.ElevatedButton(
@@ -859,6 +950,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
             open_csv_button,
             load_hf_button,
             new_problem_button,
+            cancel_new_problem_button,
             save_button,
             save_as_button,
             source_dropdown,
@@ -1018,10 +1110,27 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
 
     page.on_keyboard_event = handle_keyboard
 
-    # Initial load — local-first: an explicit --dataset-path, then a previous
-    # editing session, then the bundled default. HuggingFace is opt-in only
-    # (via the "Load from HuggingFace" button), never the editor's default.
-    if dataset_path and os.path.exists(dataset_path):
+    # Initial load. Showcase mode only ever loads the one pushed dataset
+    # (--dataset-path, else T2M_EDITOR_DATASET_PATH, else the bundled
+    # default) since there's no "previous session" file — quick-save writes
+    # back in place to that same path. Normal mode is local-first: an
+    # explicit --dataset-path, then a previous editing session, then the
+    # bundled default. HuggingFace is opt-in only (via the "Load from
+    # HuggingFace" button), never the editor's default.
+    if SHOWCASE_MODE:
+        showcase_source = dataset_path or SHOWCASE_DATASET_PATH
+        if showcase_source and os.path.exists(showcase_source):
+            load_local_path(showcase_source, f"showcase dataset ({showcase_source})")
+        elif DEFAULT_DATASET_PATH.exists():
+            load_local_path(
+                str(DEFAULT_DATASET_PATH),
+                "bundled default dataset (T2M_EDITOR_DATASET_PATH not set or not found)",
+            )
+        else:
+            status_text.value = "Showcase mode: no dataset found. Set T2M_EDITOR_DATASET_PATH to a pushed CSV."
+            status_text.color = ft.colors.RED
+            page.update()
+    elif dataset_path and os.path.exists(dataset_path):
         load_local_path(dataset_path, dataset_path)
     elif os.path.exists(WORKING_DATASET_PATH):
         load_local_path(WORKING_DATASET_PATH, f"previous session ({WORKING_DATASET_PATH})")
@@ -1034,8 +1143,22 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
 
 
 def launch(dataset_path: Optional[str] = None) -> None:
-    """Launch the Text2Zinc dataset editor GUI."""
-    ft.app(target=lambda page: main(page, dataset_path=dataset_path))
+    """Launch the Text2Zinc dataset editor GUI.
+
+    Locally this opens a native desktop window. In showcase mode
+    (T2M_SHOWCASE=1, e.g. deployed as an HF Space) it instead serves over
+    HTTP so it can run headless in a container, listening on $PORT
+    (default 7860, matching HF Spaces' Docker SDK default)."""
+    if SHOWCASE_MODE:
+        port = int(os.environ.get("PORT", 7860))
+        ft.app(
+            target=lambda page: main(page, dataset_path=dataset_path),
+            view=ft.AppView.WEB_BROWSER,
+            host="0.0.0.0",
+            port=port,
+        )
+    else:
+        ft.app(target=lambda page: main(page, dataset_path=dataset_path))
 
 
 if __name__ == "__main__":

@@ -132,15 +132,15 @@ That's it — your strategy is now available via `--strategies <name>` in both `
 
 ## Fine-tuned Models
 
-Alongside API-based copilots, we release our own **fine-tuned models for generating MiniZinc code**, hosted on Hugging Face under the [skadio](https://huggingface.co/skadio) org. They run locally, in-process (loaded via [unsloth](https://github.com/unslothai/unsloth), no daemon), and are available as `--model` options alongside OpenAI/Ollama models — see [`text2model/huggingface.py`](text2model/huggingface.py) for the loading/prompting logic per model. Set `HF_TOKEN` in your environment before using these (see [Set Your API Keys](https://github.com/skadio/text2model?tab=readme-ov-file#set-your-api-keys)).
+Alongside API-based copilots, you can also load our own **fine-tuned models for generating MiniZinc code**, hosted on Hugging Face under the [skadio](https://huggingface.co/skadio) org. They run locally as `--model` options alongside OpenAI/Ollama models — see [`text2model/huggingface.py`](text2model/huggingface.py) for details. Set `HF_TOKEN` in your environment before using these (see [Set Your API Keys](https://github.com/skadio/text2model?tab=readme-ov-file#set-your-api-keys)).
 
-**Requires an NVIDIA or Intel GPU.** unsloth hard-fails with `NotImplementedError` at import time on CPU-only machines — there's no CPU fallback in `huggingface.py` today (it always loads through `unsloth.FastLanguageModel`, never plain `transformers.AutoModelForCausalLM`). Install the extra GPU dependencies into the same environment as the rest of text2model:
+**Requires an NVIDIA or Intel GPU.** Install the extra GPU dependencies into the same environment as the rest of text2model:
 
 ```bash
 pip install "text2model[gpu]" --extra-index-url https://download.pytorch.org/whl/cu126
 ```
 
-The `[gpu]` extra pins exact versions (torch, unsloth, transformers, peft, etc.) — this stack breaks easily across releases, so see the comment above `[project.optional-dependencies]` in [`pyproject.toml`](pyproject.toml) if you need to change any of them.
+This stack breaks easily across releases, so see the comment above `[project.optional-dependencies]` in [`pyproject.toml`](pyproject.toml) if you need to change any pinned versions.
 
 | Model (`--model` alias) | Base Model | Hugging Face Repo |
 |---|---|---|
@@ -259,7 +259,9 @@ pytest -m "not integration"
 **Integration tests** (`tests/test_integration.py`) hit real external dependencies and are opt-in only.
 This is not to be used in CI:
 - MiniZinc tests run the real `minizinc` binary and are skipped unless it is on `PATH`.
-- The OpenAI test makes exactly one real, cheap, token-capped call (`gpt-4o-mini`, `max_tokens=20`) and is skipped unless `OPENAI_API_KEY` is set. It's intentionally not exhaustive to avoid API costs.
+- The OpenAI tests are skipped unless `OPENAI_API_KEY` is set. Beyond a single cheap, token-capped smoke test, they include a real end-to-end sweep across every strategy and input mode (including multi-call strategies like `agents`/`gala`) plus several batch-mode runs, so they make many real API calls, not just one.
+
+**Note:** running the full integration suite with `OPENAI_API_KEY` set will incur real, non-trivial API costs — don't run it casually, repeatedly, or in CI.
 
 To run everything locally (with `OPENAI_API_KEY` set and MiniZinc installed):
 
