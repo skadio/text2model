@@ -1,6 +1,8 @@
+import base64
 import datetime
 import json
 import os
+import tempfile
 from pathlib import Path
 from typing import List, Optional
 
@@ -407,6 +409,45 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
             save_indicator.value = f"✗ Error: {str(ex)}"
             save_indicator.color = ft.colors.RED
 
+        page.update()
+
+    def download_csv(e=None):
+        """Push the current dataset to the browser as a file download.
+
+        Showcase mode only: the container's filesystem (where quick-save
+        writes) isn't reachable from the HF Space UI, and there's no HF Hub
+        token to push edits anywhere else. Flet's native Save-As dialog also
+        can't stream server-side bytes to the browser on the web view — its
+        FilePickerResultEvent.path comes back empty there — so this instead
+        base64-encodes the CSV and hands it to the browser as a data: URL,
+        which browsers download rather than render inline for a CSV mime
+        type."""
+        if not editor.data:
+            status_text.value = "No data to download"
+            status_text.color = ft.colors.ORANGE
+            page.update()
+            return
+
+        sync_fields_into_current_item()
+        tmp_path = tempfile.mktemp(suffix=".csv")
+        try:
+            if not editor.save_csv(tmp_path):
+                raise RuntimeError("save_csv failed")
+            with open(tmp_path, "rb") as f:
+                csv_bytes = f.read()
+        except Exception as ex:
+            status_text.value = f"Error preparing download: {ex}"
+            status_text.color = ft.colors.RED
+            page.update()
+            return
+        finally:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+
+        b64 = base64.b64encode(csv_bytes).decode("ascii")
+        page.launch_url(f"data:text/csv;charset=utf-8;base64,{b64}")
+        status_text.value = f"Downloading {len(editor.data)} problems as CSV..."
+        status_text.color = ft.colors.GREEN
         page.update()
 
     def save_as_result(e: ft.FilePickerResultEvent):
@@ -831,6 +872,13 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         visible=not SHOWCASE_MODE,
     )
 
+    download_button = ft.ElevatedButton(
+        "Download CSV", icon=ft.icons.DOWNLOAD, on_click=download_csv,
+        bgcolor=ft.colors.GREEN_700, color=ft.colors.WHITE,
+        tooltip="Download the current dataset as a CSV file to your computer",
+        visible=SHOWCASE_MODE,
+    )
+
     execute_button = ft.ElevatedButton(
         "Execute MiniZinc", icon=ft.icons.PLAY_ARROW, on_click=execute_code,
         bgcolor=ft.colors.GREEN_700, color=ft.colors.WHITE,
@@ -953,6 +1001,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
             cancel_new_problem_button,
             save_button,
             save_as_button,
+            download_button,
             source_dropdown,
         ],
         spacing=10,
