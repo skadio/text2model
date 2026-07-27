@@ -14,9 +14,9 @@ from tqdm import tqdm
 from text2model import copilots, huggingface, utils
 from text2model.utils import print
 
-# NOTE: `datasets` (HuggingFace) is intentionally imported lazily, inside the
-# Text2Zinc-mode code path in main(), rather than at module scope. Text mode
-# (--problem) never touches the HF dataset, so importing it eagerly here
+# NOTE: `datasets` (HuggingFace) is intentionally imported lazily, inside
+# utils.load_text2zinc_dataset() rather than at module scope. Text mode
+# (--problem) never calls that function, so importing it eagerly here
 # would mean every text2model invocation pays for/depends on the HF stack
 # even when it's never used.
 
@@ -162,10 +162,6 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
-    if len(sys.argv) == 1:
-        print(parser.format_help(), end='')
-        return
-
     # ── Simple single-problem mode ──────────────────────────────────────────
     parser.add_argument(
         '--problem', type=str, default=None,
@@ -188,9 +184,11 @@ def main():
     parser.add_argument('--api-key', default=os.getenv('OPENAI_API_KEY'),
                         help='OpenAI API key')
     parser.add_argument('--temperature', type=float, default=0,
-                        help='Temperature for API calls')
+                        help='Temperature for API calls. Ignored for reasoning models '
+                             f'({sorted(utils.REASONING_MODELS)}).')
     parser.add_argument('--max-tokens', type=int, default=4096,
-                        help='Max tokens for API calls')
+                        help='Max tokens for API calls. Ignored for reasoning models '
+                             f'({sorted(utils.REASONING_MODELS)}).')
     parser.add_argument('--sleep-time', type=float, default=3,
                         help='Sleep time between API calls')
     parser.add_argument('--reasoning-effort', default=None,
@@ -229,13 +227,15 @@ def main():
     parser.add_argument('--full-dataset', action='store_true',
                         help='Run on the full dataset instead of only the problems with '
                              'manually verified MiniZinc models (Text2Zinc mode)')
-    parser.add_argument('--all-sources', action='store_true',
-                        help='Run on all sources (Text2Zinc mode)')
     parser.add_argument('--output-dir', default=None,
                         help='Base output directory for Text2Zinc mode (must not already exist)')
     parser.add_argument('--dataset-path', default=None,
         help='Path to a local Text2Zinc CSV dataset (e.g. one saved by `text2model --editor`), '
              'used instead of the default skadio/text2zinc HuggingFace dataset (Text2Zinc mode).')
+
+    if len(sys.argv) == 1:
+        print(parser.format_help(), end='')
+        return
 
     args = parser.parse_args()
 

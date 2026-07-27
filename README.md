@@ -87,6 +87,13 @@ text2model --strategies agents --model gpt-4 \
   --sleep-time 2 \
   --full-dataset
 
+# Reasoning-effort hint (gpt-5.5 / gpt-5.6 only; ignored by other models,
+# including gpt-4o/gpt-5.2 which are also reasoning models but don't take
+# this hint). One of: none, low, medium, high, xhigh, max ("max" is
+# gpt-5.6 only).
+text2model --strategies cot --model gpt-5.5 --output-dir my_results \
+  --reasoning-effort high
+
 # Use a local dataset (e.g. one saved by `text2model --editor`) instead of the
 # default skadio/text2zinc HuggingFace dataset
 text2model --strategies cot --model gpt-4 --output-dir my_results \

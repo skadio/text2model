@@ -3,6 +3,10 @@ Changelog
 
 All notable changes to this project are documented in this file.
 
+[1.3.3] - 2026-07-27
+- Documented the `--reasoning-effort` hint in the README
+- Removed stray `--all-sources` flag; fixed no-args help printing
+
 [1.3.2] - 2026-07-26
 - Added copy-CSV-to-clipboard button for HF Spaces (file downloads are blocked there)
 
