@@ -12,7 +12,7 @@
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#text2zinc-mode">Text2Zinc Mode</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#interactive-mode">Interactive Mode</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#copilots">Copilots</a> •
-    <a href="https://github.com/skadio/text2model?tab=readme-ov-file#fine-tuned-models">Fine-tuned Models</a> •
+    <a href="https://github.com/skadio/text2model?tab=readme-ov-file#small-language-models-slms">Small Language Models (SLMs)</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#installation">Installation</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#dataset-editor">Dataset Editor</a> •
     <a href="https://github.com/skadio/text2model?tab=readme-ov-file#evaluation">Evaluation</a> •
@@ -137,9 +137,9 @@ Every strategy in the table above follows the same shape, so plugging in a new o
 
 That's it — your strategy is now available via `--strategies <name>` in both `--problem` and batch modes.
 
-## Fine-tuned Models
+## Small Language Models (SLMs)
 
-Alongside API-based copilots, you can also load our own **fine-tuned models for generating MiniZinc code**, hosted on Hugging Face under the [skadio](https://huggingface.co/skadio) org. They run locally as `--model` options alongside OpenAI/Ollama models — see [`text2model/huggingface.py`](text2model/huggingface.py) for details. Set `HF_TOKEN` in your environment before using these (see [Set Your API Keys](https://github.com/skadio/text2model?tab=readme-ov-file#set-your-api-keys)).
+Alongside API-based copilots, you can also load our own **small language models (SLMs) for generating MiniZinc code**, hosted on Hugging Face under the [skadio](https://huggingface.co/skadio) org. They run locally as `--model` options alongside OpenAI/Ollama models — see [`text2model/huggingface.py`](text2model/huggingface.py) for details. Set `HF_TOKEN` in your environment before using these (see [Set Your API Keys](https://github.com/skadio/text2model?tab=readme-ov-file#set-your-api-keys)).
 
 **Requires an NVIDIA or Intel GPU.** Install the extra GPU dependencies into the same environment as the rest of text2model:
 
@@ -158,7 +158,7 @@ This stack breaks easily across releases, so see the comment above `[project.opt
 | `learn2zinc-gemma-2-9b` | Gemma-2-9B | [skadio/learn2zinc-Gemma-2-9B](https://huggingface.co/skadio/learn2zinc-Gemma-2-9B) |
 
 ```bash
-# Run a copilot strategy against a local fine-tuned Hugging Face model
+# Run a copilot strategy against a local small language model (SLM) from Hugging Face
 text2model --problem my_problem.txt --strategies baseline --model learn2zinc-gpt-oss-20b
 ```
 
@@ -173,7 +173,7 @@ Text2Model requires **Python 3.8+** and can be installed from PyPI or by buildin
 ```bash
 export OPENAI_API_KEY="your-api-key-here"
 
-# Only needed for the Hugging Face models under Fine-tuned Models below.
+# Only needed for the Hugging Face models under Small Language Models (SLMs) below.
 # huggingface_hub/transformers pick this up automatically from the
 # environment, no --api-key-style flag needed.
 export HF_TOKEN="your-hugging-face-token-here"

@@ -78,18 +78,18 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     )
 
     output_json_field = ft.TextField(
-        label="Expected Output (output.json)", multiline=True, min_lines=8, max_lines=12,
+        multiline=True, min_lines=8, max_lines=12,
         hint_text="Expected output in JSON format...", text_size=13,
     )
 
     execution_output = ft.TextField(
-        label="Execution Output (Raw)", multiline=True, min_lines=8, max_lines=12,
+        multiline=True, min_lines=8, max_lines=12,
         read_only=True, bgcolor=ft.colors.GREY_50, text_size=13,
     )
 
     execution_json_display = ft.Container(
         content=ft.Text("No execution yet", size=13, color=ft.colors.GREY_600),
-        padding=10, border=ft.border.all(1, ft.colors.GREY_300), border_radius=5, bgcolor=ft.colors.WHITE,
+        padding=10, border=ft.border.all(1, ft.colors.GREY_300), border_radius=8, bgcolor=ft.colors.WHITE,
     )
 
     problem_type_warning = ft.Container(
@@ -898,6 +898,31 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         on_click=open_chat,
     )
 
+    def labeled_box(title: str, content: ft.Control, height: Optional[int] = None) -> ft.Container:
+        """Uniform bordered panel used for the Execute tab's output boxes, so
+        Raw Output / Expected Output / Execution Results all read as one
+        family of boxes regardless of the widget they wrap.
+
+        No expand=True here: these boxes live inside a scrollable Column,
+        which gives its children unbounded height, and flet/flutter crashes
+        (invalid transform matrix) if something under it tries to expand
+        into that unbounded space. Passing a fixed `height` is the safe way
+        to make a box (e.g. the results panel) span roughly the same space
+        as its neighbors.
+        """
+        return ft.Container(
+            content=ft.Column([
+                ft.Text(title, size=13, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_700),
+                content,
+            ], spacing=6),
+            padding=10, border=ft.border.all(1, ft.colors.GREY_300), border_radius=8,
+            bgcolor=ft.colors.WHITE, height=height,
+        )
+
+    raw_output_box = labeled_box("Raw Output", execution_output)
+    expected_output_box = labeled_box("Expected Output (output.json)", output_json_field)
+    execution_results_box = labeled_box("Execution Results (Formatted)", execution_json_display, height=470)
+
     # Primary work area
     tabs = ft.Tabs(
                             selected_index=0,
@@ -947,22 +972,20 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
                                         content=ft.Column([
                                             ft.Text("Output & Execution", size=14, weight=ft.FontWeight.BOLD),
                                             ft.Divider(height=1),
+                                            ft.Row(
+                                                [execute_button, solver_dropdown, timeout_field, is_verified_checkbox],
+                                                spacing=15, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                                            ),
                                             problem_type_warning,
-                                            output_json_field,
                                             ft.Container(height=10),
-                                            ft.Row([is_verified_checkbox]),
-                                            ft.Container(height=10),
-                                            ft.Text("Execution Settings:", size=13, weight=ft.FontWeight.BOLD),
-                                            ft.Row([solver_dropdown, timeout_field], spacing=15),
-                                            ft.Container(height=10),
-                                            ft.Row([execute_button], spacing=10),
-                                            ft.Container(height=15),
-                                            ft.Text("Execution Results (Formatted):", size=14, weight=ft.FontWeight.BOLD),
-                                            ft.Divider(height=1),
-                                            execution_json_display,
-                                            ft.Container(height=10),
-                                            ft.Text("Raw Output:", size=13, weight=ft.FontWeight.BOLD),
-                                            execution_output,
+                                            ft.Row(
+                                                [
+                                                    ft.Column([raw_output_box, expected_output_box], spacing=10, expand=1),
+                                                    ft.Column([execution_results_box], spacing=10, expand=1),
+                                                ],
+                                                spacing=15,
+                                                vertical_alignment=ft.CrossAxisAlignment.START,
+                                            ),
                                         ], scroll=ft.ScrollMode.AUTO),
                                         padding=10,
                                     ),

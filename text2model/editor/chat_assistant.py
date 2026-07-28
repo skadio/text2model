@@ -2,8 +2,14 @@ from typing import Any, Dict
 
 import openai
 
+from text2model.utils import REASONING_EFFORT_MODELS
+
 # Default model for the in-editor AI chat assistant.
-DEFAULT_CHAT_MODEL = "gpt-5.2"
+DEFAULT_CHAT_MODEL = "gpt-5.6"
+
+# Default reasoning-effort hint for models in REASONING_EFFORT_MODELS
+# (gpt-5.5 / gpt-5.6). "medium" is a middle ground between "none" and "max".
+DEFAULT_REASONING_EFFORT = "medium"
 
 
 class ChatAssistant:
@@ -12,6 +18,7 @@ class ChatAssistant:
     def __init__(self, api_key: str = "", model: str = DEFAULT_CHAT_MODEL):
         self.api_key = api_key
         self.model = model
+        self.reasoning_effort = DEFAULT_REASONING_EFFORT
         self.client = None
         self.conversation_history = []
         self.current_context = {}
@@ -49,7 +56,11 @@ class ChatAssistant:
 
             # gpt-4o / gpt-5.2 / gpt-5.5 / gpt-5.6 are reasoning models, so skip
             # temperature/max_tokens (same pattern as call_openai_api in utils.py)
-            completion = self.client.chat.completions.create(model=self.model, messages=messages)
+            params = {"model": self.model, "messages": messages}
+            if self.reasoning_effort and self.model in REASONING_EFFORT_MODELS:
+                params["reasoning_effort"] = self.reasoning_effort
+
+            completion = self.client.chat.completions.create(**params)
 
             assistant_message = completion.choices[0].message.content.strip()
             self.conversation_history.append({"role": "assistant", "content": assistant_message})
