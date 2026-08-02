@@ -8,9 +8,9 @@ from text2model.copilots import baseline
 def test_strategy_map_covers_all_documented_strategies():
     expected = {
         "baseline", "cot", "knowledge_graph",
-        "cot_with_code_validation", "cot_with_grammar_validation",
-        "cot_with_code_and_grammar_validation",
-        "agents", "agents_with_code_validation", "gala",
+        "cot_with_code", "cot_with_grammar",
+        "cot_with_code_and_grammar",
+        "agents", "agents_with_code", "gala",
     }
     assert expected == set(copilots.STRATEGY_MAP.keys())
     assert main._STRATEGY_MAP is copilots.STRATEGY_MAP

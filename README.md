@@ -46,7 +46,7 @@ text2model --problem my_problem.txt
 # Choose the copilot strategy and the model
 # `knowledge_graph`: uses the pre-built .ttl if one exists for the problem,
 # otherwise generates one on the fly with an extra LLM call.
-text2model --problem my_problem.txt --strategies agents_with_code_validation --model gpt-4o
+text2model --problem my_problem.txt --strategies agents_with_code --model gpt-4o
 
 # Redirect the output to a MiniZinc model
 text2model --problem my_problem.txt > my_model.mzn
@@ -118,11 +118,11 @@ Text2Model offers different copilot strategies, ranging from simple single-call 
 | `baseline` | Direct code generation from problem description. No special prompting. Good for simple problems or establishing a baseline.                                   |
 | `cot` | **Chain-of-Thought** prompting with guiding principles. The LLM reasons through the problem step-by-step before generating code.                              |
 | `knowledge_graph` | First extracts structured information (entities, relationships) from the problem, then generates code from this intermediate representation.                  |
-| `cot_with_code_validation` | Generates code with CoT, then validates and fixes any compilation errors. Good default choice.                                                                |
-| `cot_with_grammar_validation` | Generates code with CoT, then checks against MiniZinc grammar rules.                                                                                          |
-| `cot_with_code_and_grammar_validation` | Combines CoT generation with both grammar checking and code validation.                                                                                       |
+| `cot_with_code` | Generates code with CoT, then validates and fixes any compilation errors. Good default choice.                                                                |
+| `cot_with_grammar` | Generates code with CoT, then checks against MiniZinc grammar rules.                                                                                          |
+| `cot_with_code_and_grammar` | Combines CoT generation with both grammar checking and code validation.                                                                                       |
 | `agents` | Decomposes the task into specialized agents: (1) parameters & variables, (2) constraints, (3) objective, (4) assembler that stitches everything together.     |
-| `agents_with_code_validation` | Agents approach plus a final validation/fix step.                                                                                                            |
+| `agents_with_code` | Agents approach plus a final validation/fix step.                                                                                                            |
 | `gala` | Global Agents for different constraint types (all_different, cumulative, etc.) plus an assembler. See the [GALA paper](https://arxiv.org/abs/2509.08970).|
 
 > **`knowledge_graph` on your own problems**: if no `.ttl` exists for the problem under [`text2model/knowledge_graphs/`](text2model/knowledge_graphs/), one is generated on the fly with an extra LLM call. To pre-build and curate your own instead, see [`text2model/generate_knowledge_graph.py`](text2model/generate_knowledge_graph.py) or hand-write a `.ttl` following the structure of an existing example (e.g. `nlp4lp_1.ttl`).
@@ -293,9 +293,9 @@ text2model/
 │   │   ├── baseline.py
 │   │   ├── cot.py
 │   │   ├── knowledge_graph.py
-│   │   ├── cot_with_code_validation.py
-│   │   ├── cot_with_grammar_validation.py
-│   │   ├── cot_with_code_and_grammar_validation.py
+│   │   ├── cot_with_code.py
+│   │   ├── cot_with_grammar.py
+│   │   ├── cot_with_code_and_grammar.py
 │   │   ├── agents.py
 │   │   └── gala.py
 │   ├── grammar.mzn              # MiniZinc grammar for validation

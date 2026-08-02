@@ -26,12 +26,12 @@ STRATEGY_FOLDER_TO_NAME = {
     "baseline": "baseline",
     "cot": "cot",
     "knowledge_graph": "knowledge_graph",
-    "cot_with_code_validation": "cot+code_val",
-    "cot_with_grammar_validation": "cot+gram_val",
-    "cot_with_code_and_grammar_validation": "cot+code+gram",
+    "cot_with_code": "cot+code_val",
+    "cot_with_grammar": "cot+gram_val",
+    "cot_with_code_and_grammar": "cot+code+gram",
     "agents": "agents",
     "gala": "gala",
-    "agents_with_code_validation": "agents+code_val",
+    "agents_with_code": "agents+code_val",
 }
 
 STRATEGY_LLM_CALLS = {

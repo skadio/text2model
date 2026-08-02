@@ -41,9 +41,9 @@ AVAILABLE_MODELS = {
 
 AVAILABLE_STRATEGIES = [
     'baseline', 'cot', 'knowledge_graph',
-    'cot_with_code_validation', 'cot_with_grammar_validation',
-    'cot_with_code_and_grammar_validation',
-    'agents', 'agents_with_code_validation', 'gala', 'all',
+    'cot_with_code', 'cot_with_grammar',
+    'cot_with_code_and_grammar',
+    'agents', 'agents_with_code', 'gala', 'all',
 ]
 
 
@@ -338,9 +338,9 @@ def main():
     if 'all' in args.strategies:
         strategies = [
             'baseline', 'cot', 'knowledge_graph',
-            'cot_with_code_validation', 'cot_with_grammar_validation',
-            'cot_with_code_and_grammar_validation',
-            'agents', 'agents_with_code_validation', 'gala',
+            'cot_with_code', 'cot_with_grammar',
+            'cot_with_code_and_grammar',
+            'agents', 'agents_with_code', 'gala',
         ]
     else:
         strategies = args.strategies
