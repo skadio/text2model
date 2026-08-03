@@ -8,10 +8,9 @@ Text2Zinc dataset (`input.json`, `data.dzn`, `model.mzn`, `output.json`,
 
 - **`app.py`** — Entry point and UI wiring. Builds the page layout (tabs,
   sidebar, navigation, chat panel), holds all `on_click`/`on_change`
-  callbacks, and drives dataset load/save flow (local CSV, HuggingFace,
-  bundled default, showcase mode). Edit this for: layout changes, new
-  buttons/fields, new tabs, keyboard shortcuts, or changes to how/where
-  datasets are loaded and saved.
+  callbacks, and drives dataset load/save flow (local CSV, HuggingFace, HF
+  mode). Edit this for: layout changes, new buttons/fields, new tabs,
+  keyboard shortcuts, or changes to how/where datasets are loaded and saved.
 
 - **`dataset_editor.py`** — `Text2ZincEditor`: framework-agnostic dataset
   logic with no flet dependency. Loading/saving CSVs, loading from
@@ -31,8 +30,6 @@ Text2Zinc dataset (`input.json`, `data.dzn`, `model.mzn`, `output.json`,
   current problem, holds conversation history, and calls the OpenAI API.
   Edit this for: chat behavior, prompt content, or model handling.
 
-- **`data/`** — Bundled seed dataset (`text2zinc.csv`) used as the default
-  when no other dataset is found.
 
 ## Adding a feature
 

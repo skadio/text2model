@@ -173,8 +173,8 @@ def main():
     parser.add_argument(
         '--editor', action='store_true',
         help="Launch the Text2Zinc dataset editor (GUI) and exit. Combine with "
-             "--dataset-path to open a specific local CSV instead of the "
-             "bundled default dataset."
+             "--dataset-path to open a specific local CSV instead of pulling "
+             "fresh from the HuggingFace dataset."
     )
 
     # ── Model / API ─────────────────────────────────────────────────────────

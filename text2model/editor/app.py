@@ -2,7 +2,6 @@ import datetime
 import json
 import os
 import tempfile
-from pathlib import Path
 from typing import List, Optional
 
 import flet as ft
@@ -16,29 +15,32 @@ from text2model.utils import (
     verify_minizinc_solution,
 )
 
-# Bundled seed dataset, shipped as package data — this is what the editor
-# opens by default the very first time it's run in a fresh directory.
-_PACKAGE_DIR = Path(__file__).parent
-DEFAULT_DATASET_PATH = _PACKAGE_DIR / "data" / "text2zinc.csv"
-
 # Where quick-save (the "Save" button / Ctrl+S) writes to, in the current
 # working directory. "Save As..." lets the user pick any other destination —
 # that destination is the "new text2zinc dataset" to pass to
 # `text2model --dataset-path` / `evals/evaluate.py --dataset-path`.
 WORKING_DATASET_PATH = "text2zinc_edited.csv"
 
-# Showcase mode: for deploying the editor as a read-mostly demo (e.g. an HF
-# Space), set T2M_SHOWCASE=1. There's no HuggingFace Hub token in the
-# container, so it never talks to the HF Hub: it only ever works with a CSV
-# already baked into the image/pushed alongside it. In this mode:
+# HF mode: for deploying the editor as a read-mostly demo in a HuggingFace
+# Space, set T2M_HF_MODE=1. There's no HuggingFace Hub write token in the
+# container, so it never pushes back to the Hub: it only ever works with a
+# CSV already baked into the image/pushed alongside it (or, absent that,
+# whatever it pulls read-only from the public `skadio/text2zinc` dataset on
+# startup). In this mode:
 #   - "Open CSV...", "Load from HuggingFace", and "Save As..." are hidden —
 #     there is exactly one dataset, and no arbitrary filesystem/Hub access.
 #   - Quick-save (Save button / Ctrl+S) still works, but writes in place to
 #     that same pushed file instead of a separate WORKING_DATASET_PATH.
 # T2M_EDITOR_DATASET_PATH points at the pushed CSV to load on startup; falls
-# back to the bundled default dataset if unset.
-SHOWCASE_MODE = os.environ.get("T2M_SHOWCASE", "").strip().lower() in ("1", "true", "yes")
-SHOWCASE_DATASET_PATH = os.environ.get("T2M_EDITOR_DATASET_PATH")
+# back to loading fresh from HuggingFace if unset.
+#
+# Concurrency caveat: a Space is a single shared container. If more than one
+# person has it open at once, quick-save writes from different sessions can
+# race and clobber each other — there's no per-session file or locking here.
+# Don't rely on this mode for concurrent multi-user editing; see
+# `save_current_edits()` below for exactly what it writes and when.
+HF_MODE = os.environ.get("T2M_HF_MODE", "").strip().lower() in ("1", "true", "yes")
+HF_MODE_DATASET_PATH = os.environ.get("T2M_EDITOR_DATASET_PATH")
 
 
 def main(page: ft.Page, dataset_path: Optional[str] = None):
@@ -141,7 +143,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     # and what edit-mode state to restore.
     pending_new_problem = {"index": None, "return_index": None, "was_edit_mode": False}
 
-    # Whichever local path is currently loaded — in showcase mode, quick-save
+    # Whichever local path is currently loaded — in HF mode, quick-save
     # writes back here in place instead of to WORKING_DATASET_PATH.
     loaded_dataset_path = [WORKING_DATASET_PATH]
 
@@ -237,7 +239,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         filter_state["source"] = "All"
 
     def finish_loading(label: str, ok: bool):
-        """Common post-load bookkeeping shared by every load path (local file, bundled default, HuggingFace)."""
+        """Common post-load bookkeeping shared by every load path (local file, HuggingFace)."""
         if not ok or not editor.data:
             status_text.value = f"Failed to load dataset ({label})"
             status_text.color = ft.colors.RED
@@ -265,9 +267,6 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     def open_csv_result(e: ft.FilePickerResultEvent):
         if e.files:
             load_local_path(e.files[0].path, e.files[0].path)
-
-    def load_bundled_default(e):
-        load_local_path(str(DEFAULT_DATASET_PATH), "bundled default dataset")
 
     def load_from_hf(e):
         status_text.value = "Loading from HuggingFace (skadio/text2zinc)..."
@@ -386,12 +385,15 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     def save_current_edits(e=None):
         """Sync edits and quick-save (Ctrl+S). Normal mode writes to the
         working file (text2zinc_edited.csv), kept separate from whatever was
-        opened so the original is never silently overwritten. Showcase mode
-        writes in place to the single pushed dataset file instead, since
-        there's no separate export step in a Space."""
+        opened so the original is never silently overwritten. HF mode writes
+        in place to the single pushed dataset file instead, since there's no
+        separate export step in a Space — note that this file is shared by
+        every concurrent visitor to the Space, so quick-saves from different
+        sessions can race and clobber each other (see the HF mode note near
+        HF_MODE above)."""
         if not editor.data:
             return
-        save_target = loaded_dataset_path[0] if SHOWCASE_MODE else WORKING_DATASET_PATH
+        save_target = loaded_dataset_path[0] if HF_MODE else WORKING_DATASET_PATH
         try:
             sync_fields_into_current_item()
             if editor.save_csv(save_target):
@@ -413,7 +415,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     def copy_csv(e=None):
         """Copy the current dataset, as CSV text, to the clipboard.
 
-        Showcase mode only: the container's filesystem (where quick-save
+        HF mode only: the container's filesystem (where quick-save
         writes) isn't reachable from the HF Space UI, and there's no HF Hub
         token to push edits anywhere else. Browser file downloads are also
         blocked in the HF Space iframe, so instead of downloading a file we
@@ -833,13 +835,13 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         "Open CSV...", icon=ft.icons.FOLDER_OPEN,
         on_click=lambda e: open_csv_dialog.pick_files(allow_multiple=False, allowed_extensions=["csv"]),
         tooltip="Open a local Text2Zinc CSV dataset",
-        visible=not SHOWCASE_MODE,
+        visible=not HF_MODE,
     )
 
     load_hf_button = ft.OutlinedButton(
         "Load from HuggingFace", icon=ft.icons.CLOUD_DOWNLOAD, on_click=load_from_hf,
         tooltip=f"Reload fresh from the {TEXT2ZINC_DATASET} HuggingFace dataset",
-        visible=not SHOWCASE_MODE,
+        visible=not HF_MODE,
     )
 
     new_problem_button = ft.ElevatedButton(
@@ -857,7 +859,8 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     save_button = ft.ElevatedButton(
         "Save", icon=ft.icons.SAVE, on_click=save_current_edits,
         bgcolor=ft.colors.BLUE_700, color=ft.colors.WHITE,
-        tooltip=("Quick-save in place (Ctrl+S)" if SHOWCASE_MODE
+        tooltip=("Quick-save in place (Ctrl+S) — shared by everyone using this Space right now, "
+                 "so concurrent saves aren't guaranteed to be consistent" if HF_MODE
                  else f"Quick-save to {WORKING_DATASET_PATH} (Ctrl+S)"),
     )
 
@@ -865,14 +868,14 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         "Save As New Dataset...", icon=ft.icons.SAVE_AS, on_click=save_as,
         bgcolor=ft.colors.GREEN_700, color=ft.colors.WHITE,
         tooltip="Save to a chosen path — pass it to text2model --dataset-path to benchmark against it",
-        visible=not SHOWCASE_MODE,
+        visible=not HF_MODE,
     )
 
     copy_button = ft.ElevatedButton(
         "Copy CSV", icon=ft.icons.COPY, on_click=copy_csv,
         bgcolor=ft.colors.GREEN_700, color=ft.colors.WHITE,
         tooltip="Copy the current dataset as CSV text to your clipboard",
-        visible=SHOWCASE_MODE,
+        visible=HF_MODE,
     )
 
     execute_button = ft.ElevatedButton(
@@ -1178,46 +1181,47 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
 
     page.on_keyboard_event = handle_keyboard
 
-    # Initial load. Showcase mode only ever loads the one pushed dataset
-    # (--dataset-path, else T2M_EDITOR_DATASET_PATH, else the bundled
-    # default) since there's no "previous session" file — quick-save writes
-    # back in place to that same path. Normal mode is local-first: an
-    # explicit --dataset-path, then a previous editing session, then the
-    # bundled default. HuggingFace is opt-in only (via the "Load from
-    # HuggingFace" button), never the editor's default.
-    if SHOWCASE_MODE:
-        showcase_source = dataset_path or SHOWCASE_DATASET_PATH
-        if showcase_source and os.path.exists(showcase_source):
-            load_local_path(showcase_source, f"showcase dataset ({showcase_source})")
-        elif DEFAULT_DATASET_PATH.exists():
-            load_local_path(
-                str(DEFAULT_DATASET_PATH),
-                "bundled default dataset (T2M_EDITOR_DATASET_PATH not set or not found)",
-            )
+    # Initial load. No CSV is bundled with the package — text2zinc is a
+    # public HuggingFace dataset, so the very first run in a fresh directory
+    # (in either mode) pulls it straight from the Hub instead, no token
+    # required. HF mode only ever loads the one pushed dataset (--dataset-path,
+    # else T2M_EDITOR_DATASET_PATH, else HuggingFace) since there's no
+    # "previous session" file — quick-save writes back in place to that same
+    # path. Normal mode is local-first: an explicit --dataset-path, then a
+    # previous editing session, then HuggingFace.
+    if HF_MODE:
+        hf_mode_source = dataset_path or HF_MODE_DATASET_PATH
+        if hf_mode_source and os.path.exists(hf_mode_source):
+            load_local_path(hf_mode_source, f"pushed dataset ({hf_mode_source})")
         else:
-            status_text.value = "Showcase mode: no dataset found. Set T2M_EDITOR_DATASET_PATH to a pushed CSV."
-            status_text.color = ft.colors.RED
+            status_text.value = f"Loading from HuggingFace ({TEXT2ZINC_DATASET})..."
+            status_text.color = ft.colors.ORANGE
             page.update()
+            finish_loading(
+                f"HuggingFace ({TEXT2ZINC_DATASET}, T2M_EDITOR_DATASET_PATH not set or not found)",
+                editor.load_from_huggingface(),
+            )
     elif dataset_path and os.path.exists(dataset_path):
         load_local_path(dataset_path, dataset_path)
     elif os.path.exists(WORKING_DATASET_PATH):
         load_local_path(WORKING_DATASET_PATH, f"previous session ({WORKING_DATASET_PATH})")
-    elif DEFAULT_DATASET_PATH.exists():
-        load_local_path(str(DEFAULT_DATASET_PATH), "bundled default dataset")
     else:
-        status_text.value = "No dataset found. Use 'Open CSV...' or 'Load from HuggingFace' to get started."
+        status_text.value = f"Loading from HuggingFace ({TEXT2ZINC_DATASET})..."
         status_text.color = ft.colors.ORANGE
         page.update()
+        finish_loading(f"HuggingFace ({TEXT2ZINC_DATASET})", editor.load_from_huggingface())
 
 
 def launch(dataset_path: Optional[str] = None) -> None:
     """Launch the Text2Zinc dataset editor GUI.
 
-    Locally this opens a native desktop window. In showcase mode
-    (T2M_SHOWCASE=1, e.g. deployed as an HF Space) it instead serves over
+    Locally this opens a native desktop window. In HF mode
+    (T2M_HF_MODE=1, e.g. deployed as an HF Space) it instead serves over
     HTTP so it can run headless in a container, listening on $PORT
-    (default 7860, matching HF Spaces' Docker SDK default)."""
-    if SHOWCASE_MODE:
+    (default 7860, matching HF Spaces' Docker SDK default). See the HF_MODE
+    comment near the top of this file for the concurrency caveat that comes
+    with that deployment."""
+    if HF_MODE:
         port = int(os.environ.get("PORT", 7860))
         ft.app(
             target=lambda page: main(page, dataset_path=dataset_path),

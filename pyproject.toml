@@ -70,5 +70,4 @@ license-files = []
     "prompts/global_constraint_prompts/*.txt",
     "grammar.mzn",
     "knowledge_graphs/*.ttl",
-    "editor/data/*.csv",
 ]

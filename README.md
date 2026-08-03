@@ -287,8 +287,8 @@ text2model/
 │   │   └── ...
 │   ├── knowledge_graphs/        # KG files (.ttl) for knowledge_graph strategy
 │   ├── editor/                  # Dataset editor GUI (`text2model --editor`)
-│   │   ├── app.py               # Flet app: browse/edit/execute Text2Zinc problems, AI chat assistant
-│   │   └── data/text2zinc.csv   # Bundled default dataset the editor opens on first run
+│   │   └── app.py               # Flet app: browse/edit/execute Text2Zinc problems, AI chat assistant
+│   │                             # (opens from HuggingFace on first run — no dataset is bundled)
 │   ├── copilots/                # One module per copilot strategy, registered in STRATEGY_MAP
 │   │   ├── baseline.py
 │   │   ├── cot.py
