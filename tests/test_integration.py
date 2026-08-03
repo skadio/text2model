@@ -182,7 +182,7 @@ def test_load_text2zinc_dataset_local_csv_parses_rows(tmp_path):
 def test_list_sources_reports_counts_across_full_dataset(tmp_path, monkeypatch, capsys):
     csv_path = _write_tiny_dataset_csv(tmp_path)
     monkeypatch.setattr(sys, "argv", [
-        "text2model", "--list-sources", "--dataset-path", str(csv_path),
+        "text2model", "--list-sources", "--text2zinc-path", str(csv_path),
     ])
 
     main.main()
@@ -195,7 +195,7 @@ def test_list_sources_reports_counts_across_full_dataset(tmp_path, monkeypatch, 
 def test_list_problem_ids_default_excludes_unverified(tmp_path, monkeypatch, capsys):
     csv_path = _write_tiny_dataset_csv(tmp_path)
     monkeypatch.setattr(sys, "argv", [
-        "text2model", "--list-problem-ids", "--dataset-path", str(csv_path),
+        "text2model", "--list-problem-ids", "--text2zinc-path", str(csv_path),
     ])
 
     main.main()
@@ -209,7 +209,7 @@ def test_list_problem_ids_default_excludes_unverified(tmp_path, monkeypatch, cap
 def test_list_problem_ids_full_dataset_includes_unverified(tmp_path, monkeypatch, capsys):
     csv_path = _write_tiny_dataset_csv(tmp_path)
     monkeypatch.setattr(sys, "argv", [
-        "text2model", "--list-problem-ids", "--full-dataset", "--dataset-path", str(csv_path),
+        "text2model", "--list-problem-ids", "--full-dataset", "--text2zinc-path", str(csv_path),
     ])
 
     main.main()
@@ -221,7 +221,7 @@ def test_list_problem_ids_filters_by_source(tmp_path, monkeypatch, capsys):
     csv_path = _write_tiny_dataset_csv(tmp_path)
     monkeypatch.setattr(sys, "argv", [
         "text2model", "--list-problem-ids", "--full-dataset",
-        "--source", "nlp4lp", "--dataset-path", str(csv_path),
+        "--source", "nlp4lp", "--text2zinc-path", str(csv_path),
     ])
 
     main.main()
@@ -245,7 +245,7 @@ def test_strategies_all_dispatches_every_strategy(tmp_path, monkeypatch):
     fake_map = {name: make_fake_strategy(name) for name in copilots.STRATEGY_MAP}
     monkeypatch.setattr(main, "_STRATEGY_MAP", fake_map)
     monkeypatch.setattr(sys, "argv", [
-        "text2model", "--model", "phi4", "--dataset-path", str(csv_path),
+        "text2model", "--model", "phi4", "--text2zinc-path", str(csv_path),
         "--problem-ids", "0", "--strategies", "all",
         "--output-dir", output_dir, "--sleep-time", "0",
     ])
@@ -310,10 +310,10 @@ def test_editor_cli_launches_without_error(monkeypatch):
     main.main()  # must not raise
 
 
-def test_editor_cli_launches_with_dataset_path_without_error(tmp_path, monkeypatch):
+def test_editor_cli_launches_with_text2zinc_path_without_error(tmp_path, monkeypatch):
     csv_path = _write_tiny_dataset_csv(tmp_path)
     monkeypatch.setattr(editor_app.ft, "app", _fake_flet_app)
-    monkeypatch.setattr(sys, "argv", ["text2model", "--editor", "--dataset-path", str(csv_path)])
+    monkeypatch.setattr(sys, "argv", ["text2model", "--editor", "--text2zinc-path", str(csv_path)])
 
     main.main()  # must not raise
 
@@ -529,8 +529,8 @@ def test_main_batch_mode_problem_ids_by_identifier(tmp_path, monkeypatch):
 
 
 @requires_openai_key
-def test_main_batch_mode_dataset_path_generates_for_local_dataset(tmp_path, monkeypatch):
-    # --dataset-path against a small locally-edited CSV instead of the default
+def test_main_batch_mode_text2zinc_path_generates_for_local_dataset(tmp_path, monkeypatch):
+    # --text2zinc-path against a small locally-edited CSV instead of the default
     # HuggingFace dataset. No --problem-ids given, so this also covers the
     # "process every row" loop body cheaply (2 rows) instead of against the
     # full real dataset.
@@ -544,7 +544,7 @@ def test_main_batch_mode_dataset_path_generates_for_local_dataset(tmp_path, monk
         "text2model",
         "--model", "gpt-4o",
         "--strategies", "baseline",
-        "--dataset-path", str(csv_path),
+        "--text2zinc-path", str(csv_path),
         "--output-dir", output_dir,
     ])
 

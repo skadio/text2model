@@ -97,14 +97,29 @@ text2model --strategies cot --model gpt-5.5 --output-dir my_results \
 # Use a local dataset (e.g. one saved by `text2model --editor`) instead of the
 # default skadio/text2zinc HuggingFace dataset
 text2model --strategies cot --model gpt-4 --output-dir my_results \
-  --dataset-path text2zinc_edited.csv
+  --text2zinc-path text2zinc_edited.csv
+
+# Force a fresh download of skadio/text2zinc instead of reusing whatever is in
+# the local HuggingFace datasets cache
+text2model --strategies cot --model gpt-4 --output-dir my_results \
+  --upgrade-text2zinc
 ```
+
+`skadio/text2zinc` is a **gated** dataset: without an HF token with approved
+access, `--upgrade-text2zinc` fails loudly instead of silently reusing stale
+cache. Request access at
+[huggingface.co/datasets/skadio/text2zinc](https://huggingface.co/datasets/skadio/text2zinc),
+then either run `huggingface-cli login` or set the `HF_TOKEN` environment
+variable. On a HuggingFace Space, add `HF_TOKEN` as a **Repository secret**
+(Settings > Variables and secrets > New secret) instead — Spaces inject
+secrets into the running container as environment variables at runtime,
+without exposing them in code or the repo.
 
 ### Interactive Mode
 
 ```bash
 text2model --editor
-text2model --editor --dataset-path text2zinc_edited.csv
+text2model --editor --text2zinc-path text2zinc_edited.csv
 ```
 
 See [Dataset Editor](https://github.com/skadio/text2model?tab=readme-ov-file#dataset-editor) for details.
@@ -204,17 +219,17 @@ text2model --editor
 By default the editor opens, in order: a previous editing session (`text2zinc_edited.csv` in the current directory), otherwise the dataset bundled with the package. Use the **"Load from HuggingFace"** button inside the editor to instead start from a fresh copy of `skadio/text2zinc`, or open any other local dataset with **"Open CSV..."** — or non-interactively:
 
 ```bash
-text2model --editor --dataset-path my_dataset.csv
+text2model --editor --text2zinc-path my_dataset.csv
 ```
 
 ### Save and Benchmark
 
 - **Save** (or Ctrl+S) quick-saves your edits to `text2zinc_edited.csv` in the current directory.
-- **Save As New Dataset...** exports to any path you choose. That path is a complete Text2Zinc dataset you can pass to `--dataset-path` to generate or benchmark against your edits instead of the default HuggingFace dataset:
+- **Save As New Dataset...** exports to any path you choose. That path is a complete Text2Zinc dataset you can pass to `--text2zinc-path` to generate or benchmark against your edits instead of the default HuggingFace dataset:
 
 ```bash
-text2model --strategies cot --model gpt-4 --output-dir my_results --dataset-path my_dataset.csv
-python evals/evaluate.py --output-dir my_results --dataset-path my_dataset.csv
+text2model --strategies cot --model gpt-4 --output-dir my_results --text2zinc-path my_dataset.csv
+python evals/evaluate.py --output-dir my_results --text2zinc-path my_dataset.csv
 ```
 
 ## Evaluation
@@ -233,7 +248,7 @@ python evals/evaluate.py --output-dir my_results
 
 # Evaluate against a local dataset (e.g. one saved by `text2model --editor`) instead
 # of the default skadio/text2zinc HuggingFace dataset
-python evals/evaluate.py --output-dir my_results --dataset-path text2zinc_edited.csv
+python evals/evaluate.py --output-dir my_results --text2zinc-path text2zinc_edited.csv
 ```
 
 Running the eval generates a JSON file (`evals/evaluation_results.json` by default, via `--output-json`) with your accuracy metrics. You can PR that file to the [Text2Model Leaderboard](https://huggingface.co/spaces/skadio/text2model-leaderboard) on Hugging Face to get your results added to the online leaderboard.

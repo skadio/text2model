@@ -340,17 +340,17 @@ def evaluate_directory(strategy_dir, problems, timeout, solver, desc=""):
     return metrics
 
 
-def load_verified_problems(dataset_path=None):
+def load_verified_problems(text2zinc_path=None):
     """
     Load verified problems from the Text2Zinc dataset (HuggingFace by default,
-    or a local CSV, e.g. one saved by `text2model --editor`, if dataset_path is set).
+    or a local CSV, e.g. one saved by `text2model --editor`, if text2zinc_path is set).
     Returns dict keyed by identifier (which matches filename).
     """
-    if dataset_path:
-        print(f"Loading VERIFIED problems from local dataset: {dataset_path}...")
+    if text2zinc_path:
+        print(f"Loading VERIFIED problems from local dataset: {text2zinc_path}...")
     else:
         print("Loading VERIFIED problems from HuggingFace dataset...")
-    dataset = t2m_utils.load_text2zinc_dataset(dataset_path)
+    dataset = t2m_utils.load_text2zinc_dataset(text2zinc_path)
     verified = dataset.filter(lambda x: x["is_verified"])
 
     problems = {}
@@ -386,10 +386,10 @@ def load_verified_problems(dataset_path=None):
     return problems
 
 
-def load_orlm_problems(dataset_path=None):
+def load_orlm_problems(text2zinc_path=None):
     """
     Load ORLM problems from the Text2Zinc dataset (HuggingFace by
-    default, or a local CSV, e.g. one saved by `text2model --editor`, if dataset_path is set).
+    default, or a local CSV, e.g. one saved by `text2model --editor`, if text2zinc_path is set).
 
     These problems ship with validated ground-truth objective values from their
     original release, so they're independently verifiable even though they don't
@@ -403,11 +403,11 @@ def load_orlm_problems(dataset_path=None):
 
     Returns dict with keys matching expected filenames.
     """
-    if dataset_path:
-        print(f"\nLoading ORLM problems from local dataset: {dataset_path}...")
+    if text2zinc_path:
+        print(f"\nLoading ORLM problems from local dataset: {text2zinc_path}...")
     else:
         print("\nLoading ORLM problems from HuggingFace dataset...")
-    dataset = t2m_utils.load_text2zinc_dataset(dataset_path)
+    dataset = t2m_utils.load_text2zinc_dataset(text2zinc_path)
 
     # Filter to only ORLM sources
     orlm_sources = ['cardinal_operations_mamo', 'cardinal_operations_industryor', 'cardinal_operations_nl4opt']
@@ -806,7 +806,7 @@ def main():
     parser.add_argument('--output-json', default=DEFAULT_OUTPUT_JSON,
                         help='Output JSON file (default: evals/evaluation_results.json, '
                              'regardless of the current working directory)')
-    parser.add_argument('--dataset-path', default=None,
+    parser.add_argument('--text2zinc-path', default=None,
                         help='Path to a local Text2Zinc CSV dataset (e.g. one saved by '
                              '`text2model --editor`), used instead of the default '
                              'skadio/text2zinc HuggingFace dataset.')
@@ -830,21 +830,21 @@ def main():
             if os.path.isdir(os.path.join(args.output_dir, d)) and d not in skip_dirs
         ])
 
-    verified_problems = load_verified_problems(args.dataset_path)
+    verified_problems = load_verified_problems(args.text2zinc_path)
     if not verified_problems:
         print("Failed to load verified problems")
         return 1
 
     orlm_problems = None
     if args.eval_orlm:
-        orlm_problems = load_orlm_problems(args.dataset_path)
+        orlm_problems = load_orlm_problems(args.text2zinc_path)
 
     # --- Print config ---
     print(f"\n{'='*60}")
     print("EVALUATION CONFIGURATION")
     print(f"{'='*60}")
     print(f"Output directory: {args.output_dir}")
-    print(f"Dataset:          {args.dataset_path if args.dataset_path else 'skadio/text2zinc (HuggingFace)'}")
+    print(f"Dataset:          {args.text2zinc_path if args.text2zinc_path else 'skadio/text2zinc (HuggingFace)'}")
     print(f"Models:           {', '.join(models_to_evaluate)}")
     print(f"Strategy filter:  {args.strategy or 'All'}")
     print(f"Timeout:          {args.timeout}s")

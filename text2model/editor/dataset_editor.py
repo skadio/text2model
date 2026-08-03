@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 from typing import Any, Dict, List
 
-from text2model.utils import TEXT2ZINC_CSV_COLUMNS, TEXT2ZINC_DATASET
+from text2model.utils import TEXT2ZINC_CSV_COLUMNS, TEXT2ZINC_DATASET, check_hf_token_for_text2zinc
 
 
 def _parse_json_field(value: Any) -> Any:
@@ -109,6 +109,7 @@ class Text2ZincEditor:
     def load_from_huggingface(self) -> bool:
         """Load dataset fresh from the skadio/text2zinc HuggingFace dataset"""
         try:
+            check_hf_token_for_text2zinc()
             from datasets import load_dataset
             hf_dataset = load_dataset(TEXT2ZINC_DATASET)['train']
 

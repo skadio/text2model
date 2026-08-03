@@ -666,26 +666,66 @@ def get_available_sources(dataset):
     return sorted(sources)
 
 
-def load_text2zinc_dataset(dataset_path: Optional[str] = None):
+HF_TOKEN_HELP = (
+    f"{TEXT2ZINC_DATASET} is a gated dataset: the `datasets` library falls back "
+    "silently to whatever is in the local cache when it can't authenticate, which "
+    "looks identical to a successful fresh load. To fetch/refresh it from the Hub, "
+    f"request access at https://huggingface.co/datasets/{TEXT2ZINC_DATASET} and then "
+    "either run `huggingface-cli login` or set the HF_TOKEN environment variable to a "
+    "token with approved access.\n"
+    "On a HuggingFace Space, add HF_TOKEN as a Repository secret "
+    "(Settings > Variables and secrets > New secret) instead of putting it in code "
+    "or the repo — Spaces inject secrets into the running container as environment "
+    "variables at runtime, which `huggingface_hub` picks up automatically."
+)
+
+
+def check_hf_token_for_text2zinc(force_download: bool = False) -> None:
+    """Warn (or, for a forced refresh, raise) if no Hugging Face token is
+    configured before touching the gated TEXT2ZINC_DATASET on the Hub.
+
+    `datasets.load_dataset` swallows auth/permission failures against gated
+    repos and silently reuses the local cache instead of erroring, so without
+    this check a missing/invalid token is indistinguishable from a successful
+    fresh load. force_download=True raises instead of warning, since the whole
+    point of forcing a refresh is defeated by silently serving stale data.
+    """
+    from huggingface_hub import get_token
+
+    if get_token():
+        return
+    if force_download:
+        raise RuntimeError(HF_TOKEN_HELP)
+    print(f"Warning: no Hugging Face token found. {HF_TOKEN_HELP}")
+
+
+def load_text2zinc_dataset(text2zinc_path: Optional[str] = None, force_download: bool = False):
     """Load the Text2Zinc benchmark dataset as a `datasets.Dataset`.
 
-    dataset_path=None (default): pulls TEXT2ZINC_DATASET from the HuggingFace Hub.
-    dataset_path=<path>: loads a local Text2Zinc CSV instead (e.g. one saved by
+    text2zinc_path=None (default): pulls TEXT2ZINC_DATASET from the HuggingFace Hub.
+    text2zinc_path=<path>: loads a local Text2Zinc CSV instead (e.g. one saved by
     `text2model --editor`), with the same 5 columns HF exposes: input.json,
     data.dzn, model.mzn, output.json, is_verified.
+
+    force_download=True (only meaningful when text2zinc_path is None): bypasses
+    the local HuggingFace datasets cache and re-downloads TEXT2ZINC_DATASET from
+    the Hub, in case it's been updated since it was last cached. Raises if no HF
+    token is configured, since serving stale cache would silently defeat the point.
 
     Either way the result supports `.filter()`, indexing, `len()`, and
     iteration identically, so callers don't need to branch on the source.
     """
     # `datasets` is imported lazily here (not at module scope) so callers that
     # never touch the benchmark dataset don't pay for/depend on the HF stack.
-    from datasets import Dataset, load_dataset
+    from datasets import DownloadMode, Dataset, load_dataset
 
-    if dataset_path is None:
-        return load_dataset(TEXT2ZINC_DATASET)['train']
+    if text2zinc_path is None:
+        check_hf_token_for_text2zinc(force_download)
+        download_mode = DownloadMode.FORCE_REDOWNLOAD if force_download else None
+        return load_dataset(TEXT2ZINC_DATASET, download_mode=download_mode)['train']
 
     rows = []
-    with open(dataset_path, 'r', encoding='utf-8', newline='') as f:
+    with open(text2zinc_path, 'r', encoding='utf-8', newline='') as f:
         reader = csv.DictReader(f)
         for row in reader:
             rows.append({

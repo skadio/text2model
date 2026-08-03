@@ -18,7 +18,7 @@ from text2model.utils import (
 # Where quick-save (the "Save" button / Ctrl+S) writes to, in the current
 # working directory. "Save As..." lets the user pick any other destination —
 # that destination is the "new text2zinc dataset" to pass to
-# `text2model --dataset-path` / `evals/evaluate.py --dataset-path`.
+# `text2model --text2zinc-path` / `evals/evaluate.py --text2zinc-path`.
 WORKING_DATASET_PATH = "text2zinc_edited.csv"
 
 # HF mode: for deploying the editor as a read-mostly demo in a HuggingFace
@@ -43,7 +43,7 @@ HF_MODE = os.environ.get("T2M_HF_MODE", "").strip().lower() in ("1", "true", "ye
 HF_MODE_DATASET_PATH = os.environ.get("T2M_EDITOR_DATASET_PATH")
 
 
-def main(page: ft.Page, dataset_path: Optional[str] = None):
+def main(page: ft.Page, text2zinc_path: Optional[str] = None):
     page.title = "Text2Zinc Dataset Editor"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 10
@@ -462,7 +462,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         if editor.save_csv(e.path):
             status_text.value = (
                 f"Saved {len(editor.data)} problems to {e.path}\n"
-                f'Benchmark with it via: text2model --dataset-path "{e.path}" --strategies cot --output-dir results/'
+                f'Benchmark with it via: text2model --text2zinc-path "{e.path}" --strategies cot --output-dir results/'
             )
             status_text.color = ft.colors.GREEN
             if not str(data_dzn_field.value or '').strip():
@@ -867,7 +867,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     save_as_button = ft.ElevatedButton(
         "Save As New Dataset...", icon=ft.icons.SAVE_AS, on_click=save_as,
         bgcolor=ft.colors.GREEN_700, color=ft.colors.WHITE,
-        tooltip="Save to a chosen path — pass it to text2model --dataset-path to benchmark against it",
+        tooltip="Save to a chosen path — pass it to text2model --text2zinc-path to benchmark against it",
         visible=not HF_MODE,
     )
 
@@ -1184,13 +1184,13 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     # Initial load. No CSV is bundled with the package — text2zinc is a
     # public HuggingFace dataset, so the very first run in a fresh directory
     # (in either mode) pulls it straight from the Hub instead, no token
-    # required. HF mode only ever loads the one pushed dataset (--dataset-path,
+    # required. HF mode only ever loads the one pushed dataset (--text2zinc-path,
     # else T2M_EDITOR_DATASET_PATH, else HuggingFace) since there's no
     # "previous session" file — quick-save writes back in place to that same
-    # path. Normal mode is local-first: an explicit --dataset-path, then a
+    # path. Normal mode is local-first: an explicit --text2zinc-path, then a
     # previous editing session, then HuggingFace.
     if HF_MODE:
-        hf_mode_source = dataset_path or HF_MODE_DATASET_PATH
+        hf_mode_source = text2zinc_path or HF_MODE_DATASET_PATH
         if hf_mode_source and os.path.exists(hf_mode_source):
             load_local_path(hf_mode_source, f"pushed dataset ({hf_mode_source})")
         else:
@@ -1201,8 +1201,8 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
                 f"HuggingFace ({TEXT2ZINC_DATASET}, T2M_EDITOR_DATASET_PATH not set or not found)",
                 editor.load_from_huggingface(),
             )
-    elif dataset_path and os.path.exists(dataset_path):
-        load_local_path(dataset_path, dataset_path)
+    elif text2zinc_path and os.path.exists(text2zinc_path):
+        load_local_path(text2zinc_path, text2zinc_path)
     elif os.path.exists(WORKING_DATASET_PATH):
         load_local_path(WORKING_DATASET_PATH, f"previous session ({WORKING_DATASET_PATH})")
     else:
@@ -1212,7 +1212,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         finish_loading(f"HuggingFace ({TEXT2ZINC_DATASET})", editor.load_from_huggingface())
 
 
-def launch(dataset_path: Optional[str] = None) -> None:
+def launch(text2zinc_path: Optional[str] = None) -> None:
     """Launch the Text2Zinc dataset editor GUI.
 
     Locally this opens a native desktop window. In HF mode
@@ -1224,13 +1224,13 @@ def launch(dataset_path: Optional[str] = None) -> None:
     if HF_MODE:
         port = int(os.environ.get("PORT", 7860))
         ft.app(
-            target=lambda page: main(page, dataset_path=dataset_path),
+            target=lambda page: main(page, text2zinc_path=text2zinc_path),
             view=ft.AppView.WEB_BROWSER,
             host="0.0.0.0",
             port=port,
         )
     else:
-        ft.app(target=lambda page: main(page, dataset_path=dataset_path))
+        ft.app(target=lambda page: main(page, text2zinc_path=text2zinc_path))
 
 
 if __name__ == "__main__":

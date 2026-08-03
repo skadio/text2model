@@ -152,7 +152,7 @@ def main():
             '  # Text2Zinc mode: run specific problems by index and/or identifier\n'
             '  text2model --strategies cot --problem-ids 0 nlp4lp_58 --output-dir results/\n\n'
             '  # Text2Zinc mode against a locally-edited dataset instead of HuggingFace\n'
-            '  text2model --strategies cot --dataset-path text2zinc_edited.csv --output-dir results/\n\n'
+            '  text2model --strategies cot --text2zinc-path text2zinc_edited.csv --output-dir results/\n\n'
             '  # Launch the dataset editor to create/edit a local Text2Zinc dataset\n'
             '  text2model --editor\n\n'
             'The OpenAI API key can also be set via the OPENAI_API_KEY environment '
@@ -173,7 +173,7 @@ def main():
     parser.add_argument(
         '--editor', action='store_true',
         help="Launch the Text2Zinc dataset editor (GUI) and exit. Combine with "
-             "--dataset-path to open a specific local CSV instead of pulling "
+             "--text2zinc-path to open a specific local CSV instead of pulling "
              "fresh from the HuggingFace dataset."
     )
 
@@ -229,9 +229,12 @@ def main():
                              'manually verified MiniZinc models (Text2Zinc mode)')
     parser.add_argument('--output-dir', default=None,
                         help='Base output directory for Text2Zinc mode (must not already exist)')
-    parser.add_argument('--dataset-path', default=None,
+    parser.add_argument('--text2zinc-path', default=None,
         help='Path to a local Text2Zinc CSV dataset (e.g. one saved by `text2model --editor`), '
              'used instead of the default skadio/text2zinc HuggingFace dataset (Text2Zinc mode).')
+    parser.add_argument('--upgrade-text2zinc', action='store_true',
+        help='Force a fresh download of the skadio/text2zinc HuggingFace dataset instead of '
+             'reusing the local datasets cache. Ignored when --text2zinc-path is set.')
 
     if len(sys.argv) == 1:
         print(parser.format_help(), end='')
@@ -242,7 +245,7 @@ def main():
     # ── --editor: launch the GUI dataset editor, no API key needed ─────────
     if args.editor:
         from text2model.editor import launch as launch_editor
-        launch_editor(dataset_path=args.dataset_path)
+        launch_editor(text2zinc_path=args.text2zinc_path)
         return
 
     # ── --list-models: no dataset, no API key needed ────────────────────────
@@ -274,11 +277,15 @@ def main():
             "(not needed with --problem, --list-sources, or --list-problem-ids)"
         )
 
-    if args.dataset_path:
-        print(f"Loading local dataset from {args.dataset_path}...")
+    if args.text2zinc_path:
+        print(f"Loading local dataset from {args.text2zinc_path}...")
+    elif args.upgrade_text2zinc:
+        print("Loading dataset from HuggingFace (skadio/text2zinc), forcing a fresh download...")
     else:
         print("Loading dataset from HuggingFace (skadio/text2zinc)...")
-    dataset_train = utils.load_text2zinc_dataset(args.dataset_path)
+    dataset_train = utils.load_text2zinc_dataset(
+        args.text2zinc_path, force_download=args.upgrade_text2zinc
+    )
 
     # --list-sources is a discovery command: always show sources across the
     # entire dataset, regardless of --full-dataset.
@@ -354,7 +361,7 @@ def main():
     print("RUN CONFIGURATION SUMMARY")
     print(f"{'='*50}")
     print(f"Model: {args.model}")
-    print(f"Dataset: {args.dataset_path if args.dataset_path else 'skadio/text2zinc (HuggingFace)'}")
+    print(f"Dataset: {args.text2zinc_path if args.text2zinc_path else 'skadio/text2zinc (HuggingFace)'}")
     print(f"Strategies: {', '.join(strategies)}")
     print(f"Source filter: {args.source if args.source else 'None (all sources)'}")
     print(f"Full dataset: {args.full_dataset}")
