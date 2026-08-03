@@ -12,6 +12,7 @@ from text2model.editor.json_viewer import create_json_viewer
 from text2model.utils import (
     OPENAI_MODELS,
     TEXT2ZINC_DATASET,
+    check_hf_token_for_text2zinc,
     verify_minizinc_solution,
 )
 
@@ -273,6 +274,27 @@ def main(page: ft.Page, text2zinc_path: Optional[str] = None):
         status_text.color = ft.colors.ORANGE
         page.update()
         finish_loading(f"HuggingFace ({TEXT2ZINC_DATASET}, not yet saved locally)", editor.load_from_huggingface())
+
+    def upgrade_from_hf(e):
+        """Force a fresh download of TEXT2ZINC_DATASET, bypassing the local
+        `datasets` cache, so upstream dataset updates show up even though a
+        cached copy already exists (e.g. baked into a HF Space image). Unlike
+        load_from_hf above, this is shown in HF mode too — it's the only way
+        to refresh a Space's data without a full rebuild/restart."""
+        status_text.value = f"Upgrading to the latest {TEXT2ZINC_DATASET} (forcing fresh download)..."
+        status_text.color = ft.colors.ORANGE
+        page.update()
+        try:
+            check_hf_token_for_text2zinc(force_download=True)
+        except RuntimeError as ex:
+            status_text.value = str(ex)
+            status_text.color = ft.colors.RED
+            page.update()
+            return
+        finish_loading(
+            f"HuggingFace ({TEXT2ZINC_DATASET}, freshly downloaded)",
+            editor.load_from_huggingface(force_download=True),
+        )
 
     def generate_unique_identifier() -> str:
         existing = set()
@@ -844,6 +866,14 @@ def main(page: ft.Page, text2zinc_path: Optional[str] = None):
         visible=not HF_MODE,
     )
 
+    upgrade_hf_button = ft.OutlinedButton(
+        "Upgrade Dataset", icon=ft.icons.SYSTEM_UPDATE_ALT, on_click=upgrade_from_hf,
+        tooltip=(f"Force a fresh download of {TEXT2ZINC_DATASET} from HuggingFace, bypassing "
+                 "the local cache, to pick up any upstream dataset updates. Click Save "
+                 "afterward to persist it." if HF_MODE else
+                 f"Force a fresh download of {TEXT2ZINC_DATASET} from HuggingFace, bypassing the local cache"),
+    )
+
     new_problem_button = ft.ElevatedButton(
         "New Problem", icon=ft.icons.ADD, on_click=new_problem,
         bgcolor=ft.colors.PURPLE_700, color=ft.colors.WHITE,
@@ -1019,6 +1049,7 @@ def main(page: ft.Page, text2zinc_path: Optional[str] = None):
             ft.Divider(height=1),
             open_csv_button,
             load_hf_button,
+            upgrade_hf_button,
             new_problem_button,
             cancel_new_problem_button,
             save_button,

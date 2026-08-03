@@ -106,12 +106,18 @@ class Text2ZincEditor:
             print(f"Error loading CSV: {e}")
             return False
 
-    def load_from_huggingface(self) -> bool:
-        """Load dataset fresh from the skadio/text2zinc HuggingFace dataset"""
+    def load_from_huggingface(self, force_download: bool = False) -> bool:
+        """Load dataset fresh from the skadio/text2zinc HuggingFace dataset.
+
+        force_download=True bypasses the local `datasets` cache and re-downloads
+        from the Hub even if a cached copy already exists, so upstream dataset
+        updates are picked up without needing to clear the cache by hand.
+        """
         try:
-            check_hf_token_for_text2zinc()
-            from datasets import load_dataset
-            hf_dataset = load_dataset(TEXT2ZINC_DATASET)['train']
+            check_hf_token_for_text2zinc(force_download)
+            from datasets import DownloadMode, load_dataset
+            download_mode = DownloadMode.FORCE_REDOWNLOAD if force_download else None
+            hf_dataset = load_dataset(TEXT2ZINC_DATASET, download_mode=download_mode)['train']
 
             data = []
             for row in hf_dataset:

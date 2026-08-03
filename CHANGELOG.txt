@@ -3,6 +3,11 @@ Changelog
 
 All notable changes to this project are documented in this file.
 
+[1.3.5] - 2026-08-03
+- Added an "Upgrade Dataset" button to the editor GUI, visible in HF Space mode
+  too, that force-downloads the latest `skadio/text2zinc` from HuggingFace,
+  bypassing the local `datasets` cache
+
 [1.3.4] - 2026-08-03
 - Renamed `--dataset-path` to `--text2zinc-path` (`text2model` and `evals/evaluate.py`)
 - Added `--upgrade-text2zinc` to force a fresh download instead of reusing the HF cache
