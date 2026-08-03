@@ -1,17 +1,19 @@
 """Basic offline tests for text2model.main — no network, API key, or MiniZinc binary required."""
 from pathlib import Path
 
-from text2model import main
+from text2model import copilots, huggingface, main, utils
+from text2model.copilots import baseline
 
 
 def test_strategy_map_covers_all_documented_strategies():
     expected = {
         "baseline", "cot", "knowledge_graph",
-        "cot_with_code_validation", "cot_with_grammar_validation",
-        "cot_with_code_and_grammar_validation",
-        "agents", "agents_with_code_validation", "gala",
+        "cot_with_code", "cot_with_grammar",
+        "cot_with_code_and_grammar",
+        "agents", "agents_with_code", "gala",
     }
-    assert expected == set(main._STRATEGY_MAP.keys())
+    assert expected == set(copilots.STRATEGY_MAP.keys())
+    assert main._STRATEGY_MAP is copilots.STRATEGY_MAP
 
 
 def test_check_already_processed_false_when_missing(tmp_path):
@@ -38,9 +40,9 @@ def test_run_baseline_strategy_saves_solution_on_success(tmp_path, monkeypatch):
         "data.dzn": "",
     }
 
-    monkeypatch.setattr(main.utils, "call_api", lambda client, model, prompt: "var int: x;")
+    monkeypatch.setattr(baseline.utils, "call_api", lambda client, model, prompt: "var int: x;")
 
-    result = main.run_baseline_strategy(None, "cot", problem, "p1", str(tmp_path))
+    result = baseline.run_baseline_strategy(None, "cot", problem, "p1", str(tmp_path))
 
     assert result is True
     assert (tmp_path / "p1.mzn").read_text() == "var int: x;"
@@ -56,12 +58,55 @@ def test_run_baseline_strategy_returns_false_when_api_fails(tmp_path, monkeypatc
         "data.dzn": "",
     }
 
-    monkeypatch.setattr(main.utils, "call_api", lambda client, model, prompt: None)
+    monkeypatch.setattr(baseline.utils, "call_api", lambda client, model, prompt: None)
 
-    result = main.run_baseline_strategy(None, "cot", problem, "p1", str(tmp_path))
+    result = baseline.run_baseline_strategy(None, "cot", problem, "p1", str(tmp_path))
 
     assert result is False
     assert not (tmp_path / "p1.mzn").exists()
+
+
+def test_huggingface_models_registered_in_available_models():
+    for alias in huggingface.HUGGINGFACE_MODELS:
+        assert alias in main.AVAILABLE_MODELS
+
+
+def test_call_api_routes_huggingface_alias_to_huggingface_backend(monkeypatch):
+    calls = {}
+
+    def fake_call_huggingface_api(client, model, prompt):
+        calls["args"] = (client, model, prompt)
+        return "var int: x;"
+
+    monkeypatch.setattr(huggingface, "call_huggingface_api", fake_call_huggingface_api)
+
+    alias = next(iter(huggingface.HUGGINGFACE_MODELS))
+    result = utils.call_api("fake-client", alias, "generate this")
+
+    assert result == "var int: x;"
+    assert calls["args"] == ("fake-client", alias, "generate this")
+
+
+def test_init_client_loads_huggingface_model_without_api_key(monkeypatch):
+    alias = next(iter(huggingface.HUGGINGFACE_MODELS))
+
+    def fake_load(model_alias):
+        assert model_alias == alias
+        return ("fake-model", "fake-tokenizer")
+
+    monkeypatch.setattr(huggingface, "load_huggingface_model", fake_load)
+
+    class Args:
+        model = alias
+        api_key = None
+        temperature = 0
+        max_tokens = 4096
+        sleep_time = 3
+        reasoning_effort = None
+
+    client = main._init_client(Args())
+
+    assert client == ("fake-model", "fake-tokenizer")
 
 
 def test_main_prints_help_without_error_for_bare_invocation(monkeypatch, capsys):

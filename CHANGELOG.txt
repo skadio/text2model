@@ -3,6 +3,39 @@ Changelog
 
 All notable changes to this project are documented in this file.
 
+[1.3.5] - 2026-08-03
+- Added an "Upgrade Dataset" button to the editor GUI, visible in HF Space mode
+  too, that force-downloads the latest `skadio/text2zinc` from HuggingFace,
+  bypassing the local `datasets` cache
+
+[1.3.4] - 2026-08-03
+- Renamed `--dataset-path` to `--text2zinc-path` (`text2model` and `evals/evaluate.py`)
+- Added `--upgrade-text2zinc` to force a fresh download instead of reusing the HF cache
+- Warn (or error, with `--upgrade-text2zinc`) if no HF token is set, since
+  `skadio/text2zinc` is gated and silently falls back to stale cache otherwise
+
+[1.3.3] - 2026-07-27
+- Documented the `--reasoning-effort` hint in the README
+- Removed stray `--all-sources` flag; fixed no-args help printing
+
+[1.3.2] - 2026-07-26
+- Added copy-CSV-to-clipboard button for HF Spaces (file downloads are blocked there)
+
+[1.3.0] - 2026-07-24 (in progress)
+- Added local Hugging Face / unsloth model support (`text2model/huggingface.py`), including
+  gpt-oss-20B, Qwen3-0.6B, Llama-3.2-1B/3B, and Gemma-2-9B fine-tuned checkpoints; installable
+  via the new `text2model[gpu]` extra
+- Refactored copilot strategies out of main.py into one module per strategy under
+  `text2model/copilots/`
+- `knowledge_graph` strategy now generates a `.ttl` on the fly if none is pre-built for the
+  problem, instead of requiring one
+- Renamed `--include-unverified` to `--full-dataset`
+- `--problem-ids` now accepts problem identifiers (e.g. `nlp4lp_58`) in addition to indices
+- Added `--list-problem-ids` and `--reasoning-effort` flags
+- Added gpt-5.5 / gpt-5.6 model support
+- Added "New Problem" creation and field validation to the dataset editor; editor chat
+  assistant model is now configurable
+
 [1.2.0] - 2026-07-20
 - Several cosmetics and UI updates
 - Fix screen size wxh

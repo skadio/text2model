@@ -1,441 +1,50 @@
-import ast
-import csv
 import datetime
 import json
 import os
-import subprocess
 import tempfile
-from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import List, Optional
 
 import flet as ft
-import openai
 
-from text2model.utils import TEXT2ZINC_CSV_COLUMNS, TEXT2ZINC_DATASET
-
-# Bundled seed dataset, shipped as package data — this is what the editor
-# opens by default the very first time it's run in a fresh directory.
-_PACKAGE_DIR = Path(__file__).parent
-DEFAULT_DATASET_PATH = _PACKAGE_DIR / "data" / "text2zinc.csv"
+from text2model.editor.chat_assistant import DEFAULT_CHAT_MODEL, ChatAssistant
+from text2model.editor.dataset_editor import Text2ZincEditor, blank_problem, validate_item
+from text2model.editor.json_viewer import create_json_viewer
+from text2model.utils import (
+    OPENAI_MODELS,
+    TEXT2ZINC_DATASET,
+    check_hf_token_for_text2zinc,
+    verify_minizinc_solution,
+)
 
 # Where quick-save (the "Save" button / Ctrl+S) writes to, in the current
 # working directory. "Save As..." lets the user pick any other destination —
 # that destination is the "new text2zinc dataset" to pass to
-# `text2model --dataset-path` / `evals/evaluate.py --dataset-path`.
+# `text2model --text2zinc-path` / `evals/evaluate.py --text2zinc-path`.
 WORKING_DATASET_PATH = "text2zinc_edited.csv"
 
-
-def _parse_json_field(value: Any) -> Any:
-    """Parse a dataset field that may already be a dict, a JSON string, or a
-    Python-repr string (the format the skadio/text2zinc HF dataset uses)."""
-    if isinstance(value, dict):
-        return value
-    if not value:
-        return {}
-    try:
-        return json.loads(value)
-    except (TypeError, ValueError):
-        try:
-            return ast.literal_eval(value)
-        except (ValueError, SyntaxError):
-            return value
-
-
-class Text2ZincEditor:
-    """Main dataset editor class that handles Text2Zinc dataset management"""
-
-    def __init__(self):
-        self.data = []
-        self.current_index = 0
-        self.csv_columns = TEXT2ZINC_CSV_COLUMNS
-
-    def load_csv(self, filename: str) -> bool:
-        """Load dataset from a local Text2Zinc CSV file"""
-        try:
-            data = []
-            with open(filename, 'r', encoding='utf-8') as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    if 'input.json' in row:
-                        row['input.json'] = _parse_json_field(row['input.json'])
-                    if 'output.json' in row:
-                        row['output.json'] = _parse_json_field(row['output.json'])
-                    if 'is_verified' in row:
-                        row['is_verified'] = str(row['is_verified']).lower() in ('true', '1', 'yes')
-                    data.append(row)
-            self.data = data
-            self.current_index = 0
-            return True
-        except Exception as e:
-            print(f"Error loading CSV: {e}")
-            return False
-
-    def load_from_huggingface(self) -> bool:
-        """Load dataset fresh from the skadio/text2zinc HuggingFace dataset"""
-        try:
-            from datasets import load_dataset
-            hf_dataset = load_dataset(TEXT2ZINC_DATASET)['train']
-
-            data = []
-            for row in hf_dataset:
-                data.append({
-                    'input.json': _parse_json_field(row.get('input.json')),
-                    'data.dzn': row.get('data.dzn', '') or '',
-                    'model.mzn': row.get('model.mzn', '') or '',
-                    'output.json': _parse_json_field(row.get('output.json')),
-                    'is_verified': bool(row.get('is_verified', False)),
-                })
-            self.data = data
-            self.current_index = 0
-            return True
-        except Exception as e:
-            print(f"Error loading dataset from HuggingFace: {e}")
-            return False
-
-    def save_csv(self, filename: str) -> bool:
-        """Save dataset to a local Text2Zinc CSV file"""
-        try:
-            with open(filename, 'w', encoding='utf-8', newline='') as f:
-                writer = csv.DictWriter(f, fieldnames=self.csv_columns, extrasaction='ignore')
-                writer.writeheader()
-                for row in self.data:
-                    row_copy = {k: v for k, v in row.items() if k in self.csv_columns}
-
-                    if isinstance(row_copy.get('input.json'), dict):
-                        row_copy['input.json'] = json.dumps(row_copy['input.json'])
-                    if isinstance(row_copy.get('output.json'), dict):
-                        row_copy['output.json'] = json.dumps(row_copy['output.json'])
-                    if 'is_verified' in row_copy:
-                        row_copy['is_verified'] = str(row_copy['is_verified'])
-                    writer.writerow(row_copy)
-            return True
-        except Exception as e:
-            print(f"Error saving CSV: {e}")
-            return False
-
-    def get_current_item(self) -> Dict[str, Any]:
-        """Get current item"""
-        if not self.data or self.current_index >= len(self.data):
-            return {}
-        return self.data[self.current_index]
-
-    def update_current_item(self, field: str, value: Any):
-        """Update a field in the current item"""
-        if self.data and self.current_index < len(self.data):
-            self.data[self.current_index][field] = value
-
-    def execute_minizinc(self,
-                         model: str,
-                         data: str,
-                         problem_type: str = "optimization",
-                         solver: str = "highs",
-                         timeout: int = 60) -> Dict[str, Any]:
-        """Execute MiniZinc model with data"""
-        result = {
-            'success': False,
-            'output': '',
-            'error': '',
-            'json_output': None,
-            'problem_type': problem_type
-        }
-
-        try:
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.mzn', delete=False) as model_file:
-                model_file.write(model)
-                model_path = model_file.name
-
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.dzn', delete=False) as data_file:
-                data_file.write(data)
-                data_path = data_file.name
-
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as output_file:
-                output_path = output_file.name
-
-            is_optimization = 'minimize' in model.lower() or 'maximize' in model.lower()
-
-            cmd = ['minizinc', '--solver', solver, '--output-mode', 'json']
-            if is_optimization:
-                cmd.append('--output-objective')
-            cmd.extend([model_path, data_path, '-o', output_path])
-
-            process_result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
-
-            os.unlink(model_path)
-            os.unlink(data_path)
-
-            if process_result.returncode == 0:
-                result['success'] = True
-                try:
-                    with open(output_path, 'r') as f:
-                        output_text = f.read()
-
-                    import re
-                    json_match = re.search(r'{.*}', output_text, re.DOTALL)
-                    if json_match:
-                        json_str = json_match.group(0)
-                        result['json_output'] = json.loads(json_str)
-                        result['output'] = json.dumps(result['json_output'])
-                    else:
-                        result['output'] = output_text
-                except Exception:
-                    result['output'] = output_text if 'output_text' in locals() else process_result.stdout
-
-                os.unlink(output_path)
-            else:
-                result['error'] = process_result.stderr
-                result['output'] = process_result.stderr
-                try:
-                    os.unlink(output_path)
-                except OSError:
-                    pass
-
-        except FileNotFoundError:
-            result['error'] = "MiniZinc not found. Please install MiniZinc."
-        except subprocess.TimeoutExpired:
-            result['error'] = f"Execution timed out after {timeout} seconds."
-        except Exception as e:
-            result['error'] = str(e)
-
-        return result
+# HF mode: for deploying the editor as a read-mostly demo in a HuggingFace
+# Space, set T2M_HF_MODE=1. There's no HuggingFace Hub write token in the
+# container, so it never pushes back to the Hub: it only ever works with a
+# CSV already baked into the image/pushed alongside it (or, absent that,
+# whatever it pulls read-only from the public `skadio/text2zinc` dataset on
+# startup). In this mode:
+#   - "Open CSV...", "Load from HuggingFace", and "Save As..." are hidden —
+#     there is exactly one dataset, and no arbitrary filesystem/Hub access.
+#   - Quick-save (Save button / Ctrl+S) still works, but writes in place to
+#     that same pushed file instead of a separate WORKING_DATASET_PATH.
+# T2M_EDITOR_DATASET_PATH points at the pushed CSV to load on startup; falls
+# back to loading fresh from HuggingFace if unset.
+#
+# Concurrency caveat: a Space is a single shared container. If more than one
+# person has it open at once, quick-save writes from different sessions can
+# race and clobber each other — there's no per-session file or locking here.
+# Don't rely on this mode for concurrent multi-user editing; see
+# `save_current_edits()` below for exactly what it writes and when.
+HF_MODE = os.environ.get("T2M_HF_MODE", "").strip().lower() in ("1", "true", "yes")
+HF_MODE_DATASET_PATH = os.environ.get("T2M_EDITOR_DATASET_PATH")
 
 
-class ChatAssistant:
-    """AI Chat Assistant using OpenAI API"""
-
-    def __init__(self, api_key: str = ""):
-        self.api_key = api_key
-        self.client = None
-        self.conversation_history = []
-        self.current_context = {}
-        if api_key:
-            self.client = openai.OpenAI(api_key=api_key)
-
-    def set_api_key(self, api_key: str):
-        """Set OpenAI API key"""
-        self.api_key = api_key
-        self.client = openai.OpenAI(api_key=api_key)
-
-    def update_context(self, context: Dict[str, Any]):
-        """Update the current context for AI assistance"""
-        self.current_context = context
-
-    def send_message(self, user_message: str) -> str:
-        """Send a message to the AI and get a response"""
-        if not self.client:
-            return "Error: OpenAI API key not set. Please set it in the settings."
-
-        try:
-            system_message = self._build_system_message()
-
-            self.conversation_history.append({"role": "user", "content": user_message})
-
-            # Keep only last 6 messages (6 turns = 3 user + 3 assistant)
-            if len(self.conversation_history) > 6:
-                self.conversation_history = self.conversation_history[-6:]
-
-            messages = [{"role": "system", "content": system_message}] + self.conversation_history
-
-            # gpt-5.2 is a reasoning model, so skip temperature/max_tokens (same pattern as utils.py)
-            completion = self.client.chat.completions.create(model="gpt-5.2", messages=messages)
-
-            assistant_message = completion.choices[0].message.content.strip()
-            self.conversation_history.append({"role": "assistant", "content": assistant_message})
-
-            return assistant_message
-
-        except Exception as e:
-            return f"Error communicating with OpenAI: {str(e)}"
-
-    def _build_system_message(self) -> str:
-        """Build a context-aware system message"""
-        base_msg = """You are an expert assistant helping modeling and solving combinatorial problems using MiniZinc models.
-You can help with:
-- Rephrasing problem descriptions
-- Generating or improving MiniZinc code
-- Creating appropriate data files (.dzn format)
-- Analyzing constraints and optimization objectives
-- Debugging MiniZinc models"""
-
-        if self.current_context:
-            base_msg += "\n\nCurrent problem context:\n"
-
-            if 'input_json' in self.current_context:
-                input_data = self.current_context['input_json']
-                if isinstance(input_data, dict):
-                    if 'description' in input_data:
-                        base_msg += f"\nProblem Description: {input_data['description']}\n"
-                    if 'metadata' in input_data:
-                        meta = input_data['metadata']
-                        base_msg += f"Problem Name: {meta.get('name', 'N/A')}\n"
-                        base_msg += f"Domain: {meta.get('domain', 'N/A')}\n"
-                        base_msg += f"Objective: {meta.get('objective', 'N/A')}\n"
-
-            if self.current_context.get('data_dzn'):
-                base_msg += f"\nCurrent data.dzn:\n{self.current_context['data_dzn'][:300]}...\n"
-
-            if self.current_context.get('model_mzn'):
-                base_msg += f"\nCurrent model.mzn:\n{self.current_context['model_mzn'][:500]}...\n"
-
-        return base_msg
-
-    def clear_history(self):
-        """Clear conversation history"""
-        self.conversation_history = []
-
-
-def create_json_viewer(json_data: dict) -> ft.Column:
-    """Create a formatted view of JSON data"""
-    if not isinstance(json_data, dict):
-        return ft.Column([ft.Text("Invalid JSON data", color=ft.colors.RED, size=14)])
-
-    sections = []
-
-    if 'metadata' in json_data:
-        metadata = json_data['metadata']
-        metadata_items = [
-            ft.Row([
-                ft.Icon(ft.icons.LABEL, size=18, color=ft.colors.BLUE),
-                ft.Text("Name:", weight=ft.FontWeight.BOLD, size=14),
-                ft.Text(str(metadata.get('name', 'N/A')), size=14),
-            ], spacing=8),
-            ft.Row([
-                ft.Icon(ft.icons.DOMAIN, size=18, color=ft.colors.BLUE),
-                ft.Text("Domain:", weight=ft.FontWeight.BOLD, size=14),
-                ft.Text(str(metadata.get('domain', 'N/A')), size=14),
-            ], spacing=8),
-            ft.Row([
-                ft.Icon(ft.icons.FLAG, size=18, color=ft.colors.BLUE),
-                ft.Text("Objective:", weight=ft.FontWeight.BOLD, size=14),
-                ft.Text(str(metadata.get('objective', 'N/A')), size=14),
-            ], spacing=8),
-        ]
-
-        if 'source' in metadata:
-            metadata_items.append(
-                ft.Row([
-                    ft.Icon(ft.icons.SOURCE, size=18, color=ft.colors.BLUE),
-                    ft.Text("Source:", weight=ft.FontWeight.BOLD, size=14),
-                    ft.Text(str(metadata.get('source', 'N/A')), size=14),
-                ], spacing=8))
-
-        if 'identifier' in metadata:
-            metadata_items.append(
-                ft.Row([
-                    ft.Icon(ft.icons.TAG, size=18, color=ft.colors.BLUE),
-                    ft.Text("Identifier:", weight=ft.FontWeight.BOLD, size=14),
-                    ft.Text(str(metadata.get('identifier', 'N/A')), size=14),
-                ], spacing=8))
-
-        if 'constraints' in metadata and isinstance(metadata['constraints'], list):
-            constraints_text = ", ".join(metadata['constraints'])
-            metadata_items.append(
-                ft.Row([
-                    ft.Icon(ft.icons.RULE, size=18, color=ft.colors.BLUE),
-                    ft.Text("Constraints:", weight=ft.FontWeight.BOLD, size=14),
-                    ft.Text(constraints_text, size=14),
-                ], spacing=8))
-
-        sections.append(
-            ft.Container(
-                content=ft.Column([
-                    ft.Text("Metadata", size=16, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_900),
-                    ft.Divider(height=1, color=ft.colors.BLUE_200),
-                    ft.Column(metadata_items, spacing=8),
-                ], spacing=8),
-                padding=12,
-                bgcolor=ft.colors.BLUE_50,
-                border_radius=8,
-                border=ft.border.all(2, ft.colors.BLUE_200),
-            ))
-
-    if 'description' in json_data:
-        sections.append(
-            ft.Container(
-                content=ft.Column([
-                    ft.Text("Problem Description", size=16, weight=ft.FontWeight.BOLD, color=ft.colors.GREEN_900),
-                    ft.Divider(height=1, color=ft.colors.GREEN_200),
-                    ft.Text(str(json_data['description']), size=13),
-                ], spacing=8),
-                padding=12,
-                bgcolor=ft.colors.GREEN_50,
-                border_radius=8,
-                border=ft.border.all(2, ft.colors.GREEN_200),
-            ))
-
-    if 'parameters' in json_data and isinstance(json_data['parameters'], list):
-        param_widgets = []
-        for i, param in enumerate(json_data['parameters'], 1):
-            shape_str = str(param.get('shape', [])) if param.get('shape') else "scalar"
-            param_widgets.append(
-                ft.Container(
-                    content=ft.Column([
-                        ft.Row([
-                            ft.Text(f"{i}.", size=13, color=ft.colors.GREY_600),
-                            ft.Text(f"{param.get('symbol', 'unknown')}", weight=ft.FontWeight.BOLD,
-                                    size=14, color=ft.colors.INDIGO_900),
-                            ft.Text(f"(shape: {shape_str})", size=12, color=ft.colors.GREY_600, italic=True),
-                        ], spacing=6),
-                        ft.Text(f"{param.get('definition', '')}", size=13, color=ft.colors.GREY_800),
-                    ], spacing=4),
-                    padding=8,
-                    bgcolor=ft.colors.WHITE,
-                    border_radius=5,
-                    border=ft.border.all(1, ft.colors.GREY_300),
-                ))
-
-        sections.append(
-            ft.Container(
-                content=ft.Column([
-                    ft.Text(f"Input Parameters ({len(json_data['parameters'])})", size=16,
-                            weight=ft.FontWeight.BOLD, color=ft.colors.INDIGO_900),
-                    ft.Divider(height=1, color=ft.colors.INDIGO_200),
-                    ft.Column(param_widgets, spacing=8),
-                ], spacing=8),
-                padding=12,
-                bgcolor=ft.colors.INDIGO_50,
-                border_radius=8,
-                border=ft.border.all(2, ft.colors.INDIGO_200),
-            ))
-
-    if 'output' in json_data and isinstance(json_data['output'], list):
-        output_widgets = []
-        for i, output in enumerate(json_data['output'], 1):
-            shape_str = str(output.get('shape', [])) if output.get('shape') else "scalar"
-            output_widgets.append(
-                ft.Container(
-                    content=ft.Column([
-                        ft.Row([
-                            ft.Text(f"{i}.", size=13, color=ft.colors.GREY_600),
-                            ft.Text(f"{output.get('symbol', 'unknown')}", weight=ft.FontWeight.BOLD,
-                                    size=14, color=ft.colors.ORANGE_900),
-                            ft.Text(f"(shape: {shape_str})", size=12, color=ft.colors.GREY_600, italic=True),
-                        ], spacing=6),
-                        ft.Text(f"{output.get('definition', '')}", size=13, color=ft.colors.GREY_800),
-                    ], spacing=4),
-                    padding=8,
-                    bgcolor=ft.colors.WHITE,
-                    border_radius=5,
-                    border=ft.border.all(1, ft.colors.GREY_300),
-                ))
-
-        sections.append(
-            ft.Container(
-                content=ft.Column([
-                    ft.Text(f"Output Variables ({len(json_data['output'])})", size=16,
-                            weight=ft.FontWeight.BOLD, color=ft.colors.ORANGE_900),
-                    ft.Divider(height=1, color=ft.colors.ORANGE_200),
-                    ft.Column(output_widgets, spacing=8),
-                ], spacing=8),
-                padding=12,
-                bgcolor=ft.colors.ORANGE_50,
-                border_radius=8,
-                border=ft.border.all(2, ft.colors.ORANGE_200),
-            ))
-
-    return ft.Column(sections, spacing=12, scroll=ft.ScrollMode.AUTO)
-
-
-def main(page: ft.Page, dataset_path: Optional[str] = None):
+def main(page: ft.Page, text2zinc_path: Optional[str] = None):
     page.title = "Text2Zinc Dataset Editor"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 10
@@ -472,18 +81,18 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     )
 
     output_json_field = ft.TextField(
-        label="Expected Output (output.json)", multiline=True, min_lines=8, max_lines=12,
+        multiline=True, min_lines=8, max_lines=12,
         hint_text="Expected output in JSON format...", text_size=13,
     )
 
     execution_output = ft.TextField(
-        label="Execution Output (Raw)", multiline=True, min_lines=8, max_lines=12,
+        multiline=True, min_lines=8, max_lines=12,
         read_only=True, bgcolor=ft.colors.GREY_50, text_size=13,
     )
 
     execution_json_display = ft.Container(
         content=ft.Text("No execution yet", size=13, color=ft.colors.GREY_600),
-        padding=10, border=ft.border.all(1, ft.colors.GREY_300), border_radius=5, bgcolor=ft.colors.WHITE,
+        padding=10, border=ft.border.all(1, ft.colors.GREY_300), border_radius=8, bgcolor=ft.colors.WHITE,
     )
 
     problem_type_warning = ft.Container(
@@ -520,16 +129,38 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     )
 
     api_key_field = ft.TextField(label="OpenAI API Key", password=True, hint_text="sk-...", expand=True)
+    chat_model_dropdown = ft.Dropdown(
+        label="Model", width=140, value=DEFAULT_CHAT_MODEL,
+        options=[ft.dropdown.Option(m) for m in OPENAI_MODELS],
+    )
 
     # Filter state — source filter driven from dataset metadata
     filter_state = {"source": "All"}
     filtered_indices = []   # global indices into editor.data matching the current filter
     filtered_pos = [0]      # position within filtered_indices
 
+    # Tracks an in-progress "New Problem" so it can be discarded via Cancel:
+    # the global index of the not-yet-saved blank item, where to jump back to,
+    # and what edit-mode state to restore.
+    pending_new_problem = {"index": None, "return_index": None, "was_edit_mode": False}
+
+    # Whichever local path is currently loaded — in HF mode, quick-save
+    # writes back here in place instead of to WORKING_DATASET_PATH.
+    loaded_dataset_path = [WORKING_DATASET_PATH]
+
     def load_current_problem():
         """Load current problem into UI fields"""
         if not editor.data or not filtered_indices:
             return
+
+        # Cancel only makes sense right after "New Problem", while still
+        # looking at that blank item — once the user navigates elsewhere it
+        # becomes just another (unsaved) row.
+        if pending_new_problem["index"] is not None and editor.current_index != pending_new_problem["index"]:
+            pending_new_problem["index"] = None
+            pending_new_problem["return_index"] = None
+            new_problem_button.visible = True
+            cancel_new_problem_button.visible = False
 
         item = editor.get_current_item()
 
@@ -609,7 +240,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         filter_state["source"] = "All"
 
     def finish_loading(label: str, ok: bool):
-        """Common post-load bookkeeping shared by every load path (local file, bundled default, HuggingFace)."""
+        """Common post-load bookkeeping shared by every load path (local file, HuggingFace)."""
         if not ok or not editor.data:
             status_text.value = f"Failed to load dataset ({label})"
             status_text.color = ft.colors.RED
@@ -631,20 +262,126 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         page.update()
 
     def load_local_path(path: str, label: str):
+        loaded_dataset_path[0] = path
         finish_loading(label, editor.load_csv(path))
 
     def open_csv_result(e: ft.FilePickerResultEvent):
         if e.files:
             load_local_path(e.files[0].path, e.files[0].path)
 
-    def load_bundled_default(e):
-        load_local_path(str(DEFAULT_DATASET_PATH), "bundled default dataset")
-
     def load_from_hf(e):
         status_text.value = "Loading from HuggingFace (skadio/text2zinc)..."
         status_text.color = ft.colors.ORANGE
         page.update()
         finish_loading(f"HuggingFace ({TEXT2ZINC_DATASET}, not yet saved locally)", editor.load_from_huggingface())
+
+    def upgrade_from_hf(e):
+        """Force a fresh download of TEXT2ZINC_DATASET, bypassing the local
+        `datasets` cache, so upstream dataset updates show up even though a
+        cached copy already exists (e.g. baked into a HF Space image). Unlike
+        load_from_hf above, this is shown in HF mode too — it's the only way
+        to refresh a Space's data without a full rebuild/restart."""
+        status_text.value = f"Upgrading to the latest {TEXT2ZINC_DATASET} (forcing fresh download)..."
+        status_text.color = ft.colors.ORANGE
+        page.update()
+        try:
+            check_hf_token_for_text2zinc(force_download=True)
+        except RuntimeError as ex:
+            status_text.value = str(ex)
+            status_text.color = ft.colors.RED
+            page.update()
+            return
+        finish_loading(
+            f"HuggingFace ({TEXT2ZINC_DATASET}, freshly downloaded)",
+            editor.load_from_huggingface(force_download=True),
+        )
+
+    def generate_unique_identifier() -> str:
+        existing = set()
+        for it in editor.data:
+            ij = it.get('input.json', {})
+            if isinstance(ij, dict):
+                ident = ij.get('metadata', {}).get('identifier')
+                if ident:
+                    existing.add(ident)
+        n = 1
+        while f"new_problem_{n}" in existing:
+            n += 1
+        return f"new_problem_{n}"
+
+    def new_problem(e):
+        """Add a blank problem, matching the same schema as every other row,
+        and jump straight to it in edit mode so it's ready to fill in."""
+        pending_new_problem["return_index"] = editor.current_index if editor.data and filtered_indices else None
+        pending_new_problem["was_edit_mode"] = edit_mode_switch.value
+
+        editor.data.append(blank_problem(generate_unique_identifier()))
+
+        # The new item has no source yet, so make sure it's visible regardless
+        # of whatever source filter is currently active.
+        if filter_state["source"] != "All":
+            filter_state["source"] = "All"
+            source_dropdown.value = "All"
+
+        rebuild_filtered_indices()
+        new_global_index = len(editor.data) - 1
+        pending_new_problem["index"] = new_global_index
+        filtered_pos[0] = filtered_indices.index(new_global_index)
+        editor.current_index = new_global_index
+        load_current_problem()
+
+        # Land on the Input tab, in edit mode, ready to type.
+        tabs.selected_index = 0
+        edit_mode_switch.value = True
+        json_viewer_container.visible = False
+        input_json_field.visible = True
+
+        new_problem_button.visible = False
+        cancel_new_problem_button.visible = True
+
+        status_text.value = (
+            "New problem added — fill in description, source, and either "
+            "model.mzn or an objective before saving."
+        )
+        status_text.color = ft.colors.BLUE
+        page.update()
+
+    def cancel_new_problem(e):
+        """Changed their mind: discard the not-yet-saved blank problem and
+        jump back to whatever problem they were on before."""
+        new_index = pending_new_problem["index"]
+        if new_index is None or new_index >= len(editor.data):
+            return
+
+        del editor.data[new_index]
+        return_index = pending_new_problem["return_index"]
+        was_edit_mode = pending_new_problem["was_edit_mode"]
+        pending_new_problem["index"] = None
+        pending_new_problem["return_index"] = None
+
+        rebuild_filtered_indices()
+        if filtered_indices:
+            if return_index is not None and return_index in filtered_indices:
+                filtered_pos[0] = filtered_indices.index(return_index)
+            else:
+                filtered_pos[0] = min(filtered_pos[0], len(filtered_indices) - 1)
+            editor.current_index = filtered_indices[filtered_pos[0]]
+            load_current_problem()
+        else:
+            current_index_text.value = "0 / 0"
+            problem_info.value = ""
+            json_viewer_container.content = ft.Text("No data loaded", size=14)
+
+        edit_mode_switch.value = was_edit_mode
+        json_viewer_container.visible = not was_edit_mode
+        input_json_field.visible = was_edit_mode
+
+        cancel_new_problem_button.visible = False
+        new_problem_button.visible = True
+
+        status_text.value = "New problem discarded."
+        status_text.color = ft.colors.GREY_700
+        page.update()
 
     def sync_fields_into_current_item():
         """Copy the current UI field values back into editor.data, without writing any file."""
@@ -668,15 +405,23 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         editor.update_current_item('is_verified', is_verified_checkbox.value)
 
     def save_current_edits(e=None):
-        """Sync edits and quick-save to the working file (text2zinc_edited.csv, Ctrl+S)"""
+        """Sync edits and quick-save (Ctrl+S). Normal mode writes to the
+        working file (text2zinc_edited.csv), kept separate from whatever was
+        opened so the original is never silently overwritten. HF mode writes
+        in place to the single pushed dataset file instead, since there's no
+        separate export step in a Space — note that this file is shared by
+        every concurrent visitor to the Space, so quick-saves from different
+        sessions can race and clobber each other (see the HF mode note near
+        HF_MODE above)."""
         if not editor.data:
             return
+        save_target = loaded_dataset_path[0] if HF_MODE else WORKING_DATASET_PATH
         try:
             sync_fields_into_current_item()
-            if editor.save_csv(WORKING_DATASET_PATH):
+            if editor.save_csv(save_target):
                 save_indicator.value = "✓ Saved"
                 save_indicator.color = ft.colors.GREEN
-                status_text.value = f"Saved to {WORKING_DATASET_PATH}"
+                status_text.value = f"Saved to {save_target}"
                 status_text.color = ft.colors.GREEN
             else:
                 save_indicator.value = "✗ Save failed"
@@ -687,6 +432,42 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
             save_indicator.value = f"✗ Error: {str(ex)}"
             save_indicator.color = ft.colors.RED
 
+        page.update()
+
+    def copy_csv(e=None):
+        """Copy the current dataset, as CSV text, to the clipboard.
+
+        HF mode only: the container's filesystem (where quick-save
+        writes) isn't reachable from the HF Space UI, and there's no HF Hub
+        token to push edits anywhere else. Browser file downloads are also
+        blocked in the HF Space iframe, so instead of downloading a file we
+        put the CSV text on the clipboard and let the user paste it into a
+        file themselves."""
+        if not editor.data:
+            status_text.value = "No data to copy"
+            status_text.color = ft.colors.ORANGE
+            page.update()
+            return
+
+        sync_fields_into_current_item()
+        tmp_path = tempfile.mktemp(suffix=".csv")
+        try:
+            if not editor.save_csv(tmp_path):
+                raise RuntimeError("save_csv failed")
+            with open(tmp_path, "r", encoding="utf-8") as f:
+                csv_text = f.read()
+        except Exception as ex:
+            status_text.value = f"Error preparing CSV: {ex}"
+            status_text.color = ft.colors.RED
+            page.update()
+            return
+        finally:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+
+        page.set_clipboard(csv_text)
+        status_text.value = f"Copied {len(editor.data)} problems as CSV to clipboard"
+        status_text.color = ft.colors.GREEN
         page.update()
 
     def save_as_result(e: ft.FilePickerResultEvent):
@@ -703,15 +484,56 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         if editor.save_csv(e.path):
             status_text.value = (
                 f"Saved {len(editor.data)} problems to {e.path}\n"
-                f'Benchmark with it via: text2model --dataset-path "{e.path}" --strategies cot --output-dir results/'
+                f'Benchmark with it via: text2model --text2zinc-path "{e.path}" --strategies cot --output-dir results/'
             )
             status_text.color = ft.colors.GREEN
+            if not str(data_dzn_field.value or '').strip():
+                status_text.value += (
+                    "\nNote: current problem has no data.dzn — fine if the model has data built in, "
+                    "otherwise add one."
+                )
         else:
             status_text.value = f"Error saving to {e.path}"
             status_text.color = ft.colors.RED
         page.update()
 
+    def close_validation_dialog(e):
+        validation_dialog.open = False
+        page.update()
+
+    validation_dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Row([
+            ft.Icon(ft.icons.ERROR_OUTLINE, color=ft.colors.RED),
+            ft.Text("Can't save — missing required fields"),
+        ], spacing=8),
+        content=ft.Text(""),
+        actions=[ft.TextButton("OK", on_click=close_validation_dialog)],
+    )
+    page.overlay.append(validation_dialog)
+
+    def show_validation_dialog(missing: List[str]):
+        validation_dialog.content = ft.Column(
+            [ft.Text("This problem is missing:", size=13)]
+            + [ft.Text(f"• {m}", size=13) for m in missing],
+            tight=True, spacing=6,
+        )
+        validation_dialog.open = True
+        page.update()
+
     def save_as(e):
+        if not editor.data:
+            status_text.value = "No data to save"
+            status_text.color = ft.colors.ORANGE
+            page.update()
+            return
+
+        sync_fields_into_current_item()
+        missing = validate_item(editor.get_current_item())
+        if missing:
+            show_validation_dialog(missing)
+            return
+
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         save_as_dialog.save_file(
             dialog_title="Save Text2Zinc Dataset As",
@@ -826,25 +648,34 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
                 execution_json_display.content = ft.Text("No JSON output available", size=13, color=ft.colors.GREY_600)
 
             if output_json_field.value:
+                comparison_text = None
                 try:
-                    expected = json.loads(output_json_field.value)
-                    if '_objective' in expected and '_objective' in result['json_output']:
-                        expected_obj = float(expected['_objective'])
-                        actual_obj = float(result['json_output']['_objective'])
-                        diff = abs(expected_obj - actual_obj)
+                    _, solution_success, verify_output = verify_minizinc_solution(
+                        model_code, data_dzn_field.value, output_json_field.value,
+                        problem_type, timeout=timeout, solver=solver,
+                    )
 
-                        if diff < 1e-6:
-                            comparison_text = f"✓ Matches expected objective: {expected_obj}"
-                            comparison_color = ft.colors.GREEN_700
+                    if is_satisfaction:
+                        if solution_success:
+                            comparison_text = "✓ Solution satisfies the model's constraints"
                         else:
-                            comparison_text = f"✗ Expected: {expected_obj}, Got: {actual_obj} (diff: {diff:.6f})"
-                            comparison_color = ft.colors.RED_700
+                            comparison_text = f"✗ Solution does not satisfy the constraints: {verify_output[:300]}"
+                    else:
+                        expected = json.loads(output_json_field.value)
+                        if '_objective' in expected:
+                            expected_obj = float(expected['_objective'])
+                            if solution_success:
+                                comparison_text = f"✓ Matches expected objective: {expected_obj}"
+                            else:
+                                comparison_text = f"✗ Expected: {expected_obj}, Got: {verify_output}"
 
+                    if comparison_text:
+                        comparison_color = ft.colors.GREEN_700 if solution_success else ft.colors.RED_700
                         execution_json_display.content.controls.append(
                             ft.Container(
                                 content=ft.Text(comparison_text, size=13, weight=ft.FontWeight.BOLD, color=comparison_color),
                                 padding=10,
-                                bgcolor=ft.colors.GREEN_50 if diff < 1e-6 else ft.colors.RED_50,
+                                bgcolor=ft.colors.GREEN_50 if solution_success else ft.colors.RED_50,
                                 border_radius=5,
                             ))
                 except Exception:
@@ -964,6 +795,10 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
             status_text.color = ft.colors.ORANGE
         page.update()
 
+    def set_chat_model(e):
+        if chat_model_dropdown.value:
+            chat_assistant.set_model(chat_model_dropdown.value)
+
     def go_to_problem(e):
         try:
             idx = int(goto_field.value) - 1
@@ -1022,23 +857,55 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         "Open CSV...", icon=ft.icons.FOLDER_OPEN,
         on_click=lambda e: open_csv_dialog.pick_files(allow_multiple=False, allowed_extensions=["csv"]),
         tooltip="Open a local Text2Zinc CSV dataset",
+        visible=not HF_MODE,
     )
 
     load_hf_button = ft.OutlinedButton(
         "Load from HuggingFace", icon=ft.icons.CLOUD_DOWNLOAD, on_click=load_from_hf,
         tooltip=f"Reload fresh from the {TEXT2ZINC_DATASET} HuggingFace dataset",
+        visible=not HF_MODE,
+    )
+
+    upgrade_hf_button = ft.OutlinedButton(
+        "Upgrade Dataset", icon=ft.icons.SYSTEM_UPDATE_ALT, on_click=upgrade_from_hf,
+        tooltip=(f"Force a fresh download of {TEXT2ZINC_DATASET} from HuggingFace, bypassing "
+                 "the local cache, to pick up any upstream dataset updates. Click Save "
+                 "afterward to persist it." if HF_MODE else
+                 f"Force a fresh download of {TEXT2ZINC_DATASET} from HuggingFace, bypassing the local cache"),
+    )
+
+    new_problem_button = ft.ElevatedButton(
+        "New Problem", icon=ft.icons.ADD, on_click=new_problem,
+        bgcolor=ft.colors.PURPLE_700, color=ft.colors.WHITE,
+        tooltip="Add a blank problem with the same schema, ready to edit",
+    )
+
+    cancel_new_problem_button = ft.OutlinedButton(
+        "Cancel New Problem", icon=ft.icons.CLOSE, on_click=cancel_new_problem,
+        visible=False,
+        tooltip="Discard this blank problem and go back to the previous one",
     )
 
     save_button = ft.ElevatedButton(
         "Save", icon=ft.icons.SAVE, on_click=save_current_edits,
         bgcolor=ft.colors.BLUE_700, color=ft.colors.WHITE,
-        tooltip=f"Quick-save to {WORKING_DATASET_PATH} (Ctrl+S)",
+        tooltip=("Quick-save in place (Ctrl+S) — shared by everyone using this Space right now, "
+                 "so concurrent saves aren't guaranteed to be consistent" if HF_MODE
+                 else f"Quick-save to {WORKING_DATASET_PATH} (Ctrl+S)"),
     )
 
     save_as_button = ft.ElevatedButton(
         "Save As New Dataset...", icon=ft.icons.SAVE_AS, on_click=save_as,
         bgcolor=ft.colors.GREEN_700, color=ft.colors.WHITE,
-        tooltip="Save to a chosen path — pass it to text2model --dataset-path to benchmark against it",
+        tooltip="Save to a chosen path — pass it to text2model --text2zinc-path to benchmark against it",
+        visible=not HF_MODE,
+    )
+
+    copy_button = ft.ElevatedButton(
+        "Copy CSV", icon=ft.icons.COPY, on_click=copy_csv,
+        bgcolor=ft.colors.GREEN_700, color=ft.colors.WHITE,
+        tooltip="Copy the current dataset as CSV text to your clipboard",
+        visible=HF_MODE,
     )
 
     execute_button = ft.ElevatedButton(
@@ -1051,6 +918,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
     send_button = ft.IconButton(icon=ft.icons.SEND, tooltip="Send message", on_click=send_chat_message)
     clear_chat_button = ft.IconButton(icon=ft.icons.DELETE_SWEEP, tooltip="Clear chat", on_click=clear_chat)
     set_key_button = ft.ElevatedButton("Set API Key", icon=ft.icons.KEY, on_click=set_api_key)
+    chat_model_dropdown.on_change = set_chat_model
 
     def open_chat(e):
         chat_panel.visible = True
@@ -1062,6 +930,31 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
         icon=ft.icons.CHAT,
         on_click=open_chat,
     )
+
+    def labeled_box(title: str, content: ft.Control, height: Optional[int] = None) -> ft.Container:
+        """Uniform bordered panel used for the Execute tab's output boxes, so
+        Raw Output / Expected Output / Execution Results all read as one
+        family of boxes regardless of the widget they wrap.
+
+        No expand=True here: these boxes live inside a scrollable Column,
+        which gives its children unbounded height, and flet/flutter crashes
+        (invalid transform matrix) if something under it tries to expand
+        into that unbounded space. Passing a fixed `height` is the safe way
+        to make a box (e.g. the results panel) span roughly the same space
+        as its neighbors.
+        """
+        return ft.Container(
+            content=ft.Column([
+                ft.Text(title, size=13, weight=ft.FontWeight.BOLD, color=ft.colors.GREY_700),
+                content,
+            ], spacing=6),
+            padding=10, border=ft.border.all(1, ft.colors.GREY_300), border_radius=8,
+            bgcolor=ft.colors.WHITE, height=height,
+        )
+
+    raw_output_box = labeled_box("Raw Output", execution_output)
+    expected_output_box = labeled_box("Expected Output (output.json)", output_json_field)
+    execution_results_box = labeled_box("Execution Results (Formatted)", execution_json_display, height=470)
 
     # Primary work area
     tabs = ft.Tabs(
@@ -1112,22 +1005,20 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
                                         content=ft.Column([
                                             ft.Text("Output & Execution", size=14, weight=ft.FontWeight.BOLD),
                                             ft.Divider(height=1),
+                                            ft.Row(
+                                                [execute_button, solver_dropdown, timeout_field, is_verified_checkbox],
+                                                spacing=15, vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                                            ),
                                             problem_type_warning,
-                                            output_json_field,
                                             ft.Container(height=10),
-                                            ft.Row([is_verified_checkbox]),
-                                            ft.Container(height=10),
-                                            ft.Text("Execution Settings:", size=13, weight=ft.FontWeight.BOLD),
-                                            ft.Row([solver_dropdown, timeout_field], spacing=15),
-                                            ft.Container(height=10),
-                                            ft.Row([execute_button], spacing=10),
-                                            ft.Container(height=15),
-                                            ft.Text("Execution Results (Formatted):", size=14, weight=ft.FontWeight.BOLD),
-                                            ft.Divider(height=1),
-                                            execution_json_display,
-                                            ft.Container(height=10),
-                                            ft.Text("Raw Output:", size=13, weight=ft.FontWeight.BOLD),
-                                            execution_output,
+                                            ft.Row(
+                                                [
+                                                    ft.Column([raw_output_box, expected_output_box], spacing=10, expand=1),
+                                                    ft.Column([execution_results_box], spacing=10, expand=1),
+                                                ],
+                                                spacing=15,
+                                                vertical_alignment=ft.CrossAxisAlignment.START,
+                                            ),
                                         ], scroll=ft.ScrollMode.AUTO),
                                         padding=10,
                                     ),
@@ -1158,8 +1049,12 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
             ft.Divider(height=1),
             open_csv_button,
             load_hf_button,
+            upgrade_hf_button,
+            new_problem_button,
+            cancel_new_problem_button,
             save_button,
             save_as_button,
+            copy_button,
             source_dropdown,
         ],
         spacing=10,
@@ -1270,6 +1165,7 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
                 ),
                 ft.Divider(height=1),
                 ft.Row([api_key_field, set_key_button], spacing=10),
+                ft.Row([chat_model_dropdown], spacing=10),
                 ft.Container(
                     content=chat_history_column,
                     expand=True,
@@ -1316,24 +1212,56 @@ def main(page: ft.Page, dataset_path: Optional[str] = None):
 
     page.on_keyboard_event = handle_keyboard
 
-    # Initial load — local-first: an explicit --dataset-path, then a previous
-    # editing session, then the bundled default. HuggingFace is opt-in only
-    # (via the "Load from HuggingFace" button), never the editor's default.
-    if dataset_path and os.path.exists(dataset_path):
-        load_local_path(dataset_path, dataset_path)
+    # Initial load. No CSV is bundled with the package — text2zinc is a
+    # public HuggingFace dataset, so the very first run in a fresh directory
+    # (in either mode) pulls it straight from the Hub instead, no token
+    # required. HF mode only ever loads the one pushed dataset (--text2zinc-path,
+    # else T2M_EDITOR_DATASET_PATH, else HuggingFace) since there's no
+    # "previous session" file — quick-save writes back in place to that same
+    # path. Normal mode is local-first: an explicit --text2zinc-path, then a
+    # previous editing session, then HuggingFace.
+    if HF_MODE:
+        hf_mode_source = text2zinc_path or HF_MODE_DATASET_PATH
+        if hf_mode_source and os.path.exists(hf_mode_source):
+            load_local_path(hf_mode_source, f"pushed dataset ({hf_mode_source})")
+        else:
+            status_text.value = f"Loading from HuggingFace ({TEXT2ZINC_DATASET})..."
+            status_text.color = ft.colors.ORANGE
+            page.update()
+            finish_loading(
+                f"HuggingFace ({TEXT2ZINC_DATASET}, T2M_EDITOR_DATASET_PATH not set or not found)",
+                editor.load_from_huggingface(),
+            )
+    elif text2zinc_path and os.path.exists(text2zinc_path):
+        load_local_path(text2zinc_path, text2zinc_path)
     elif os.path.exists(WORKING_DATASET_PATH):
         load_local_path(WORKING_DATASET_PATH, f"previous session ({WORKING_DATASET_PATH})")
-    elif DEFAULT_DATASET_PATH.exists():
-        load_local_path(str(DEFAULT_DATASET_PATH), "bundled default dataset")
     else:
-        status_text.value = "No dataset found. Use 'Open CSV...' or 'Load from HuggingFace' to get started."
+        status_text.value = f"Loading from HuggingFace ({TEXT2ZINC_DATASET})..."
         status_text.color = ft.colors.ORANGE
         page.update()
+        finish_loading(f"HuggingFace ({TEXT2ZINC_DATASET})", editor.load_from_huggingface())
 
 
-def launch(dataset_path: Optional[str] = None) -> None:
-    """Launch the Text2Zinc dataset editor GUI."""
-    ft.app(target=lambda page: main(page, dataset_path=dataset_path))
+def launch(text2zinc_path: Optional[str] = None) -> None:
+    """Launch the Text2Zinc dataset editor GUI.
+
+    Locally this opens a native desktop window. In HF mode
+    (T2M_HF_MODE=1, e.g. deployed as an HF Space) it instead serves over
+    HTTP so it can run headless in a container, listening on $PORT
+    (default 7860, matching HF Spaces' Docker SDK default). See the HF_MODE
+    comment near the top of this file for the concurrency caveat that comes
+    with that deployment."""
+    if HF_MODE:
+        port = int(os.environ.get("PORT", 7860))
+        ft.app(
+            target=lambda page: main(page, text2zinc_path=text2zinc_path),
+            view=ft.AppView.WEB_BROWSER,
+            host="0.0.0.0",
+            port=port,
+        )
+    else:
+        ft.app(target=lambda page: main(page, text2zinc_path=text2zinc_path))
 
 
 if __name__ == "__main__":

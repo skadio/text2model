@@ -19,23 +19,17 @@ import openai
 from datasets import DatasetDict, load_dataset
 from tqdm import tqdm
 
-from text2model.utils import API_CONFIG, call_openai_api, load_file, prepare_problem_data
+from text2model.utils import (
+    API_CONFIG, call_openai_api, create_kg_generation_prompt,
+    get_effective_input_data, prepare_problem_data,
+)
 
 
 def create_kg_prompt(problem):
     """Create a knowledge graph generation prompt using problem data"""
     problem_data = prepare_problem_data(problem)
-
-    # Load the KG generation prompt template
-    kg_prompt_template = load_file('prompts/kg_generation_prompt.txt')
-
-    # Format the prompt with problem data
-    kg_prompt = kg_prompt_template.format(
-        problem_description=problem_data['description'],
-        data_nomenclature=problem_data['data_nomenclature']
-    )
-
-    return kg_prompt
+    effective_input_data = get_effective_input_data(problem_data)
+    return create_kg_generation_prompt(problem_data, effective_input_data)
 
 
 def save_kg_solution(output_dir, problem_id, solution):
