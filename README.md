@@ -210,27 +210,11 @@ pip install -e .
 
 Text2Model ships a GUI editor (built with [Flet](https://flet.dev)) for browsing and editing Text2Zinc problems (input.json, data.dzn, model.mzn, output.json), running them through MiniZinc, and chatting with an AI assistant for help rephrasing descriptions or fixing model code.
 
-### Launch
-
 ```bash
 text2model --editor
 ```
 
-By default the editor opens, in order: a previous editing session (`text2zinc_edited.csv` in the current directory), otherwise the dataset bundled with the package. Use the **"Load from HuggingFace"** button inside the editor to instead start from a fresh copy of `skadio/text2zinc`, or open any other local dataset with **"Open CSV..."** — or non-interactively:
-
-```bash
-text2model --editor --text2zinc-path my_dataset.csv
-```
-
-### Save and Benchmark
-
-- **Save** (or Ctrl+S) quick-saves your edits to `text2zinc_edited.csv` in the current directory.
-- **Save As New Dataset...** exports to any path you choose. That path is a complete Text2Zinc dataset you can pass to `--text2zinc-path` to generate or benchmark against your edits instead of the default HuggingFace dataset:
-
-```bash
-text2model --strategies cot --model gpt-4 --output-dir my_results --text2zinc-path my_dataset.csv
-python evals/evaluate.py --output-dir my_results --text2zinc-path my_dataset.csv
-```
+See [text2model/editor/README.md](text2model/editor/README.md) for loading/saving datasets, benchmarking against your edits, and the editor's internals.
 
 ## Evaluation
 
@@ -301,9 +285,7 @@ text2model/
 │   │   ├── global_constraint_prompts/
 │   │   └── ...
 │   ├── knowledge_graphs/        # KG files (.ttl) for knowledge_graph strategy
-│   ├── editor/                  # Dataset editor GUI (`text2model --editor`)
-│   │   └── app.py               # Flet app: browse/edit/execute Text2Zinc problems, AI chat assistant
-│   │                             # (opens from HuggingFace on first run — no dataset is bundled)
+│   ├── editor/                  # Dataset editor GUI (`text2model --editor`) — see text2model/editor/README.md
 │   ├── copilots/                # One module per copilot strategy, registered in STRATEGY_MAP
 │   │   ├── baseline.py
 │   │   ├── cot.py
