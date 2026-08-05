@@ -151,6 +151,6 @@ def test_problem_mode_comments_cli_status_but_not_code(monkeypatch, capsys):
     main.main()
 
     output = capsys.readouterr()
-    assert output.out.startswith("% Generating MiniZinc model using strategy 'cot' with model 'gpt-4'...")
+    assert output.out.startswith("% Generating MiniZinc model using strategy 'cot' with model 'gpt-5.2'...")
     assert output.out.rstrip().endswith("var int: x;")
     assert output.err == ""
