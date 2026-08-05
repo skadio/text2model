@@ -3,6 +3,9 @@ Changelog
 
 All notable changes to this project are documented in this file.
 
+[1.3.6] - 2026-08-05
+- Updated default model settings and editor GUI buttons
+
 [1.3.5] - 2026-08-03
 - Added an "Upgrade Dataset" button to the editor GUI, visible in HF Space mode
   too, that force-downloads the latest `skadio/text2zinc` from HuggingFace,

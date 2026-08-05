@@ -101,8 +101,8 @@ def _run_problem_mode(args, client):
 
     problem = utils.create_problem_from_text(problem_text)
 
-    # Use the first requested strategy; default to 'cot'
-    strategy = (args.strategies or ['cot'])[0]
+    # Use the first requested strategy; default to 'cot_with_grammar'
+    strategy = (args.strategies or ['cot_with_grammar'])[0]
 
     strategy_fn = _STRATEGY_MAP[strategy]
 
@@ -178,7 +178,7 @@ def main():
     )
 
     # ── Model / API ─────────────────────────────────────────────────────────
-    parser.add_argument('--model', default='gpt-4',
+    parser.add_argument('--model', default='gpt-5.2',
                         choices=list(AVAILABLE_MODELS.keys()),
                         help='LLM model to use')
     parser.add_argument('--api-key', default=os.getenv('OPENAI_API_KEY'),
@@ -199,10 +199,10 @@ def main():
     # ── Strategy ────────────────────────────────────────────────────────────
     parser.add_argument(
         '--strategies', nargs='+',
-        default=['cot'],
+        default=['cot_with_grammar'],
         choices=AVAILABLE_STRATEGIES,
         help='Strategy (or strategies for Text2Zinc mode). '
-             'In --problem mode only the first strategy is used; default is cot.'
+             'In --problem mode only the first strategy is used; default is cot_with_grammar.'
     )
 
     # ── Text2Zinc-mode dataset arguments ────────────────────────────────────

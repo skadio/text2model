@@ -16,7 +16,7 @@ from langchain_ollama import ChatOllama
 
 # Global OpenAI API configuration
 API_CONFIG = {
-    'model': 'gpt-4',
+    'model': 'gpt-5.2',
     'temperature': 0,
     'max_tokens': 4096,
     'sleep_time': 3,
