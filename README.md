@@ -118,12 +118,16 @@ without exposing them in code or the repo.
 ### Interactive Mode
 
 ```bash
-# Text2Model offers an interactive editor for curating Text2Zinc problems (input.json, data.dzn, model.mzn, output.json), execution through MiniZinc, and an AI assistant to help problem, instance, model generation.
+# Text2Model offers an interactive editor for curating Text2Zinc problems
+# It allows editing: input.json, data.dzn, model.mzn, output.json
+# execution through MiniZinc, and an
+# AI assistant to help problem, instance, model generation.
+# AI Assistants has a simple harness to be aware of the current problem, data, model visible on the editor
 text2model --editor
+
+# Load from a local copy
 text2model --editor --text2zinc-path text2zinc_edited.csv
 ```
-
-See [Dataset Editor](https://github.com/skadio/text2model?tab=readme-ov-file#dataset-editor) for details.
 
 ## Copilots
 
