@@ -28,8 +28,12 @@ WORKING_DATASET_PATH = "text2zinc_edited.csv"
 # CSV already baked into the image/pushed alongside it (or, absent that,
 # whatever it pulls read-only from the public `skadio/text2zinc` dataset on
 # startup). In this mode:
-#   - "Open CSV...", "Load from HuggingFace", and "Save As..." are hidden —
-#     there is exactly one dataset, and no arbitrary filesystem/Hub access.
+#   - "Load from CSV" and "Save As..." are hidden — there is exactly one
+#     dataset, and no arbitrary filesystem/Hub access. "Load from
+#     HuggingFace" stays visible in both modes: it's the only way to refresh
+#     a Space's data without a full rebuild/restart, and it always
+#     force-downloads (bypassing the local `datasets` cache) so it actually
+#     picks up upstream dataset updates.
 #   - Quick-save (Save button / Ctrl+S) still works, but writes in place to
 #     that same pushed file instead of a separate WORKING_DATASET_PATH.
 # T2M_EDITOR_DATASET_PATH points at the pushed CSV to load on startup; falls
@@ -270,18 +274,11 @@ def main(page: ft.Page, text2zinc_path: Optional[str] = None):
             load_local_path(e.files[0].path, e.files[0].path)
 
     def load_from_hf(e):
-        status_text.value = "Loading from HuggingFace (skadio/text2zinc)..."
-        status_text.color = ft.colors.ORANGE
-        page.update()
-        finish_loading(f"HuggingFace ({TEXT2ZINC_DATASET}, not yet saved locally)", editor.load_from_huggingface())
-
-    def upgrade_from_hf(e):
-        """Force a fresh download of TEXT2ZINC_DATASET, bypassing the local
-        `datasets` cache, so upstream dataset updates show up even though a
-        cached copy already exists (e.g. baked into a HF Space image). Unlike
-        load_from_hf above, this is shown in HF mode too — it's the only way
-        to refresh a Space's data without a full rebuild/restart."""
-        status_text.value = f"Upgrading to the latest {TEXT2ZINC_DATASET} (forcing fresh download)..."
+        """Load the latest TEXT2ZINC_DATASET from HuggingFace, always forcing
+        a fresh download (bypassing the local `datasets` cache) so upstream
+        dataset updates show up even though a cached copy already exists
+        (e.g. baked into a HF Space image)."""
+        status_text.value = f"Loading the latest {TEXT2ZINC_DATASET} from HuggingFace (forcing fresh download)..."
         status_text.color = ft.colors.ORANGE
         page.update()
         try:
@@ -854,7 +851,7 @@ def main(page: ft.Page, text2zinc_path: Optional[str] = None):
     page.overlay.extend([open_csv_dialog, save_as_dialog])
 
     open_csv_button = ft.OutlinedButton(
-        "Open CSV...", icon=ft.icons.FOLDER_OPEN,
+        "Load from CSV", icon=ft.icons.FOLDER_OPEN,
         on_click=lambda e: open_csv_dialog.pick_files(allow_multiple=False, allowed_extensions=["csv"]),
         tooltip="Open a local Text2Zinc CSV dataset",
         visible=not HF_MODE,
@@ -862,15 +859,9 @@ def main(page: ft.Page, text2zinc_path: Optional[str] = None):
 
     load_hf_button = ft.OutlinedButton(
         "Load from HuggingFace", icon=ft.icons.CLOUD_DOWNLOAD, on_click=load_from_hf,
-        tooltip=f"Reload fresh from the {TEXT2ZINC_DATASET} HuggingFace dataset",
-        visible=not HF_MODE,
-    )
-
-    upgrade_hf_button = ft.OutlinedButton(
-        "Upgrade Dataset", icon=ft.icons.SYSTEM_UPDATE_ALT, on_click=upgrade_from_hf,
-        tooltip=(f"Force a fresh download of {TEXT2ZINC_DATASET} from HuggingFace, bypassing "
-                 "the local cache, to pick up any upstream dataset updates. Click Save "
-                 "afterward to persist it." if HF_MODE else
+        tooltip=(f"Force a fresh download of {TEXT2ZINC_DATASET} from HuggingFace, bypassing the "
+                 "local cache, to sync with the latest upstream dataset. Click Save afterward to "
+                 "persist it." if HF_MODE else
                  f"Force a fresh download of {TEXT2ZINC_DATASET} from HuggingFace, bypassing the local cache"),
     )
 
@@ -1047,14 +1038,9 @@ def main(page: ft.Page, text2zinc_path: Optional[str] = None):
             problem_info,
             save_indicator,
             ft.Divider(height=1),
-            open_csv_button,
-            load_hf_button,
-            upgrade_hf_button,
-            new_problem_button,
-            cancel_new_problem_button,
-            save_button,
-            save_as_button,
-            copy_button,
+            ft.Row([open_csv_button, load_hf_button], spacing=8, wrap=True),
+            ft.Row([new_problem_button, cancel_new_problem_button], spacing=8, wrap=True),
+            ft.Row([save_button, save_as_button, copy_button], spacing=8, wrap=True),
             source_dropdown,
         ],
         spacing=10,
