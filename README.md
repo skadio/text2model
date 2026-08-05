@@ -32,7 +32,7 @@ Please visit [Text2Model](https://skadio.github.io/text2model/) for latest publi
 
 ## Quick Start
 
-Text2Model supports translating given problem descriptions (**Text mode**), specific problems from our dataset (**Text2Zinc mode**), or running interactively using the [editor](https://github.com/skadio/text2model?tab=readme-ov-file#dataset-editor) (**Editor mode**).
+Text2Model supports translating given problem descriptions (**Text mode**), specific problems from our dataset (**Text2Zinc mode**), or running the interactive editor (**Editor mode**).
 
 ### Text Mode
 
@@ -118,6 +118,7 @@ without exposing them in code or the repo.
 ### Interactive Mode
 
 ```bash
+# Text2Model offers an interactive editor for curating Text2Zinc problems (input.json, data.dzn, model.mzn, output.json), execution through MiniZinc, and an AI assistant to help problem, instance, model generation.
 text2model --editor
 text2model --editor --text2zinc-path text2zinc_edited.csv
 ```
@@ -206,32 +207,6 @@ cd text2model
 pip install -e .
 ```
 
-## Dataset Editor
-
-Text2Model ships a GUI editor (built with [Flet](https://flet.dev)) for browsing and editing Text2Zinc problems (input.json, data.dzn, model.mzn, output.json), running them through MiniZinc, and chatting with an AI assistant for help rephrasing descriptions or fixing model code.
-
-### Launch
-
-```bash
-text2model --editor
-```
-
-By default the editor opens, in order: a previous editing session (`text2zinc_edited.csv` in the current directory), otherwise the dataset bundled with the package. Use the **"Load from HuggingFace"** button inside the editor to instead start from a fresh copy of `skadio/text2zinc`, or open any other local dataset with **"Open CSV..."** — or non-interactively:
-
-```bash
-text2model --editor --text2zinc-path my_dataset.csv
-```
-
-### Save and Benchmark
-
-- **Save** (or Ctrl+S) quick-saves your edits to `text2zinc_edited.csv` in the current directory.
-- **Save As New Dataset...** exports to any path you choose. That path is a complete Text2Zinc dataset you can pass to `--text2zinc-path` to generate or benchmark against your edits instead of the default HuggingFace dataset:
-
-```bash
-text2model --strategies cot --model gpt-4 --output-dir my_results --text2zinc-path my_dataset.csv
-python evals/evaluate.py --output-dir my_results --text2zinc-path my_dataset.csv
-```
-
 ## Evaluation
 
 After generating models, evaluate their correctness via [`evals/evaluate.py`](evals/evaluate.py). This script compiles and runs each generated MiniZinc model against test instances, checking for both execution success and solution correctness.
@@ -242,12 +217,13 @@ Install MiniZinc solver: https://www.minizinc.org/doc-2.5.5/en/installation.html
 
 #### Evals
 ```bash
-# Evaluate all generated code
-# `--output-dir` is required. Point it at the directory produced by the batch-mode `text2model` run.
+# Run strategies in batch-mode
+text2model --strategies cot --model gpt-4 --output-dir my_results --text2zinc-path text2zinc_edited.csv
+
+# Evaluate all generated code. `--output-dir` is required to point the directory produced by the batch-mode `text2model` run.
 python evals/evaluate.py --output-dir my_results
 
-# Evaluate against a local dataset (e.g. one saved by `text2model --editor`) instead
-# of the default skadio/text2zinc HuggingFace dataset
+# Evaluate against a local dataset (e.g. one saved by `text2model --editor`) instead of the default HuggingFace dataset
 python evals/evaluate.py --output-dir my_results --text2zinc-path text2zinc_edited.csv
 ```
 
