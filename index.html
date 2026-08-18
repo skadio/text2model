@@ -1070,6 +1070,13 @@
           <span class="pub-dot">·</span>
         </span>
       </li>
+      
+      <li>
+        <span>
+          <a href="#tutorial" class="pub-link"><strong>Tutorial:</strong> an overview of modeling copilots</a>
+          <span class="pub-dot">·</span>
+        </span>
+      </li>
     </ol>
   </div>
   </div>
@@ -1493,6 +1500,42 @@
     </div>
 
   </div>
+
+  <div class="project-card" id="tutorial">
+      <div class="project-card-inner">
+        <div class="card-accent teal"></div>
+        <div class="card-body">
+          <div class="card-tag teal">Copilot Frameworks</div>
+          <div class="card-header-row">
+            <h3>Tutorial: Modeling Copilots</h3>
+            <button class="anchor-link" onclick="copyAnchor('tutorial')" title="Copy link">
+              <i class="fa-solid fa-link"></i>
+              <span class="anchor-tooltip">Copy link</span>
+            </button>
+          </div>
+          <p class="card-desc">An overview of modeling copilots from our Tutorial @ IJCAI 2026.</p>
+          <p class="card-venue">Tias Guns, Serdar Kadıoğlu, Dimos Tsouros</p>
+          <div class="card-links">
+            <a href="https://drive.google.com/uc?export=download&id=1r9ai1lO_pUFf7laNkZl8NfC-p-9_m2nQ" class="card-link" target="_blank"><i class="fa-solid fa-file-powerpoint" style="color: #c0392b;"></i> Slides</a>
+            <a href="https://sites.google.com/view/ijcai26-llm-con" class="card-link" target="_blank"><i class="fa-brands fa-chalkboard-user"></i>LLM-Con</a>
+            <!-- <a href="https://arxiv.org/abs/2509.08970" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'25</a> -->
+            <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
+          </div>
+          <div class="bibtex-inline">
+            <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
+            <pre>@misc{gala,
+  title         = {LLMs for Constraint Modeling (LLM-Con)},
+  author        = {Tias Guns, Serdar Kadıoğlu, Dimos Tsouros},
+  year          = {2026},
+  archivePrefix = {IJCAI Tutorial},
+  url           = {https://sites.google.com/view/ijcai26-llm-con}
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 </section>
 
 <div class="section-divider"><hr></div>
@@ -1504,13 +1547,17 @@
     <p>We co-organize and contribute to tutorials, workshops, master classes, and competitions to advance the research in text-to-model translation.</p>
   </div>
   <div class="events-grid">
-    <!-- <span class="event-chip disabled" id="tutorial-ijcai26">
-      <i class="fa-solid fa-chalkboard-user"></i> Tutorial on LLMs for Constraint <span class="event-venue">IJCAI'26</span>
-      <span class="event-anchor" onclick="event.stopPropagation(); copyAnchor('tutorial-ijcai26')" title="Copy link"><i class="fa-solid fa-link"></i></span>
-    </span> -->
-     <a href="https://sites.google.com/view/ijcai26-llm-con/" class="event-chip" id="llm-solve-cp26" target="_blank">
+    <a href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/skadio/skadio.github.io/master/files/2026_Constraints_Special_Issue.pdf" class="event-chip" id="constraints-si" target="_blank">
+      <i class="fa-solid fa-file-lines"></i> Special Issue on LLMs for Combinatorial Constraint Solving <span class="event-venue">Constraints</span>
+      <span class="event-anchor" onclick="event.preventDefault(); event.stopPropagation(); copyAnchor('constraints-si')" title="Copy link"><i class="fa-solid fa-link"></i></span>
+    </a>
+     <a href="https://sites.google.com/view/ijcai26-llm-con/" class="event-chip" id="llm-con-ijcai26" target="_blank">
       <i class="fa-solid fa-users"></i> Tutorial on LLMs for Constraint Modeling <span class="event-venue">IJCAI'26</span>
       <span class="event-anchor" onclick="event.preventDefault(); event.stopPropagation(); copyAnchor('llm-con-ijcai26')" title="Copy link"><i class="fa-solid fa-link"></i></span>
+    </a>
+    <a href="https://feiliu36.github.io/llm_opt_tutorial_ijcai2026/" class="event-chip" id="llm-opt-ijcai26" target="_blank">
+      <i class="fa-solid fa-users"></i> Tutorial on LLMs for Optimization <span class="event-venue">IJCAI'26</span>
+      <span class="event-anchor" onclick="event.preventDefault(); event.stopPropagation(); copyAnchor('llm-opt-ijcai26')" title="Copy link"><i class="fa-solid fa-link"></i></span>
     </a>
     <a href="https://sites.google.com/view/llm-solve-2026" class="event-chip" id="llm-solve-cp26" target="_blank">
       <i class="fa-solid fa-users"></i> Workshop on LLM-Solve  <span class="event-venue">CP'26</span>
