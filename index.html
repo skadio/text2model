@@ -1516,21 +1516,45 @@
           <p class="card-desc">An overview of modeling copilots from our LLM-Con tutorial @ IJCAI 2026.</p>
           <p class="card-venue">Tias Guns, Serdar Kadıoğlu, Dimos Tsouros</p>
           <div class="card-links">
+            <a href="https://pubsonline.informs.org/do/10.1287/LYTX.2026.03.17/full/" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> INFORMS'26</a>
             <a href="https://drive.google.com/uc?export=download&id=1r9ai1lO_pUFf7laNkZl8NfC-p-9_m2nQ" class="card-link" target="_blank"><i class="fa-solid fa-file-powerpoint" style="color: #c0392b;"></i> Slides</a>
             <a href="https://sites.google.com/view/ijcai26-llm-con" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i>LLM-Con @ IJCAI'26</a>
             <!-- <a href="https://arxiv.org/abs/2509.08970" class="card-link" target="_blank"><i class="fa-solid fa-file-lines"></i> arXiv'25</a> -->
             <button class="bibtex-toggle" onclick="toggleBibtex(this)"><i class="fa-solid fa-chevron-down"></i> BibTeX</button>
+            <button class="bibtex-toggle" onclick="toggleBibtex('bib-informs', this)"><i class="fa-solid fa-chevron-down"></i> BibTeX · INFORMS Analytics Magazine'26</button>
+            <button class="bibtex-toggle" onclick="toggleHeroBibtex('bib-ijcai', this)"><i class="fa-solid fa-chevron-down"></i> BibTeX · IJCAI'26</button>
           </div>
-          <div class="bibtex-inline">
-            <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
-            <pre>@misc{gala,
-  title         = {LLMs for Constraint Modeling (LLM-Con)},
-  author        = {Tias Guns, Serdar Kadıoğlu, Dimos Tsouros},
-  year          = {2026},
-  archivePrefix = {IJCAI Tutorial},
-  url           = {https://sites.google.com/view/ijcai26-llm-con}
+
+           <div class="bibtex-inline" id="bib-informs">
+        <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
+        <pre>@article{author2026title,
+  author    = {Kadıoğlu, Serdar},
+  title     = {Modeling Copilots: Large Language Models for Text-to-Model Translation},
+  journal   = {INFORMS Analytics Magazine},
+  year      = {2026},
+  month     = {Oct},
+  doi       = {10.1287/LYTX.2026.03.17},
+  url       = {https://pubsonline.informs.org/do/10.1287/LYTX.2026.03.17/full/}
 }</pre>
-          </div>
+      </div>
+      <div class="bibtex-inline" id="bib-ijcai">
+        <button class="copy-btn" onclick="copyBibtexInline(this)">Copy</button>
+        <pre>@misc{guns_tias_2026_21998210,
+  author       = {Guns, Tias and
+                  Tsouros, Dimosthenis and
+                  Kadıoğlu, Serdar},
+  title        = {{LLMs for Constraint Modeling, IJCAI26 tutorial}},
+  month        = aug,
+  year         = 2026,
+  version      = {v1},
+  publisher    = {Zenodo},
+  type         = {Presentation},
+  doi          = {10.5281/zenodo.21998210},
+  url          = {https://doi.org}
+}</pre>
+      </div>
+
+          
         </div>
       </div>
     </div>
